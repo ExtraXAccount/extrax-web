@@ -61,13 +61,9 @@ export default function AppLayout() {
       <ScrollToTop />
       <div className="top-bar">
         <div className="nav">
-          <Link className="nav-logo" to="/home">
-            <div className="nav-logo-top">
-              <i className="nav-logo-image"></i>
-              {/* <i className="nav-logo-tag">Beta</i> */}
-            </div>
-            {/* <p className="nav-logo-slogan">Farm Extra, Harvest More</p> */}
-          </Link>
+          <div className="nav-logo-top">
+            <i className="nav-logo-tag">Extra-X</i>
+          </div>
           <div className="side-nav">
             {navList.map((i) => {
               return (

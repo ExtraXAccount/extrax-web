@@ -1,7 +1,7 @@
 export default function Lend() {
   return (
     <div className="page-lend">
-      <h2>lend pape</h2>
+      <h2>lend page</h2>
     </div>
   )
 }
