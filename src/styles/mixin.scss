@@ -1,0 +1,17 @@
+
+@mixin custom-scrollbar {
+  @media (min-width: 720px) {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(#aaa, 0.4);
+      border-radius: var(--box-radius);
+    }
+  }
+}

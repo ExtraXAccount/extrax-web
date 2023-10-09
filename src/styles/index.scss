@@ -1,0 +1,86 @@
+@import './var.scss';
+@import './module.scss';
+@import './coin.scss';
+@import './iconfont/iconfont.css';
+@import './notification.scss';
+@import './table.mobile.scss';
+@import './antd.scss';
+
+.ant-btn-default:not(:disabled):hover{
+  color: #fff !important;
+}
+
+.ant-radio-group-solid
+.ant-radio-button-wrapper-disabled{
+  background-color: var(--text-color-weaker);
+}
+
+.ant-table-content {
+  overflow-x: auto;
+}
+.ant-table{
+  color: var(--text-color) !important;
+  padding: 0 16px !important;
+}
+.ant-table-wrapper{
+  .ant-table-thead {
+    >tr {
+      >td,
+      >th{
+        font-weight: normal;
+        color: var(--text-color) !important;
+        background-color: var(--table-head-bg) !important;
+        &:hover{
+          background-color:  var(--table-head-bg) !important;
+        }
+        &:first-child{
+          border-radius: 8px 0 0 8px;
+        }
+        &:last-child{
+          border-radius: 0 8px 8px 0;
+        }
+        &::before{
+          display: none !important;
+        }
+      }
+    
+      >th{
+        padding: 6px 16px;
+        border-bottom: 0;
+      }
+    }
+  }
+}
+
+.ant-table-tbody >tr >td.ant-table-cell-row-hover{
+  background-color:  var(--box-bg-hover) !important;
+}
+
+body.dark{
+  .ant-table{
+    background: transparent !important;
+    color: var(--text-color) !important;
+  }
+  .ant-table-wrapper td.ant-table-column-sort {
+    background-color: transparent;
+  }
+  // .ant-table-wrapper .ant-table-thead >tr>th,
+  // .ant-table-wrapper .ant-table-thead >tr>td,
+  .ant-table-tbody >tr >td{
+    border-color: rgba(#fff, .2) !important;
+  }
+  .ant-table-tbody >tr:last-child>td {
+    // border-color: rgba(#fff, .2) !important;
+    border-bottom: none !important;
+  }
+  .ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>td {
+    background-color:  var(--box-bg-hover);
+  }
+  .ant-table-wrapper .ant-table-tbody>tr.ant-table-placeholder,
+  .ant-table-wrapper .ant-table-tbody>tr.ant-table-placeholder:hover>td {
+    background: transparent !important;
+  }
+  .ant-empty .ant-empty-description{
+    color: #fff;
+  }
+}

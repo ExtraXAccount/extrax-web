@@ -1,0 +1,103 @@
+.token,
+.coin {
+  background: center / contain no-repeat;
+  background-image: url('~@/assets/coins/unknown.svg');
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+$coin-list:
+  // 'extra',
+  'usdc',
+  'usdt',
+  'eth',
+  // 'weth',
+  'op',
+  'dola',
+  'sonne',
+  'lyra',
+  'daiplus',
+  'ern',
+  'frax',
+  'thales',
+  'gnode'
+  // 'extra',
+;
+
+$svg-coin-list: 
+  'weth',
+  'extra',
+  'velo',
+  'aero',
+  'snx',
+  'usx',
+  'stg',
+  'usdplus',
+  'frxeth',
+  'wsteth',
+  'kwenta',
+  'mai',
+  'wusdr',
+  'chi',
+  'dai',
+  'bob',
+  'dht',
+  'aleth',
+  'mseth',
+  'blu',
+  'red',
+  'lusd',
+  'tarot',
+  'ageur',
+  // 'unidx',
+  'susd',
+  'wld',
+  'alusd',
+  'exa',
+  'tbtc',
+  'wbtc',
+;
+
+$link-coin-map: (
+  'perp': 'https://assets.smold.app/api/token/10/0x9e1028F5F1D5eDE59748FFceE5532509976840E0/logo.svg',
+  'dht': 'https://assets.smold.app/api/token/10/0xAF9fE3B5cCDAe78188B1F8b9a49Da7ae9510F151/logo.svg',
+  'mta': 'https://assets.smold.app/api/token/10/0x929B939f8524c3Be977af57A4A0aD3fb1E374b50/logo.svg',
+  'fbomb': 'https://assets.smold.app/api/token/10/0x74ccbe53F77b08632ce0CB91D3A545bF6B8E0979/logo.svg',
+  'usdbc': 'https://assets.smold.app/api/token/8453/0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA/logo.svg',
+  // 'aero': 'https://assets.smold.app/api/token/8453/0x940181a94A35A4569E4529A3CDfB74e38FD98631/logo.svg',
+  'cbeth': 'https://assets.smold.app/api/token/8453/0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22/logo.svg',
+  'unidx': 'https://assets.smold.app/api/token/8453/0x6B4712AE9797C199edd44F897cA09BC57628a1CF/logo.svg',
+  'deus': 'https://assets.smold.app/api/token/8453/0xDE5ed76E7c05eC5e4572CfC88d1ACEA165109E44/logo.svg',
+  'well': 'https://assets.smold.app/api/token/8453/0xFF8adeC2221f9f4D8dfbAFa6B9a297d17603493D/logo.svg',
+  'msusd': 'https://assets.smold.app/api/token/10/0x9dAbAE7274D28A45F0B65Bf8ED201A5731492ca0/logo.svg',
+  'ovn': 'https://assets.smold.app/api/token/8453/0xA3d1a8DEB97B111454B294E2324EfAD13a9d8396/logo.svg'
+);
+
+
+@each $coin in $coin-list {
+  .token-#{$coin},
+  .coin-#{$coin} {
+    background-image: url('~@/assets/coins/#{$coin}.png');
+  }
+}
+
+
+@each $coin in $svg-coin-list {
+  .token-#{$coin},
+  .coin-#{$coin} {
+    background-image: url('~@/assets/coins/#{$coin}.svg');
+  }
+}
+
+@each $coin, $imageUrl in $link-coin-map {
+  .token-#{$coin},
+  .coin-#{$coin} {
+    background-image: url(#{$imageUrl});
+  }
+}
+
+.coin-unidx{
+  background-color: #ddd;
+}

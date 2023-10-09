@@ -1,0 +1,166 @@
+:root {
+  --root-bg: #f0f0f0;
+  --body-bg: #f0f0f0;
+  --modal-bg: rgba(255,255,255);
+  //color
+  --text-color: #001E58;
+  --text-color-weak: #001e5873;
+  --text-color-weaker: #001e5833;
+  --primary-color: #0f0f4a;
+  // --primary-color: #1586FF;
+  --weak-color: #001d5888;
+  --weakest-color: #1586ff28;
+
+  --weakest-color-darken: #1586ff20;
+
+  --safe-color: #1fbb2c;
+  --warn-color: #ffb507;
+  --danger-color: #ff1b1b;
+
+  // text
+  --text-hightlight-color-simple: #011e58;
+  --text-highlight-color-pure: #008CF2;
+  --text-highlight-color: linear-gradient(270deg, #008CF2 0%, #008CF2 100%, #008CF2 100%);
+
+  // button
+  --button-color: #fff;
+  // --button-bg: linear-gradient(270deg, #000D18 0%, #0f0f4a 100%);
+  // --button-bg-hover: linear-gradient(270deg, #012c52 0%, #0c0c67 100%);
+  // --button-bg-active: linear-gradient(270deg, #012749 0%, #15156c 100%);
+  --button-bg: linear-gradient(0deg, #0066E3 0%, #008CF2 112%);
+  // --button-bg: linear-gradient(270deg, #009BF2 0%, #007DF2 100%);
+  --button-bg-hover: linear-gradient(0deg, #1e76e2 0%, #2c95e1 112%);
+  --button-bg-active: linear-gradient(0deg, #1e76e2 0%, #2c95e1 112%);
+  --button-bg-disabled: #e7ebf2; // rgba(0,0,0,0.04);
+  --button-color-secondary: #6e6e6e;
+  --button-border-secondary: #2482ff;
+
+  --btn-max-bg: rgba(51, 51, 51, .1);
+  --btn-max-bg-hover: rgba(51, 51, 51, .2);
+  // box
+  --box-radius: 8px;
+  --box-shadow: none;
+  // 0px 4px 10px 0px rgba(36,158,255,0.1);
+  --box-bg: #fff;
+  --box-list-bg: #fff;
+  --box-bg-hover: #e8e8e8;
+
+  --box-bg-weak-color: #F3F2F8;
+
+  // menu
+  --menu-width: 192px;
+
+  //nav
+  --nav-height: 60px;
+  --nav-border-color: rgba(28, 28, 28, .15);
+  --nav-bg: #fff;
+  --nav-box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+
+  // leverage display
+  --lev-display-arrow-color: #000;
+  --lev-display-border-color: rgba(0, 0, 0, .4);
+
+  --antd-primary: rgb(21, 134, 255);
+
+  // farm page
+  --bg-li-interval: rgba(255, 255, 255, .05);
+  --btn-highlight-1: rgba(21, 134, 255, .5);
+  --btn-highlight-2: rgba(21, 134, 255, 0);
+  --btn-highlight-3: rgba(21, 134, 255, .1);
+  --btn-highlight-4: rgba(21, 134, 255, .07);
+  --btn-highlight-5: rgba(21, 134, 255, .24);
+  --btn-highlight-border: rgb(21, 134, 255);
+  // chart
+  --recharts-tooltip-bg: rgba(#fff, .6);
+
+  // tab
+  --tab-bg: #F3F2F8;
+  --tab-active-bg: #fff;
+
+  // apr-block
+  --apr-block-border-color: #E2E2E2;
+  --apr-block-color: rgba(0, 0, 0, .5);
+
+  // table
+  --table-head-bg: #F3F2F8;
+}
+
+:root.dark {
+  --root-bg: #131D32;
+  // --body-bg: linear-gradient(180deg, #131D32 0%, #000000 100%, #0F141E 100%);
+  --body-bg: linear-gradient(180deg, #0C1321 0%, #060910 100%);
+  --modal-bg: #393A3E;
+  //color
+  --text-color: rgba(255, 255, 255, .8);
+  --text-color-weak: rgba(255, 255, 255, .7);
+  --text-color-weaker: rgba(255, 255, 255, .6);
+  --primary-color: #fff;
+  --weak-color: #001d5888;
+  --weakest-color: #1586ff28;
+
+  --weakest-color-darken: #1586ff20;
+
+  --safe-color: #48d553;
+  --warn-color: #ffb507;
+  --danger-color: #f97e7e;
+
+  // text
+  --text-hightlight-color-simple: #1ae3a4;
+  --text-highlight-color-pure: #0FEFA9;
+  --text-highlight-color: linear-gradient(270deg, #0FEFA9 0%, #0FEFA9 100%, #0FEFA9 100%);
+
+  // button
+  --button-color: #fff;
+  // --button-bg: linear-gradient(90deg, #1586FF 0%, #049fb0 112%);
+  --button-bg: linear-gradient(360deg, #0066E3 0%, #008CF2 100%);
+  --button-bg-hover: linear-gradient(360deg, #297ee6 0%, #219ef8 100%);
+  --button-bg-active: linear-gradient(360deg, #297ee6 0%, #219ef8 100%);
+  --button-bg-disabled: #e7ebf2; // rgba(0,0,0,0.04);
+  --button-color-secondary: #fff;
+  --button-border-secondary: #5f6162;
+
+  --btn-max-bg: rgba(170, 170, 170, .25);
+  --btn-max-bg-hover: rgba(170, 170, 170, .5);
+  // box
+  --box-radius: 8px;
+  --box-shadow: none;
+  // 0px 4px 10px 0px rgba(36,158,255,0.1);
+  --box-bg: rgba(60, 64, 73, 0.8);
+  --box-list-bg: rgba(60, 64, 73, 0.8);
+  --box-bg-hover: #25283299;
+
+  --box-bg-weak-color: rgba(60, 64, 73, 0.4);
+
+  // leverage display
+  --lev-display-arrow-color: #fff;
+  --lev-display-border-color: rgba(255, 255, 255, .4);
+
+  --antd-primary: #1586FF;
+
+  // farm page
+  --bg-li-interval: rgba(0, 0, 0, .05);
+  --btn-highlight-1: rgba(255, 255, 255, .5);
+  --btn-highlight-2: rgba(255, 255, 255, 0);
+  --btn-highlight-3: rgba(255, 255, 255, .1);
+  --btn-highlight-4: rgba(245,246,246,.07);
+  --btn-highlight-5: rgba(255,255,255,.24);
+  --btn-highlight-border: #fff;
+  // chart
+  --recharts-tooltip-bg: rgba(60, 64, 73, .6);
+
+  // nav
+  --nav-bg: rgba(21, 134, 255, 0.25);
+  --nav-border-color: rgba(238, 238, 238, .15);
+  --nav-box-shadow: 0px 4px 12px rgba(255, 255, 255, 0.1);
+
+  // tab
+  --tab-bg: rgba(37, 40, 50, .6);
+  --tab-active-bg: #666;
+
+    // apr-block
+  --apr-block-border-color: rgba(226, 226, 226, 0.20);
+  --apr-block-color: #e2e2e2;
+
+    // table
+    --table-head-bg: rgba(226, 226, 226, 0.20);
+}

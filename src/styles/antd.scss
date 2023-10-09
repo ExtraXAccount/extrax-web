@@ -1,0 +1,27 @@
+
+html {
+  .ant-dropdown {
+    .ant-dropdown-menu {
+      .ant-dropdown-menu-item {
+        color: var(--text-color);
+        &:hover {
+          background-color: rgba(#aaa, .1);
+        }
+      }
+    }
+  }
+
+  &.dark {
+    .ant-switch {
+      &:not(.ant-switch-checked) {
+        background-color: rgba(#aaa, 0.5);
+      }
+    }
+
+    .ant-dropdown {
+      .ant-dropdown-menu {
+        background: rgba(60, 64, 73, 1);
+      }
+    }
+  }
+}
