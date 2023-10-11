@@ -1,9 +1,7 @@
 import { compact, trim } from 'lodash'
 
 class DSLParser {
-  constructor() {
-
-  }
+  constructor() {}
 
   public parse(text: string) {
     const formatted = this.format(text)

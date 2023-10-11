@@ -9,8 +9,8 @@ import { useAccount, useNetwork, usePublicClient, useWalletClient } from 'wagmi'
 export default function useWagmi() {
   const { address: account, connector: activeConnector, isConnected: isActive } = useAccount()
   const { chain: { id: chainId } = {} } = useNetwork()
-  const provider = usePublicClient()
-  const { data: signer } = useWalletClient()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
   // const [searchParams] = useSearchParams()
 
   return {
@@ -19,7 +19,7 @@ export default function useWagmi() {
     activeConnector,
     isActive,
     chainId,
-    provider,
-    signer,
+    publicClient,
+    walletClient,
   }
 }

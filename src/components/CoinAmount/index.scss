@@ -1,0 +1,23 @@
+.coin-amount{
+  display: flex;
+  align-items: center;
+
+  span{
+    margin: 0 6px 0 0;
+  }
+
+  .coin{
+    width: 16px;
+    height: 16px;
+    margin: 0 6px 0 0;
+  }
+
+  &-group{
+    display: flex;
+    align-items: center;
+
+    >p{
+      margin: 0 6px;
+    }
+  }
+}

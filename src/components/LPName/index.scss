@@ -1,0 +1,46 @@
+.lpname{
+  display: flex;
+  align-items: center;
+  >.coin{
+    &:first-child{
+      margin-right: -5px;
+      position: relative;
+      z-index: 1;
+    }
+    @media screen and (max-width: 720px) {
+      width: 14px;
+      height: 14px;
+    }
+  }
+  >p{
+    @media screen and (max-width: 720px) {
+      font-size: 14px;
+      margin-left: 6px;
+    }
+    font-size: 15px;
+    margin-left: 10px;
+    &.bold{
+      font-weight: bold;
+      line-height: 1.5;
+    }
+  }
+
+  &-new{
+    font-size: 20px;
+    font-style: normal;
+    transform: translate(0, -5px);
+  }
+
+  &-tag{
+    display: block;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 13px;
+    line-height: 1;
+    padding: 4px 5px;
+    border-radius: 2px;
+    margin-left: 4px;
+    color: #fff;
+    background-color: var(--antd-primary);
+  }
+}

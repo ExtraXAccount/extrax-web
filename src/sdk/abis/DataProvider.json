@@ -1,0 +1,568 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_addressRegistry",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [],
+    "name": "addressRegistry",
+    "outputs": [
+      {
+        "internalType": "contract IAddressRegistry",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "reserveIdArr",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "getLendingPositions",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "reserveId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "user",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "eTokenStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "eTokenUnStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidity",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ILendingPool.PositionStatus[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "reserveIdArr",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getLendingReserveStatus",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "reserveId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "underlyingTokenAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "eTokenAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "stakingAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLiquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalBorrows",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "exchangeRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowingRate",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ILendingPool.ReserveStatus[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "reserveIdArr",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address",
+        "name": "rewardToken",
+        "type": "address"
+      }
+    ],
+    "name": "getLendingRewardsStatus",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "totalStaked",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "endTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardRate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "lastUpdateTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "rewardPerTokenStored",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataProvider.RewardsStatus[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getLendinngPool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVaultPositionMananger",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "vaultId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "positsionId",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct DataProvider.PositionIdentifer[]",
+        "name": "idArr",
+        "type": "tuple[]"
+      }
+    ],
+    "name": "getVaultPositions",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "manager",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "isActive",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "enableRangeStop",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint64",
+            "name": "openedAt",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "current",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint256",
+            "name": "token0Principal",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "token1Principal",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidityPrincipal",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "token0Left",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "token1Left",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "token0InLiquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "token1InLiquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "liquidity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debt0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debt1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowingIndex0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "borrowingIndex1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minPriceOfRangeStop",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "maxPriceOfRangeStop",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct VaultTypes.VeloPositionValue[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "vaultIdArr",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "getVaults",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "gauge",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "pair",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token0",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token1",
+            "type": "address"
+          },
+          {
+            "internalType": "bool",
+            "name": "stable",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "paused",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "frozen",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "borrowingEnabled",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "liquidateWithTWAP",
+            "type": "bool"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxLeverage",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "premiumMaxLeverage",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "maxPriceDiff",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "liquidateDebtRatio",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "withdrawFeeRate",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "compoundFeeRate",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "liquidateFeeRate",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "rangeStopFeeRate",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint16",
+            "name": "protocolFeeRate",
+            "type": "uint16"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premiumRequirement",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protocolFee0Accumulated",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "protocolFee1Accumulated",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minInvestValue",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minSwapAmount0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "minSwapAmount1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalLpShares",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premiumUtilizationOfReserve0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtLimit0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtPositionId0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtTotalShares0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "premiumUtilizationOfReserve1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtLimit1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtPositionId1",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "debtTotalShares1",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct VaultTypes.VeloVaultState[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "reserveIdArr",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "address",
+        "name": "rewardToken",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "pendingRewardsOfLendingPool",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

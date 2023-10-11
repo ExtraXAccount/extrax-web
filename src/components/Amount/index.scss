@@ -1,0 +1,37 @@
+.token-amount{
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  >span{
+    margin: 0 .4em;
+  }
+  .token{
+    width: 1.2em;
+    height: 1.2em;
+  }
+}
+
+.token-amount-group{
+  color: var(--text-color-weak);
+  &-1{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  &-2{
+    background-color: var(--weakest-color);
+    width: max-content;
+    padding: .2em .4em;
+    border-radius: var(--box-radius);
+    .token-amount{
+      font-size: 12px;
+    }
+    .token-amount-group-plus{
+      display: none;
+    }
+  }
+
+  &-plus{
+    margin: 0 0.4em;
+  }
+}
