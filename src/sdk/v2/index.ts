@@ -39,7 +39,9 @@ export default function useV2Contract() {
   useEffect(() => {
     async function test() {
       const config = V2_CONFIG[chainId]
-
+      if (!config) {
+        return
+      }
       const vaults = Object.keys(config).map((key) => ({
         key,
         value: config[key],

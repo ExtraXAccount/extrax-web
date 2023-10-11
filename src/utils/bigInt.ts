@@ -5,7 +5,7 @@ export function bi2bn(bi: bigint) {
   return BigNumber(bi.toString())
 }
 
-export function bn2bi(bn: BigNumber) {
+export function bn2bi(bn: BigNumber | EthersBN) {
   return BigInt(bn.toString())
 }
 
