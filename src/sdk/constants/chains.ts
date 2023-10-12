@@ -1,8 +1,8 @@
 export enum SupportedChainId {
-  // MAINNET = 1,
+  MAINNET = 1,
   // ROPSTEN = 3,
   // RINKEBY = 4,
-  // GOERLI = 5,
+  GOERLI = 5,
   // KOVAN = 42,
 
   // ARBITRUM_ONE = 42161,
@@ -11,6 +11,7 @@ export enum SupportedChainId {
   OPTIMISM = 10,
   OPTIMISM_LOCAL_TEST = 31337,
   BASE = 8453,
+  // BASE_GOERLI = 84531,
   // OPTIMISM_GOERLI = 420,
 
   // POLYGON = 137,
@@ -21,11 +22,12 @@ export enum SupportedChainId {
 }
 
 export const chainIdToName = {
-  // [SupportedChainId.MAINNET]: 'mainnet',
-  // [SupportedChainId.GOERLI]: 'goerli',
+  [SupportedChainId.MAINNET]: 'mainnet',
+  [SupportedChainId.GOERLI]: 'goerli',
   [SupportedChainId.OPTIMISM]: 'optimism',
   [SupportedChainId.OPTIMISM_LOCAL_TEST]: 'devnet',
   [SupportedChainId.BASE]: 'base',
+  // [SupportedChainId.BASE_GOERLI]: 'base_goerli',
 }
 
 export enum NetworkType {

@@ -1,14 +1,14 @@
 import { SupportedChainId } from './chains'
 
 export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
-  // [SupportedChainId.MAINNET]: [
-  //   // "Safe" URLs
-  //   'https://api.mycryptoapi.com/eth',
-  //   'https://cloudflare-eth.com',
-  //   // "Fallback" URLs
-  //   'https://rpc.ankr.com/eth',
-  //   'https://eth-mainnet.public.blastapi.io',
-  // ],
+  [SupportedChainId.MAINNET]: [
+    // "Safe" URLs
+    'https://api.mycryptoapi.com/eth',
+    'https://cloudflare-eth.com',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth',
+    'https://eth-mainnet.public.blastapi.io',
+  ],
   // [SupportedChainId.ROPSTEN]: [
   //   // "Fallback" URLs
   //   'https://rpc.ankr.com/eth_ropsten',
@@ -17,12 +17,12 @@ export const FALLBACK_URLS: { [key in SupportedChainId]: string[] } = {
   //   // "Fallback" URLs
   //   'https://rinkeby-light.eth.linkpool.io/',
   // ],
-  // [SupportedChainId.GOERLI]: [
-  //   // "Safe" URLs
-  //   'https://rpc.goerli.mudit.blog/',
-  //   // "Fallback" URLs
-  //   'https://rpc.ankr.com/eth_goerli',
-  // ],
+  [SupportedChainId.GOERLI]: [
+    // "Safe" URLs
+    'https://rpc.goerli.mudit.blog/',
+    // "Fallback" URLs
+    'https://rpc.ankr.com/eth_goerli',
+  ],
   // [SupportedChainId.KOVAN]: [
   //   // "Safe" URLs
   //   'https://kovan.poa.network',
