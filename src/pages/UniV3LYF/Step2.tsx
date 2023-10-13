@@ -157,7 +157,7 @@ export default function Step2(props: IStep2Props) {
           <Select showSearch={false} style={{ height: 40 }} value={supplyIndex} onChange={setSupplyIndex}>
             {[token0, token1].map((item, index) => {
               return (
-                <Select.Option key={item.symbol} value={index}>
+                <Select.Option key={item.id} value={index}>
                   <i className={`coin coin-${item.symbol?.toLowerCase()}`} /> {nameChecker(item.symbol)}
                 </Select.Option>
               )
@@ -312,7 +312,7 @@ export default function Step2(props: IStep2Props) {
                   }}
                   key={coin}
                 >
-                  <i className={`coin coin-${coin.toLowerCase()}`} /> {nameChecker(coin)}
+                  <i className={`coin coin-${coin?.toLowerCase()}`} /> {nameChecker(coin)}
                   {!canLend && (
                     <p className="lppool-borrow-list-hint">
                       No sufficient {coin}can be borrowed to open leveraged position temporarily.

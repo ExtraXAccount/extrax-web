@@ -61,7 +61,7 @@ export default function useV2Contract() {
       console.log('useContractRead :>> ', res)
     }
 
-    test()
+    // test()
   }, [chainId, readContract])
 
   return {

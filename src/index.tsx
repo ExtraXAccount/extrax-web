@@ -17,11 +17,11 @@ notification.config({
 })
 
 // check mode
-const themeMode = localStorage.getItem('extra_theme_mode') || (isSystemThemeDark() ? '2' : '1')
-if (themeMode === '2') {
-  document.body.classList.add('dark')
-  document.documentElement.classList.add('dark')
-}
+// const themeMode = localStorage.getItem('extra_theme_mode') || (isSystemThemeDark() ? '2' : '1')
+// if (themeMode === '2') {
+//   document.body.classList.add('dark')
+//   document.documentElement.classList.add('dark')
+// }
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(

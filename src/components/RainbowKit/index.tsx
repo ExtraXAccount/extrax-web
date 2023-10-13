@@ -10,7 +10,7 @@ import { chains, publicClient } from './getChainsConfig'
 import { getWalletsConfig } from './getWalletsConfig'
 
 const appName = 'ExtraX'
-const projectId = 'ae9bc6c16bf3d9121367f023f740150a' // Project ID of WalletConnect Cloud
+const projectId = 'eced84325207bcd6637a44683e3755e4' // Project ID of WalletConnect Cloud
 
 export const connectors = getWalletsConfig({
   appName,

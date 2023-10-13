@@ -36,19 +36,21 @@ const borrowInterest = 0.05
 const lv = 3
 const priceRangeHeight = 227
 
-export default function Farm() {
-  const navigate = useNavigate()
-  const { poolId } = useParams()
-  const v3TopTvlPools = usePools()
-  const { baseInfo: poolInfo, daysData: poolDayDatas, ticks: poolTicks } = usePoolInfo(poolId)
-  // const poolDayDatas = usePoolDayData(poolId)
-  // const poolTicks = usePoolTicks(poolId)
+export default function UniV3LYF() {
   const { chainId } = useWagmiCtx()
-  // const vaultManager = useFranciumVaultManager()
+  const navigate = useNavigate()
+  // const { poolId } = useParams()
+  const v3TopTvlPools = usePools()
+  const poolId = useMemo(() => {
+    return v3TopTvlPools?.[0]?.id
+  }, [v3TopTvlPools])
 
-  // const [reverseBaseToken, setReverseBaseToken] = useState(false)
-  // const [pricePercentLower, setPricePercentLower] = useState(1)
-  // const [pricePercentUpper, setPricePercentUpper] = useState(1)
+  const { baseInfo: poolInfo, daysData: poolDayDatas, ticks: poolTicks } = usePoolInfo(poolId)
+
+  useEffect(() => {
+    console.log('usePoolInfo :>> ', { poolInfo, poolDayDatas, poolTicks })
+  }, [poolDayDatas, poolInfo, poolTicks])
+
   const [priceMin, setPriceMin] = useState(0)
   const [priceMax, setPriceMax] = useState(0)
   const [showNextSteps, setShowNextSteps] = useState(false)
