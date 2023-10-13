@@ -19,11 +19,11 @@ const navList = [
     icon: 'lending',
     link: '/lend',
   },
-  // {
-  //   name: 'Stake',
-  //   icon: 'lock',
-  //   link: '/staking',
-  // },
+  {
+    name: 'UniV3Lyf',
+    // icon: 'lock',
+    link: '/univ3lyf',
+  },
   // {
   //   name: 'Swap',
   //   icon: 'exchange',
@@ -43,9 +43,6 @@ const navList = [
 
 export default function AppLayout() {
   const location = useLocation()
-
-  const { poolKey } = useParams()
-
   const [searchParams] = useSearchParams()
   const { isMobile } = useDeviceDetect()
 
