@@ -24,21 +24,6 @@ const navList = [
     // icon: 'lock',
     link: '/univ3lyf',
   },
-  // {
-  //   name: 'Swap',
-  //   icon: 'exchange',
-  //   link: '/swap',
-  // },
-  // {
-  //   name: 'Calculator',
-  //   icon: 'calculator',
-  //   link: '/calculator',
-  // },
-  // {
-  //   name: 'Portal',
-  //   icon: 'internet',
-  //   link: '/portal',
-  // },
 ]
 
 export default function AppLayout() {
@@ -83,11 +68,7 @@ export default function AppLayout() {
         </div>
       </div>
 
-      <div
-        className={classNames('page-content', {
-          'page-content-home': ['/home'].includes(location.pathname),
-        })}
-      >
+      <div className={classNames('page-content')}>
         <div className="page-content-inner">
           <Outlet />
         </div>
