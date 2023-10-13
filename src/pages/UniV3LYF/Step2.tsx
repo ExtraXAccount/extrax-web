@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import CoinAmount from '@/components/CoinAmount'
 import useFetchBalance from '@/hooks/useFetchBalance'
+// import { SupportedChainId } from '@/sdk/constants/chains'
 import { Token } from '@/types/uniswap.interface'
 import { nameChecker } from '@/utils'
 import { toPrecision } from '@/utils/math'
