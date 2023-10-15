@@ -1,0 +1,37 @@
+.intent-box-item{
+  width: 160px;
+  height: 160px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: rgba($color: #fff, $alpha: .5);
+
+  &-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &-content{
+    font-size: 14px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+
+    &-platform{
+      color: #999;
+    }
+    &-pool{
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    &-pricerange{
+      &-title{
+        color: #999;
+      }
+    }
+  }
+}
