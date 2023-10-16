@@ -41,5 +41,5 @@ export default function Contract() {
     getContractData()
   }, [chainId, readContract])
 
-  return <div className="contract">{contractData}</div>
+  return <div className="contract-test">{contractData}</div>
 }

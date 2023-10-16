@@ -1,3 +1,5 @@
+import './index.scss'
+
 import Contract from './Contract'
 
 export default function Farm() {
