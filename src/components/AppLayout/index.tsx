@@ -8,6 +8,8 @@ import { Link, NavLink, Outlet, useLocation, useParams, useSearchParams } from '
 import ScrollToTop from '@/components/ScrollToTop'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 
+import AccountInfo from './AccountInfo'
+
 const navList = [
   {
     name: 'Farm',
@@ -27,17 +29,13 @@ const navList = [
 ]
 
 export default function AppLayout() {
-  const location = useLocation()
   const [searchParams] = useSearchParams()
   const { isMobile } = useDeviceDetect()
-
-  const isHome = ['/home'].includes(location.pathname)
 
   return (
     <div
       className={classNames('App', {
         mobile: isMobile,
-        home: isHome,
       })}
     >
       <ScrollToTop />
@@ -68,6 +66,7 @@ export default function AppLayout() {
         </div>
       </div>
 
+      <AccountInfo />
       <div className={classNames('page-content')}>
         <div className="page-content-inner">
           <Outlet />

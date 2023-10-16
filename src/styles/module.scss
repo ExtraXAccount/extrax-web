@@ -72,6 +72,7 @@ body.dark{
   @media screen and (max-width: 720px) {
     padding: calc(60px + 1em) 1em 90px;
   }
+  padding-top: 0px !important;
   &-inner{
     position: relative;
     width: 100%;
