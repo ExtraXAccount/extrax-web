@@ -53,13 +53,14 @@ export default function IntentPanel() {
     <div className="intent-panel">
       {list.map((item, index) => {
         return (
-          <div className="intent-panel-row" key={index}>
-            {item.intents.map((i, idx) => {
-              return <IntentBox intent={i} key={i} param={(item.params || [])[idx]} />
-            })}
+          <div className="intent-panel-line" key={index}>
+            <div className="intent-panel-row">
+              {item.intents.map((i, idx) => {
+                return <IntentBox intent={i} key={i} param={(item.params || [])[idx]} />
+              })}
+            </div>
           </div>
         )
-        return
       })}
     </div>
   )

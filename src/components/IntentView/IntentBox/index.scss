@@ -1,10 +1,9 @@
 .intent-box-item{
   width: 160px;
   height: 160px;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: rgba($color: #fff, $alpha: .5);
+  transform-origin: center center;
+  transform-style: preserve-3d;
+  // transform: rotateX(-5deg) rotateY(-5deg);
 
   &-title{
     display: flex;
@@ -33,5 +32,22 @@
         color: #999;
       }
     }
+  }
+
+  >.face{
+    display: none;
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    padding: 12px;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    &.front  { transform: translateZ(80px); display: block;}
+    &.top    { transform: rotateX( 90deg)  translateZ(80px); }
+    &.right  { transform: rotateY( 90deg)  translateZ(80px); }
+    &.left   { transform: rotateY(-90deg)  translateZ(80px); }
+    &.bottom { transform: rotateX(-90deg)  translateZ(80px); }
+    &.back   { transform: rotateY(-180deg) translateZ(80px); }
   }
 }

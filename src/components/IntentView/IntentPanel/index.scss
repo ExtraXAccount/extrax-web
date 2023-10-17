@@ -1,9 +1,17 @@
 .intent-panel{
+  &-line{
+    perspective: 2500px;
+  }
   &-row{
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
     gap: 10px;
+    position: relative;
+    transition: 400ms;
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    display: flex;
+    // justify-content: center;
+    align-items: center;
     &::after{
 
     }
