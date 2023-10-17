@@ -47,6 +47,9 @@ export default function AccountInfo() {
           <div className="extrax-account-info-deposited">
             <b>Deposited: </b>
             <em className="text-highlight">${addComma(depositedVal)}</em>
+            <button className="btn-base btn-base-mini">
+              <b>+</b>
+            </button>
           </div>
           <div className="extrax-account-info-credit">
             <b>Leverage Credit: </b>
