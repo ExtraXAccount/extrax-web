@@ -1,0 +1,62 @@
+.page-leveraged-apps {
+  position: relative;
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  // padding-left: 100px;
+
+  .side-bar {
+    // position: fixed;
+    // top: 100px;
+    // left: 20px;
+    width: 100px;
+    background: var(--box-bg);
+    border-radius: var(--box-radius);
+    box-shadow: var(--box-shadow);
+    padding: 10px;
+    height: fit-content;
+
+    h4 {
+      margin-bottom: 20px;
+    }
+    .side-bar-app-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      &-item {
+        // width: 60px;
+        min-height: 40px;
+        display: block;
+        line-height: 1.4;
+        padding: 10px;
+        font-size: 12px;
+        border-radius: 6px;
+        text-align: center;
+        cursor: pointer;
+        background: #D1AEBA;
+        &:hover,
+        &.active {
+          color: var(--button-color);
+          background: var(--antd-primary);
+        }
+      }
+    }
+  }
+
+  .dapp-wrapper {
+    width: 100%;
+    min-height: 60vh;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    .dapp-wrapper-title {
+      margin-bottom: 20px;
+    }
+    .dapp-wrapper-inner {
+      padding: 20px;
+      border-radius: 8px;
+      background: var(--body-bg);
+      min-height: calc(100% - 50px);
+    }
+  }
+}

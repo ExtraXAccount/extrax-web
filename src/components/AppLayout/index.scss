@@ -4,21 +4,12 @@
   left: 0;
   width: 100%;
   z-index: 200;
-}
-
-.nav{
-  // position: fixed;
-  // top: 0;
-  // left: 0;
   display: flex;
-  // flex-wrap: wrap;
   align-items: center;
-  // justify-content: center;
   justify-content: space-between;
   width: 100%;
   height: var(--nav-height);
   line-height: var(--nav-height);
-  // z-index: 200;
   padding: 0 1em;
   border-bottom: 1px solid var(--nav-border-color);
 
@@ -168,7 +159,7 @@
   }
 }
 
-.side-nav {
+.nav-menu {
   // background: rgba(#1586FF, .15);
   background: var(--nav-bg);
   // box-shadow: var(--box-shadow);

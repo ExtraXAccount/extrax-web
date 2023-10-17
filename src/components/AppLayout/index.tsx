@@ -12,9 +12,9 @@ import AccountInfo from './AccountInfo'
 
 const navList = [
   {
-    name: 'Farm',
+    name: 'Leveraged Apps',
     icon: 'shovel',
-    link: '/farm',
+    link: '/leveragedapps/uniswapv3',
   },
   {
     name: 'Lend',
@@ -22,9 +22,9 @@ const navList = [
     link: '/lend',
   },
   {
-    name: 'UniV3Lyf',
+    name: 'My Positions',
     // icon: 'lock',
-    link: '/univ3lyf',
+    link: '/positions',
   },
 ]
 
@@ -39,30 +39,29 @@ export default function AppLayout() {
       })}
     >
       <ScrollToTop />
+
       <div className="top-bar">
-        <div className="nav">
-          <div className="nav-logo-top">
-            <i className="nav-logo-tag">Extra-X</i>
-          </div>
-          <div className="side-nav">
-            {navList.map((i) => {
-              return (
-                <NavLink to={i.link + '?' + searchParams.toString()} className="side-nav-item" key={i.name}>
-                  <p>{i.name}</p>
-                </NavLink>
-              )
-            })}
-          </div>
-          <div className="nav-right flex ai-ct">
-            <ConnectButton
-              accountStatus={{
-                smallScreen: 'avatar',
-                largeScreen: 'full',
-              }}
-              showBalance={false}
-            />
-            {/* <DarkMode /> */}
-          </div>
+        <div className="nav-logo-top">
+          <i className="nav-logo-tag">Extra-X</i>
+        </div>
+        <div className="nav-menu">
+          {navList.map((i) => {
+            return (
+              <NavLink to={i.link + '?' + searchParams.toString()} className="nav-menu-item" key={i.name}>
+                <p>{i.name}</p>
+              </NavLink>
+            )
+          })}
+        </div>
+        <div className="nav-right flex ai-ct">
+          <ConnectButton
+            accountStatus={{
+              smallScreen: 'avatar',
+              largeScreen: 'full',
+            }}
+            showBalance={false}
+          />
+          {/* <DarkMode /> */}
         </div>
       </div>
 

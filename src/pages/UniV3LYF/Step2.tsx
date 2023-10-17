@@ -8,7 +8,7 @@ import CoinAmount from '@/components/CoinAmount'
 import useFetchBalance from '@/hooks/useFetchBalance'
 // import { SupportedChainId } from '@/sdk/constants/chains'
 import { Token } from '@/types/uniswap.interface'
-import { nameChecker } from '@/utils'
+// import { nameChecker } from '@/utils'
 import { toPrecision } from '@/utils/math'
 
 interface IStep2Props {
@@ -86,11 +86,6 @@ export default function Step2(props: IStep2Props) {
     newVal[supplyIndex] = percent !== undefined ? '' + balances[supplyIndex] * percent : count
     setInputValue(newVal)
   }
-  // const summary = useMemo(() => {
-  //   return {
-  //     token1BorrowCount:
-  //   }
-  // }, [])
 
   useEffect(() => {
     setToken0BorrowRatio(1 - assetIndex)
@@ -159,61 +154,12 @@ export default function Step2(props: IStep2Props) {
             {[token0, token1].map((item, index) => {
               return (
                 <Select.Option key={item.id} value={index}>
-                  <i className={`coin coin-${item.symbol?.toLowerCase()}`} /> {nameChecker(item.symbol)}
+                  <i className={`coin coin-${item.symbol?.toLowerCase()}`} /> {item.symbol}
                 </Select.Option>
               )
             })}
           </Select>
         </div>
-        {/* <div className="lppool-coin-block-wrap">
-          <section className="lppool-coin-block lppool-coin-block-0">
-            <p className="subtitle subtitle-right">
-              Available:
-              <span onClick={() => setAmount(1)} className="subtitle-amount">
-                {balance > 10 ** 6 ? floor(balance, 2) : balance}
-              </span>
-            </p>
-            <Input
-              prefix={
-                <div className="lppool-input-max-button" onClick={() => setAmount(1)}>
-                  max
-                </div>
-              }
-              placeholder="0.00"
-              size="large"
-              suffix={<div className="lppool-input-token-name">{nameChecker(token0)}</div>}
-              value={inputValue}
-              onChange={(e) => {
-                const r = e.target.value.trim().replace(/[^\d^.]+/g, '')
-                setInputValue(r)
-              }}
-            />
-          </section>
-
-          <section className="lppool-coin-block lppool-coin-block-1">
-            <p className="subtitle subtitle-right">
-              Available:
-              <span onClick={() => setAmount1(1)} className="subtitle-amount">
-                {balance1 > 10 ** 6 ? floor(balance1, 2) : balance1}
-              </span>
-            </p>
-            <Input
-              prefix={
-                <div className="lppool-input-max-button" onClick={() => setAmount1(1)}>
-                  max
-                </div>
-              }
-              placeholder="0.00"
-              size="large"
-              suffix={<div className="lppool-input-token-name">{nameChecker(token1)}</div>}
-              value={inputValue1}
-              onChange={(e) => {
-                const r = e.target.value.trim().replace(/[^\d^.]+/g, '')
-                setInputValue1(r)
-              }}
-            />
-          </section>
-        </div> */}
       </div>
 
       <div className="farm-page-lv-setting">
@@ -257,26 +203,16 @@ export default function Step2(props: IStep2Props) {
           />
         </div>
       )}
-      {/* {!canLend && (
-        <p className="lppool-notice">
-          No sufficient {borrowList[assetIndex]} can be borrowed to open leveraged position temporarily.
-        </p>
-      )} */}
 
       <div className="subtitle subtitle-borrow flex jc-sb ai-ct">
         <p>Asset to Borrow</p>
         {borrowList.length > 1 && canDualBorrow && (
           <div className="flex ai-ct jc-sb">
-            <span>Borrow Two Assets:</span>
+            <span>Dual Borrow:</span>
             <Switch
-              // checkedChildren='Enable'
-              // unCheckedChildren='Disable'
               checked={borrowAdvanced}
               size="small"
               onChange={(checked) => {
-                // if (!checked) {
-                //   setLeverage(1);
-                // }
                 setBorrowAdvanced(checked)
               }}
             ></Switch>
@@ -313,7 +249,7 @@ export default function Step2(props: IStep2Props) {
                   }}
                   key={coin}
                 >
-                  <i className={`coin coin-${coin?.toLowerCase()}`} /> {nameChecker(coin)}
+                  <i className={`coin coin-${coin?.toLowerCase()}`} /> {coin}
                   {!canLend && (
                     <p className="lppool-borrow-list-hint">
                       No sufficient {coin}can be borrowed to open leveraged position temporarily.
@@ -367,26 +303,6 @@ export default function Step2(props: IStep2Props) {
           />
         </section>
       )}
-
-      {/* {realLeverage > 2 && (
-        <section className="lppool-summary-hint lppool-summary-hint-warning">
-          <p>
-            Please keep in mind that when you leverage above 2x, you will have a
-            <Tooltip title="short in a limited range">
-              <span
-                className="text-with-help"
-                style={{
-                  display: 'inline-block',
-                  margin: '0 4px',
-                }}
-              >
-                slight short
-              </span>
-            </Tooltip>
-            on the borrowed asset. Check more details with simulator.
-          </p>
-        </section>
-      )} */}
     </div>
   )
 }
