@@ -1,5 +1,5 @@
 
-.fr-dialog {
+.ex-dialog {
   &.backtest-modal {
     color: var(--text-color);
     h2 {
@@ -7,7 +7,11 @@
     }
     .back-test-modal-inner {
       overflow: hidden;
-      padding-top: 20px;
+      // padding-top: 20px;
+      .ant-form-item {
+        // width: 90%;
+        margin-bottom: 10px;
+      }
       .back-days-setting-slider {
         width: 90%;
         margin-bottom: 0;

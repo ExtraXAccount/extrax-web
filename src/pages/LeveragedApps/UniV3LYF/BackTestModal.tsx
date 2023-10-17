@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import Dialog from '@/components/Dialog'
 
-import BackTestChart from '../LeveragedApps/UniV3LYF/Calculator/BackTestChart'
+import BackTestChart from './Calculator/BackTestChart'
 
 export default function BackTestModal(props: any) {
   const params = props.params

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import usePoolDayData from '@/hooks/usePoolDayData'
 import usePoolTicks from '@/hooks/usePoolTicks'
-import { getHistoricalAprFromPool } from '@/pages/Calculator/fn'
+import { getHistoricalAprFromPool } from '@/pages/LeveragedApps/UniV3LYF/Calculator/fn'
 
 import usePoolBaseInfo from './usePoolBaseInfo'
 

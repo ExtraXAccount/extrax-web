@@ -10,12 +10,12 @@ import AppLayout from './components/AppLayout'
 import Intent from './pages/Intent'
 import Lend from './pages/Lend'
 import LeveragedApps from './pages/LeveragedApps'
+import Spark from './pages/LeveragedApps/Spark'
+import UniV3LYF from './pages/LeveragedApps/UniV3LYF'
+import Velodrome from './pages/LeveragedApps/Velodrome'
 import Positions from './pages/Positions'
-import UniV3LYF from './pages/UniV3LYF'
 
 function App() {
-  // const theme = useTheme()
-
   return (
     <ConfigProvider>
       <RainbowContextApp>
@@ -24,11 +24,9 @@ function App() {
             <Route path="leveragedapps" element={<LeveragedApps />}>
               <Route path="uniswapv3/:poolId" element={<UniV3LYF />}></Route>
               <Route path="uniswapv3" element={<UniV3LYF />}></Route>
-
-              <Route path="velodromev2/:poolId" element={<UniV3LYF />}></Route>
-              <Route path="velodromev2" element={<UniV3LYF />}></Route>
+              <Route path="spark" element={<Spark />}></Route>
+              <Route path="velodromev2" element={<Velodrome />}></Route>
             </Route>
-            {/* <Route path="univ3lyf" element={<UniV3LYF />}></Route> */}
             <Route path="lend" element={<Lend />}></Route>
             <Route path="positions" element={<Positions />}></Route>
             <Route path="intent" element={<Intent />}></Route>

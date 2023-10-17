@@ -15,7 +15,7 @@ import { TOKEN_LIST } from '@/constants/token'
 // import { useFranciumVaultManager } from '@/hooks/useFranciumSDK'
 import usePoolInfo from '@/hooks/usePoolInfo'
 import usePools from '@/hooks/usePools'
-import PriceChart from '@/pages/Calculator/PriceChart'
+import PriceChart from '@/pages/LeveragedApps/UniV3LYF/Calculator/PriceChart'
 import { VAULT_CONFIG } from '@/sdk/constants/vaultConfig'
 import { Token } from '@/types/uniswap.interface'
 import { getFeeTierPercentage } from '@/uniswap/math'
@@ -23,8 +23,8 @@ import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
 import { toBNString } from '@/utils/math/bn'
 import { token0price2latestUsabletick } from '@/utils/math/priceTickConvert'
 
-import { getHistoricalAprFromPool } from '../Calculator/fn'
 import BackTestModal from './BackTestModal'
+import { getHistoricalAprFromPool } from './Calculator/fn'
 import Step2 from './Step2'
 import Summary from './Summary'
 import useBaseTokenSwitch from './useBaseTokenSwitch'
@@ -404,7 +404,7 @@ export default function UniV3LYF() {
   const handleChangePool = useCallback(
     (poolId) => {
       // setReverseBaseToken(false)
-      navigate(`/univ3lyf/${poolId}`)
+      navigate(`/leveragedapps/uniswapv3/${poolId}`)
     },
     [navigate]
   )
