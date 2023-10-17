@@ -21,6 +21,7 @@ function App() {
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="farm" element={<Farm />}></Route>
+            <Route path="univ3lyf/:poolId" element={<UniV3LYF />}></Route>
             <Route path="univ3lyf" element={<UniV3LYF />}></Route>
             <Route path="lend" element={<Lend />}></Route>
             <Route path="intent" element={<Intent />}></Route>

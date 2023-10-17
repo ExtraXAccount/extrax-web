@@ -39,11 +39,11 @@ const priceRangeHeight = 227
 export default function UniV3LYF() {
   const { chainId } = useWagmiCtx()
   const navigate = useNavigate()
-  // const { poolId } = useParams()
+  const { poolId = '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8' } = useParams()
   const v3TopTvlPools = usePools()
-  const poolId = useMemo(() => {
-    return v3TopTvlPools?.[0]?.id
-  }, [v3TopTvlPools])
+  // const poolId = useMemo(() => {
+  //   return v3TopTvlPools?.[0]?.id
+  // }, [v3TopTvlPools])
 
   const { baseInfo: poolInfo, daysData: poolDayDatas, ticks: poolTicks } = usePoolInfo(poolId)
 
@@ -401,10 +401,13 @@ export default function UniV3LYF() {
   //     upper:
   //   }
   // })
-  const handleChangePool = useCallback((poolId) => {
-    // setReverseBaseToken(false)
-    navigate(`/app/farm/${poolId}`)
-  }, [])
+  const handleChangePool = useCallback(
+    (poolId) => {
+      // setReverseBaseToken(false)
+      navigate(`/univ3lyf/${poolId}`)
+    },
+    [navigate]
+  )
 
   const inited = useMemo(() => {
     return !!relativePrice

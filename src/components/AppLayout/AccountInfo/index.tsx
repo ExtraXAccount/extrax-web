@@ -1,9 +1,6 @@
 import './index.scss'
 
-import { ConnectButton } from '@rainbow-me/rainbowkit'
-import classNames from 'classnames'
 import { useMemo } from 'react'
-import { Link, NavLink, Outlet, useLocation, useParams, useSearchParams } from 'react-router-dom'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useDebt from '@/hooks/useDebt'
