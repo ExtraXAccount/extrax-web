@@ -1,13 +1,44 @@
 .intent-dsl{
   padding-left: 10px;
-  >textarea{
-    border: 1px solid #ccc;
+  &-textarea{
+    position: relative;
+    border: 2px solid #167abc;
+    background-color: #4eacea;
     border-radius: 8px;
-    background-color: rgba(#fff, .5);
+    width: 524px;
+    height: 224px;
+
+    &-bg{
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      width: calc(100% - 8px);
+      height: calc(100% - 8px);
+      background-color: rgba(#fff, .3)
+    }
+
+    &-info{
+      position: absolute;
+      border-radius: 8px 0;
+      right: 0;
+      bottom: 0;
+      padding: 12px;
+      background-color: rgba(#fff, .3)
+    }
+  }
+  textarea{
+    position: relative;
+    z-index: 1;
+    width: 500px;
+    background-color: transparent;
+    border: 0;
     outline: 0;
     resize: none;
     padding: 12px;
-    height: 304px;
+    height: 200px;
     line-height: 1.5;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
   }
 }

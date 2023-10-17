@@ -1,6 +1,7 @@
 import './index.scss'
 
 import { Select } from 'antd'
+import classNames from 'classnames'
 import { map, toArray } from 'lodash'
 
 import { INTENT_MAP, INTENTS, INTENTS_INPUT } from '@/sdk/dsl/intentList'
@@ -24,13 +25,15 @@ export default function IntentBox(props: {
   const { intent, param } = props
   return (
     <div className="intent-box-item">
-      <div className="face front">
+      <div className={classNames('face front', intent)}>
+        <div className="face-bg"></div>
         <div className="intent-box-item-title">
-          <Select value={intent} style={{ width: 140 }}>
+          {INTENT_MAP[intent].method}
+          {/* <Select value={intent} style={{ width: 150 }}>
             {toArray(INTENTS).map((value) => {
               return <Option key={value}>{INTENT_MAP[value].method}</Option>
             })}
-          </Select>
+          </Select> */}
         </div>
         <div className="intent-box-item-content">
           {param?.type === INTENTS_INPUT.INTENTS_INPUT_TOKENS && (

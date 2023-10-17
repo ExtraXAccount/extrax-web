@@ -1,14 +1,27 @@
 import './index.scss'
 
+import { useAppDispatch, useAppSelector } from '@/state'
+import { setDSLText } from '@/state/dsl/reducer'
+
 export default function IntentDSL() {
-  const value = `@Deposit 1000 $USDC
-@Borrow 500 $USDC
-@Borrow 0.9 $WETH
-@Farm POOL UniswapV3 WETH/USDC
-@Rebalance`
+  const value = useAppSelector((state) => state.dsl.text)
+  const dispatch = useAppDispatch()
   return (
     <div className="intent-dsl">
-      <textarea name="" id="" cols={30} rows={10} value={value}></textarea>
+      <div className="intent-dsl-textarea">
+        <div className="intent-dsl-textarea-bg"></div>
+        <div className="intent-dsl-textarea-info">Input your intent here💡</div>
+        <textarea
+          name=""
+          id=""
+          cols={30}
+          rows={10}
+          value={value}
+          onChange={(e) => {
+            dispatch(setDSLText(e.target.value))
+          }}
+        ></textarea>
+      </div>
     </div>
   )
 }

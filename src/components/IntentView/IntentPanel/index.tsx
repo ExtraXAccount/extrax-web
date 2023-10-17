@@ -1,6 +1,8 @@
 import './index.scss'
 
+import { dslParser } from '@/sdk'
 import { INTENTS, INTENTS_INPUT } from '@/sdk/dsl/intentList'
+import { useAppSelector } from '@/state'
 
 import IntentBox from '../IntentBox'
 
@@ -43,22 +45,25 @@ const list = [
     ],
   },
   {
-    intents: [INTENTS.INTENT_AUTOBALANCE],
+    intents: [INTENTS.INTENT_AUTOCOMPOUND],
     params: [],
   },
 ]
 
 export default function IntentPanel() {
+  const dslText = useAppSelector((state) => state.dsl.text)
+  const config = dslParser.parse(dslText)
   return (
     <div className="intent-panel">
-      {list.map((item, index) => {
+      {config.map((item, index) => {
         return (
           <div className="intent-panel-line" key={index}>
             <div className="intent-panel-row">
               {item.intents.map((i, idx) => {
-                return <IntentBox intent={i} key={i} param={(item.params || [])[idx]} />
+                return <IntentBox intent={i} key={idx} param={(item.params || [])[idx]} />
               })}
             </div>
+            {index < config.length - 1 && <div className="intent-panel-row-next"></div>}
           </div>
         )
       })}

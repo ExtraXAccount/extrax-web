@@ -3,7 +3,7 @@ export enum INTENTS {
   INTENT_BORROW = 'INTENT_BORROW',
   INTENT_SWAP = 'INTENT_SWAP',
   INTENT_FARM = 'INTENT_FARM',
-  INTENT_AUTOBALANCE = 'INTENT_AUTOBALANCE',
+  INTENT_AUTOCOMPOUND = 'INTENT_AUTOCOMPOUND',
 }
 
 export enum INTENTS_INPUT {
@@ -29,8 +29,8 @@ export const INTENT_MAP = {
     method: 'Farm',
     params: [INTENTS_INPUT.INTENTS_INPUT_TOKENS, INTENTS_INPUT.INTENTS_INPUT_PRICE_RANGE],
   },
-  [INTENTS.INTENT_AUTOBALANCE]: {
-    method: 'Auto balance',
+  [INTENTS.INTENT_AUTOCOMPOUND]: {
+    method: 'AutoCompound',
     params: [],
   },
 }
