@@ -3,13 +3,15 @@ import './index.scss'
 import { useMemo } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
+import useCredit from '@/hooks/useCredit'
 import useDebt from '@/hooks/useDebt'
 import useDeposited from '@/hooks/useDeposited'
 import { addComma, toPrecision } from '@/utils/math'
 
 export default function AccountInfo() {
-  const { depositedVal, depositedAssets, maxCredit } = useDeposited()
+  const { depositedVal, depositedAssets } = useDeposited()
   const { debtVal, debtAssets } = useDebt()
+  const { maxCredit, availableCredit } = useCredit()
 
   const { account } = useWagmiCtx()
 

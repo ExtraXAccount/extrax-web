@@ -5,6 +5,7 @@ import cx from 'classnames'
 import { useEffect, useMemo, useState } from 'react'
 
 import CoinAmount from '@/components/CoinAmount'
+import useCredit from '@/hooks/useCredit'
 import useDeposited from '@/hooks/useDeposited'
 import useFetchBalance from '@/hooks/useFetchBalance'
 // import { SupportedChainId } from '@/sdk/constants/chains'
@@ -55,7 +56,8 @@ export default function Step2(props: IStep2Props) {
   const realUseLeverage = canLend ? useLeverage : false
   const realLeverage = realUseLeverage ? leverage : 1
 
-  const { depositedVal, depositedAssets, maxCredit } = useDeposited()
+  const { depositedVal, depositedAssets } = useDeposited()
+  const { maxCredit, availableCredit } = useCredit()
   const [supply, changeSupply] = useState(0)
   const [selectedTemplate, setSelectedTemplate] = useState(-1)
   const [autoRebalance, setAutoRebalance] = useState(false)
@@ -65,7 +67,7 @@ export default function Step2(props: IStep2Props) {
     const res = {
       0: '0',
       [depositedVal]: depositedVal,
-      [maxCredit]: maxCredit,
+      [availableCredit]: availableCredit,
     }
     // const count = maxLeverage * 2 - 1
     // for (let index = 0; index < count; index++) {
@@ -73,7 +75,7 @@ export default function Step2(props: IStep2Props) {
     //   res[key] = `${key}x`
     // }
     return res
-  }, [depositedVal, maxCredit])
+  }, [availableCredit, depositedVal])
 
   useEffect(() => {
     onChangeDepositParams({
@@ -155,7 +157,7 @@ export default function Step2(props: IStep2Props) {
             value={supply}
             onChange={changeSupply}
             min={0}
-            max={maxCredit}
+            max={availableCredit}
           />
         </div>
       </div>

@@ -25,6 +25,6 @@ export default function useDeposited() {
   return {
     depositedVal,
     depositedAssets,
-    maxCredit: depositedVal * 5,
+    // maxCredit: depositedVal * 5,
   }
 }
