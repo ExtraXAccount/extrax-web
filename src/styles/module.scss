@@ -63,16 +63,17 @@ body.dark{
 .page-content{
   position: relative;
   width: 100%;
-  min-height: calc(100vh - var(--nav-height));
-  padding: 100px 100px 40px;
+  // min-height: calc(100vh - var(--nav-height));
+  padding: 100px 40px 0;
+  padding: 10px 40px 0;
   // padding-top: var(--nav-height);
-  @media screen and (max-width: 1000px) {
-    padding: 100px 70px 0;
-  }
-  @media screen and (max-width: 720px) {
-    padding: calc(60px + 1em) 1em 90px;
-  }
-  padding-top: 0px !important;
+  // @media screen and (max-width: 1000px) {
+  //   padding: 100px 70px 0;
+  // }
+  // @media screen and (max-width: 720px) {
+  //   padding: calc(60px + 1em) 1em 90px;
+  // }
+  // padding-top: 10px !important;
   &-inner{
     position: relative;
     width: 100%;

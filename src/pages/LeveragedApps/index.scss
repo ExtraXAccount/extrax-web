@@ -1,13 +1,14 @@
 .page-leveraged-apps {
   position: relative;
   display: flex;
+  justify-content: center;
   gap: 20px;
   width: 100%;
   // padding-left: 100px;
 
   .side-bar {
-    // position: fixed;
-    // top: 100px;
+    // position: sticky;
+    // top: 160px;
     // left: 20px;
     width: 100px;
     background: var(--box-bg);
@@ -47,8 +48,11 @@
     width: 100%;
     min-height: 60vh;
     background: #fff;
-    padding: 30px 40px;
+    padding: 20px;
     border-radius: 12px;
+    max-width: 1200px;
+    min-width: 800px;
+    // margin: auto;
     .dapp-wrapper-title {
       margin-bottom: 20px;
     }
@@ -56,7 +60,9 @@
       padding: 20px;
       border-radius: 12px;
       background: var(--body-bg);
-      min-height: calc(100% - 50px);
+      // min-height: calc(100% - 50px);
+      height: calc(100vh - 250px);
+      overflow-y: auto;
     }
   }
 }

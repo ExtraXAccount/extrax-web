@@ -18,12 +18,11 @@ export default function LeveragedApps() {
       title: 'Spark Protocol - Leveraged Lending',
       link: '/leveragedapps/spark',
     },
-    {
-      name: 'Velodrome V2',
-      // icon: 'shovel',
-      title: 'Velodrome V2 - Leveraged LP',
-      link: '/leveragedapps/velodromev2',
-    },
+    // {
+    //   name: 'Velodrome V2',
+    //   title: 'Velodrome V2 - Leveraged LP',
+    //   link: '/leveragedapps/velodromev2',
+    // },
   ])
 
   const dappTitle = useMemo(() => {

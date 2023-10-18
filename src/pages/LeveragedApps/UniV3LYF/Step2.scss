@@ -228,7 +228,10 @@ $bg4: rgba(113,133,175,0.05);
 .market-template {
   margin-bottom: 20px;
   .market-template-selects {
-    // gap: 20px;
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+
     .market-template-selects-option {
       padding: 6px 10px;
       background: rgba(21, 134, 255, 0.15);
