@@ -1,10 +1,11 @@
 import './Step2.scss'
 
-import { Dropdown, Input, Select, Slider, Switch, Tooltip } from 'antd/es'
+import { Dropdown, Form, Input, Select, Slider, Switch, Tooltip } from 'antd/es'
 import cx from 'classnames'
 import { useEffect, useMemo, useState } from 'react'
 
 import CoinAmount from '@/components/CoinAmount'
+import useDeposited from '@/hooks/useDeposited'
 import useFetchBalance from '@/hooks/useFetchBalance'
 // import { SupportedChainId } from '@/sdk/constants/chains'
 import { Token } from '@/types/uniswap.interface'
@@ -54,15 +55,34 @@ export default function Step2(props: IStep2Props) {
   const realUseLeverage = canLend ? useLeverage : false
   const realLeverage = realUseLeverage ? leverage : 1
 
+  const { depositedVal, depositedAssets, maxCredit } = useDeposited()
+  const [supply, changeSupply] = useState(0)
+  const [selectedTemplate, setSelectedTemplate] = useState(-1)
+  const [autoRebalance, setAutoRebalance] = useState(false)
+  const [rangeStop, setRangeStop] = useState(false)
+
   const lvMarks = useMemo(() => {
-    const res = {}
-    const count = maxLeverage * 2 - 1
-    for (let index = 0; index < count; index++) {
-      const key = index * 0.5 + 1
-      res[key] = `${key}x`
+    const res = {
+      0: '0',
+      [depositedVal]: depositedVal,
+      [maxCredit]: maxCredit,
     }
+    // const count = maxLeverage * 2 - 1
+    // for (let index = 0; index < count; index++) {
+    //   const key = index * 0.5 + 1
+    //   res[key] = `${key}x`
+    // }
     return res
-  }, [maxLeverage])
+  }, [depositedVal, maxCredit])
+
+  useEffect(() => {
+    onChangeDepositParams({
+      amount0Borrow: supply / 2,
+      amount1Borrow: supply / 2 / ammPrice,
+      amount0: supply / 2,
+      amount1: supply / 2 / ammPrice,
+    })
+  }, [supply, onChangeDepositParams, ammPrice])
 
   // function setAmount(percent: number) {
   //   setInputValue(toFixedByTokenNoExp(balance * percent, token0))
@@ -126,183 +146,70 @@ export default function Step2(props: IStep2Props) {
 
   return (
     <div className="farm-page-section">
-      <h3>Step 2: Provide Collateral & Leverage</h3>
-      <div className="farm-page-supply-setting">
-        <div className="farm-page-supply-wrapper flex jc-sb">
-          <div className="farm-supply-input-wrapper">
-            <Input
-              className="farm-supply-input"
-              prefix={
-                <div className="lppool-input-max-button" onClick={() => setSupply('', 1)}>
-                  MAX
-                </div>
-              }
-              placeholder="0.00"
-              size="large"
-              // suffix={<div className="lppool-input-token-name">{nameChecker(token0)}</div>}
-              value={inputValue[supplyIndex]}
-              onChange={(e) => {
-                const r = e.target.value.trim().replace(/[^\d^.]+/g, '')
-                setSupply(r)
-              }}
-            />
-            <p className="farm-supply-input-balance">
-              Balance: <span onClick={() => setSupply('', 1)}>{toPrecision(currentBalance, 4)}</span>
-            </p>
-          </div>
-          <Select showSearch={false} style={{ height: 40 }} value={supplyIndex} onChange={setSupplyIndex}>
-            {[token0, token1].map((item, index) => {
-              return (
-                <Select.Option key={item.id} value={index}>
-                  <i className={`coin coin-${item.symbol?.toLowerCase()}`} /> {item.symbol}
-                </Select.Option>
-              )
-            })}
-          </Select>
-        </div>
-      </div>
-
-      <div className="farm-page-lv-setting">
-        <h3>Leverage Setup</h3>
-        {/* <div className="farm-page-lv-setting-option"></div> */}
-      </div>
-      <div className="subtitle subtitle-leverage flex jc-sb">
-        <div className="flex ai-ct">
-          <p>Leverage</p>
-          <div className="subtitle-leverage-display">{realLeverage}x</div>
-        </div>
-        <Dropdown
-          // trigger={['click']}
-          placement="bottomRight"
-          overlay={
-            <ul className="farm-template-list">
-              <li>3x Long Farming</li>
-              <li>3x Short Farming</li>
-              <li>Delta Neutral Strategy</li>
-            </ul>
-          }
-        >
-          <span className="text-sm-2 flex ai-ct">
-            Templates <i className="iconfont icon-down"> </i>
-          </span>
-        </Dropdown>
-      </div>
-
-      {realUseLeverage && (
+      <h3>Step 2: Supply Credit</h3>
+      <div className="deposit-slider">
         <div className="percent-box percent-box-leverage">
           <Slider
             marks={lvMarks}
-            step={0.1}
-            // defaultValue={leverage}
-            value={leverage}
-            onChange={(val) => {
-              setLeverage(val)
-            }}
-            min={1}
-            max={maxLeverage}
+            // step={0.1}
+            value={supply}
+            onChange={changeSupply}
+            min={0}
+            max={maxCredit}
           />
         </div>
-      )}
-
-      <div className="subtitle subtitle-borrow flex jc-sb ai-ct">
-        <p>Asset to Borrow</p>
-        {borrowList.length > 1 && canDualBorrow && (
-          <div className="flex ai-ct jc-sb">
-            <span>Dual Borrow:</span>
-            <Switch
-              checked={borrowAdvanced}
-              size="small"
-              onChange={(checked) => {
-                setBorrowAdvanced(checked)
-              }}
-            ></Switch>
-          </div>
-        )}
       </div>
-      {!(borrowAdvanced && borrowList.length > 1) ? (
-        <ul className="lppool-borrow-list">
-          {borrowList.map((coin: string, index: number) => {
-            // const { canLend, availiable } = checkLendingPoolStatus(coin, lendingPoolInfo)
-            // const availiableValue = availiable * priceInfo[coin]
-            // const showRemain = availiableValue < 50000 && canLend
-            return (
-              <Tooltip
-                // title={
-                //   showRemain ? (
-                //     <div>
-                //       {remain2Decimal(availiable)} {nameChecker(coin)} availiable
-                //     </div>
-                //   ) : null
-                // }
-                key={coin}
+      <div className="strategy-settings">
+        <h3>Strategy Settings</h3>
+        <div className="market-template">
+          <div className="market-template-selects flex jc-sb">
+            {[
+              {
+                name: 'Long',
+              },
+              {
+                name: 'Short',
+              },
+              {
+                name: ' Market Neutral',
+              },
+            ].map((item, idx) => (
+              <div
+                className={cx('market-template-selects-option', {
+                  'market-template-selects-option-active': selectedTemplate === idx,
+                })}
+                key={idx}
+                onClick={() => {
+                  setSelectedTemplate(idx)
+                }}
               >
-                <li
-                  className={cx('flex ai-ct', {
-                    normal: assetIndex !== index && canLend,
-                    active: assetIndex === index,
-                    disable: !canLend,
-                  })}
-                  onClick={() => {
-                    if (canLend) {
-                      setAssetIndex(index)
-                    }
-                  }}
-                  key={coin}
-                >
-                  <i className={`coin coin-${coin?.toLowerCase()}`} /> {coin}
-                  {!canLend && (
-                    <p className="lppool-borrow-list-hint">
-                      No sufficient {coin}can be borrowed to open leveraged position temporarily.
-                    </p>
-                  )}
-                </li>
-              </Tooltip>
-            )
-          })}
-        </ul>
-      ) : (
-        <section className="lppool-borrow-advanced">
-          <div className="lppool-borrow-advanced-items">
-            <div className="lppool-borrow-advanced-item">
-              <section className="flex ai-ct">
-                <CoinAmount coin={token0.symbol} amount={borrow0} showZero />({Math.round(token0BorrowRatio * 100)}%)
-              </section>
-
-              <div className="lppool-borrow-advanced-interest">
-                <span>Borrow Interest:</span>
-                {toPrecision(borrowInterest[0] * 100)}%
+                <p>{item.name}</p>
+                {(idx === 0 || idx === 1) && <span>borrow {idx === 0 ? token0.name : token1.name}</span>}
               </div>
-            </div>
-            <div className="lppool-borrow-advanced-item">
-              <section className="flex ai-ct">
-                <CoinAmount coin={token1.symbol} amount={borrow1} showZero />(
-                {Math.round((1 - token0BorrowRatio) * 100)}%)
-              </section>
-              <div className="lppool-borrow-advanced-interest">
-                <span>Borrow Interest:</span>
-                {toPrecision(borrowInterest[1] * 100)}%
-              </div>
-            </div>
+            ))}
           </div>
-          <Slider
-            step={0.01}
-            min={0}
-            max={1}
-            value={token0BorrowRatio}
-            onChange={setToken0BorrowRatio}
-            marks={{
-              0: '0%',
-              0.25: '25%',
-              0.5: '50%',
-              0.75: '75%',
-              1: '100%',
+        </div>
+
+        <Form.Item label="Auto Rebalance">
+          <Switch
+            size="small"
+            checked={autoRebalance}
+            onChange={(checked) => {
+              setAutoRebalance(!!checked)
             }}
-            tipFormatter={(val) => {
-              return `${Math.round(val * 100)}%`
+          ></Switch>
+        </Form.Item>
+
+        <Form.Item label="Range Stop">
+          <Switch
+            size="small"
+            checked={rangeStop}
+            onChange={(checked) => {
+              setRangeStop(!!checked)
             }}
-          />
-        </section>
-      )}
+          ></Switch>
+        </Form.Item>
+      </div>
     </div>
   )
 }

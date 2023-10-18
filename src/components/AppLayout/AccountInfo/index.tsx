@@ -8,7 +8,7 @@ import useDeposited from '@/hooks/useDeposited'
 import { addComma, toPrecision } from '@/utils/math'
 
 export default function AccountInfo() {
-  const { depositedVal, depositedAssets } = useDeposited()
+  const { depositedVal, depositedAssets, maxCredit } = useDeposited()
   const { debtVal, debtAssets } = useDebt()
 
   const { account } = useWagmiCtx()
@@ -16,10 +16,6 @@ export default function AccountInfo() {
   const safetyRatio = useMemo(() => {
     return debtVal / (depositedVal + debtVal)
   }, [debtVal, depositedVal])
-
-  const maxDebt = useMemo(() => {
-    return depositedVal * 5
-  }, [depositedVal])
 
   const accountAPY = useMemo(() => {
     const apy = 0.1321
@@ -51,7 +47,7 @@ export default function AccountInfo() {
           <div className="extrax-account-info-credit">
             <b>Leverage Credit: </b>
             <em className="text-highlight">
-              ${addComma(debtVal)} / ${addComma(maxDebt)}
+              ${addComma(debtVal)} / ${addComma(maxCredit)}
             </em>
           </div>
           <div className="extrax-account-info-safety">
