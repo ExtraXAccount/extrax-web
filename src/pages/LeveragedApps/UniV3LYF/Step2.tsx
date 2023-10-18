@@ -51,7 +51,7 @@ export default function Step2(props: IStep2Props) {
           color: '#008CF2',
         },
         label: (
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', right: 14 }}>
             <Tooltip title="">
               <b>{availableCredit}</b>
             </Tooltip>
@@ -79,8 +79,8 @@ export default function Step2(props: IStep2Props) {
 
   useEffect(() => {
     onChangeDepositParams({
-      amount0Borrow: (supply * tk0BorrowRatio) / 2,
-      amount1Borrow: (supply * (1 - tk0BorrowRatio)) / 2 / ammPrice,
+      amount0Borrow: supply * tk0BorrowRatio,
+      amount1Borrow: (supply * (1 - tk0BorrowRatio)) / ammPrice,
       amount0: supply / 2,
       amount1: supply / 2 / ammPrice,
     })

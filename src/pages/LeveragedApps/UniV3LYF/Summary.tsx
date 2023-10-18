@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 
 import { CoinAmountGroup } from '@/components/CoinAmount'
+import useCredit from '@/hooks/useCredit'
+import useDebt from '@/hooks/useDebt'
+import useDeposited from '@/hooks/useDeposited'
 import { Token } from '@/types/uniswap.interface'
 import { toPrecision, toPrecisionNum } from '@/utils/math'
 
@@ -23,8 +26,22 @@ export default function Summary(props: ISummaryProps) {
   } = props
 
   const positionTotalVal = useMemo(() => {
-    return summary.amount0 + summary.amount0Borrow + ammPrice * (summary.amount1 + summary.amount1Borrow)
-  }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])
+    return summary.amount0Borrow + ammPrice * summary.amount1Borrow
+  }, [ammPrice, summary.amount0Borrow, summary.amount1Borrow])
+
+  const { maxCredit, availableCredit } = useCredit()
+  const { depositedVal, depositedAssets } = useDeposited()
+  const { debtVal, debtAssets } = useDebt()
+
+  const prevSafetyFactor = useMemo(() => {
+    return debtVal / (depositedVal + debtVal)
+  }, [debtVal, depositedVal])
+
+  const nextSafetyFactor = useMemo(() => {
+    return (debtVal + positionTotalVal) / (depositedVal + debtVal + positionTotalVal)
+  }, [debtVal, depositedVal, positionTotalVal])
+  // return summary.amount0 + summary.amount0Borrow + ammPrice * (summary.amount1 + summary.amount1Borrow)
+  // }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])
 
   return (
     <div className="farm-page-summary">
@@ -52,7 +69,7 @@ export default function Summary(props: ISummaryProps) {
               <span className="text-highlight">{toPrecision(summary.aprLeveraged * 100, 2)}%</span>
             </b>
           </li>
-          <li>
+          {/* <li>
             <p>Assets Supplied</p>
             <b>
               <CoinAmountGroup
@@ -63,7 +80,7 @@ export default function Summary(props: ISummaryProps) {
                 amount1={summary.amount1}
               />
             </b>
-          </li>
+          </li> */}
           <li>
             <p>Assets Borrowed</p>
             <b>
@@ -88,12 +105,20 @@ export default function Summary(props: ISummaryProps) {
               />
             </b>
           </li>
-          {/* <li>
-            <p>Amount to Swap</p>
+          <li>
+            <p>Left Credit</p>
             <b>
-              <CoinAmount showZero coin={summary.swapToken} amount={summary.swapCount} />
+              <span className="item-pre">{toPrecision(availableCredit)} →</span>
+              <span className="text-highlight">{toPrecision(availableCredit - positionTotalVal)}</span>
             </b>
-          </li> */}
+          </li>
+          <li>
+            <p>Safety Factor</p>
+            <b>
+              <span className="item-pre">{toPrecision(prevSafetyFactor * 100)}% →</span>
+              <span className="text-highlight">{toPrecision(nextSafetyFactor * 100)}%</span>
+            </b>
+          </li>
         </ul>
       </section>
     </div>

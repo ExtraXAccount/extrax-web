@@ -43,7 +43,7 @@ export default function LeveragedApps() {
             )
           })}
           <div className="side-bar-app-list-item" key="add">
-            +
+            <b>+</b>
           </div>
         </div>
       </div>
