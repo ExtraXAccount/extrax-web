@@ -16,7 +16,7 @@ export default function Lend() {
       <div className="box">
         <h3 className="page-app-title">Lending Assets</h3>
 
-        <LendingTable list={lendList} />
+        <LendingTable />
       </div>
     </div>
   )

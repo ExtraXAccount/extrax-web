@@ -2,6 +2,8 @@ import { useCallback, useEffect } from 'react'
 
 // import { publicClient } from '@/components/RainbowKit/getChainsConfig'
 import { useWagmiCtx } from '@/components/WagmiContext'
+import { CONTRACT_ADDRESSES } from '@/constants/addresses'
+import { SupportedChainId } from '@/constants/chains'
 import { V2_CONFIG } from '@/constants/v2'
 
 import dataProviderABI from '../abis/DataProvider.json'
@@ -22,14 +24,14 @@ export default function useV2Contract() {
   const readContract = useCallback(
     async (functionName, args, options = {}) => {
       return await publicClient.readContract({
-        address: '0x1A97E89572Fc303e4BfD4FA49d02Cd94161744DD',
+        address: CONTRACT_ADDRESSES[chainId]?.dataProvider as `0x${string}`,
         abi: dataProviderABI,
         functionName,
         args,
         ...options,
       })
     },
-    [publicClient]
+    [chainId, publicClient]
   )
 
   useEffect(() => {

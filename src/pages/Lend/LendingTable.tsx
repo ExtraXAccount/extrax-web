@@ -1,16 +1,17 @@
 import { BigNumber as BN } from '@ethersproject/bignumber'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd'
-import { useState } from 'react'
-import { useSwitchNetwork } from 'wagmi'
 
+// import { useState } from 'react'
+// import { useSwitchNetwork } from 'wagmi'
 import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
-import { SupportedChainId } from '@/sdk/constants/chains'
+// import { SupportedChainId } from '@/sdk/constants/chains'
+import useLendContract from '@/sdk/lend'
 import { formatSymbol, toDecimals } from '@/sdk/utils/token'
-import { useAppDispatch } from '@/state'
+// import { useAppDispatch } from '@/state'
 // import { setCurrentHistoryPool, setCurrentPool } from '@/state/lending/reducer'
 // import { usePriceHub } from '@/state/price/hooks'
 import { nameChecker } from '@/utils'
@@ -23,18 +24,19 @@ import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecisi
 
 const { Column } = Table
 
-export default function LendingTable(props: { list: any[] }) {
+export default function LendingTable() {
   const { prices, getPrice } = usePrices()
   const { openConnectModal } = useConnectModal()
   const { account, chainId } = useWagmiCtx()
-  const { switchNetwork } = useSwitchNetwork()
+  // const { switchNetwork } = useSwitchNetwork()
   const { isMobile } = useDeviceDetect()
-  const dispatch = useAppDispatch()
+  // const dispatch = useAppDispatch()
+  const { lendList, depositAndStake, unStakeAndWithdraw } = useLendContract()
 
   return (
     <Table
       sortDirections={['descend', 'ascend']}
-      dataSource={props.list || []}
+      dataSource={lendList || []}
       pagination={false}
       rowKey={(i) => i.poolKey}
       locale={{
@@ -76,7 +78,8 @@ export default function LendingTable(props: { list: any[] }) {
           return a.value - b.value
         }}
         render={(i) => {
-          const { amount, value } = i
+          const { amount } = i
+          const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
           return (
             <>
               {isMobile && <div className="text-bold-small">Total Supply</div>}
@@ -196,13 +199,14 @@ export default function LendingTable(props: { list: any[] }) {
           return (
             <div className="flex ai-ct lending-table-actions">
               <button
-                className="btn-base"
+                className="btn-base btn-base-small"
                 onClick={() => {
                   if (!account) {
                     openConnectModal()
                     return
                   }
                   // dispatch(setCurrentPool(i.poolKey))
+                  depositAndStake(i.ReserveId, '10000')
                 }}
               >
                 Deposit
@@ -210,18 +214,18 @@ export default function LendingTable(props: { list: any[] }) {
               {!!i.deposited && (
                 <>
                   <button
-                    className="btn-base"
+                    className="btn-base btn-base-small"
                     onClick={() => {
-                      // dispatch(setCurrentPool(i.poolKey))
+                      unStakeAndWithdraw(i.ReserveId, '10000')
                     }}
                   >
                     Withdraw
                   </button>
 
                   <button
-                    className="btn-base"
+                    className="btn-base btn-base-small"
                     onClick={() => {
-                      // dispatch(setCurrentPool(i.poolKey))
+                      depositAndStake(i.ReserveId, '10000')
                     }}
                   >
                     Borrow
@@ -230,9 +234,9 @@ export default function LendingTable(props: { list: any[] }) {
               )}
               {!!i.borrowed && (
                 <button
-                  className="btn-base"
+                  className="btn-base btn-base-small"
                   onClick={() => {
-                    // dispatch(setCurrentPool(i.poolKey))
+                    depositAndStake(i.ReserveId, '10000')
                   }}
                 >
                   Repay

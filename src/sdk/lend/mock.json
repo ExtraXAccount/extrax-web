@@ -18,8 +18,8 @@
     "stakingAddress": "0x21C43d9B3b7c25C740B0D5dC9F62495aeC0d1ecC",
     "amount": 6441230.037226,
     "value": 6441230.04,
-    "deposited": 0,
-    "borrowed": 0,
+    "deposited": 100,
+    "borrowed": 10,
     "totalRewardApy": 0.023677919695008987
   },
   {
@@ -31,12 +31,12 @@
       "type": "BigNumber",
       "hex": "0x01c7c49e4ccb"
     },
-    "utilizationRate": 0.7652377125643383,
-    "borrowingRate": 0.05,
+    "utilizationRate": 0.6652377125643383,
+    "borrowingRate": 0.04,
     "tokenAddress": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
     "tokenDecimals": 6,
     "tokenSymbol": "DAI",
-    "apr": 0.03826188562821692,
+    "apr": 0.03326188562821692,
     "eTokenAddress": "0x40Bc6dA651F9cbDCbFa886d2ae4135D18a8369f0",
     "stakingAddress": "0xE61662C09c30E1F3f3CbAeb9BC1F13838Ed18957",
     "amount": 1957508.828363,
