@@ -1,3 +1,4 @@
+import { BigNumber as BN } from '@ethersproject/bignumber'
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -10,10 +11,11 @@ import useLendContract from '@/sdk/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { toBNString, toDecimals } from '@/utils/math/bn'
+import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 
 export default function DepositDialog({
   open,
-  currentLendingPoolDetail = {},
+  currentLendingPoolDetail,
   onClose,
 }: {
   open: boolean
@@ -34,23 +36,42 @@ export default function DepositDialog({
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
 
+  const nextApy = useMemo(() => {
+    if (currentLendingPoolDetail) {
+      // console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
+      const totalLiquidity = toDecimals(
+        BN.from(currentLendingPoolDetail.totalLiquidity),
+        currentLendingPoolDetail.tokenDecimals
+      )
+      const { nextBorrowingRate, nextUtilizationRate } = calculateNextBorrowingRate({
+        liquidityChangedValue: Number(value),
+        poolKey: currentLendingPoolDetail.poolKey,
+        totalLiquidity,
+        utilizationRate: currentLendingPoolDetail.utilizationRate,
+      })
+      // console.log('calculateNextBorrowingRate :>> ', { nextBorrowingRate, nextUtilizationRate })
+      return aprToApy(nextBorrowingRate * nextUtilizationRate) * 100
+    }
+    return 0
+  }, [currentLendingPoolDetail, value])
+
   const deposit = useCallback(async () => {
     const res = await depositAndStake(
       toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals),
-      currentLendingPoolDetail.ReserveId
+      currentLendingPoolDetail?.ReserveId
     )
 
     onClose()
 
     return res
-  }, [value, onClose, depositAndStake, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail.ReserveId])
+  }, [value, onClose, depositAndStake, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.ReserveId])
 
   useEffect(() => {
     function reset() {
       setValue('')
     }
     reset()
-  }, [currentLendingPoolDetail.ReserveId])
+  }, [currentLendingPoolDetail?.ReserveId])
 
   return (
     <Dialog
@@ -75,12 +96,16 @@ export default function DepositDialog({
         <li>
           <p>Value:</p>
           <b className="text-highlight">
-            ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail.tokenSymbol))}
+            ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
           </b>
         </li>
         <li>
-          <p>APY:</p>
+          <p>Current APY:</p>
           <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail.apr) * 100)}%</b>
+        </li>
+        <li>
+          <p>Updated APY:</p>
+          <b className="text-highlight">{formatFloatNumber(nextApy)}%</b>
         </li>
       </ul>
       <div className="dialog-btns flex jc-sb">

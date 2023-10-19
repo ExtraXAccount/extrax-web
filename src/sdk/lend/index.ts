@@ -15,15 +15,17 @@ export default function useLendContract() {
   }, [])
 
   const readContract = useCallback(
-    async (functionName: string, args, options = {}) => {
+    async (functionName: string, args?: any, options = {}) => {
       try {
-        return await publicClient.readContract({
+        const res = await publicClient.readContract({
           address: CONTRACT_ADDRESSES[chainId]?.lend as `0x${string}`,
           abi: lendingPoolABI,
           functionName,
           args,
           ...options,
         })
+        // console.log('readContract :>> ', res)
+        return res
       } catch (err) {
         console.warn('readContract err: ', err)
       }
@@ -53,6 +55,23 @@ export default function useLendContract() {
     },
     [walletClient, account, chainId]
   )
+
+  const getPoolStatus = useCallback(async () => {
+    const poolIds = ['2', '26', '1', '4']
+    const res = await readContract('getReserveStatus', [poolIds])
+    console.log('getPoolStatus :>> ', res)
+  }, [readContract])
+
+  const getPositionStatus = useCallback(async () => {
+    const poolIds = ['2', '26', '1', '4']
+    const res = await readContract('getPositionStatus', [poolIds, account])
+    console.log('getPositionStatus :>> ', res)
+  }, [readContract, account])
+
+  useEffect(() => {
+    // getPoolStatus()
+    // getPositionStatus()
+  }, [getPoolStatus, getPositionStatus])
 
   const depositAndStake = useCallback(
     (reserveId: string, amount: string) => {
