@@ -15,7 +15,7 @@ export default function AccountInfo() {
   const { debtVal, debtAssets } = useDebt()
   const { maxCredit, availableCredit } = useCredit()
 
-  const { account } = useWagmiCtx()
+  const { account = '' } = useWagmiCtx()
 
   const safetyRatio = useMemo(() => {
     return debtVal / (depositedVal + debtVal)
