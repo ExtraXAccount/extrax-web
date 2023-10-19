@@ -101,7 +101,7 @@ export default function DepositDialog({
         </li>
         <li>
           <p>Current APY:</p>
-          <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail.apr) * 100)}%</b>
+          <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%</b>
         </li>
         <li>
           <p>Updated APY:</p>
