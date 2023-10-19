@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
@@ -8,6 +8,7 @@ import lendData from './mock.json'
 
 export default function useLendContract() {
   const { account, chainId, publicClient, walletClient } = useWagmiCtx()
+  const [writeLoading, setWriteLoading] = useState(false)
 
   const lendList = useMemo(() => {
     return lendData
@@ -33,6 +34,7 @@ export default function useLendContract() {
   const writeContract = useCallback(
     async (functionName: string, args, options = {}) => {
       try {
+        setWriteLoading(true)
         const res = await walletClient.writeContract({
           chain: walletClient.chain,
           account,
@@ -45,6 +47,8 @@ export default function useLendContract() {
         return res
       } catch (err) {
         console.warn('writeContract err: ', err)
+      } finally {
+        setWriteLoading(false)
       }
     },
     [walletClient, account, chainId]
@@ -72,5 +76,6 @@ export default function useLendContract() {
     writeContract,
     depositAndStake,
     unStakeAndWithdraw,
+    writeLoading,
   }
 }
