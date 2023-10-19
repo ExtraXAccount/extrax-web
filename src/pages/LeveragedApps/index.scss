@@ -1,3 +1,70 @@
+
+.side-bar {
+  // position: sticky;
+  // top: 160px;
+  // left: 20px;
+  width: 100px;
+  background: var(--box-bg);
+  border-radius: var(--box-radius);
+  box-shadow: var(--box-shadow);
+  padding: 10px;
+  height: fit-content;
+
+  h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    text-align: center;
+  }
+  &-app-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    &-item {
+      width: 80px;
+      height: 80px;
+      min-height: 40px;
+      display: block;
+      position: relative;
+      line-height: 1;
+      font-size: 12px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      background: top 6px center / 46px 46px no-repeat;
+      border: 2px solid rgba(#666, .2);
+
+      &-add{
+        background-image: url('./images/add.svg');
+      }
+
+      &-uniswap{
+        background-image: url('./images/uniswap.svg');
+      }
+
+      &-spark{
+        background-image: url('./images/spark.svg');
+        background-position: top center;
+      }
+
+      >p{
+        width: 100%;
+        font-size: 12px;
+        position: absolute;
+        left: 0;
+        bottom: 6px;
+        text-align: center;
+      }
+      &:hover,
+      &.active {
+        border: 2px solid rgba(21, 134, 255, .6);
+        // color: var(--button-color);
+        // background: var(--antd-primary);
+      }
+    }
+  }
+}
+
 .page-leveraged-apps {
   position: relative;
   display: flex;
@@ -5,44 +72,6 @@
   gap: 20px;
   width: 100%;
   // padding-left: 100px;
-
-  .side-bar {
-    // position: sticky;
-    // top: 160px;
-    // left: 20px;
-    width: 100px;
-    background: var(--box-bg);
-    border-radius: var(--box-radius);
-    box-shadow: var(--box-shadow);
-    padding: 10px;
-    height: fit-content;
-
-    h4 {
-      margin-bottom: 20px;
-    }
-    .side-bar-app-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      &-item {
-        // width: 60px;
-        min-height: 40px;
-        display: block;
-        line-height: 1.4;
-        padding: 10px;
-        font-size: 12px;
-        border-radius: 6px;
-        text-align: center;
-        cursor: pointer;
-        background: #D1AEBA;
-        &:hover,
-        &.active {
-          color: var(--button-color);
-          background: var(--antd-primary);
-        }
-      }
-    }
-  }
 
   .dapp-wrapper {
     width: 100%;
@@ -63,6 +92,31 @@
       // min-height: calc(100% - 50px);
       height: calc(100vh - 250px);
       overflow-y: auto;
+    }
+  }
+
+  &-store{
+    .ex-dialog-content-box{
+      width: 800px;
+      padding: 24px;
+      .side-bar-app-list{
+        padding: 10px 0;
+        flex-direction: row;
+      }
+      h4{
+        font-size: 20px;
+        line-height: 1;
+        margin-bottom: 20px;
+      }
+
+      >p{
+        font-weight: bold;
+        font-size: 14px;
+        padding: 6px 0;
+        b{
+          color: var( --antd-primary);
+        }
+      }
     }
   }
 }
