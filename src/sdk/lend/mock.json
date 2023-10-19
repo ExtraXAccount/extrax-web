@@ -1,0 +1,94 @@
+[
+  {
+    "poolKey": "USDC",
+    "ReserveId": "2",
+    "cgId": "usdc",
+    "exchangeRate": 1.034603497079923,
+    "totalLiquidity": {
+      "type": "BigNumber",
+      "hex": "0x05dbb73a70ea"
+    },
+    "utilizationRate": 0.43264400817489734,
+    "borrowingRate": 0.1297932024524692,
+    "tokenAddress": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+    "tokenDecimals": 6,
+    "tokenSymbol": "USDC",
+    "apr": 0.05615425134289219,
+    "eTokenAddress": "0xBf785098C120C06e2547b04d26Ecb76300023e95",
+    "stakingAddress": "0x21C43d9B3b7c25C740B0D5dC9F62495aeC0d1ecC",
+    "amount": 6441230.037226,
+    "value": 6441230.04,
+    "deposited": 0,
+    "borrowed": 0,
+    "totalRewardApy": 0.023677919695008987
+  },
+  {
+    "poolKey": "DAI",
+    "ReserveId": "25",
+    "cgId": "dai",
+    "exchangeRate": 1.0138660578221015,
+    "totalLiquidity": {
+      "type": "BigNumber",
+      "hex": "0x01c7c49e4ccb"
+    },
+    "utilizationRate": 0.7652377125643383,
+    "borrowingRate": 0.05,
+    "tokenAddress": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+    "tokenDecimals": 6,
+    "tokenSymbol": "DAI",
+    "apr": 0.03826188562821692,
+    "eTokenAddress": "0x40Bc6dA651F9cbDCbFa886d2ae4135D18a8369f0",
+    "stakingAddress": "0xE61662C09c30E1F3f3CbAeb9BC1F13838Ed18957",
+    "amount": 1957508.828363,
+    "value": 1957508.83,
+    "deposited": 0,
+    "borrowed": 0,
+    "totalRewardApy": 0.04251911548269738
+  },
+  {
+    "poolKey": "WETH",
+    "ReserveId": "1",
+    "cgId": "weth",
+    "exchangeRate": 1.0160281828684794,
+    "totalLiquidity": {
+      "type": "BigNumber",
+      "hex": "0x17ac7c695bb9dc09e7"
+    },
+    "utilizationRate": 0.3524948424632426,
+    "borrowingRate": 0.10574845273897278,
+    "tokenAddress": "0x4200000000000000000000000000000000000006",
+    "tokenDecimals": 18,
+    "tokenSymbol": "WETH",
+    "apr": 0.037275784188955864,
+    "eTokenAddress": "0x3dC60bE8092C851c3f512eDbFe3b61Fc40D33bb9",
+    "stakingAddress": "0x5F8d42635A2fa74D03b5F91c825dE6F44c443dA5",
+    "amount": 436.70403860963654,
+    "value": 689297.45,
+    "deposited": 0,
+    "borrowed": 0,
+    "totalRewardApy": 0.024034106141063605
+  },
+  {
+    "poolKey": "OP",
+    "ReserveId": "35",
+    "cgId": "optimism",
+    "exchangeRate": 1.1252614476627771,
+    "totalLiquidity": {
+      "type": "BigNumber",
+      "hex": "0x1691301f6440f75d6d6c7c"
+    },
+    "utilizationRate": 0.7459754259155733,
+    "borrowingRate": 0.18649385647889333,
+    "tokenAddress": "0x9560e827aF36c94D2Ac33a39bCE1Fe78631088Db",
+    "tokenDecimals": 18,
+    "tokenSymbol": "OP",
+    "apr": 0.13911983401748024,
+    "eTokenAddress": "0xC89Bddb6E5aada6Ef9e15eeA77E9C5e0dB9dAe5D",
+    "stakingAddress": "0x78D49Baa0FaE8CfB1CA2e51B2eA5C03fDdDFa4D5",
+    "amount": 27281998.877257824,
+    "value": 956409.47,
+    "deposited": 0,
+    "borrowed": 0,
+    "totalRewardApy": 0
+  }
+]

@@ -1,15 +1,23 @@
 import './index.scss'
+import './lendingList.scss'
 
-import Contract from './Contract'
-// import LendingList from './LendingList'
+import useLendContract from '@/sdk/lend'
+
+// import Contract from './Contract'
+import LendingTable from './LendingTable'
 
 export default function Lend() {
+  const { lendList } = useLendContract()
+
+  console.log('lendlist :>> ', lendList)
+
   return (
     <div className="page-app page-lending">
-      <h2>lend page</h2>
+      <div className="box">
+        <h3 className="page-app-title">Lending Assets</h3>
 
-      {/* <LendingList /> */}
-      <Contract />
+        <LendingTable list={lendList} />
+      </div>
     </div>
   )
 }

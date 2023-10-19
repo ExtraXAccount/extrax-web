@@ -1,0 +1,73 @@
+
+.lending-list{
+  width: 1200px;
+  margin: 0 auto;
+
+  &-header{
+
+  }
+
+  &-title-wrap{
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &-title-tag{
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0px 4px;
+    background-color: var(--antd-primary);
+    border-radius: 4px;
+    color: #fff;
+    .iconfont{
+      font-size: 14px;
+    }
+  }
+
+  &-pool-hide{
+    display: none !important;
+  }
+}
+
+.lending-list-item-inner {
+  border-bottom: 2px solid #000;
+  line-height: 60px;
+  display: flex;
+  div{
+    flex: 1;
+  }
+}
+
+.page-app-title {
+  // display: flex;
+  // justify-content: space-between;
+  // padding-right: 1em;
+  .details-switch {
+    color: var(--text-color);
+    font-size: 12px;
+  }
+}
+
+.mobile{
+  .page-app-title-lending{
+    flex-wrap: wrap;
+  }
+  .lending-table-actions{
+    display: block;
+  }
+  .lending-list-title-wrap{
+    display: block;
+  }
+  .lending-list-title-tag{
+    display: inline-flex;
+    margin-bottom: 4px;
+  }
+}
+
+.lending-table-actions {
+  gap: 10px;
+}

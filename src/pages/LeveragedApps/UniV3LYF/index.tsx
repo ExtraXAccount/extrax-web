@@ -47,9 +47,9 @@ export default function UniV3LYF() {
 
   const { baseInfo: poolInfo, daysData: poolDayDatas, ticks: poolTicks } = usePoolInfo(poolId)
 
-  useEffect(() => {
-    console.log('usePoolInfo :>> ', { poolInfo, poolDayDatas, poolTicks })
-  }, [poolDayDatas, poolInfo, poolTicks])
+  // useEffect(() => {
+  //   console.log('usePoolInfo :>> ', { poolInfo, poolDayDatas, poolTicks })
+  // }, [poolDayDatas, poolInfo, poolTicks])
 
   const [priceMin, setPriceMin] = useState(0)
   const [priceMax, setPriceMax] = useState(0)
@@ -271,9 +271,9 @@ export default function UniV3LYF() {
   //   // }, [poolDayDatas, priceMax, priceMin, reverseBaseToken])
   // }, [poolDayDatas, reverseBaseToken])
 
-  useEffect(() => {
-    console.log('poolInfo :>> ', poolInfo)
-  }, [poolInfo])
+  // useEffect(() => {
+  //   console.log('poolInfo :>> ', poolInfo)
+  // }, [poolInfo])
 
   const chartProps = useMemo(() => {
     return {

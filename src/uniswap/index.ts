@@ -57,7 +57,7 @@ export const getPoolHourData = async (poolAddress: string, numberOfDays = 14): P
     }
   }`)
 
-  console.log('poolHourDatas :>> ', poolHourDatas)
+  // console.log('poolHourDatas :>> ', poolHourDatas)
   return poolHourDatas
 }
 
@@ -79,7 +79,7 @@ export const getPoolDayData = async (poolAddress: string, numberOfDays = 30): Pr
     }
   }`)
 
-  console.log('poolDayDatas :>> ', poolDayDatas)
+  // console.log('poolDayDatas :>> ', poolDayDatas)
   return poolDayDatas
 }
 
@@ -129,7 +129,7 @@ export const getPoolTicks = async (poolAddress: string): Promise<Tick[]> => {
     page += PAGE_SIZE
   }
   // result = await _getPoolTicksByPage(poolAddress, 0)
-  console.log('getPoolTicks result :>> ', result)
+  // console.log('getPoolTicks result :>> ', result)
   // store.setState({
   //   v3PoolTicks: result
   // });
@@ -236,7 +236,7 @@ export const getTopTvlPools = async (limit = 50): Promise<Pool[]> => {
     }
   }`)
 
-  console.log('getTopTvlPools :>> ', pools)
+  // console.log('getTopTvlPools :>> ', pools)
 
   return pools as Pool[]
 }
@@ -332,7 +332,7 @@ export const getPoolInfo = async (poolAddress: string): Promise<Pool> => {
     }
   }`)
 
-  console.log('getPoolInfo :>> ', pools)
+  // console.log('getPoolInfo :>> ', pools)
 
   return pools?.[0] || {}
 }
