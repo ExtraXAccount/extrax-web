@@ -8,6 +8,8 @@ import Dialog from '@/components/Dialog'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import useLendContract from '@/sdk/lend'
+import { useAppDispatch, useAppSelector } from '@/state'
+import { setLendingStatus } from '@/state/lending/reducer'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { toBNString, toDecimals } from '@/utils/math/bn'
@@ -23,6 +25,7 @@ export default function DepositDialog({
   currentLendingPoolDetail: any
 }) {
   const { prices, getPrice } = usePrices()
+  const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
   // const [allowance, setAllowance] = useState(0)
   // const [balance, setBalance] = useState('')
@@ -39,10 +42,7 @@ export default function DepositDialog({
   const nextApy = useMemo(() => {
     if (currentLendingPoolDetail) {
       // console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
-      const totalLiquidity = toDecimals(
-        BN.from(currentLendingPoolDetail.totalLiquidity),
-        currentLendingPoolDetail.tokenDecimals
-      )
+      const totalLiquidity = currentLendingPoolDetail.amount
       const { nextBorrowingRate, nextUtilizationRate } = calculateNextBorrowingRate({
         liquidityChangedValue: Number(value),
         poolKey: currentLendingPoolDetail.poolKey,
@@ -61,10 +61,27 @@ export default function DepositDialog({
       currentLendingPoolDetail?.ReserveId
     )
 
+    const newLendList = [...lendList]
+    const targetIndex = newLendList.findIndex((item) => item.ReserveId === currentLendingPoolDetail?.ReserveId)
+    const target = newLendList[targetIndex]
+    newLendList.splice(targetIndex, 1, {
+      ...target,
+      deposited: target.deposited + Number(value),
+    })
+    // console.log('newLendingData :>> ', targetIndex, newLendList)
+    dispatch(setLendingStatus(newLendList))
     onClose()
 
     return res
-  }, [value, onClose, depositAndStake, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.ReserveId])
+  }, [
+    depositAndStake,
+    value,
+    currentLendingPoolDetail?.tokenDecimals,
+    currentLendingPoolDetail?.ReserveId,
+    lendList,
+    dispatch,
+    onClose,
+  ])
 
   useEffect(() => {
     function reset() {

@@ -41,7 +41,7 @@ export default function useFetchBalance(token: string, chainId?: number, replace
   //   chainId: chainId || connectedChainId,
   // })
   // console.log('balance :>> ', balance?.data)
-  console.log('useFetchBalance :>> ', chainId, token, isWETH(chainId || connectedChainId, token), res)
+  // console.log('useFetchBalance :>> ', chainId, token, isWETH(chainId || connectedChainId, token), res)
   // console.log('useFetchBalance :>> ', res, chainId || connectedChainId, )
   return {
     balance: res.data?.formatted || '0',

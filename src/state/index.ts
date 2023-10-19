@@ -2,10 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import dsl from './dsl/reducer'
+import lending from './lending/reducer'
+import price from './price/reducer'
 
 const store = configureStore({
   reducer: {
+    lending,
     dsl,
+    price,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 })

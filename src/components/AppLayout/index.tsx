@@ -3,10 +3,16 @@ import './index.scss'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 // import { Dropdown, MenuProps } from 'antd'
 import classNames from 'classnames'
+import { useEffect } from 'react'
 import { Link, NavLink, Outlet, useLocation, useParams, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
+import lendingData from '@/sdk/lend/mock.json'
+import { getCoingeckoPriceByIds } from '@/sdk/utils/coingecko'
+import { useAppDispatch, useAppSelector } from '@/state'
+import { setLendingStatus } from '@/state/lending/reducer'
+import { setPrices } from '@/state/price/reducer'
 
 import AccountInfo from './AccountInfo'
 
@@ -31,6 +37,32 @@ const navList = [
 export default function AppLayout() {
   const [searchParams] = useSearchParams()
   const { isMobile } = useDeviceDetect()
+  // const lendingList = useAppSelector((state) => state.lending.poolStatus)
+
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    dispatch(setLendingStatus(lendingData))
+
+    const getPrices = async () => {
+      const priceMap = {}
+      try {
+        const result = await getCoingeckoPriceByIds(lendingData.map((i) => i.cgId))
+
+        // console.log('getCoingeckoPriceByIds :>> ', result)
+        lendingData.forEach((i) => {
+          if (result[i.cgId]?.usd) {
+            priceMap[i.tokenSymbol] = result[i.cgId].usd
+          }
+        })
+        dispatch(setPrices(priceMap))
+      } catch (err) {
+        console.warn(err)
+      }
+    }
+
+    getPrices()
+  }, [dispatch])
 
   return (
     <div

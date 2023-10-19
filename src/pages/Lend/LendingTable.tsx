@@ -130,7 +130,7 @@ export default function LendingTable() {
           dataIndex=""
           key="borrowed"
           render={(i) => {
-            const amount = toDecimals(BN.from(i.totalLiquidity), i.tokenDecimals)
+            const amount = i.amount
             const fixed = formatFloatNumber(amount * i.utilizationRate)
             const value = formatFloatNumber(fixed * getPrice(i.tokenSymbol))
             return (
@@ -186,6 +186,9 @@ export default function LendingTable() {
             return (
               <>
                 <div>{toPrecision(i.deposited)}</div>
+                <div className="text-sm-2">
+                  ${formatNumberByUnit(formatFloatNumber(i.deposited * getPrice(i.tokenSymbol)))}
+                </div>
               </>
             )
           }}
@@ -201,6 +204,9 @@ export default function LendingTable() {
             return (
               <>
                 <div>{toPrecision(i.borrowed)}</div>
+                <div className="text-sm-2">
+                  ${formatNumberByUnit(formatFloatNumber(i.borrowed * getPrice(i.tokenSymbol)))}
+                </div>
               </>
             )
           }}

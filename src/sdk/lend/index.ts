@@ -2,17 +2,22 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
+import { useAppSelector } from '@/state'
 
 import lendingPoolABI from './LendingPoolABI.json'
-import lendData from './mock.json'
+// import lendData from './mock.json'
+
+// export const lendingList = lendData
 
 export default function useLendContract() {
   const { account, chainId, publicClient, walletClient } = useWagmiCtx()
   const [writeLoading, setWriteLoading] = useState(false)
 
+  const lendingList = useAppSelector((state) => state.lending.poolStatus)
+
   const lendList = useMemo(() => {
-    return lendData
-  }, [])
+    return lendingList
+  }, [lendingList])
 
   const readContract = useCallback(
     async (functionName: string, args?: any, options = {}) => {

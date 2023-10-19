@@ -4,10 +4,6 @@
     "ReserveId": "2",
     "cgId": "usdc",
     "exchangeRate": 1.034603497079923,
-    "totalLiquidity": {
-      "type": "BigNumber",
-      "hex": "0x05dbb73a70ea"
-    },
     "utilizationRate": 0.43264400817489734,
     "borrowingRate": 0.1297932024524692,
     "tokenAddress": "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
@@ -18,8 +14,8 @@
     "stakingAddress": "0x21C43d9B3b7c25C740B0D5dC9F62495aeC0d1ecC",
     "amount": 6441230.037226,
     "value": 6441230.04,
-    "deposited": 100,
-    "borrowed": 10,
+    "deposited": 0,
+    "borrowed": 0,
     "totalRewardApy": 0.023677919695008987
   },
   {
@@ -27,10 +23,6 @@
     "ReserveId": "25",
     "cgId": "dai",
     "exchangeRate": 1.0138660578221015,
-    "totalLiquidity": {
-      "type": "BigNumber",
-      "hex": "0x01c7c49e4ccb"
-    },
     "utilizationRate": 0.6652377125643383,
     "borrowingRate": 0.04,
     "tokenAddress": "0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1",
@@ -50,10 +42,6 @@
     "ReserveId": "1",
     "cgId": "weth",
     "exchangeRate": 1.0160281828684794,
-    "totalLiquidity": {
-      "type": "BigNumber",
-      "hex": "0x17ac7c695bb9dc09e7"
-    },
     "utilizationRate": 0.3524948424632426,
     "borrowingRate": 0.10574845273897278,
     "tokenAddress": "0x4200000000000000000000000000000000000006",
@@ -73,10 +61,6 @@
     "ReserveId": "4",
     "cgId": "optimism",
     "exchangeRate": 1.1252614476627771,
-    "totalLiquidity": {
-      "type": "BigNumber",
-      "hex": "0x1691301f6440f75d6d6c7c"
-    },
     "utilizationRate": 0.7459754259155733,
     "borrowingRate": 0.18649385647889333,
     "tokenAddress": "0x4200000000000000000000000000000000000042",

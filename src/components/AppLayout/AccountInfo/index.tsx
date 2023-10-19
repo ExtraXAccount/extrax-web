@@ -1,5 +1,6 @@
 import './index.scss'
 
+import { sumBy } from 'lodash'
 import { useCallback, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,14 +8,17 @@ import { useWagmiCtx } from '@/components/WagmiContext'
 import useCredit from '@/hooks/useCredit'
 import useDebt from '@/hooks/useDebt'
 import useDeposited from '@/hooks/useDeposited'
-import { addComma, toPrecision } from '@/utils/math'
+import usePrices from '@/hooks/usePrices'
+import { useAppDispatch, useAppSelector } from '@/state'
+import { addComma, aprToApy, toPrecision } from '@/utils/math'
 
 export default function AccountInfo() {
   const navigate = useNavigate()
+  const { prices } = usePrices()
   const { depositedVal, depositedAssets } = useDeposited()
   const { debtVal, debtAssets } = useDebt()
   const { maxCredit, availableCredit } = useCredit()
-
+  const lendingList = useAppSelector((state) => state.lending.poolStatus)
   const { account = '' } = useWagmiCtx()
 
   const safetyRatio = useMemo(() => {
@@ -22,9 +26,11 @@ export default function AccountInfo() {
   }, [debtVal, depositedVal])
 
   const accountAPY = useMemo(() => {
-    const apy = 0.1321
-    return addComma(apy * 100) + '%'
-  }, [])
+    const totalApy =
+      sumBy(lendingList, (item) => aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol]) / depositedVal
+    // const apy = 0.1321
+    return addComma(totalApy * 100) + '%'
+  }, [depositedVal, lendingList, prices])
 
   const handleAddDeposit = useCallback(() => {
     navigate('/lend')
@@ -55,7 +61,7 @@ export default function AccountInfo() {
           <div className="extrax-account-info-credit">
             <b>Leverage Credit: </b>
             <em className="text-highlight">
-              ${addComma(debtVal)} / ${addComma(maxCredit)}
+              ${addComma(availableCredit)} / ${addComma(maxCredit)}
             </em>
           </div>
           <div className="extrax-account-info-safety">
