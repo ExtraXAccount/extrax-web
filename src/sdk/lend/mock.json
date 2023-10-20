@@ -57,15 +57,15 @@
     "totalRewardApy": 0.024034106141063605
   },
   {
-    "poolKey": "OP",
+    "poolKey": "UNI",
     "ReserveId": "4",
-    "cgId": "optimism",
+    "cgId": "uniswap",
     "exchangeRate": 1.1252614476627771,
     "utilizationRate": 0.7459754259155733,
     "borrowingRate": 0.18649385647889333,
     "tokenAddress": "0x4200000000000000000000000000000000000042",
     "tokenDecimals": 18,
-    "tokenSymbol": "OP",
+    "tokenSymbol": "UNI",
     "apr": 0.13911983401748024,
     "eTokenAddress": "0x1De04dCD405B2e5e5ECD9cB9875B764416c1c055",
     "stakingAddress": "0x89A049290CC6d56A316ed7e8D0422f54aD2BFEaC",

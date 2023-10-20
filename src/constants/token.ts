@@ -165,8 +165,13 @@ export const TOKEN_LIST = {
       address: '0x4200000000000000000000000000000000000006',
       decimals: 18,
     },
-    OP: {
-      name: 'OP',
+    // OP: {
+    //   name: 'OP',
+    //   address: '0x4200000000000000000000000000000000000042',
+    //   decimals: 18,
+    // },
+    UNI: {
+      name: 'UNI',
       address: '0x4200000000000000000000000000000000000042',
       decimals: 18,
     },
