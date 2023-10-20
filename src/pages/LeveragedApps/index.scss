@@ -81,6 +81,7 @@
     border-radius: 12px;
     max-width: 1200px;
     min-width: 800px;
+    position: relative;
     // margin: auto;
     .dapp-wrapper-title {
       margin-bottom: 20px;
@@ -92,6 +93,12 @@
       // min-height: calc(100% - 50px);
       height: calc(100vh - 250px);
       overflow-y: auto;
+    }
+
+    &-intent-button{
+      position: absolute;
+      right: 20px;
+      top: 12px;
     }
   }
 

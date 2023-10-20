@@ -101,6 +101,7 @@ export default function LeveragedApps() {
         </div>
       </div>
       <div className="dapp-wrapper">
+        <button className="dapp-wrapper-intent-button btn-base">Describe your intent</button>
         <h3 className="dapp-wrapper-title">{dappTitle}</h3>
         <div className="dapp-wrapper-inner">
           <Outlet />

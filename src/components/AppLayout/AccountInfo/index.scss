@@ -42,34 +42,54 @@
       align-items: center;
       margin-bottom: 10px;
       gap: 10px;
+      font-size: 14px;
   
-      .extrax-account-info-main-splitter {
-  
+      &-account{
+        em{
+          font-weight: normal;
+        }
       }
     }
     .extrax-account-info-detail {
-      padding: 0 40px;
+      padding: 0 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      b {
-        font-size: 14px;
-      }
-      em {
-        font-style: normal;
-        font-weight: bold;
-        color: var(--text-highlight-color-pure);
+      gap: 10px;
+
+      &-item{
+        background-color: rgba(21, 134, 255, 0.15);
+        position: relative;
+        flex: 1;
+        border-radius: 8px;
+        padding: 8px;
+        >b{
+          font-size: 12px;
+          display: block;
+        }
+        >em {
+          font-style: normal;
+          font-weight: normal;
+          line-height: 1.5;
+          font-size: 24px;
+          color: var(--text-highlight-color-pure);
+        }
       }
 
       .extrax-account-info-deposited {
         .btn-base {
-          margin-left: 10px;
-          font-size: 16px;
-          font-weight: bold;
-          padding: 0 .8em;
-          height: 1.6em;
+          position: absolute;
+          right: 12px;
+          bottom: 12px;
+          width: 40px;
+          height: 40px;
+          background: url('../../../pages/LeveragedApps/images/add.svg') center / contain no-repeat;
+          &:hover{
+            filter: brightness(1.1);
+          }
         }
       }
     }
   }
+
 }

@@ -41,7 +41,7 @@ export default function AccountInfo() {
       <div className="extrax-account-info-inner">
         <div className="extrax-account-info-main">
           <p className="extrax-account-info-main-account">
-            <b>Account: </b>
+            <b>Main Account: </b>
             <em>{`${account.slice(0, 6)}...${account.slice(-4)}`}</em>
           </p>
           <p className="extrax-account-info-main-splitter"> | </p>
@@ -51,21 +51,19 @@ export default function AccountInfo() {
           </p>
         </div>
         <div className="extrax-account-info-detail">
-          <div className="extrax-account-info-deposited">
-            <b>Deposited: </b>
+          <div className="extrax-account-info-detail-item extrax-account-info-deposited">
+            <b>Deposited</b>
             <em className="text-highlight">${addComma(depositedVal)}</em>
-            <button className="btn-base btn-base-mini" onClick={handleAddDeposit}>
-              <b>+</b>
-            </button>
+            <button className="btn-base btn-base-mini" onClick={handleAddDeposit}></button>
           </div>
-          <div className="extrax-account-info-credit">
-            <b>Leverage Credit: </b>
+          <div className="extrax-account-info-detail-item extrax-account-info-credit">
+            <b>Leverage Credit</b>
             <em className="text-highlight">
               ${addComma(availableCredit)} / ${addComma(maxCredit)}
             </em>
           </div>
-          <div className="extrax-account-info-safety">
-            <b>Safety Factor: </b>
+          <div className="extrax-account-info-detail-item extrax-account-info-safety">
+            <b>Safety Factor</b>
             <em className="text-highlight">{toPrecision(safetyRatio * 100)}%</em>
           </div>
         </div>
