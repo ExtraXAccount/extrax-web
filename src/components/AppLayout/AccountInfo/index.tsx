@@ -70,7 +70,7 @@ export default function AccountInfo() {
           <div className="extrax-account-info-detail-item extrax-account-info-credit">
             <b>Leverage Credit</b>
             <em className="text-highlight">
-              {!depositedVal ? '--' : `$${addComma(availableCredit)} / ${addComma(maxCredit)}`}
+              {!depositedVal ? '--' : `$${addComma(availableCredit)} / $${addComma(maxCredit)}`}
             </em>
           </div>
           <div className="extrax-account-info-detail-item extrax-account-info-safety">

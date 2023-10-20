@@ -5,6 +5,7 @@ import cx from 'classnames'
 import { floor } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 
+import AmountInput from '@/components/AmountInput'
 // import CoinAmount from '@/components/CoinAmount'
 import useCredit from '@/hooks/useCredit'
 import useDeposited from '@/hooks/useDeposited'
@@ -92,6 +93,14 @@ export default function Step2(props: IStep2Props) {
     <div className="farm-page-section">
       <h3>Step 2: Supply Credit</h3>
       <div className="deposit-slider">
+        <AmountInput
+          maxText="Available Credit"
+          max={availableCredit}
+          token="USD"
+          decimals={18}
+          value={supply}
+          onChange={(val) => changeSupply(Number(val))}
+        />
         <div className="percent-box percent-box-leverage">
           <Slider
             marks={lvMarks}
