@@ -130,6 +130,9 @@ $bg4: rgba(113,133,175,0.05);
                 margin-left: 6px;
               }
             }
+            &:hover {
+              background: var(--nav-border-color);
+            }
           }
         }
       }

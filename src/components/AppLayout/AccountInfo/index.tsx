@@ -39,7 +39,7 @@ export default function AccountInfo() {
           <p className="extrax-account-info-main-splitter"> | </p>
           <p className="extrax-account-info-main-apy">
             <b>Portfolio APY: </b>
-            <em className="text-highlight">{!depositedVal ? '--' : accountAPY}</em>
+            <em className="text-highlight">{!depositedVal ? '--' : addComma(accountAPY * 100) + '%'}</em>
           </p>
         </div>
         <div className="extrax-account-info-detail">

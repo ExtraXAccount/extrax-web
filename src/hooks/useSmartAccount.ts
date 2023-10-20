@@ -36,7 +36,7 @@ export default function useSmartAccount() {
           item.borrowingRate * item.borrowed * prices[item.tokenSymbol]
       ) / depositedVal
 
-    return addComma(totalApy * 100) + '%'
+    return totalApy
   }, [depositedVal, lendingList, prices])
 
   return {

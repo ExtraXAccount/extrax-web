@@ -1,4 +1,6 @@
+import { Tooltip } from 'antd/es'
 import cx from 'classnames'
+import { sumBy } from 'lodash'
 import { useMemo } from 'react'
 
 import { INFINITY } from '@/components/AppLayout/AccountInfo'
@@ -6,8 +8,9 @@ import { CoinAmountGroup } from '@/components/CoinAmount'
 import usePrices from '@/hooks/usePrices'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendContract from '@/sdk/lend'
+import { useAppSelector } from '@/state'
 import { Token } from '@/types/uniswap.interface'
-import { toPrecision, toPrecisionNum } from '@/utils/math'
+import { addComma, aprToApy, toPrecision, toPrecisionNum } from '@/utils/math'
 
 interface ISummaryProps {
   token0: Token
@@ -19,7 +22,7 @@ export default function Summary(props: ISummaryProps) {
   const {
     token0,
     token1,
-    ammPrice = 1,
+    // ammPrice = 1,
     summary = {
       bi: 0,
       baseApr: 0,
@@ -28,10 +31,11 @@ export default function Summary(props: ISummaryProps) {
   } = props
 
   const { prices } = usePrices()
+  const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const positionTotalVal = useMemo(() => {
-    return summary.amount0Borrow + ammPrice * summary.amount1Borrow
-  }, [ammPrice, summary.amount0Borrow, summary.amount1Borrow])
+    return summary.amount0Borrow * prices[token0.symbol] + summary.amount1Borrow * prices[token0.symbol]
+  }, [prices, summary.amount0Borrow, summary.amount1Borrow, token0.symbol])
 
   const {
     // smartAccount,
@@ -72,6 +76,21 @@ export default function Summary(props: ISummaryProps) {
   //   token1data,
   // })
 
+  const borrowedVal = useMemo(() => {
+    return (
+      summary.amount0Borrow * token0data.borrowFactor * prices[token0.symbol] +
+      summary.amount1Borrow * token1data.borrowFactor * prices[token1.symbol]
+    )
+  }, [
+    prices,
+    summary.amount0Borrow,
+    summary.amount1Borrow,
+    token0.symbol,
+    token0data.borrowFactor,
+    token1.symbol,
+    token1data.borrowFactor,
+  ])
+
   const borrowInterest = useMemo(() => {
     return token0data.borrowingRate * summary.tk0BorrowRatio + token1data.borrowingRate * (1 - summary.tk0BorrowRatio)
   }, [summary.tk0BorrowRatio, token0data.borrowingRate, token1data.borrowingRate])
@@ -96,8 +115,19 @@ export default function Summary(props: ISummaryProps) {
   // }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])
 
   const updatedAccountApy = useMemo(() => {
-    return accountAPY
-  }, [accountAPY])
+    if (!depositedVal) {
+      return 0
+    }
+    const result =
+      sumBy(
+        lendingList,
+        (item) =>
+          aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
+          item.borrowingRate * item.borrowed * prices[item.tokenSymbol] +
+          borrowedVal * summary.baseApr
+      ) / depositedVal
+    return result
+  }, [lendingList, depositedVal, prices, borrowedVal, summary.baseApr])
 
   return (
     <div className="farm-page-summary">
@@ -118,7 +148,7 @@ export default function Summary(props: ISummaryProps) {
             </b>
           </li>
           <li>
-            <p>Total APR</p>
+            <p>Position APR</p>
             <b>
               <span
                 className={cx('', {
@@ -133,27 +163,31 @@ export default function Summary(props: ISummaryProps) {
           </li>
           <li>
             <p>Assets Borrowed</p>
-            <b>
-              <CoinAmountGroup
-                showZero
-                coin0={token0.symbol}
-                amount0={summary.amount0Borrow}
-                coin1={token1.symbol}
-                amount1={summary.amount1Borrow}
-              />
-            </b>
+            <Tooltip title={`$${toPrecision(borrowedVal)} total worth`}>
+              <b>
+                <CoinAmountGroup
+                  showZero
+                  coin0={token0.symbol}
+                  amount0={summary.amount0Borrow * token0data.borrowFactor}
+                  coin1={token1.symbol}
+                  amount1={summary.amount1Borrow * token0data.borrowFactor}
+                />
+              </b>
+            </Tooltip>
           </li>
           <li>
             <p>Total Assets in Position</p>
-            <b>
-              <CoinAmountGroup
-                showZero
-                coin0={token0.symbol}
-                amount0={positionTotalVal / 2}
-                coin1={token1.symbol}
-                amount1={toPrecisionNum(positionTotalVal / 2 / ammPrice)}
-              />
-            </b>
+            <Tooltip title={`$${toPrecision(borrowedVal)} total worth`}>
+              <b>
+                <CoinAmountGroup
+                  showZero
+                  coin0={token0.symbol}
+                  amount0={borrowedVal / 2 / prices[token0.symbol]}
+                  coin1={token1.symbol}
+                  amount1={toPrecisionNum(borrowedVal / 2 / prices[token1.symbol])}
+                />
+              </b>
+            </Tooltip>
           </li>
           <li>
             <p>Left Credit</p>
@@ -172,8 +206,8 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Portfolio APY</p>
             <b>
-              <span className="item-pre">{accountAPY} →</span>
-              <span className="text-highlight">{updatedAccountApy}</span>
+              <span className="item-pre">{addComma(accountAPY * 100)}% →</span>
+              <span className="text-highlight">{addComma(updatedAccountApy * 100)}%</span>
             </b>
           </li>
         </ul>
