@@ -30,7 +30,7 @@ import { ALCHEMY_API_KEY, BASE_ALCHEMY_URL, OP_ALCHEMY_URL } from '@/sdk/constan
 // }
 
 export const { chains, publicClient } = configureChains(
-  [optimism, base],
+  [optimism],
   [
     jsonRpcProvider({
       rpc: (chain) => {

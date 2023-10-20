@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 
+import { INFINITY } from '@/components/AppLayout/AccountInfo'
 import { CoinAmountGroup } from '@/components/CoinAmount'
 import useCredit from '@/hooks/useCredit'
 import useDebt from '@/hooks/useDebt'
@@ -34,11 +35,20 @@ export default function Summary(props: ISummaryProps) {
   const { debtVal, debtAssets } = useDebt()
 
   const prevSafetyFactor = useMemo(() => {
-    return debtVal / (depositedVal + debtVal)
+    if (!debtVal) {
+      return INFINITY
+    }
+    return toPrecision((depositedVal / debtVal) * 100) + '%'
+    // return debtVal / (depositedVal + debtVal)
   }, [debtVal, depositedVal])
 
   const nextSafetyFactor = useMemo(() => {
-    return (debtVal + positionTotalVal) / (depositedVal + debtVal + positionTotalVal)
+    const newDebtVal = debtVal + positionTotalVal
+    if (!newDebtVal) {
+      return INFINITY
+    }
+    return toPrecision((depositedVal / newDebtVal) * 100) + '%'
+    // return (debtVal + positionTotalVal) / (depositedVal + debtVal + positionTotalVal)
   }, [debtVal, depositedVal, positionTotalVal])
   // return summary.amount0 + summary.amount0Borrow + ammPrice * (summary.amount1 + summary.amount1Borrow)
   // }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])
@@ -115,8 +125,8 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Safety Factor</p>
             <b>
-              <span className="item-pre">{toPrecision(prevSafetyFactor * 100)}% →</span>
-              <span className="text-highlight">{toPrecision(nextSafetyFactor * 100)}%</span>
+              <span className="item-pre">{prevSafetyFactor} →</span>
+              <span className="text-highlight">{nextSafetyFactor}</span>
             </b>
           </li>
         </ul>

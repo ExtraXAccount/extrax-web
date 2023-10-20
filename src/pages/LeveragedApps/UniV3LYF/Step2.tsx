@@ -2,6 +2,7 @@ import './Step2.scss'
 
 import { Dropdown, Form, Input, Select, Slider, Switch, Tooltip } from 'antd/es'
 import cx from 'classnames'
+import { floor } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 
 // import CoinAmount from '@/components/CoinAmount'
@@ -10,6 +11,7 @@ import useDeposited from '@/hooks/useDeposited'
 // import useFetchBalance from '@/hooks/useFetchBalance'
 // import { SupportedChainId } from '@/sdk/constants/chains'
 import { Token } from '@/types/uniswap.interface'
+import { toPrecision } from '@/utils/math'
 // import { nameChecker } from '@/utils'
 // import { toPrecision } from '@/utils/math'
 
@@ -45,15 +47,15 @@ export default function Step2(props: IStep2Props) {
   const lvMarks = useMemo(() => {
     const res = {
       0: '0',
-      [depositedVal]: depositedVal,
-      [availableCredit]: {
+      [toPrecision(depositedVal)]: toPrecision(depositedVal),
+      [floor(availableCredit)]: {
         style: {
           color: '#008CF2',
         },
         label: (
-          <div style={{ position: 'relative', right: 14 }}>
+          <div style={{ position: 'relative', right: '25%' }}>
             <Tooltip title="">
-              <b>{availableCredit}</b>
+              <b>{floor(availableCredit)}</b>
             </Tooltip>
           </div>
         ),

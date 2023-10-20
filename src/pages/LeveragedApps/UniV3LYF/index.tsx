@@ -53,7 +53,7 @@ export default function UniV3LYF() {
 
   const [priceMin, setPriceMin] = useState(0)
   const [priceMax, setPriceMax] = useState(0)
-  const [showNextSteps, setShowNextSteps] = useState(false)
+  const [showNextSteps, setShowNextSteps] = useState(true)
   const [priceChartLines, setPriceChartLines] = useState({} as any)
   const [upperPricePos, setUpperPricePos] = useState(0)
   const [lowerPricePos, setLowerPricePos] = useState(0)
@@ -736,10 +736,10 @@ export default function UniV3LYF() {
               <p>Base APR</p>
               <p className="text-highlight">{aprText}</p>
             </div>
-            <div>
+            {/* <div>
               <p>Leveraged APR ({lv}x)</p>
               <p className="text-highlight">{aprTextLeveraged}</p>
-            </div>
+            </div> */}
           </div>
 
           {/* <div className="price-setting-hint text-sm">
@@ -751,9 +751,9 @@ export default function UniV3LYF() {
           </div> */}
         </div>
 
-        <button className="layout-lf-btn-next btn-base btn-base-primary" onClick={toggleNextSteps}>
+        {/* <button className="layout-lf-btn-next btn-base btn-base-primary" onClick={toggleNextSteps}>
           Next Step
-        </button>
+        </button> */}
       </section>
 
       {showNextSteps && (

@@ -12,6 +12,8 @@ import usePrices from '@/hooks/usePrices'
 import { useAppDispatch, useAppSelector } from '@/state'
 import { addComma, aprToApy, toPrecision } from '@/utils/math'
 
+export const INFINITY = '∞'
+
 export default function AccountInfo() {
   const navigate = useNavigate()
   const { prices } = usePrices()
@@ -22,7 +24,11 @@ export default function AccountInfo() {
   const { account = '' } = useWagmiCtx()
 
   const safetyRatio = useMemo(() => {
-    return debtVal / (depositedVal + debtVal)
+    if (!debtVal) {
+      return INFINITY
+    }
+    return toPrecision((depositedVal / debtVal) * 100) + '%'
+    // return debtVal / (depositedVal + debtVal)
   }, [debtVal, depositedVal])
 
   const accountAPY = useMemo(() => {
@@ -63,8 +69,8 @@ export default function AccountInfo() {
             </em>
           </div>
           <div className="extrax-account-info-detail-item extrax-account-info-safety">
-            <b>Safety Factor</b>
-            <em className="text-highlight">{toPrecision(safetyRatio * 100)}%</em>
+            <b>Safety Factor: </b>
+            <em className="text-highlight">{safetyRatio}</em>
           </div>
         </div>
       </div>

@@ -1,30 +1,17 @@
-import { BigNumber as BN } from '@ethersproject/bignumber'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd'
 import { useState } from 'react'
 
-import Loading from '@/components/Loading'
-// import { useState } from 'react'
-// import { useSwitchNetwork } from 'wagmi'
 import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
-// import { SupportedChainId } from '@/sdk/constants/chains'
 import useLendContract from '@/sdk/lend'
-import { formatSymbol, toDecimals } from '@/sdk/utils/token'
-// import { useAppDispatch } from '@/state'
-// import { setCurrentHistoryPool, setCurrentPool } from '@/state/lending/reducer'
-// import { usePriceHub } from '@/state/price/hooks'
+import { formatSymbol } from '@/sdk/utils/token'
 import { nameChecker } from '@/utils'
 import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 
 import DepositDialog from './DepositDialog'
-
-// import { LendingPoolWithRewardsItem } from './hooks'
-// import InterestCurve from './InterestCurve'
-// import InterestTag from './InterestTag'
-// import LendingRewardBlock from './LendingRewardBlock'
 
 const { Column } = Table
 
@@ -35,7 +22,7 @@ export default function LendingTable() {
   // const { switchNetwork } = useSwitchNetwork()
   const { isMobile } = useDeviceDetect()
   // const dispatch = useAppDispatch()
-  const { lendList, depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
+  const { lendList, depositAndStake, unStakeAndWithdraw } = useLendContract()
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
   const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
@@ -229,7 +216,6 @@ export default function LendingTable() {
                     setDepositDialogOpen(true)
                   }}
                 >
-                  {/* {writeLoading && <Loading />} */}
                   Deposit
                 </button>
                 {!!i.deposited && (
