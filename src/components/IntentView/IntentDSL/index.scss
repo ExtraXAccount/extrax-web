@@ -1,5 +1,16 @@
 .intent-dsl{
   padding-left: 10px;
+  min-height: 340px;
+  &-template{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    >button{
+
+    }
+  }
   &-textarea{
     position: relative;
     border: 2px solid #167abc;

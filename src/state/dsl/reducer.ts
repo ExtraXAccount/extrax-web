@@ -1,14 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+import { uniswapDSL } from './constants'
+
 interface DSLState {
+  showDSL: boolean
   text: string
 }
 
 const initialState: DSLState = {
-  text: `@Borrow 500 $USDC
-@Borrow 0.9 $WETH
-@Farm POOL UniswapV3 WETH/USDC with RANGE -10% +10%
-@AutoCompound`,
+  showDSL: false,
+  text: uniswapDSL,
 }
 
 const dslSlice = createSlice({
@@ -18,8 +19,11 @@ const dslSlice = createSlice({
     setDSLText(state, { payload }) {
       state.text = payload
     },
+    setShowDSL(state, { payload }) {
+      state.showDSL = payload
+    },
   },
 })
 
-export const { setDSLText } = dslSlice.actions
+export const { setDSLText, setShowDSL } = dslSlice.actions
 export default dslSlice.reducer

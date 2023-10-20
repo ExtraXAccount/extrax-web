@@ -5,8 +5,12 @@ import { useMemo, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 import Dialog from '@/components/Dialog'
+import IntentView from '@/components/IntentView'
+import { useAppDispatch } from '@/state'
+import { setShowDSL } from '@/state/dsl/reducer'
 
 export default function LeveragedApps() {
+  const dispatch = useAppDispatch()
   const { pathname } = useLocation()
 
   const [showDappStore, setShowDappStore] = useState(false)
@@ -40,6 +44,7 @@ export default function LeveragedApps() {
 
   return (
     <div className="page-leveraged-apps">
+      <IntentView />
       <Dialog open={showDappStore} onClose={() => setShowDappStore(false)} className="page-leveraged-apps-store">
         <h4>Dapp Store</h4>
         <p>
@@ -101,7 +106,14 @@ export default function LeveragedApps() {
         </div>
       </div>
       <div className="dapp-wrapper">
-        <button className="dapp-wrapper-intent-button btn-base">Describe your intent</button>
+        <button
+          className="dapp-wrapper-intent-button btn-base"
+          onClick={() => {
+            dispatch(setShowDSL(true))
+          }}
+        >
+          Describe your intent
+        </button>
         <h3 className="dapp-wrapper-title">{dappTitle}</h3>
         <div className="dapp-wrapper-inner">
           <Outlet />

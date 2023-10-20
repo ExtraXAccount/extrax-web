@@ -43,7 +43,8 @@
     width: 120px;
     height: 120px;
     padding: 12px 16px;
-    background-color: #f8f8f8;
+    background-color: #4eacea;
+    border: 2px solid darken(#4eacea, 20%);
     border-radius: 8px;
     // border: 1px solid #ccc;
     &.front  { transform: translateZ(80px); display: block;}
@@ -63,7 +64,7 @@
       border: 2px solid darken(#a6b0fb, 20%);
     }
 
-    &.INTENT_AUTOCOMPOUND{
+    &.INTENT_AUTOCOMPOUND, &.INTENT_AUTOREBALANCE{
       background-color: #6debb7;
       border: 2px solid darken(#6debb7, 20%);
 

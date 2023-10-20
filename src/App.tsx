@@ -29,7 +29,7 @@ function App() {
             </Route>
             <Route path="lend" element={<Lend />}></Route>
             <Route path="positions" element={<Positions />}></Route>
-            <Route path="intent" element={<Intent />}></Route>
+            {/* <Route path="intent" element={<Intent />}></Route> */}
             <Route path="*" element={<Navigate to="/lend" replace />} />
           </Route>
         </Routes>

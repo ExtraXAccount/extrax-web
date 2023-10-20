@@ -4,11 +4,25 @@
   background-color: #fff;
   padding: 24px;
   border-radius: 8px;
+  gap: 160px;
+
+  &-panel{
+    min-width: 380px;
+  }
+
+  &-dsl{
+
+  }
+}
+
+.intent-view-dialog{
+  .ex-dialog-content-box{
+    width: 1160px;
+  }
 }
 
 .intent-confirm-button{
-  margin: 0 auto;
-  transform: translateY(-120%);
+  margin: 24px auto 0;
   position: relative;
   border: 2px solid #167abc;
   background-color: #4eacea;

@@ -8,8 +8,6 @@ import { INTENT_MAP, INTENTS, INTENTS_INPUT } from '@/sdk/dsl/intentList'
 
 const { Option } = Select
 
-console.log(toArray(INTENTS))
-
 export default function IntentBox(props: {
   intent: INTENTS
   param: {
@@ -46,10 +44,32 @@ export default function IntentBox(props: {
             <div>
               <p className="intent-box-item-content-platform">{param.platform}</p>
               <p className="intent-box-item-content-pool">{param.pool}</p>
-              <p className="intent-box-item-content-pricerange-title">Price Range:</p>
+              {!!param.from && !!param.to && (
+                <>
+                  <p className="intent-box-item-content-pricerange-title">Price Range:</p>
+                  <p className="intent-box-item-content-pricerange-content">
+                    {param.from * 100}% - {param.to * 100}%
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+          {param?.type === INTENTS_INPUT.INTENTS_INPUT_STOPLOSS_RANGE && (
+            <div>
+              <p className="intent-box-item-content-pricerange-title">Stoploss when</p>
               <p className="intent-box-item-content-pricerange-content">
-                {param.from * 100}% - {param.to * 100}%
+                {param.from * 100}%
+                {!!param.to && (
+                  <>
+                    {'>'} {param.to * 100}%
+                  </>
+                )}
               </p>
+            </div>
+          )}
+          {(intent === INTENTS.INTENT_AUTOCOMPOUND || intent === INTENTS.INTENT_AUTOREBALANCE) && (
+            <div>
+              <p className="intent-box-item-content-pricerange-title">per 30minutes</p>
             </div>
           )}
         </div>

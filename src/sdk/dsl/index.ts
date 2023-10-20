@@ -1,6 +1,6 @@
 import { compact, find, forEach, trim } from 'lodash'
 
-import { INTENT_MAP, INTENTS, INTENTS_INPUT } from './intentList'
+import { INTENT_MAP, INTENTS, INTENTS_INPUT, isMonitor } from './intentList'
 
 class DSLParser {
   constructor() {
@@ -19,27 +19,44 @@ class DSLParser {
         }
       }
     })
-    return this.mergeConfig(compact(config))
+    const parseResult = this.mergeConfig(compact(config))
+    return parseResult
   }
 
   public mergeConfig(config: any[]) {
     const res = []
+    let monitorConfigs = {} as any
     forEach(config, (value, index) => {
-      if (index === 0) {
-        res.push({
-          intents: [value.intent],
-          params: [value.param],
-        })
-      } else if (res[res.length - 1].intents[0] === value.intent) {
-        res[res.length - 1].intents.push(value.intent)
-        res[res.length - 1].params.push(value.param)
+      if (isMonitor(value.intent)) {
+        if (monitorConfigs.intents) {
+          monitorConfigs.intents.push(value.intent)
+          monitorConfigs.params.push(value.param)
+        } else {
+          monitorConfigs = {
+            intents: [value.intent],
+            params: [value.param],
+          }
+        }
       } else {
-        res.push({
-          intents: [value.intent],
-          params: [value.param],
-        })
+        if (index === 0) {
+          res.push({
+            intents: [value.intent],
+            params: [value.param],
+          })
+        } else if (res[res.length - 1].intents[0] === value.intent) {
+          res[res.length - 1].intents.push(value.intent)
+          res[res.length - 1].params.push(value.param)
+        } else {
+          res.push({
+            intents: [value.intent],
+            params: [value.param],
+          })
+        }
       }
     })
+    if (monitorConfigs.intents) {
+      res.push(monitorConfigs)
+    }
     return res
   }
 
@@ -67,13 +84,22 @@ class DSLParser {
         intent: settings.intent,
         param: {
           type: INTENTS_INPUT.INTENTS_INPUT_PRICE_RANGE,
-          from: Number(formattedArray[6].slice(0, -1)) / 100,
-          to: Number(formattedArray[7].slice(0, -1)) / 100,
+          from: Number(formattedArray[6]?.slice(0, -1)) / 100,
+          to: Number(formattedArray[7]?.slice(0, -1)) / 100,
           platform: formattedArray[2],
           pool: formattedArray[3],
         },
       }
-    } else if (settings.intent === INTENTS.INTENT_AUTOCOMPOUND) {
+    } else if (settings.intent === INTENTS.INTENT_STOPLOSS) {
+      return {
+        intent: settings.intent,
+        param: {
+          type: INTENTS_INPUT.INTENTS_INPUT_STOPLOSS_RANGE,
+          from: Number(formattedArray[3]?.slice(0, -1)) / 100,
+          to: Number(formattedArray[4]?.slice(0, -1)) / 100,
+        },
+      }
+    } else {
       return {
         intent: settings.intent,
         param: [],

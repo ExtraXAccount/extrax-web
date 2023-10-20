@@ -1,6 +1,7 @@
 import './index.scss'
 
 import { useAppDispatch, useAppSelector } from '@/state'
+import { daiDSL, uniswapDSL } from '@/state/dsl/constants'
 import { setDSLText } from '@/state/dsl/reducer'
 
 export default function IntentDSL() {
@@ -8,6 +9,16 @@ export default function IntentDSL() {
   const dispatch = useAppDispatch()
   return (
     <div className="intent-dsl">
+      <div className="intent-dsl-template">
+        Use
+        <button className="btn-base" onClick={() => dispatch(setDSLText(uniswapDSL))}>
+          Uniswap v3
+        </button>
+        <button className="btn-base" onClick={() => dispatch(setDSLText(daiDSL))}>
+          sDAI
+        </button>
+        Template
+      </div>
       <div className="intent-dsl-textarea">
         <div className="intent-dsl-textarea-bg"></div>
         <div className="intent-dsl-textarea-info">Input your intent here💡</div>
