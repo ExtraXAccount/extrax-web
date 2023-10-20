@@ -68,6 +68,7 @@ export default function UniV3LYF() {
   const [depositing, setDepositing] = useState(false)
 
   const [depositParams, setDepositParams] = useState({
+    tk0BorrowRatio: 0.5,
     amount0Borrow: '0',
     amount1Borrow: '0',
     amount0: '0',

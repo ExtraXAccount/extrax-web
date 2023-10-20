@@ -1,3 +1,4 @@
+import cx from 'classnames'
 import { useMemo } from 'react'
 
 import { INFINITY } from '@/components/AppLayout/AccountInfo'
@@ -5,6 +6,8 @@ import { CoinAmountGroup } from '@/components/CoinAmount'
 import useCredit from '@/hooks/useCredit'
 import useDebt from '@/hooks/useDebt'
 import useDeposited from '@/hooks/useDeposited'
+import usePrices from '@/hooks/usePrices'
+import useLendContract from '@/sdk/lend'
 import { Token } from '@/types/uniswap.interface'
 import { toPrecision, toPrecisionNum } from '@/utils/math'
 
@@ -26,13 +29,44 @@ export default function Summary(props: ISummaryProps) {
     },
   } = props
 
+  const { prices } = usePrices()
+
   const positionTotalVal = useMemo(() => {
     return summary.amount0Borrow + ammPrice * summary.amount1Borrow
   }, [ammPrice, summary.amount0Borrow, summary.amount1Borrow])
 
   const { maxCredit, availableCredit } = useCredit()
   const { depositedVal, depositedAssets } = useDeposited()
+  const { lendList } = useLendContract()
   const { debtVal, debtAssets } = useDebt()
+
+  const { token0data, token1data } = useMemo(() => {
+    const token0info = lendList.find((item) => item.tokenSymbol === token0.symbol)
+    const token1info = lendList.find((item) => item.tokenSymbol === token1.symbol)
+    return {
+      token0data: {
+        ...token0info,
+        price: prices[token0info?.tokenSymbol],
+      },
+      token1data: {
+        ...token1info,
+        price: prices[token1info?.tokenSymbol],
+      },
+    }
+  }, [token0, token1, lendList, prices])
+
+  console.log('token0data token1data :>> ', {
+    summary,
+    lendList,
+    token0,
+    token1,
+    token0data,
+    token1data,
+  })
+
+  const borrowInterest = useMemo(() => {
+    return token0data.borrowingRate * summary.tk0BorrowRatio + token1data.borrowingRate * (1 - summary.tk0BorrowRatio)
+  }, [summary.tk0BorrowRatio, token0data.borrowingRate, token1data.borrowingRate])
 
   const prevSafetyFactor = useMemo(() => {
     if (!debtVal) {
@@ -60,37 +94,31 @@ export default function Summary(props: ISummaryProps) {
       <section className="lppool-summary">
         <ul className="lppool-summary-list">
           <li>
-            <p>Borrowing Interest</p>
+            <p>Farming APR</p>
             <b>
-              <span className="item-pre">{toPrecision(summary.bi * 100, 2)}%</span>
+              <span className="farm-buffer-safe">{toPrecision(summary.baseApr * 100)}%</span>
             </b>
           </li>
           <li>
-            <p>Daily APR</p>
+            <p>Borrowing APR</p>
             <b>
-              <span className="text-highlight">{toPrecision((summary.baseApr / 365) * 100)}%</span>
-              {/* <span className="text-highlight"> → {toPrecision((summary.aprLeveraged / 365) * 100, 2)}%</span> */}
+              <span className="item-pre farm-buffer-danger">-{toPrecision(borrowInterest * 100)}%</span>
             </b>
           </li>
           <li>
             <p>Total APR</p>
             <b>
-              <span className="text-highlight">{toPrecision(summary.baseApr * 100)}%</span>
+              <span
+                className={cx('', {
+                  'farm-buffer-safe': summary.baseApr - borrowInterest >= 0,
+                  'farm-buffer-danger': summary.baseApr - borrowInterest < 0,
+                })}
+              >
+                {toPrecision((summary.baseApr - borrowInterest) * 100)}%
+              </span>
               {/* <span className="text-highlight"> → {toPrecision(summary.aprLeveraged * 100, 2)}%</span> */}
             </b>
           </li>
-          {/* <li>
-            <p>Assets Supplied</p>
-            <b>
-              <CoinAmountGroup
-                showZero
-                coin0={token0.symbol}
-                amount0={summary.amount0}
-                coin1={token1.symbol}
-                amount1={summary.amount1}
-              />
-            </b>
-          </li> */}
           <li>
             <p>Assets Borrowed</p>
             <b>

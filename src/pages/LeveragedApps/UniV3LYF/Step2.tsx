@@ -82,6 +82,7 @@ export default function Step2(props: IStep2Props) {
 
   useEffect(() => {
     onChangeDepositParams({
+      tk0BorrowRatio,
       amount0Borrow: supply * tk0BorrowRatio,
       amount1Borrow: (supply * (1 - tk0BorrowRatio)) / ammPrice,
       amount0: supply / 2,

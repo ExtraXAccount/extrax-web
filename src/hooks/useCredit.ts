@@ -1,3 +1,4 @@
+import { sumBy } from 'lodash'
 import { useMemo } from 'react'
 
 import useDebt from '@/hooks/useDebt'
@@ -12,11 +13,17 @@ export default function useCredit() {
   const { debtVal, debtAssets } = useDebt()
 
   const maxCredit = useMemo(() => {
-    return depositedVal * MAX_LEVERAGE
-  }, [depositedVal])
+    return sumBy(depositedAssets, (item) => item.deposited * item.price * item.collateralFactor) * MAX_LEVERAGE
+    // return depositedVal * MAX_LEVERAGE
+  }, [depositedAssets])
+
+  const usedCredit = useMemo(() => {
+    return sumBy(debtAssets, (item) => (item.borrowed * item.price) / item.borrowFactor)
+  }, [debtAssets])
 
   return {
     maxCredit,
-    availableCredit: maxCredit - debtVal,
+    usedCredit,
+    availableCredit: maxCredit - usedCredit,
   }
 }

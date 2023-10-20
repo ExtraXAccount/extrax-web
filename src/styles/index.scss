@@ -84,3 +84,15 @@ body.dark{
     color: #fff;
   }
 }
+
+.farm-buffer{
+  &-safe{
+    color: var(--safe-color);
+  }
+  &-warn{
+    color: var(--warn-color);
+  }
+  &-danger{
+    color: var(--danger-color);
+  }
+}
