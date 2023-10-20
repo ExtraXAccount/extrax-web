@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
+import useDeposited from '@/hooks/useDeposited'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import useLendContract from '@/sdk/lend'
@@ -24,17 +25,19 @@ export default function DepositDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { prices, getPrice } = usePrices()
+  const { getPrice } = usePrices()
   const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
   // const [allowance, setAllowance] = useState(0)
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
+  const [creatingAccount, setCreatingAccount] = useState(false)
   // const [isApproving, setIsApproving] = useState(false)
   // const [isDepositing, setIsDepositing] = useState(false)
   // const lendManager = useLendManager()
   // const dispatch = useAppDispatch()
-  const { lendList, depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
+  const { lendList, depositAndStake, writeLoading } = useLendContract()
+  const { depositedVal } = useDeposited()
 
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
@@ -133,11 +136,19 @@ export default function DepositDialog({
           className={classNames('btn-base flex1', {
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
-          onClick={() => {
+          onClick={async () => {
+            if (!depositedVal) {
+              setCreatingAccount(true)
+              try {
+                await depositAndStake('2', '1')
+              } finally {
+                setCreatingAccount(false)
+              }
+            }
             deposit()
           }}
         >
-          {writeLoading ? 'Depositing' : 'Deposit'}
+          {writeLoading ? (!creatingAccount ? 'Depositing' : 'Creating Smart Account') : 'Deposit'}
         </Button>
       </div>
     </Dialog>

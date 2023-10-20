@@ -40,7 +40,7 @@ export default function useSmartAccount() {
   }, [depositedVal, lendingList, prices])
 
   return {
-    smartAccount,
+    smartAccount: depositedVal ? smartAccount : '',
     depositedVal,
     depositedAssets,
     debtVal,
@@ -50,5 +50,6 @@ export default function useSmartAccount() {
     usedCredit,
     safetyRatio,
     accountAPY,
+    lendingList,
   }
 }

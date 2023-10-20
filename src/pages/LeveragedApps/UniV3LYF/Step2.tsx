@@ -14,7 +14,6 @@ import useDeposited from '@/hooks/useDeposited'
 import { Token } from '@/types/uniswap.interface'
 import { toPrecision } from '@/utils/math'
 // import { nameChecker } from '@/utils'
-// import { toPrecision } from '@/utils/math'
 
 interface IStep2Props {
   ammPrice: number
