@@ -16,7 +16,7 @@ export default function useWagmi() {
   return {
     // account: (searchParams.get('addr') as `0x${string}`) || account,
     account,
-    smartAccount: '0x82D755822c6Adf626fCE5b0cC50fEECd9378f7C2',
+    smartAccount: '0x2a2C3B2a78b6c09a15520C97747bD1c5cbf39431',
     activeConnector,
     isActive,
     chainId,
