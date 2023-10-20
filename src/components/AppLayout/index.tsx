@@ -74,7 +74,8 @@ export default function AppLayout() {
 
       <div className="top-bar">
         <div className="nav-logo-top">
-          <i className="nav-logo-tag">Extra-X</i>
+          <i className="nav-logo-image"></i>
+          {/* <i className="nav-logo-tag">Extra-X</i> */}
         </div>
         <div className="nav-menu">
           {navList.map((i) => {

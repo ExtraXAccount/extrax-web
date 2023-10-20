@@ -34,129 +34,6 @@
     font-size: 24px;
     padding-left: 20px;
   }
-
-  .nav-right {
-    .nav-docs {
-      height: 20px;
-      display: flex;
-      flex-wrap: nowrap;
-      align-items: center;
-      // gap: 0 !important;
-      gap: 8px;
-      .link-audits,
-      a {
-        height: 100%;
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: center;
-
-        // width: 121px;
-        height: 40px;
-        background: var(--nav-bg);
-        box-shadow: var(--nav-box-shadow);
-        border: 2px solid var(--nav-bg);
-        border-radius: 20px;
-        padding: 8px 10px;
-        font-size: 12px;
-        gap: 6px;
-        font-weight: bold;
-        transition:  .125s ease;
-        cursor: pointer;
-        &:hover {
-          transform: scale(1.025);
-        }
-        @media screen and (max-width: 900px) {
-          font-size: 12px;
-          gap: 4px;
-          padding: 8px 6px;
-        }
-        @media screen and (max-width: 720px) {
-          padding: 4px 6px;
-          font-size: 12px;
-          line-height: 1.2;
-
-          .coin-extra {
-            flex-shrink: 0;
-          }
-
-          svg {
-            display: none;
-          }
-        }
-
-        // &.link-swap {
-        //   .iconfont {
-        //     font-size: 14px;
-        //     margin-right: 2px;
-        //   }
-        //   &.active,
-        //   &:hover {
-        //     color: var(--antd-primary);
-        //   }
-        // }
-        &.link-audits {
-          .iconfont {
-            // background: #0ECA82;
-            color: #0ECA82;
-            line-height: 24px;
-            display: block;
-          }
-          // &:hover {
-          //   font-weight: 400;
-          //   background: var(--text-highlight-color);
-          //   -webkit-background-clip: text;
-          //   -webkit-text-fill-color: transparent;
-          // }
-          // @media screen and (max-width: 720px) {
-          //   display: none;
-          // }
-        }
-      }
-    }
-
-    @media screen and (max-width: 720px) {
-      max-width: calc(100% - 40px);
-      gap: 10px;
-    }
-    @media screen and (min-width: 720px) {
-      gap: 10px;
-    }
-    > div:not(.claim-wrapper) {
-      gap: 10px;
-      >button {
-        font-size: 12px;
-        border-radius: 20px;
-        text-align: center;
-        >div {
-          border-radius: 20px;
-        }
-        @media screen and (max-width: 720px) {
-          font-size: 12px;
-          overflow: visible;
-        }
-      }
-    }
-  }
-
-  &-docs{
-    >a{
-      // padding: 0 8px;
-      // border-right: 2px solid var(--text-color);
-      transition: .3s ease-in-out;
-      // &:hover{
-      //   filter: brightness(1.5);
-      // }
-      // &:last-child{
-      //   border-right: 0;
-      // }
-    }
-    @media screen and (max-width: 800px) {
-      font-size: 12px;
-      .iconfont{
-        display: none;
-      }
-    }
-  }
 }
 
 .nav-menu {
@@ -264,8 +141,8 @@
   }
 }
 
-$dark-logo: '~@/assets/images/logo/extrafi_logo_blue_dark.svg';
-$light-logo: '~@/assets/images/logo/extrafi_logo_blue_white.svg';
+$dark-logo: '~@/assets/images/logo/logo_light_black.png';
+$light-logo: '~@/assets/images/logo/logo_light_black.png';
 
 .nav-logo{
   // position: relative;
@@ -280,15 +157,13 @@ $light-logo: '~@/assets/images/logo/extrafi_logo_blue_white.svg';
   &-image{
     display: block;
     font-weight: bold;
-    background: url($dark-logo) center/contain no-repeat;
-    width: 80px;
+    background: url($light-logo) center/contain no-repeat;
+    width: 100px;
     height: 40px;
     @media screen and (max-width: 720px) {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      // height: 100%;
-      background: url('~@/assets/images/logo/Ex_logo_dark_rect.svg') center / contain no-repeat;
     }
     @media screen and (max-width: 720px) {
       flex: 0 0 auto;
@@ -323,170 +198,6 @@ $light-logo: '~@/assets/images/logo/extrafi_logo_blue_white.svg';
       transform: none;
       font-size: 12px;
       margin-left: 2px;
-    }
-  }
-}
-
-body.dark{
-  @media screen and (min-width: 720px) {
-    .nav-logo-image{
-      background-image: url($light-logo);
-    }
-  }
-  @media screen and (max-width: 720px) {
-    .nav-logo-image{
-      background: url('~@/assets/images/logo/Ex_logo_dark_rect.svg') center / contain no-repeat;
-    }
-  }
-}
-
-.page-content-inner-hint{
-  padding: 1em;
-  text-align: center;
-  font-size: 18px;
-
-  >.iconfont{
-    display: block;
-    font-size: 48px;
-    margin-bottom: .5em;
-  }
-}
-
-.app-bottom-wrapper {
-  width: 100%;
-  max-width: 1600px;
-  margin: 0 auto;
-  display: flex;
-  gap: 10px;
-  flex-wrap: nowrap;
-  &.farm-page {
-    display: none;
-    max-width: 1000px;
-    .risk-hint {
-      word-break: break-all;
-    }
-  }
-  .chainlink-badge {
-    display: block;
-    flex: 0 0 auto;
-    img {
-      position: relative;
-      display: block;
-      width: 240px;
-      border-radius: 4px;
-      overflow: hidden;
-      &.chainlink-badge-white {
-        display: block;
-      }
-      &.chainlink-badge-black {
-        background-color: #131D32;
-        // background-color: #333;
-        display: none;
-      }
-    }
-  }
-
-  @media screen and (max-width: 720px) {
-    flex-direction: column-reverse;
-    .chainlink-badge {
-      width: 100%;
-      height: auto;
-      img {
-        width: 100%;
-        height: auto;
-      }
-    }
-  }
-}
-:root.dark {
-  .app-bottom-wrapper {
-    .chainlink-badge {
-      img {
-        &.chainlink-badge-white {
-          display: none;
-        }
-        &.chainlink-badge-black {
-          display: block;
-        }
-      }
-    }
-  }
-}
-
-.risk-hint{
-  background-color: #dedede;
-  border-radius: var(--box-radius);
-  // max-width: 1600px;
-  margin: 0 auto;
-  color: #797676;
-  font-size: 14px;
-  padding: 1em;
-  line-height: 1.5;
-
-  >i{
-    margin-right: 6px;
-  }
-  >a{
-    color: #666;
-    text-decoration: underline;
-  }
-}
-
-.security-overlay {
-  a {
-    line-height: 1.4;
-    font-size: 14px;
-    &:hover {
-      color: #0ECA82 !important;
-    }
-    .icon-guard {
-      font-size: 18px;
-    }
-    .link-icon {
-      width: 18px;
-      height: 18px;
-      background: center/contain no-repeat;
-      &-bug {
-        margin-right: 2px;
-        width: 16px;
-        height: 16px;
-        background-image: url('~@/assets/partners/immunify_mark_black.png') ;
-      }
-      &-insurace {
-        background-image: url('~@/assets/partners/insurace_mark.png') ;
-      }
-    }
-  }
-}
-
-body.dark{
-  .risk-hint{
-    background-color: #131D32;
-  }
-  .security-overlay {
-    .link-icon {
-      &-bug {
-        background-image: url('~@/assets/partners/immunify_mark_white.png') ;
-      }
-      &-insurace {
-        background-image: url('~@/assets/partners/insurace_mark2.png') ;
-      }
-    }
-  }
-  
-}
-
-.App.home:not(.mobile){
-  .nav-logo-image{
-    background-image: url($light-logo);
-  }
-  .nav{
-    .nav-right {
-      .nav-docs {
-        a{
-          color: var(--text-color)
-        }
-      }
     }
   }
 }
