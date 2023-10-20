@@ -3,10 +3,8 @@ import { useMemo } from 'react'
 
 import { INFINITY } from '@/components/AppLayout/AccountInfo'
 import { CoinAmountGroup } from '@/components/CoinAmount'
-import useCredit from '@/hooks/useCredit'
-import useDebt from '@/hooks/useDebt'
-import useDeposited from '@/hooks/useDeposited'
 import usePrices from '@/hooks/usePrices'
+import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendContract from '@/sdk/lend'
 import { Token } from '@/types/uniswap.interface'
 import { toPrecision, toPrecisionNum } from '@/utils/math'
@@ -35,10 +33,20 @@ export default function Summary(props: ISummaryProps) {
     return summary.amount0Borrow + ammPrice * summary.amount1Borrow
   }, [ammPrice, summary.amount0Borrow, summary.amount1Borrow])
 
-  const { maxCredit, availableCredit } = useCredit()
-  const { depositedVal, depositedAssets } = useDeposited()
+  const {
+    // smartAccount,
+    depositedVal,
+    // depositedAssets,
+    debtVal,
+    // debtAssets,
+    // maxCredit,
+    availableCredit,
+    // usedCredit,
+    // safetyRatio,
+    accountAPY,
+  } = useSmartAccount()
+
   const { lendList } = useLendContract()
-  const { debtVal, debtAssets } = useDebt()
 
   const { token0data, token1data } = useMemo(() => {
     const token0info = lendList.find((item) => item.tokenSymbol === token0.symbol)
@@ -55,14 +63,14 @@ export default function Summary(props: ISummaryProps) {
     }
   }, [token0, token1, lendList, prices])
 
-  console.log('token0data token1data :>> ', {
-    summary,
-    lendList,
-    token0,
-    token1,
-    token0data,
-    token1data,
-  })
+  // console.log('token0data token1data :>> ', {
+  //   summary,
+  //   lendList,
+  //   token0,
+  //   token1,
+  //   token0data,
+  //   token1data,
+  // })
 
   const borrowInterest = useMemo(() => {
     return token0data.borrowingRate * summary.tk0BorrowRatio + token1data.borrowingRate * (1 - summary.tk0BorrowRatio)
@@ -86,6 +94,10 @@ export default function Summary(props: ISummaryProps) {
   }, [debtVal, depositedVal, positionTotalVal])
   // return summary.amount0 + summary.amount0Borrow + ammPrice * (summary.amount1 + summary.amount1Borrow)
   // }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])
+
+  const updatedAccountApy = useMemo(() => {
+    return accountAPY
+  }, [accountAPY])
 
   return (
     <div className="farm-page-summary">
@@ -155,6 +167,13 @@ export default function Summary(props: ISummaryProps) {
             <b>
               <span className="item-pre">{prevSafetyFactor} →</span>
               <span className="text-highlight">{nextSafetyFactor}</span>
+            </b>
+          </li>
+          <li>
+            <p>Portfolio APY</p>
+            <b>
+              <span className="item-pre">{accountAPY} →</span>
+              <span className="text-highlight">{updatedAccountApy}</span>
             </b>
           </li>
         </ul>

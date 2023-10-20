@@ -272,9 +272,11 @@ $bg4: rgba(113,133,175,0.05);
         left: 0;
         height: 0;
         width: 100%;
-        border-bottom: 2px dashed #82ca9d;
+        // border-bottom: 2px dashed #82ca9d;
+        border-bottom: 2px dashed #fff;
         transition: top .3s ease;
         z-index: 1;
+        // display: none;
       }
       .price-range-area {
         position: absolute;
@@ -289,9 +291,10 @@ $bg4: rgba(113,133,175,0.05);
         position: absolute;
         top: 0;
         left: 0;
-        height: 2px;
+        height: 0;
         width: 100%;
-        background: #6AE1CD; //#78C46C;
+        border-bottom: 1px dashed #6AE1CD;
+        // background: #aaa; //#78C46C;
 
         cursor: ns-resize;
         z-index: 1;

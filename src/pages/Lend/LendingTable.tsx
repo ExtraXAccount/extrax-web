@@ -19,13 +19,11 @@ import WithdrawDialog from './WithdrawDialog'
 const { Column } = Table
 
 export default function LendingTable() {
-  const { prices, getPrice } = usePrices()
+  const { getPrice } = usePrices()
   const { openConnectModal } = useConnectModal()
-  const { account, chainId } = useWagmiCtx()
-  // const { switchNetwork } = useSwitchNetwork()
+  const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
-  // const dispatch = useAppDispatch()
-  const { lendList, depositAndStake, unStakeAndWithdraw } = useLendContract()
+  const { lendList } = useLendContract()
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
   const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
