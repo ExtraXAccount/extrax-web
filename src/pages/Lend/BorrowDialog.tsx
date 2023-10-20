@@ -15,7 +15,9 @@ import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/
 import { toBNString, toDecimals } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 
-export default function DepositDialog({
+const maxBorrowedRatio = 0.8
+
+export default function BorrowDialog({
   open,
   currentLendingPoolDetail,
   onClose,
@@ -58,8 +60,8 @@ export default function DepositDialog({
   function reset() {
     setValue('')
   }
-  const deposit = useCallback(async () => {
-    const res = await depositAndStake(
+  const borrow = useCallback(async () => {
+    const res = await unStakeAndWithdraw(
       currentLendingPoolDetail?.ReserveId,
       toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
     )
@@ -69,7 +71,7 @@ export default function DepositDialog({
     const target = newLendList[targetIndex]
     newLendList.splice(targetIndex, 1, {
       ...target,
-      deposited: target.deposited + Number(value),
+      borrowed: (target.borrowed || 0) + Number(value),
     })
     // console.log('newLendingData :>> ', targetIndex, newLendList)
     dispatch(setLendingStatus(newLendList))
@@ -78,7 +80,7 @@ export default function DepositDialog({
 
     return res
   }, [
-    depositAndStake,
+    unStakeAndWithdraw,
     value,
     currentLendingPoolDetail?.tokenDecimals,
     currentLendingPoolDetail?.ReserveId,
@@ -95,13 +97,13 @@ export default function DepositDialog({
     <Dialog
       open={!!open && !!currentLendingPoolDetail}
       onClose={onClose}
-      title={`Deposit ${nameChecker(currentLendingPoolDetail?.tokenSymbol)}`}
+      title={`Borrow ${nameChecker(currentLendingPoolDetail?.tokenSymbol)}`}
     >
       <div>
         <AmountInput
-          maxText="Balance"
-          max={balance}
-          ethBalance={ethBalance}
+          maxText="Available"
+          max={(currentLendingPoolDetail?.deposited - currentLendingPoolDetail?.borrowed) * maxBorrowedRatio}
+          // ethBalance={ethBalance}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
           token={currentLendingPoolDetail?.tokenSymbol}
@@ -117,14 +119,14 @@ export default function DepositDialog({
             ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
           </b>
         </li>
-        <li>
+        {/* <li>
           <p>Current APY:</p>
           <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%</b>
         </li>
         <li>
           <p>Updated APY:</p>
           <b className="text-highlight">{formatFloatNumber(nextApy)}%</b>
-        </li>
+        </li> */}
       </ul>
       <div className="dialog-btns flex jc-sb">
         <Button
@@ -134,10 +136,10 @@ export default function DepositDialog({
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
           onClick={() => {
-            deposit()
+            borrow()
           }}
         >
-          {writeLoading ? 'Depositing' : 'Deposit'}
+          {writeLoading ? 'Borrowing' : 'Borrow'}
         </Button>
       </div>
     </Dialog>

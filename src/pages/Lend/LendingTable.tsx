@@ -11,7 +11,10 @@ import { formatSymbol } from '@/sdk/utils/token'
 import { nameChecker } from '@/utils'
 import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 
+import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
+import RepayDialog from './RepayDialog'
+import WithdrawDialog from './WithdrawDialog'
 
 const { Column } = Table
 
@@ -27,6 +30,10 @@ export default function LendingTable() {
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
   const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
 
+  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false)
+  const [repayDialogOpen, setRepayDialogOpen] = useState(false)
+  const [borrowDialogOpen, setBorrowDialogOpen] = useState(false)
+
   return (
     <>
       <DepositDialog
@@ -34,6 +41,24 @@ export default function LendingTable() {
         currentLendingPoolDetail={currentLendingPoolDetail}
         onClose={() => setDepositDialogOpen(false)}
       ></DepositDialog>
+
+      <WithdrawDialog
+        open={withdrawDialogOpen}
+        currentLendingPoolDetail={currentLendingPoolDetail}
+        onClose={() => setWithdrawDialogOpen(false)}
+      ></WithdrawDialog>
+
+      <BorrowDialog
+        open={borrowDialogOpen}
+        currentLendingPoolDetail={currentLendingPoolDetail}
+        onClose={() => setBorrowDialogOpen(false)}
+      ></BorrowDialog>
+
+      <RepayDialog
+        open={repayDialogOpen}
+        currentLendingPoolDetail={currentLendingPoolDetail}
+        onClose={() => setRepayDialogOpen(false)}
+      ></RepayDialog>
 
       <Table
         sortDirections={['descend', 'ascend']}
@@ -223,7 +248,8 @@ export default function LendingTable() {
                     <button
                       className="btn-base btn-base-small"
                       onClick={() => {
-                        unStakeAndWithdraw(i.ReserveId, '10000')
+                        setCurrentLendingPoolDetail(i)
+                        setWithdrawDialogOpen(true)
                       }}
                     >
                       Withdraw
@@ -232,7 +258,8 @@ export default function LendingTable() {
                     <button
                       className="btn-base btn-base-small"
                       onClick={() => {
-                        depositAndStake(i.ReserveId, '10000')
+                        setCurrentLendingPoolDetail(i)
+                        setBorrowDialogOpen(true)
                       }}
                     >
                       Borrow
@@ -243,7 +270,8 @@ export default function LendingTable() {
                   <button
                     className="btn-base btn-base-small"
                     onClick={() => {
-                      depositAndStake(i.ReserveId, '10000')
+                      setCurrentLendingPoolDetail(i)
+                      setRepayDialogOpen(true)
                     }}
                   >
                     Repay

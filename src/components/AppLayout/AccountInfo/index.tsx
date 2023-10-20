@@ -33,8 +33,13 @@ export default function AccountInfo() {
 
   const accountAPY = useMemo(() => {
     const totalApy =
-      sumBy(lendingList, (item) => aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol]) / depositedVal
-    // const apy = 0.1321
+      sumBy(
+        lendingList,
+        (item) =>
+          aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
+          item.borrowingRate * item.borrowed * prices[item.tokenSymbol]
+      ) / depositedVal
+
     return addComma(totalApy * 100) + '%'
   }, [depositedVal, lendingList, prices])
 
@@ -69,7 +74,7 @@ export default function AccountInfo() {
             </em>
           </div>
           <div className="extrax-account-info-detail-item extrax-account-info-safety">
-            <b>Safety Factor: </b>
+            <b>Safety Factor</b>
             <em className="text-highlight">{safetyRatio}</em>
           </div>
         </div>
