@@ -68,15 +68,15 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Daily APR</p>
             <b>
-              <span className="item-pre">{toPrecision((summary.baseApr / 365) * 100, 2)}% →</span>
-              <span className="text-highlight">{toPrecision((summary.aprLeveraged / 365) * 100, 2)}%</span>
+              <span className="text-highlight">{toPrecision((summary.baseApr / 365) * 100)}%</span>
+              {/* <span className="text-highlight"> → {toPrecision((summary.aprLeveraged / 365) * 100, 2)}%</span> */}
             </b>
           </li>
           <li>
             <p>Total APR</p>
             <b>
-              <span className="item-pre">{toPrecision(summary.baseApr * 100, 2)}% →</span>
-              <span className="text-highlight">{toPrecision(summary.aprLeveraged * 100, 2)}%</span>
+              <span className="text-highlight">{toPrecision(summary.baseApr * 100)}%</span>
+              {/* <span className="text-highlight"> → {toPrecision(summary.aprLeveraged * 100, 2)}%</span> */}
             </b>
           </li>
           {/* <li>

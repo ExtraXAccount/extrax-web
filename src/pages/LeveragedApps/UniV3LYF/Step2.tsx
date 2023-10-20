@@ -90,7 +90,7 @@ export default function Step2(props: IStep2Props) {
 
   return (
     <div className="farm-page-section">
-      <h3>Step 2: Supply Liquidity</h3>
+      <h3>Step 2: Supply Credit</h3>
       <div className="deposit-slider">
         <div className="percent-box percent-box-leverage">
           <Slider

@@ -17,6 +17,7 @@ import usePoolInfo from '@/hooks/usePoolInfo'
 import usePools from '@/hooks/usePools'
 import PriceChart from '@/pages/LeveragedApps/UniV3LYF/Calculator/PriceChart'
 import { VAULT_CONFIG } from '@/sdk/constants/vaultConfig'
+import useLendContract from '@/sdk/lend'
 import { Token } from '@/types/uniswap.interface'
 import { getFeeTierPercentage } from '@/uniswap/math'
 import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
@@ -41,6 +42,7 @@ export default function UniV3LYF() {
   const navigate = useNavigate()
   const { poolId = '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8' } = useParams()
   const v3TopTvlPools = usePools()
+  const { depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
   // const poolId = useMemo(() => {
   //   return v3TopTvlPools?.[0]?.id
   // }, [v3TopTvlPools])
@@ -467,7 +469,7 @@ export default function UniV3LYF() {
       // amount1: toBNString(0.01, 18), // '10000000000000000', , Number(poolInfo.token1.decimals)
     }
     console.log('vaultParams :>> ', vaultParams)
-    const [needApproveToken0, needApproveToken1] = [true, true]
+    // const [needApproveToken0, needApproveToken1] = [true, true]
     // const [needApproveToken0, needApproveToken1] = await vaultManager.checkAllowance(
     //   { amount0: vaultParams.amount0, amount1: vaultParams.amount1 },
     //   poolKey
@@ -475,39 +477,14 @@ export default function UniV3LYF() {
     console.log('checkAllowance :>> ', {
       amount0: depositParams.amount0,
       amount1: depositParams.amount1,
-      needApproveToken0,
-      needApproveToken1,
+      // needApproveToken0,
+      // needApproveToken1,
     })
-
-    if (needApproveToken0) {
-      setApprovingToken0(true)
-      try {
-        // const approveRes0 = await vaultManager.approveToken0(vaultParams.amount0, poolKey)
-        // console.log('approveRes0 :>> ', approveRes0)
-      } catch (err) {
-        console.warn(err)
-        throw err
-      } finally {
-        setApprovingToken0(false)
-      }
-    }
-
-    if (needApproveToken1) {
-      setApprovingToken1(true)
-      try {
-        // const approveRes1 = await vaultManager.approveToken1(vaultParams.amount1, poolKey)
-        // console.log('approveRes1 :>> ', approveRes1)
-      } catch (err) {
-        console.warn(err)
-        throw err
-      } finally {
-        setApprovingToken1(false)
-      }
-    }
 
     setDepositing(true)
     try {
-      console.log('vaultManager vaultParams :>> ', vaultParams)
+      await depositAndStake('2', '1')
+      // console.log('vaultManager vaultParams :>> ', vaultParams)
       // const depositRes = await vaultManager.deposit(vaultParams)
       // console.log('depositRes :>> ', depositRes)
     } catch (err) {
@@ -516,7 +493,7 @@ export default function UniV3LYF() {
     } finally {
       setDepositing(false)
     }
-  }, [feeTier, token0PriceUpper, decimals, token0PriceLower, depositParams, poolKey])
+  }, [feeTier, depositAndStake, token0PriceUpper, decimals, token0PriceLower, depositParams, poolKey])
 
   const onChangeDepositParams = useCallback((params) => {
     setDepositParams(params)

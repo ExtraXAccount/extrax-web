@@ -21,7 +21,7 @@ export default function AccountInfo() {
   const { debtVal, debtAssets } = useDebt()
   const { maxCredit, availableCredit } = useCredit()
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
-  const { account = '' } = useWagmiCtx()
+  const { account = '', smartAccount } = useWagmiCtx()
 
   const safetyRatio = useMemo(() => {
     if (!debtVal) {
@@ -53,29 +53,29 @@ export default function AccountInfo() {
         <div className="extrax-account-info-main">
           <p className="extrax-account-info-main-account">
             <b>Main Account: </b>
-            <em>{`${account.slice(0, 6)}...${account.slice(-4)}`}</em>
+            <em>{!depositedVal ? '--' : `${smartAccount.slice(0, 6)}...${smartAccount.slice(-4)}`}</em>
           </p>
           <p className="extrax-account-info-main-splitter"> | </p>
           <p className="extrax-account-info-main-apy">
             <b>Portfolio APY: </b>
-            <em className="text-highlight">{accountAPY}</em>
+            <em className="text-highlight">{!depositedVal ? '--' : accountAPY}</em>
           </p>
         </div>
         <div className="extrax-account-info-detail">
           <div className="extrax-account-info-detail-item extrax-account-info-deposited">
             <b>Deposited</b>
-            <em className="text-highlight">${addComma(depositedVal)}</em>
+            <em className="text-highlight">{!depositedVal ? '--' : `$${addComma(depositedVal)}`}</em>
             <button className="btn-base btn-base-mini" onClick={handleAddDeposit}></button>
           </div>
           <div className="extrax-account-info-detail-item extrax-account-info-credit">
             <b>Leverage Credit</b>
             <em className="text-highlight">
-              ${addComma(availableCredit)} / ${addComma(maxCredit)}
+              {!depositedVal ? '--' : `$${addComma(availableCredit)} / ${addComma(maxCredit)}`}
             </em>
           </div>
           <div className="extrax-account-info-detail-item extrax-account-info-safety">
             <b>Safety Factor</b>
-            <em className="text-highlight">{safetyRatio}</em>
+            <em className="text-highlight">{!depositedVal ? '--' : safetyRatio}</em>
           </div>
         </div>
       </div>
