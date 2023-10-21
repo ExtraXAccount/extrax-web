@@ -13,7 +13,7 @@ const initialState: DSLState = {
 }
 
 const dslSlice = createSlice({
-  name: 'lending',
+  name: 'dsl',
   initialState,
   reducers: {
     setDSLText(state, { payload }) {

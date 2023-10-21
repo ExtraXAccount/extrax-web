@@ -3,6 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import dsl from './dsl/reducer'
 import lending from './lending/reducer'
+import position from './position/reducer'
 import price from './price/reducer'
 
 const store = configureStore({
@@ -10,6 +11,7 @@ const store = configureStore({
     lending,
     dsl,
     price,
+    position,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
 })

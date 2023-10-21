@@ -38,6 +38,18 @@
         background-image: url('./images/add.svg');
       }
 
+      &-balancer{
+        background-image: url('./images/balancer.svg');
+      }
+
+      &-curve{
+        background-image: url('./images/curve.png');
+      }
+
+      &-velodrome{
+        background-image: url('./images/velodrome.svg');
+      }
+
       &-uniswap{
         background-image: url('./images/uniswap.svg');
       }
@@ -46,6 +58,26 @@
         background-image: url('./images/spark.svg');
         background-position: top center;
       }
+
+      &-1inch{
+        background-image: url('./images/1inch.png');
+      }
+
+      &-makerdao{
+        background-image: url('./images/makerdao.png');
+      }
+
+      &-yearn{
+        // background-position: top center;
+        background-size: 40px 40px;
+        background-image: url('./images/yearn.svg');
+      }
+
+      &-yeth{
+        fill: #5913fb !important;
+        background-image: url('./images/yeth.svg');
+      }
+
 
       >p{
         width: 100%;

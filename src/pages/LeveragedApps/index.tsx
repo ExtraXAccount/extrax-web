@@ -51,33 +51,39 @@ export default function LeveragedApps() {
           Yield Farming <b>(Up to 7x)</b>
         </p>
         <div className="side-bar-app-list">
+          <div className="side-bar-app-list-item side-bar-app-list-item-balancer">
+            <p>Balancer</p>
+          </div>
+          <div className="side-bar-app-list-item side-bar-app-list-item-curve">
+            <p>Curve</p>
+          </div>
+          <div className="side-bar-app-list-item side-bar-app-list-item-velodrome">
+            <p>Velodrome</p>
+          </div>
           <div className="side-bar-app-list-item side-bar-app-list-item-uniswap">
             <p>Uniswap V3</p>
-          </div>
-          <div className="side-bar-app-list-item side-bar-app-list-item-spark">
-            <p>spark</p>
           </div>
         </div>
         <p>
-          Trading <b>(Up to 7x)</b>
+          Trading <b>(Up to 5x)</b>
         </p>
         <div className="side-bar-app-list">
-          <div className="side-bar-app-list-item side-bar-app-list-item-uniswap">
-            <p>Uniswap V3</p>
-          </div>
-          <div className="side-bar-app-list-item side-bar-app-list-item-spark">
-            <p>spark</p>
+          <div className="side-bar-app-list-item side-bar-app-list-item-1inch">
+            <p>1inch</p>
           </div>
         </div>
         <p>
           Earning <b>(Up to 7x)</b>
         </p>
         <div className="side-bar-app-list">
-          <div className="side-bar-app-list-item side-bar-app-list-item-uniswap">
-            <p>Uniswap V3</p>
+          <div className="side-bar-app-list-item side-bar-app-list-item-makerdao">
+            <p>MakerDAO</p>
           </div>
-          <div className="side-bar-app-list-item side-bar-app-list-item-spark">
-            <p>spark</p>
+          <div className="side-bar-app-list-item side-bar-app-list-item-yearn">
+            <p>Yearn Finance</p>
+          </div>
+          <div className="side-bar-app-list-item side-bar-app-list-item-yeth">
+            <p>yETH</p>
           </div>
         </div>
       </Dialog>
