@@ -33,6 +33,7 @@ export default function useSmartAccount() {
       (sumBy(
         lendingList,
         (item) =>
+          (item.SavingsDAI || 0) * 0.05 +
           aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
           item.borrowingRate * item.borrowed * prices[item.tokenSymbol]
       ) +

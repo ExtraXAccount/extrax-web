@@ -25,7 +25,7 @@ export default function LeveragedApps() {
     },
     {
       name: 'Spark Protocol',
-      title: 'Spark Protocol - Leveraged Lending',
+      title: 'Spark Protocol - SavingsDAI Earning',
       id: 'spark',
       image:
         'https://2799817246-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FjvdfbhgN5UCpMtP1l8r5%2Fuploads%2Fgit-blob-c029bb6c918f8c042400dbcef7102c4e5c1caf38%2Flogomark%20colour.svg?alt=media',

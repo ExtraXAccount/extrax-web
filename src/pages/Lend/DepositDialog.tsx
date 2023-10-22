@@ -1,4 +1,3 @@
-import { BigNumber as BN } from '@ethersproject/bignumber'
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
