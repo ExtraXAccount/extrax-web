@@ -31,8 +31,8 @@
     "recharts": "^2.8.0",
     "tua-body-scroll-lock": "^1.4.0",
     "use-debounce": "^9.0.4",
-    "viem": "^1.15.4",
-    "wagmi": "^1.4.3",
+    "viem": "^1.16.6",
+    "wagmi": "^1.4.5",
     "web-vitals": "^2.1.4"
   },
   "overrides": {

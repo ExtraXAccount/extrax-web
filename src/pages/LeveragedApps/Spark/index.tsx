@@ -48,6 +48,7 @@ export default function Spark() {
     const target = newLendList[targetIndex]
     newLendList.splice(targetIndex, 1, {
       ...target,
+      borrowed: target.borrowed + Number(value),
       SavingsDAI: target.SavingsDAI + Number(value),
     })
     // console.log('newLendingData :>> ', targetIndex, newLendList)
