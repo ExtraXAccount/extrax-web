@@ -1,7 +1,8 @@
 import './index.scss'
 
-import { TICK_SPACINGS } from '@uniswap/v3-sdk'
+import { BigNumber as BN } from '@ethersproject/bignumber'
 import { InputNumber, Select, Switch } from 'antd/es'
+import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { round } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -18,11 +19,12 @@ import usePools from '@/hooks/usePools'
 import PriceChart from '@/pages/LeveragedApps/UniV3LYF/Calculator/PriceChart'
 import { VAULT_CONFIG } from '@/sdk/constants/vaultConfig'
 import useLendContract from '@/sdk/lend'
+import { useAppDispatch } from '@/state'
+import { setLendingStatus } from '@/state/lending/reducer'
+import { addUserPositions } from '@/state/position/reducer'
 import { Token } from '@/types/uniswap.interface'
 import { getFeeTierPercentage } from '@/uniswap/math'
 import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
-import { toBNString } from '@/utils/math/bn'
-import { token0price2latestUsabletick } from '@/utils/math/priceTickConvert'
 
 import BackTestModal from './BackTestModal'
 import { getHistoricalAprFromPool } from './Calculator/fn'
@@ -42,7 +44,8 @@ export default function UniV3LYF() {
   const navigate = useNavigate()
   const { poolId = '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8' } = useParams()
   const v3TopTvlPools = usePools()
-  const { depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
+  const { lendList, depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
+  const dispatch = useAppDispatch()
   // const poolId = useMemo(() => {
   //   return v3TopTvlPools?.[0]?.id
   // }, [v3TopTvlPools])
@@ -68,6 +71,7 @@ export default function UniV3LYF() {
   const [depositing, setDepositing] = useState(false)
 
   const [depositParams, setDepositParams] = useState({
+    positionVal: 0,
     tk0BorrowRatio: 0.5,
     amount0Borrow: '0',
     amount1Borrow: '0',
@@ -132,10 +136,6 @@ export default function UniV3LYF() {
     )
   }, [token0, token1, chainId])
 
-  const decimals: [number, number] = useMemo(() => {
-    return [_token0.decimals, _token1.decimals]
-  }, [_token0, _token1])
-
   const isStable = useMemo(() => {
     return stableCoins.includes(token1.symbol) && stableCoins.includes(token0.symbol)
   }, [token0, token1])
@@ -153,15 +153,6 @@ export default function UniV3LYF() {
     ]
     return isStable ? stableOptions : options
   }, [isStable])
-
-  // const setPriceRangeByRatio = useCallback(
-  //   (min, max) => {
-  //     // console.log('setPriceRangeByRatio :>> ', relativePrice, min, max)
-  //     setPriceMin(toPrecisionNum(relativePrice * min, 4))
-  //     setPriceMax(toPrecisionNum(relativePrice * max, 4))
-  //   },
-  //   [relativePrice]
-  // )
 
   useEffect(() => {
     setPriceMin(toPrecisionNum(Number(poolInfo.token0Price) * (1 + priceOptions[0][0]), 4))
@@ -242,41 +233,6 @@ export default function UniV3LYF() {
           chartMaxVal: toPrecisionNum(relativePrice * 1.5, 2),
         }
   }, [isStable, relativePrice])
-
-  // const { chartMinVal, chartMaxVal } = useMemo(() => {
-  //   const daysData = poolDayDatas.slice(0, 60).reverse()
-  //   if (!daysData.length) {
-  //     return {}
-  //   }
-  //   function getValueByBaseToken(val) {
-  //     if (!val) {
-  //       return 0
-  //     }
-  //     return toPrecisionNum(reverseBaseToken ? 1 / Number(val) : Number(val), 7)
-  //   }
-
-  //   let minVal = getValueByBaseToken(daysData[0].low)
-  //   let maxVal = getValueByBaseToken(daysData[0].high)
-  //   daysData.forEach((item) => {
-  //     minVal = Math.min(minVal, getValueByBaseToken(item.low), getValueByBaseToken(item.close))
-  //     maxVal = Math.max(maxVal, getValueByBaseToken(item.high), getValueByBaseToken(item.close))
-  //   })
-
-  //   // maxVal = Math.max(maxVal, priceMax)
-  //   // minVal = Math.min(minVal, priceMin)
-  //   const delta = maxVal - minVal
-  //   return {
-  //     chartMinVal: minVal - delta * 0.1,
-  //     chartMaxVal: maxVal + delta * 0.1,
-  //     // chartMinVal: minVal * 0.9,
-  //     // chartMaxVal: maxVal * 1.1,
-  //   }
-  //   // }, [poolDayDatas, priceMax, priceMin, reverseBaseToken])
-  // }, [poolDayDatas, reverseBaseToken])
-
-  // useEffect(() => {
-  //   console.log('poolInfo :>> ', poolInfo)
-  // }, [poolInfo])
 
   const chartProps = useMemo(() => {
     return {
@@ -416,10 +372,6 @@ export default function UniV3LYF() {
     return !!relativePrice
   }, [relativePrice])
 
-  const toggleNextSteps = useCallback(() => {
-    setShowNextSteps(!showNextSteps)
-  }, [showNextSteps])
-
   const clickBacktest = useCallback(() => {
     console.log('clickBacktest :>> ')
     setBacktest({
@@ -450,51 +402,52 @@ export default function UniV3LYF() {
   }, [depositParams, poolId, poolInfo, priceMax, priceMin, reverseBaseToken])
 
   const clickConfirm = useCallback(async () => {
-    const tickSpacing = TICK_SPACINGS[feeTier]
-
-    const tickLower = token0price2latestUsabletick(token0PriceUpper, ...decimals, tickSpacing)
-    const tickUpper = token0price2latestUsabletick(token0PriceLower, ...decimals, tickSpacing)
-
-    const vaultParams = {
-      // ...vaultManager.TEST_PARAMS,
-      amount0Borrow: toBNString(depositParams.amount0Borrow, decimals[0]),
-      amount1Borrow: toBNString(depositParams.amount1Borrow, decimals[1]),
-      // amount0Borrow: '0',
-      // amount1Borrow: '0',
-      poolKey,
-      tickLower,
-      tickUpper,
-      amount0: toBNString(depositParams.amount0, decimals[0]),
-      amount1: toBNString(depositParams.amount1, decimals[1]),
-      // amount0: toBNString(16.89, 18), // Number(poolInfo.token0.decimals)),
-      // amount1: toBNString(0.01, 18), // '10000000000000000', , Number(poolInfo.token1.decimals)
-    }
-    console.log('vaultParams :>> ', vaultParams)
-    // const [needApproveToken0, needApproveToken1] = [true, true]
-    // const [needApproveToken0, needApproveToken1] = await vaultManager.checkAllowance(
-    //   { amount0: vaultParams.amount0, amount1: vaultParams.amount1 },
-    //   poolKey
-    // )
-    console.log('checkAllowance :>> ', {
-      amount0: depositParams.amount0,
-      amount1: depositParams.amount1,
-      // needApproveToken0,
-      // needApproveToken1,
-    })
+    console.log('depositParams :>> ', depositParams)
 
     setDepositing(true)
     try {
-      await depositAndStake('2', '1')
-      // console.log('vaultManager vaultParams :>> ', vaultParams)
-      // const depositRes = await vaultManager.deposit(vaultParams)
-      // console.log('depositRes :>> ', depositRes)
+      await depositAndStake('2', '4839')
+
+      const newLendList = [...lendList]
+      const targetIndex = newLendList.findIndex((item) => item.tokenSymbol === token0.symbol)
+      const target = newLendList[targetIndex]
+      newLendList.splice(targetIndex, 1, {
+        ...target,
+        borrowed: target.borrowed + Number(depositParams.amount0Borrow),
+      })
+      // console.log('target2Index :>> ', targetIndex, newLendList)
+
+      const target2Index = newLendList.findIndex((item) => item.tokenSymbol === token1.symbol)
+      // console.log('target2Index :>> ', target2Index)
+      const target2 = newLendList[target2Index]
+      newLendList.splice(target2Index, 1, {
+        ...target2,
+        borrowed: target.borrowed + Number(depositParams.amount1Borrow),
+      })
+      // console.log('newLendingData :>> ', target2Index, newLendList)
+      dispatch(setLendingStatus(newLendList))
+
+      dispatch(
+        addUserPositions({
+          poolKey,
+          token0: token0.symbol,
+          token1: token1.symbol,
+          totalPositionValue: depositParams.positionVal,
+          token0Amount: BN.from(new BigNumber(depositParams.amount0).multipliedBy(1e18).toString()),
+          token1Amount: BN.from(new BigNumber(depositParams.amount1).multipliedBy(1e18).toString()),
+          token0Debt: BN.from(new BigNumber(depositParams.amount0Borrow).multipliedBy(1e18).toString()),
+          token1Debt: BN.from(new BigNumber(depositParams.amount1Borrow).multipliedBy(1e18).toString()),
+          apr,
+        })
+      )
+      navigate(`/positions`)
     } catch (err) {
       console.warn(err)
       throw err
     } finally {
       setDepositing(false)
     }
-  }, [feeTier, depositAndStake, token0PriceUpper, decimals, token0PriceLower, depositParams, poolKey])
+  }, [depositParams, depositAndStake, lendList, dispatch, poolKey, token0, token1, apr, navigate])
 
   const onChangeDepositParams = useCallback((params) => {
     setDepositParams(params)

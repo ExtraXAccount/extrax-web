@@ -18,6 +18,7 @@ export default function useSmartAccount() {
   const { maxCredit, availableCredit, usedCredit } = useCredit()
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
   const { account = '', smartAccount } = useWagmiCtx()
+  const positions = useAppSelector((state) => state.position.userPositions)
 
   const safetyRatio = useMemo(() => {
     if (!debtVal) {
@@ -29,15 +30,17 @@ export default function useSmartAccount() {
 
   const accountAPY = useMemo(() => {
     const totalApy =
-      sumBy(
+      (sumBy(
         lendingList,
         (item) =>
           aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
           item.borrowingRate * item.borrowed * prices[item.tokenSymbol]
-      ) / depositedVal
+      ) +
+        sumBy(positions, (item) => item.apr * item.totalPositionValue)) /
+      depositedVal
 
     return totalApy
-  }, [depositedVal, lendingList, prices])
+  }, [depositedVal, lendingList, positions, prices])
 
   return {
     smartAccount: depositedVal ? smartAccount : '',

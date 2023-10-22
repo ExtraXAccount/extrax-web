@@ -1,11 +1,11 @@
 import './index.scss'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 // import { useNavigate } from 'react-router-dom'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import DepositDialog from '@/pages/Lend/DepositDialog'
-import { addComma, aprToApy, toPrecision } from '@/utils/math'
+import { toPrecision } from '@/utils/math'
 
 export const INFINITY = '∞'
 
@@ -31,8 +31,6 @@ export default function AccountInfo() {
   const handleAddDeposit = useCallback(() => {
     setDepositDialogOpen(true)
   }, [])
-  // navigate('/lend')
-  // }, [navigate])
 
   return (
     <div className="extrax-account-info">
@@ -71,7 +69,7 @@ export default function AccountInfo() {
             <div className="extrax-account-info-detail-item extrax-account-info-credit">
               <b>Leverage Credit</b>
               <em className="text-highlight">
-                {!depositedVal ? '--' : `$${addComma(availableCredit)} / $${addComma(maxCredit)}`}
+                {!depositedVal ? '--' : `$${toPrecision(availableCredit)} / $${toPrecision(maxCredit)}`}
               </em>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-safety">

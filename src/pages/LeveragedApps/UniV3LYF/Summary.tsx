@@ -119,13 +119,14 @@ export default function Summary(props: ISummaryProps) {
       return 0
     }
     const result =
-      sumBy(
+      (sumBy(
         lendingList,
         (item) =>
           aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
-          item.borrowingRate * item.borrowed * prices[item.tokenSymbol] +
-          borrowedVal * summary.baseApr
-      ) / depositedVal
+          item.borrowingRate * item.borrowed * prices[item.tokenSymbol]
+      ) +
+        borrowedVal * summary.baseApr) /
+      depositedVal
     return result
   }, [lendingList, depositedVal, prices, borrowedVal, summary.baseApr])
 

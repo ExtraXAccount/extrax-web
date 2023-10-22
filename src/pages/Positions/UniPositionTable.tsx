@@ -5,7 +5,7 @@ import LPName from '@/components/LPName'
 import { formatSymbol } from '@/sdk/utils/token'
 import { useAppSelector } from '@/state'
 import { nameChecker } from '@/utils'
-import { remain2Decimal } from '@/utils/math'
+import { remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
 
 export default function UniPositionTable() {
@@ -16,7 +16,7 @@ export default function UniPositionTable() {
         sortDirections={['descend', 'ascend']}
         dataSource={positions || []}
         pagination={false}
-        rowKey={(i) => i.poolKey}
+        rowKey={(item, index) => `${item.poolKey}-${index + 1}`}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
@@ -54,7 +54,7 @@ export default function UniPositionTable() {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">${remain2Decimal(i.totalPositionValue)}</div>
+                <div className="lending-list-title-wrap">${toPrecision(i.totalPositionValue)}</div>
                 <div className="position-amount-wrap">
                   <TokenAmount symbol={i.token0} amount={i.token0Amount} />
                   <TokenAmount symbol={i.token1} amount={i.token1Amount} />
@@ -88,9 +88,9 @@ export default function UniPositionTable() {
               <>
                 <p>Farmed: $0</p>
                 <p>
-                  Daily: {remain2Decimal(i.apr / 365)}% (${remain2Decimal((i.apr / 365 / 100) * i.totalPositionValue)})
+                  Daily: {toPrecision((i.apr * 100) / 365)}% (${toPrecision((i.apr / 365) * i.totalPositionValue)})
                 </p>
-                <p>APR: {i.apr}%</p>
+                <p>APR: {toPrecision(i.apr * 100)}%</p>
               </>
             )
           }}

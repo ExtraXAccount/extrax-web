@@ -62,6 +62,11 @@ export default function DepositDialog({
     setValue('')
   }
   const deposit = useCallback(async () => {
+    const params = [
+      currentLendingPoolDetail?.ReserveId,
+      toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals),
+    ]
+    console.log('params :>> ', params)
     const res = await depositAndStake(
       currentLendingPoolDetail?.ReserveId,
       toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
@@ -137,14 +142,14 @@ export default function DepositDialog({
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
           onClick={async () => {
-            if (!depositedVal) {
-              setCreatingAccount(true)
-              try {
-                await depositAndStake('2', '1')
-              } finally {
-                setCreatingAccount(false)
-              }
-            }
+            // if (!depositedVal) {
+            //   setCreatingAccount(true)
+            //   try {
+            //     await depositAndStake('2', '4839')
+            //   } finally {
+            //     setCreatingAccount(false)
+            //   }
+            // }
             deposit()
           }}
         >
