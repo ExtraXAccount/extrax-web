@@ -41,6 +41,10 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
+    "zip-dist": "npx rimraf build.zip && zip -r build.zip build",
+    "scp-dist-beta": "scp -i 'aws_nu.pem' build.zip ubuntu@ec2-13-250-158-206.ap-southeast-1.compute.amazonaws.com:~/project/extrax-beta/public/",
+    "send-dist-beta": "npm run build && npm run zip-dist && npm run scp-dist-beta",
+    "login-beta": "ssh -i 'aws_nu.pem' ubuntu@ec2-13-250-158-206.ap-southeast-1.compute.amazonaws.com",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
@@ -52,9 +56,11 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
     ],
     "development": [
       "last 1 chrome version",
