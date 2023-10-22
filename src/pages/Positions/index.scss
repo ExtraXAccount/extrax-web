@@ -1,6 +1,16 @@
 .page-positions {
   .box {
     min-height: calc(100vh - 300px);
-    padding: 20px;
+    padding: 0;
+  }
+}
+
+.position-amount-wrap{
+  padding: 6px;
+  width: max-content;
+  background-color: #eee;
+  border-radius: 8px;
+  .token-amount{
+    font-size: 12px;
   }
 }

@@ -90,11 +90,11 @@ class DSLParser {
           pool: formattedArray[3],
         },
       }
-    } else if (settings.intent === INTENTS.INTENT_STOPLOSS) {
+    } else if (settings.intent === INTENTS.INTENT_RANGESTOP) {
       return {
         intent: settings.intent,
         param: {
-          type: INTENTS_INPUT.INTENTS_INPUT_STOPLOSS_RANGE,
+          type: INTENTS_INPUT.INTENTS_INPUT_RANGESTOP_RANGE,
           from: Number(formattedArray[3]?.slice(0, -1)) / 100,
           to: Number(formattedArray[4]?.slice(0, -1)) / 100,
         },

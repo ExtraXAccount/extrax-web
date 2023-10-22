@@ -54,9 +54,9 @@ export default function IntentBox(props: {
               )}
             </div>
           )}
-          {param?.type === INTENTS_INPUT.INTENTS_INPUT_STOPLOSS_RANGE && (
+          {param?.type === INTENTS_INPUT.INTENTS_INPUT_RANGESTOP_RANGE && (
             <div>
-              <p className="intent-box-item-content-pricerange-title">Stoploss when</p>
+              <p className="intent-box-item-content-pricerange-title">RangeStop when</p>
               <p className="intent-box-item-content-pricerange-content">
                 {param.from * 100}%
                 {!!param.to && (
