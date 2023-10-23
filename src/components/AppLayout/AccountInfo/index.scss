@@ -109,6 +109,14 @@
           }
         }
       }
+
+      .extrax-account-info-safety,
+      .extrax-account-info-credit {
+        b {
+          display: flex;
+          justify-content: center;
+        }
+      }
     }
   }
 

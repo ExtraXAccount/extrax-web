@@ -46,7 +46,7 @@ export default function Summary(props: ISummaryProps) {
     // maxCredit,
     availableCredit,
     // usedCredit,
-    // safetyRatio,
+    safetyRatio: prevSafetyFactor,
     accountAPY,
   } = useSmartAccount()
 
@@ -95,21 +95,13 @@ export default function Summary(props: ISummaryProps) {
     return token0data.borrowingRate * summary.tk0BorrowRatio + token1data.borrowingRate * (1 - summary.tk0BorrowRatio)
   }, [summary.tk0BorrowRatio, token0data.borrowingRate, token1data.borrowingRate])
 
-  const prevSafetyFactor = useMemo(() => {
-    if (!debtVal) {
-      return INFINITY
-    }
-    return toPrecision((depositedVal / debtVal) * 100) + '%'
-    // return debtVal / (depositedVal + debtVal)
-  }, [debtVal, depositedVal])
-
   const nextSafetyFactor = useMemo(() => {
     const newDebtVal = debtVal + positionTotalVal
-    if (!newDebtVal) {
-      return INFINITY
-    }
-    return toPrecision((depositedVal / newDebtVal) * 100) + '%'
-    // return (debtVal + positionTotalVal) / (depositedVal + debtVal + positionTotalVal)
+    // if (!newDebtVal) {
+    //   return INFINITY
+    // }
+    // return toPrecision((depositedVal / newDebtVal) * 100) + '%'
+    return toPrecision((newDebtVal / (depositedVal + newDebtVal)) * 100) + '%'
   }, [debtVal, depositedVal, positionTotalVal])
   // return summary.amount0 + summary.amount0Borrow + ammPrice * (summary.amount1 + summary.amount1Borrow)
   // }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])

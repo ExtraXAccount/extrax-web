@@ -21,11 +21,11 @@ export default function useSmartAccount() {
   const positions = useAppSelector((state) => state.position.userPositions)
 
   const safetyRatio = useMemo(() => {
-    if (!debtVal) {
-      return INFINITY
+    if (!depositedVal) {
+      return 0
     }
-    return toPrecision((depositedVal / debtVal) * 100) + '%'
-    // return debtVal / (depositedVal + debtVal)
+    // return toPrecision((depositedVal / (depositedVal + debtVal)) * 100) + '%'
+    return toPrecision(debtVal / (depositedVal + debtVal)) + '%'
   }, [debtVal, depositedVal])
 
   const accountAPY = useMemo(() => {

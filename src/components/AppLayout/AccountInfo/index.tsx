@@ -1,8 +1,9 @@
 import './index.scss'
 
+// import { useNavigate } from 'react-router-dom'
+import { Tooltip } from 'antd'
 import { useCallback, useState } from 'react'
 
-// import { useNavigate } from 'react-router-dom'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import DepositDialog from '@/pages/Lend/DepositDialog'
 import { toPrecision } from '@/utils/math'
@@ -67,13 +68,33 @@ export default function AccountInfo() {
               <button className="btn-base btn-base-mini" onClick={handleAddDeposit}></button>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-credit">
-              <b>Leverage Credit</b>
+              <Tooltip title="Available Credit / Max Credit">
+                <b className="flex ai-ct gap-6">
+                  Leverage Credit
+                  <i className="iconfont icon-hint"></i>
+                </b>
+              </Tooltip>
               <em className="text-highlight">
                 {!depositedVal ? '--' : `$${toPrecision(availableCredit)} / $${toPrecision(maxCredit)}`}
               </em>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-safety">
-              <b>Safety Factor</b>
+              <Tooltip
+                overlayInnerStyle={{ width: 400 }}
+                title={
+                  <div>
+                    <p>Safety Factor = Debts&apos; Value / Positions&apos; Value</p>
+                    <p>
+                      The account will be liquidated when the Safety Factor is above <span className="">90%</span>
+                    </p>
+                  </div>
+                }
+              >
+                <b className="flex ai-ct gap-6">
+                  Safety Factor
+                  <i className="iconfont icon-hint"></i>
+                </b>
+              </Tooltip>
               <em className="text-highlight">{!depositedVal ? '--' : safetyRatio}</em>
             </div>
           </div>
