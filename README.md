@@ -10,6 +10,8 @@ A web User Interface to interact with the [ExtraX Contract](https://github.com/E
 
 ![ExtraX Intent](./screenshots/extrax-intent.png)
 
+![ExtraX Dapp Store](./screenshots/dapp store.png)
+
 ## Available Scripts
 
 In the project directory, you can run:
