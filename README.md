@@ -4,15 +4,20 @@ A web User Interface to interact with the [ExtraX Contract](https://github.com/E
 
 ## Screenshots
 
+### ExtraX Lend
 ![ExtraX Lend](./screenshots/extrax-lend.png)
 
+### Uniswap V3 - Leveraged LP
 ![Uniswap V3 - Leveraged LP](./screenshots/extrax-uniswap.png)
 
+### ExtraX Intent
 ![ExtraX Intent](./screenshots/extrax-intent.png)
 
-![ExtraX Dapp Store](./screenshots/dapp store.png)
+### ExtraX Dapp Store
+![ExtraX Dapp Store](./screenshots/dapp-store.png)
 
-## Available Scripts
+
+## Scripts
 
 In the project directory, you can run:
 
