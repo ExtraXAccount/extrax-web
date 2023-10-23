@@ -19,6 +19,10 @@ export default function useLendContract() {
     return lendingList
   }, [lendingList])
 
+  const totalSavingsDAI = useMemo(() => {
+    return lendList.find((item) => item.tokenSymbol === 'DAI')?.SavingsDAI || 0
+  }, [lendList])
+
   const readContract = useCallback(
     async (functionName: string, args?: any, options = {}) => {
       try {
@@ -101,5 +105,6 @@ export default function useLendContract() {
     depositAndStake,
     unStakeAndWithdraw,
     writeLoading,
+    totalSavingsDAI,
   }
 }

@@ -11,5 +11,12 @@
     padding: 20px;
     background: #fff;
     border-radius: 12px;
+
+    .page-newtabs-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
   }
 }
