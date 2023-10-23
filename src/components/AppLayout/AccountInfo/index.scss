@@ -52,7 +52,7 @@
     em {
       font-style: normal;
       font-weight: bold;
-      color: var(--text-highlight-color-pure);
+      // color: var(--text-highlight-color-pure);
     }
   
     .extrax-account-info-main {
@@ -92,7 +92,12 @@
           font-weight: normal;
           line-height: 1.5;
           font-size: 24px;
-          color: var(--text-highlight-color-pure);
+          // color: var(--text-highlight-color-pure);
+        }
+        &:not(.extrax-account-info-safety) {
+          >em {
+            color: var(--text-highlight-color-pure);
+          }
         }
       }
 

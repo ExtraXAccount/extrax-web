@@ -25,7 +25,7 @@ export default function useSmartAccount() {
       return 0
     }
     // return toPrecision((depositedVal / (depositedVal + debtVal)) * 100) + '%'
-    return toPrecision(debtVal / (depositedVal + debtVal)) + '%'
+    return debtVal / (depositedVal + debtVal)
   }, [debtVal, depositedVal])
 
   const accountAPY = useMemo(() => {

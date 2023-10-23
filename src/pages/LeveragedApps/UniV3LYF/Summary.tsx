@@ -101,7 +101,7 @@ export default function Summary(props: ISummaryProps) {
     //   return INFINITY
     // }
     // return toPrecision((depositedVal / newDebtVal) * 100) + '%'
-    return toPrecision((newDebtVal / (depositedVal + newDebtVal)) * 100) + '%'
+    return newDebtVal / (depositedVal + newDebtVal)
   }, [debtVal, depositedVal, positionTotalVal])
   // return summary.amount0 + summary.amount0Borrow + ammPrice * (summary.amount1 + summary.amount1Borrow)
   // }, [ammPrice, summary.amount0, summary.amount0Borrow, summary.amount1, summary.amount1Borrow])
@@ -192,8 +192,24 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Safety Factor</p>
             <b>
-              <span className="item-pre">{prevSafetyFactor} →</span>
-              <span className="text-highlight">{nextSafetyFactor}</span>
+              <span
+                className={cx('item-pre', {
+                  'farm-buffer-safe': prevSafetyFactor < 0.8,
+                  'farm-buffer-warn': prevSafetyFactor > 0.8,
+                  'farm-buffer-danger': prevSafetyFactor > 0.9,
+                })}
+              >
+                {toPrecision(prevSafetyFactor * 100)}% →
+              </span>
+              <span
+                className={cx('', {
+                  'farm-buffer-safe': nextSafetyFactor < 0.8,
+                  'farm-buffer-warn': nextSafetyFactor > 0.8,
+                  'farm-buffer-danger': nextSafetyFactor > 0.9,
+                })}
+              >
+                {toPrecision(nextSafetyFactor * 100)}%
+              </span>
             </b>
           </li>
           <li>

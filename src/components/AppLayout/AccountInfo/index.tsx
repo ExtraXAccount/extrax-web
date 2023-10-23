@@ -2,6 +2,7 @@ import './index.scss'
 
 // import { useNavigate } from 'react-router-dom'
 import { Tooltip } from 'antd'
+import cx from 'classnames'
 import { useCallback, useState } from 'react'
 
 import useSmartAccount from '@/hooks/useSmartAccount'
@@ -95,7 +96,15 @@ export default function AccountInfo() {
                   <i className="iconfont icon-hint"></i>
                 </b>
               </Tooltip>
-              <em className="text-highlight">{!depositedVal ? '--' : safetyRatio}</em>
+              <em
+                className={cx('', {
+                  'farm-buffer-safe': safetyRatio < 0.8,
+                  'farm-buffer-warn': safetyRatio > 0.8,
+                  'farm-buffer-danger': safetyRatio > 0.9,
+                })}
+              >
+                {!depositedVal ? '--' : toPrecision(safetyRatio * 100) + '%'}
+              </em>
             </div>
           </div>
         </div>
