@@ -6,8 +6,8 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 
 import store from '@/state'
-import isSystemThemeDark from '@/utils/theme'
 
+// import isSystemThemeDark from '@/utils/theme'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 
