@@ -34,6 +34,7 @@ export const { chains, publicClient } = configureChains(
   [
     jsonRpcProvider({
       rpc: (chain) => {
+        return { http: 'https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0' }
         if (chain.id === SupportedChainId.OPTIMISM_LOCAL_TEST) {
           return { http: 'https://rpc.extrafi.io' }
         } else if (chain.id === SupportedChainId.BASE) {

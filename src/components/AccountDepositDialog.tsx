@@ -1,6 +1,12 @@
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { 
+  // type BaseError, 
+  useSendTransaction, 
+  // useWaitForTransactionReceipt 
+} from 'wagmi' 
+import { parseEther } from 'viem' 
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
@@ -16,11 +22,13 @@ import { toBNString, toDecimals } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 import useAccountContract from '@/sdk/account'
 
-export default function DepositDialog({
+export default function AccountDepositDialog({
+  accounts,
   open,
   currentLendingPoolDetail,
   onClose,
 }: {
+  accounts: any
   open: boolean
   onClose: any
   currentLendingPoolDetail: any
@@ -44,6 +52,14 @@ export default function DepositDialog({
 
   const { createAccount } = useAccountContract()
 
+  const { 
+    data: hash,
+    error, 
+    // isPending, 
+    sendTransaction
+  } = useSendTransaction() 
+  
+
   const nextApy = useMemo(() => {
     if (currentLendingPoolDetail) {
       // console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
@@ -63,8 +79,10 @@ export default function DepositDialog({
   function reset() {
     setValue('')
   }
+
   const deposit = useCallback(async () => {
-    if (!depositedVal) {
+    console.log('accounts :>> ', accounts);
+    if (!accounts.length) {
       setCreatingAccount(true)
       try {
         await createAccount()
@@ -73,6 +91,9 @@ export default function DepositDialog({
         setCreatingAccount(false)
       }
     }
+    const parsedValue = toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
+    await sendTransaction({ to: accounts[0], value: parseEther(parsedValue) }) 
+    return
 
     const params = [
       currentLendingPoolDetail?.ReserveId,

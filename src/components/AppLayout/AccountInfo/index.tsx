@@ -6,7 +6,7 @@ import cx from 'classnames'
 import { useCallback, useState } from 'react'
 
 import useSmartAccount from '@/hooks/useSmartAccount'
-import DepositDialog from '@/pages/Lend/DepositDialog'
+import AccountDepositDialog from '@/components/AccountDepositDialog'
 import { toPrecision } from '@/utils/math'
 
 export const INFINITY = '∞'
@@ -26,6 +26,7 @@ export default function AccountInfo() {
     safetyRatio,
     accountAPY,
     lendingList,
+    accounts,
   } = useSmartAccount()
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
@@ -36,11 +37,12 @@ export default function AccountInfo() {
 
   return (
     <div className="extrax-account-info">
-      <DepositDialog
+      <AccountDepositDialog
+        accounts={accounts}
         open={depositDialogOpen}
         currentLendingPoolDetail={lendingList[0]}
         onClose={() => setDepositDialogOpen(false)}
-      ></DepositDialog>
+      ></AccountDepositDialog>
 
       {!smartAccount ? (
         <div className="extrax-account-info-inner extrax-account-creator">
