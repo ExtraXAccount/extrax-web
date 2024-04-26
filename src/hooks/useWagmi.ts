@@ -14,6 +14,7 @@ export default function useWagmi() {
   // const [searchParams] = useSearchParams()
 
   return {
+    user: account,
     // account: (searchParams.get('addr') as `0x${string}`) || account,
     account,
     blockNumber: Number(blockNumber?.toString()),

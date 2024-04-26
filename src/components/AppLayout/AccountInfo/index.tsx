@@ -56,7 +56,7 @@ export default function AccountInfo() {
           <div className="extrax-account-info-main">
             <p className="extrax-account-info-main-account">
               <b>Main Account: </b>
-              <em>{!depositedVal ? '--' : `${smartAccount.slice(0, 6)}...${smartAccount.slice(-4)}`}</em>
+              <em>{!smartAccount ? '--' : `${smartAccount.slice(0, 6)}...${smartAccount.slice(-4)}`}</em>
             </p>
             <p className="extrax-account-info-main-splitter"> | </p>
             <p className="extrax-account-info-main-apy">

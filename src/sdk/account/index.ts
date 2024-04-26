@@ -6,8 +6,151 @@ import { useAppSelector } from '@/state'
 
 import HealthManager from './HealthManager.json'
 import ExtraXAccountFactory from './ExtraXAccountFactory.json'
+import { getContract } from 'viem'
+import { Client } from 'viem'
+import { defaultChainId } from '@/constants'
+import { SupportedChainId } from '@/constants/chains'
 
-const ExtraXAccountDefaultNonce = "0x8ea9f6b044757f2ee7b9c6d556ffb9cf925a8681edcb87332d3650b59f784256";
+const ExtraXAccountDefaultNonce = "0x2222";
+
+export class AccountManager {
+  public chainId = defaultChainId
+  public account: string
+  // public contract: Contract
+  // public dataContract: Contract
+  // public tokenContract: TokenContract
+  // public rewardList: RewardInfoItem[]
+  // public RPC_URLS = CLIENT_RPC_URLS
+  publicClient: Client
+  walletClient: Client
+
+  constructor(chainId: SupportedChainId, publicClient, walletClient, account?: string, ) {
+    if (chainId && chainId in SupportedChainId) {
+      this.chainId = chainId
+    }
+    if (account) {
+      this.account = account
+    }
+    if (publicClient) {
+      this.publicClient = publicClient
+    }
+    if (walletClient) {
+      this.walletClient = walletClient
+    }
+  }
+
+  public healthManagerContract() {
+    return getContract({
+      address: CONTRACT_ADDRESSES[this.chainId]?.healthManager,
+      abi: HealthManager,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
+      }
+    })
+  }
+
+  public factoryContract() {
+    return getContract({
+      address: CONTRACT_ADDRESSES[this.chainId]?.accountFactory,
+      abi: ExtraXAccountFactory,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
+      }
+    })
+  }
+
+  public async getAccount() {
+    const evts: any = await this.factoryContract().getEvents.ExtraAccountCreation({
+      user: this.account,
+      saltNonce: ExtraXAccountDefaultNonce
+    })
+
+    console.log('getAccount evts :>> ', evts);
+    const accounts = evts.map(evt => evt.args.proxy)
+    // const accounts = evts.forEach((evt) => {
+    //   return {
+    //     user: evt.args[0],
+    //     saltNonce: "0x" + evt.args[1].toString(16),
+    //     account: evt.args[2],
+    //   };
+    // });
+    console.log('accounts :>> ', accounts);
+    return accounts
+  }
+
+  public async createAccount() {
+    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce]);
+    const res = await this.factoryContract().write.createProxyWithNonce(['0x200', ExtraXAccountDefaultNonce])
+    // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
+    console.log('createAccount res :>> ', res);
+    const account = await this.getAccount()
+    console.log('createAccount :>> ', account)
+    return account
+  }
+
+
+  public async getSupportedAssets() {
+    const nextAssetId: any = await this.healthManagerContract().read.nextAssetId()
+    console.log('getSupportedAssets :>> ', nextAssetId)
+    const result = [] as any[]
+    for (let i = 1n; i < nextAssetId; i++) {
+      const res: any = await this.healthManagerContract().read.assets([i]);
+      const [ assetType, underlyingTokensCalculator, data ] = res
+      result.push({
+        assetId: i,
+        assetType,
+        underlyingTokensCalculator,
+        data,
+      })
+    }
+    console.log('getSupportedAssets :>> ', result);
+    return result
+  }
+
+  public async getSupportedDebts() {
+    const nextDebtId: any = await this.healthManagerContract().read.nextDebtId()
+    console.log('getSupportedDebts :>> ', nextDebtId)
+    const result = [] as any[]
+    for (let i = 1n; i < nextDebtId; i++) {
+      const res: any = await this.healthManagerContract().read.debts([i]);
+      const [ assetType, underlyingTokensCalculator, data ] = res
+      result.push({
+        assetId: i,
+        assetType,
+        underlyingTokensCalculator,
+        data,
+      })
+    }
+    console.log('getSupportedDebts :>> ', result);
+    return result
+  }
+
+  public async getCollateralAndDebtValue(account: string) {
+    const res = await this.healthManagerContract().read.getCollateralAndDebtValue([account])
+    const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
+    console.log('getCollateralAndDebtValue :>> ', {account, collateral, collateralDeciamls, debt, debtDecimals})
+    return res
+  }
+
+  public async getPositionStatus() {
+    const poolIds = ['2', '26', '1', '4']
+    const res = await this.healthManagerContract().read.getPositionStatus([poolIds, this.account])
+    console.log('getPositionStatus :>> ', res)
+  }
+
+  public async depositAndStake(reserveId: string, amount: string) {
+    console.log('depositAndStake :>> ', [reserveId, amount, this.account, 1234])
+    return this.healthManagerContract().write.depositAndStake([reserveId, amount, this.account, 1234])
+  }
+
+  public async unStakeAndWithdraw(reserveId: string, amount: string, receiveNativeETH = true) {
+    console.log('unStakeAndWithdraw :>> ', [reserveId, amount, this.account, receiveNativeETH])
+    return this.healthManagerContract().write.unStakeAndWithdraw([reserveId, amount, this.account, receiveNativeETH])
+  }
+}
+
 
 export default function useAccountContract() {
   const { account, blockNumber, chainId, publicClient, walletClient } = useWagmiCtx()
@@ -22,6 +165,17 @@ export default function useAccountContract() {
   const totalSavingsDAI = useMemo(() => {
     return lendList.find((item) => item.tokenSymbol === 'DAI')?.SavingsDAI || 0
   }, [lendList])
+
+  const healthManagerContract = useMemo(() => {
+    return getContract({
+      address: CONTRACT_ADDRESSES[chainId]?.healthManager as `0x${string}`,
+      abi: HealthManager,
+      client: {
+        public: publicClient as Client,
+        wallet: walletClient as Client,
+      }
+    })
+  }, [])
 
   const readContract = useCallback(
     async (functionName: string, args?: any, options = {}) => {
@@ -108,7 +262,7 @@ export default function useAccountContract() {
   )
 
   const getCollateralAndDebtValue = useCallback(async (address: string) => {
-    const res = await readContract('getCollateralAndDebtValue', [address])
+    const res = await healthManagerContract.read.getCollateralAndDebtValue([address])
     const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('getCollateralAndDebtValue :>> ', {address, collateral, collateralDeciamls, debt, debtDecimals})
     return res
@@ -122,22 +276,13 @@ export default function useAccountContract() {
       eventName: 'ExtraAccountCreation',
       args: {
         user: account,
-        // saltNonce: ExtraXAccountDefaultNonce
+        saltNonce: ExtraXAccountDefaultNonce
       },
       // fromBlock: 16330000n, 
       // toBlock: '16330050n'
     })
-    // const evts = await publicClient.getFilterLogs({ filter })
-    console.log('getAccount evts :>> ', evts);
 
-    // let accountCreationFilter = await readFactoryContract(`filters["ExtraAccountCreation(address,uint256,address,address)"]`, [account, ExtraXAccountDefaultNonce])
-  
-    // let evts: any = await readFactoryContract('queryFilter', [
-    //   accountCreationFilter,
-    //   blockNumber - 100,
-    //   "latest"
-    // ]);
-    
+    console.log('getAccount evts :>> ', evts);
     const accounts = evts.map(evt => evt.args.proxy)
     // const accounts = evts.forEach((evt) => {
     //   return {
@@ -151,12 +296,12 @@ export default function useAccountContract() {
   }, [account, blockNumber, readFactoryContract])
 
   const createAccount = useCallback(async () => {
-    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x123', ExtraXAccountDefaultNonce]);
-    const res = await writeFactoryContract('createProxyWithNonce', ['0x123', ExtraXAccountDefaultNonce])
+    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce]);
+    const res = await writeFactoryContract('createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce])
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('createAccount res :>> ', res);
     const account = await getAccount()
-    // console.log('createAccount :>> ', account)
+    console.log('createAccount :>> ', account)
     return account
   }, [getAccount, writeFactoryContract])
 

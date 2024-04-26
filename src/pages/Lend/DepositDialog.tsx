@@ -14,7 +14,7 @@ import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
-import useAccountContract from '@/sdk/account'
+import { useAccountManager } from '@/hooks/useSDK'
 
 export default function DepositDialog({
   open,
@@ -42,7 +42,8 @@ export default function DepositDialog({
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
 
-  const { createAccount } = useAccountContract()
+  // const { createAccount } = useAccountContract()
+  const accountMng = useAccountManager()
 
   const nextApy = useMemo(() => {
     if (currentLendingPoolDetail) {
@@ -67,7 +68,7 @@ export default function DepositDialog({
     if (!depositedVal) {
       setCreatingAccount(true)
       try {
-        await createAccount()
+        await accountMng.createAccount()
         // await depositAndStake('2', '4839')
       } finally {
         setCreatingAccount(false)
@@ -98,6 +99,7 @@ export default function DepositDialog({
 
     return res
   }, [
+    accountMng,
     depositAndStake,
     value,
     currentLendingPoolDetail?.tokenDecimals,
