@@ -7,7 +7,7 @@ import { useWagmiCtx } from '@/components/WagmiContext'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
 import useLendContract from '@/sdk/lend'
-import useLendingContract from '@/sdk/lending'
+import { useLendingManager } from '@/hooks/useSDK'
 import { formatSymbol } from '@/sdk/utils/token'
 import { nameChecker } from '@/utils'
 import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
@@ -25,7 +25,7 @@ export default function LendingTable() {
   const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
   const { lendList } = useLendContract()
-  const { getPoolStatus } = useLendingContract()
+  const mng = useLendingManager()
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
   const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
@@ -35,8 +35,8 @@ export default function LendingTable() {
   const [borrowDialogOpen, setBorrowDialogOpen] = useState(false)
 
   useEffect(() => {
-    getPoolStatus('2')
-  }, [getPoolStatus])
+    mng.getPoolStatus(2n)
+  }, [mng])
 
   return (
     <>
