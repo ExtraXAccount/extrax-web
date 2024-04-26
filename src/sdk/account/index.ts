@@ -7,7 +7,7 @@ import { useAppSelector } from '@/state'
 import HealthManager from './HealthManager.json'
 import ExtraXAccountFactory from './ExtraXAccountFactory.json'
 
-const ExtraXAccountDefaultNonce = "0x8e09f6b044757f2ee7b9c6d556ffb9cf925a8681edcb87332d3650b59f784256";
+const ExtraXAccountDefaultNonce = "0x8ea9f6b044757f2ee7b9c6d556ffb9cf925a8681edcb87332d3650b59f784256";
 
 export default function useAccountContract() {
   const { account, blockNumber, chainId, publicClient, walletClient } = useWagmiCtx()
@@ -107,12 +107,12 @@ export default function useAccountContract() {
     [walletClient, account, chainId]
   )
 
-  const getCollateralAndDebtValue = useCallback(async () => {
-    const res = await readContract('getCollateralAndDebtValue', [account])
+  const getCollateralAndDebtValue = useCallback(async (address: string) => {
+    const res = await readContract('getCollateralAndDebtValue', [address])
     const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
-    console.log('getCollateralAndDebtValue :>> ', {account, collateral, collateralDeciamls, debt, debtDecimals})
+    console.log('getCollateralAndDebtValue :>> ', {address, collateral, collateralDeciamls, debt, debtDecimals})
     return res
-  }, [account, readContract])
+  }, [readContract])
 
 
   const getAccount = useCallback(async () => {
@@ -122,7 +122,7 @@ export default function useAccountContract() {
       eventName: 'ExtraAccountCreation',
       args: {
         user: account,
-        saltNonce: ExtraXAccountDefaultNonce
+        // saltNonce: ExtraXAccountDefaultNonce
       },
       // fromBlock: 16330000n, 
       // toBlock: '16330050n'
@@ -151,7 +151,8 @@ export default function useAccountContract() {
   }, [account, blockNumber, readFactoryContract])
 
   const createAccount = useCallback(async () => {
-    const res = await writeFactoryContract('createProxyWithNonce', [ExtraXAccountDefaultNonce, ExtraXAccountDefaultNonce])
+    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x123', ExtraXAccountDefaultNonce]);
+    const res = await writeFactoryContract('createProxyWithNonce', ['0x123', ExtraXAccountDefaultNonce])
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('createAccount res :>> ', res);
     const account = await getAccount()

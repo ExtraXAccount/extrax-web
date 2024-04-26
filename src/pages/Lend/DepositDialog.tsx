@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
-import { toBNString, toDecimals } from '@/utils/math/bn'
+import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 import useAccountContract from '@/sdk/account'
 

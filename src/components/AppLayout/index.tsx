@@ -88,10 +88,11 @@ export default function AppLayout() {
         </div>
         <div className="nav-right flex ai-ct">
           <ConnectButton
-            accountStatus={{
-              smallScreen: 'avatar',
-              largeScreen: 'full',
-            }}
+            accountStatus="address"
+            // accountStatus={{
+            //   smallScreen: 'avatar',
+            //   largeScreen: 'full',
+            // }}
             showBalance={false}
           />
           {/* <DarkMode /> */}

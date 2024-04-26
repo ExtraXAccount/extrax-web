@@ -1,52 +1,46 @@
-import { configureChains } from 'wagmi'
-import { base, optimism, optimismGoerli } from 'wagmi/chains'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
+// import { getDefaultConfig } from '@rainbow-me/rainbowkit';
+import { http } from 'wagmi';
+import { optimism } from 'wagmi/chains';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+import {
+  injectedWallet,
+  walletConnectWallet,
+} from '@rainbow-me/rainbowkit/wallets';
+import { createConfig } from 'wagmi';
 
-// import { FALLBACK_URLS } from '@/constants/network'
-import { SupportedChainId } from '@/sdk/constants/chains'
-import { ALCHEMY_API_KEY, BASE_ALCHEMY_URL, OP_ALCHEMY_URL } from '@/sdk/constants/network'
+const appName = 'ExtraX'
+const projectId = 'ae9bc6c16bf3d9121367f023f740150a' // Project ID of WalletConnect Cloud
 
-// const devnet = {
-//   id: SupportedChainId.OPTIMISM_LOCAL_TEST,
-//   name: 'Devnet',
-//   network: 'devnet',
-//   nativeCurrency: {
-//     decimals: 18,
-//     name: 'Ether',
-//     symbol: 'ETH',
-//   },
-//   iconBackground: '#fff',
-//   rpcUrls: {
-//     default: {
-//       http: FALLBACK_URLS[SupportedChainId.OPTIMISM_LOCAL_TEST],
-//     },
-//     public: {
-//       http: FALLBACK_URLS[SupportedChainId.OPTIMISM_LOCAL_TEST],
-//     },
-//   },
-//   blockExplorers: optimismGoerli.blockExplorers,
-//   testnet: true,
-// }
-
-export const { chains, publicClient } = configureChains(
-  [optimism],
+const connectors = connectorsForWallets(
   [
-    jsonRpcProvider({
-      rpc: (chain) => {
-        return { http: 'https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0' }
-        if (chain.id === SupportedChainId.OPTIMISM_LOCAL_TEST) {
-          return { http: 'https://rpc.extrafi.io' }
-        } else if (chain.id === SupportedChainId.BASE) {
-          return {
-            http: BASE_ALCHEMY_URL,
-          }
-        }
-        return {
-          http: OP_ALCHEMY_URL,
-        }
-      },
-    }),
-    alchemyProvider({ apiKey: ALCHEMY_API_KEY }),
-  ]
-)
+    {
+      groupName: 'Recommended',
+      wallets: [injectedWallet, walletConnectWallet],
+    },
+  ],
+  {
+    appName,
+    projectId,
+  }
+);
+
+// export const defaultConfig = getDefaultConfig({
+//   appName,
+//   projectId,
+//   chains: [optimism] as any,
+//   transports: {
+//     [optimism.id]: http('https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0'),
+//     // [base.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
+//   },
+// });
+
+export const wagmiConfig = createConfig({
+  connectors,
+  // appName,
+  // projectId,
+  chains: [optimism] as any,
+  transports: {
+    [optimism.id]: http('https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0'),
+    // [base.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
+  },
+})

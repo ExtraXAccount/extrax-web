@@ -1,4 +1,3 @@
-import { BigNumber as BN } from '@ethersproject/bignumber'
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -12,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
-import { toBNString, toDecimals } from '@/utils/math/bn'
+import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 
 export default function WithdrawDialog({

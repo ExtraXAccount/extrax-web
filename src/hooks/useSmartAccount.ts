@@ -27,14 +27,17 @@ export default function useSmartAccount() {
   const {getAccount, getCollateralAndDebtValue} = useAccountContract()
 
   const getAccountInfo = useCallback(async () => {
-    const res = await getCollateralAndDebtValue()
+    // if (!accounts[0]) {
+      // return
+    // }
+    const res = await getCollateralAndDebtValue(account)
     const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     setAccountInfo({
       collateral, collateralDeciamls, debt, debtDecimals,
       depositedVal: collateral / BigInt(10 ** collateralDeciamls),
       debtVal: debt / BigInt(10 ** debtDecimals),
     })
-  }, [getCollateralAndDebtValue])
+  }, [account, getCollateralAndDebtValue])
 
   const depositedVal = accountInfo.depositedVal || 0
   const debtVal = accountInfo.debtVal || 0

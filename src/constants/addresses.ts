@@ -7,7 +7,7 @@ export const CONTRACT_ADDRESSES = {
     dataProvider: '0x1A97E89572Fc303e4BfD4FA49d02Cd94161744DD',
 
     // extrax
-    addressRegistry: "0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D",
+    AddressRegistry: "0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D",
     accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',
     accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
     healthManager: '0x9099a2dC1FE0b801A7eb890C0137F2099B7d4dB6',
