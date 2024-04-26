@@ -35,7 +35,7 @@ export default function useSmartAccount() {
     }
     const res = await accountMng.getCollateralAndDebtValue(accounts[0])
     const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
-    console.log('collateral :>> ', collateral);
+
     setAccountInfo({
       collateral, collateralDeciamls, debt, debtDecimals,
       depositedVal: collateral / BigInt(10 ** collateralDeciamls),
@@ -44,7 +44,7 @@ export default function useSmartAccount() {
   }, [accounts, accountMng])
 
   const depositedVal = accountInfo.depositedVal || 0
-  console.log('accountInfo :>> ', accountInfo);
+  // console.log('accountInfo :>> ', accountInfo);
   const debtVal = accountInfo.debtVal || 0
 
   useEffect(() => {

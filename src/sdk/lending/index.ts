@@ -1,134 +1,79 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { getContract } from 'viem'
-import { useWagmiCtx } from '@/components/WagmiContext'
+import { erc20Abi, getContract, Client } from 'viem'
+import { Address } from "@/types";
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
-import { useAppSelector } from '@/state'
 
-import ERC20ABI from '../abis/erc20.json'
-import ExtraXLending from './ExtraXLending.json'
-import MultiSendCallOnly from './MultiSendCallOnly.json'
+import { ExtraXLendingABI } from './ExtraXLendingABI'
+import { MultiSendCallOnlyABI } from './MultiSendCallOnlyABI'
 import { LendingConfig } from './lending-pool'
-// const ExtraXAccountDefaultNonce = "0x8ea9f6b044757f2ee7b9c6d556ffb9cf925a8681edcb87332d3650b59f784256";
+import { defaultChainId } from '@/constants'
+import { SupportedChainId } from '@/constants/chains'
 
-export type Address = `0x${string}`
+export class LendingManager {
+  public chainId = defaultChainId
+  public account: Address
+  public publicClient: Client
+  public walletClient: Client
 
-export default function useLendingContract() {
-  const { user, blockNumber, chainId, publicClient, walletClient } = useWagmiCtx()
-  const [writeLoading, setWriteLoading] = useState(false)
+  constructor(chainId: SupportedChainId, publicClient, walletClient, account?: Address, ) {
+    if (chainId && chainId in SupportedChainId) {
+      this.chainId = chainId
+    }
+    if (account) {
+      this.account = account
+    }
+    if (publicClient) {
+      this.publicClient = publicClient
+    }
+    if (walletClient) {
+      this.walletClient = walletClient
+    }
+  }
 
-  const lendingList = useAppSelector((state) => state.lending.poolStatus)
-
-  const lendList = useMemo(() => {
-    return lendingList
-  }, [lendingList])
-
-  const totalSavingsDAI = useMemo(() => {
-    return lendList.find((item) => item.tokenSymbol === 'DAI')?.SavingsDAI || 0
-  }, [lendList])
-
-  const getErc20Contract = useCallback(({address, client }) => {
+  public getExtraXLendingContract() {
     return getContract({
-      address,
-      abi: ERC20ABI,
-      client,
-    }) as any
-  }, [])
-
-  const multiSendCall = useCallback(
-    async (functionName: string, args, options = {}) => {
-      try {
-        setWriteLoading(true)
-        const res = await walletClient.writeContract({
-          chain: walletClient.chain,
-          account: user,
-          address: CONTRACT_ADDRESSES[chainId]?.MultiSendCallOnly,
-          abi: MultiSendCallOnly,
-          functionName,
-          args,
-          ...options,
-        })
-        return res
-      } catch (err) {
-        console.warn('writeContract err: ', err)
-      } finally {
-        setWriteLoading(false)
+      address: CONTRACT_ADDRESSES[this.chainId]?.lendingPool,
+      abi: ExtraXLendingABI,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
       }
-    },
-    [walletClient, user, chainId]
-  )
+    })
+  }
 
-  const readContract = useCallback(
-    async (functionName: string, args?: any, options = {}) => {
-      try {
-        const res = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[chainId]?.lendingPool as `0x${string}`,
-          abi: ExtraXLending,
-          functionName,
-          args,
-          ...options,
-        })
-        console.log('readContract :>> ', res)
-        return res
-      } catch (err) {
-        console.warn('readContract err: ', err)
+  public getErc20Contract(erc20TokenAddr: Address) {
+    return getContract({
+      address: erc20TokenAddr,
+      abi: erc20Abi,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
       }
-    },
-    [chainId, publicClient]
-  )
+    })
+  }
 
-  const writeContract = useCallback(
-    async (functionName: string, args, options = {}) => {
-      try {
-        setWriteLoading(true)
-        const res = await walletClient.writeContract({
-          chain: walletClient.chain,
-          account: user,
-          address: CONTRACT_ADDRESSES[chainId]?.lendingPool,
-          abi: ExtraXLending,
-          functionName,
-          args,
-          ...options,
-        })
-        return res
-      } catch (err) {
-        console.warn('writeContract err: ', err)
-      } finally {
-        setWriteLoading(false)
+  public getMultiSendCallOnlyContract() {
+    return getContract({
+      address: CONTRACT_ADDRESSES[this.chainId]?.MultiSendCallOnly,
+      abi: MultiSendCallOnlyABI,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
       }
-    },
-    [walletClient, user, chainId]
-  )
+    })
+  }
 
-  const getPoolStatus = useCallback(async(reserveId: string) => {
-    const res = await readContract('getReserve', [reserveId])
+  public async getPoolStatus(reserveId: bigint) {
+    const res = await this.getExtraXLendingContract().read.getReserve([reserveId])
     console.log('getPoolStatus :>> ', res)
     return res
-  }, [readContract])
+  }
 
-  const approve = useCallback(
-    async (account: string, reserveId: string, amount: string) => {
-      console.log('deposit lending :>> ', [reserveId, amount, account])
-      const lendConfig: any = Object.values(LendingConfig[chainId]).find((item: any) => item.reserveId.toString() === reserveId)
-      const erc20Contract = getErc20Contract({
-        address: lendConfig.underlyingTokenAddress,
-        // abi: ERC20ABI,
-        client: { public: publicClient, wallet: walletClient }
-      })
+  public async approve(account: Address, reserveId: bigint, amount: bigint) {
+    console.log('deposit lending :>> ', [reserveId, amount, account])
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
+    const erc20Contract = this.getErc20Contract(lendConfig.underlyingTokenAddress)
 
-      await erc20Contract.write.approve(account, amount)
-      // return writeContract('depositAndStake', [reserveId, amount, account, user])
-    },
-    [chainId, publicClient, walletClient]
-  )
-
-
-  return {
-    lendList,
-    readContract,
-    writeContract,
-    getPoolStatus,
-    writeLoading,
-    totalSavingsDAI,
+    await erc20Contract.write.approve([account, amount])
   }
 }
