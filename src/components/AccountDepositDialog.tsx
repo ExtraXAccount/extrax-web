@@ -1,12 +1,6 @@
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { 
-  // type BaseError, 
-  useSendTransaction, 
-  // useWaitForTransactionReceipt 
-} from 'wagmi' 
-import { parseEther } from 'viem' 
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
@@ -20,7 +14,8 @@ import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
-import { useAccountManager } from '@/hooks/useSDK'
+import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import { LendingConfig } from '@/sdk/lending/lending-pool'
 
 export default function AccountDepositDialog({
   accounts,
@@ -47,19 +42,11 @@ export default function AccountDepositDialog({
   const { lendList, depositAndStake, writeLoading } = useLendContract()
   const { depositedVal } = useDeposited()
 
+  const accountMng = useAccountManager()
+  const mng = useLendingManager()
+
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
-
-  // const { createAccount } = useAccountContract()
-  const accountMng = useAccountManager()
-
-  // const { 
-  //   data: hash,
-  //   error, 
-  //   // isPending, 
-  //   sendTransaction
-  // } = useSendTransaction() 
-
 
   const nextApy = useMemo(() => {
     if (currentLendingPoolDetail) {
@@ -92,42 +79,23 @@ export default function AccountDepositDialog({
         setCreatingAccount(false)
       }
     }
+
+    mng.depositToLending(accounts[0], 2n, BigInt(value) * (10n ** 6n))
+
     // const parsedValue = toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
     // await sendTransaction({ to: accounts[0], value: parseEther(parsedValue) }) 
     return
 
-    const params = [
-      currentLendingPoolDetail?.ReserveId,
-      toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals),
-    ]
-    console.log('params :>> ', params)
-    const res = await depositAndStake(
-      currentLendingPoolDetail?.ReserveId,
-      toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
-    )
-
-    const newLendList = [...lendList]
-    const targetIndex = newLendList.findIndex((item) => item.ReserveId === currentLendingPoolDetail?.ReserveId)
-    const target = newLendList[targetIndex]
-    newLendList.splice(targetIndex, 1, {
-      ...target,
-      deposited: target.deposited + Number(value),
-    })
-    // console.log('newLendingData :>> ', targetIndex, newLendList)
-    dispatch(setLendingStatus(newLendList))
-    reset()
-    onClose()
-
-    return res
   }, [
+    accounts,
     accountMng,
-    depositAndStake,
+    // depositAndStake,
     value,
-    currentLendingPoolDetail?.tokenDecimals,
-    currentLendingPoolDetail?.ReserveId,
-    lendList,
-    dispatch,
-    onClose,
+    // currentLendingPoolDetail?.tokenDecimals,
+    // currentLendingPoolDetail?.ReserveId,
+    // lendList,
+    // dispatch,
+    // onClose,
   ])
 
   useEffect(() => {

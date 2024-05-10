@@ -1,5 +1,5 @@
 
-import { erc20Abi, getContract, Client } from 'viem'
+import { WalletClient, encodeFunctionData, erc20Abi, getContract, PublicClient, Client, toBytes, encodePacked } from 'viem'
 import { Address } from "@/types";
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 
@@ -8,6 +8,33 @@ import { MultiSendCallOnlyABI } from './MultiSendCallOnlyABI'
 import { LendingConfig } from './lending-pool'
 import { defaultChainId } from '@/constants'
 import { SupportedChainId } from '@/constants/chains'
+import { HealthManagerABI } from '../account/HealthManagerABI';
+import { ERC20ABI } from '../abis/erc20ABI';
+import { ExtraXAccountABI } from '../account/ExtraXAccountABI';
+import { buildSignedMetaTransaction } from './build-safe-transaction';
+import { Hex } from 'viem';
+import { HealthManagerConfig } from './health-manager-config';
+import { isWETH } from '../utils/token';
+
+export interface MetaTransaction {
+  to: Address;
+  value: string | number | bigint;
+  data: Address;
+  operation: number;
+}
+
+export function encodeMetaTransaction(tx: MetaTransaction) {
+  const data = toBytes(tx.data);
+  const encoded = encodePacked(
+    ["uint8", "address", "uint256", "uint256", "bytes"],
+    [tx.operation, tx.to, BigInt(tx.value), BigInt(data.length), tx.data]
+  );
+  return encoded.slice(2);
+}
+
+export function encodeMultiSend(txs: MetaTransaction[]): Hex {
+  return `0x${txs.map((tx) => encodeMetaTransaction(tx)).join('')}`;
+}
 
 export class LendingManager {
   public chainId = defaultChainId
@@ -69,11 +96,217 @@ export class LendingManager {
     return res
   }
 
-  public async approve(account: Address, reserveId: bigint, amount: bigint) {
-    console.log('deposit lending :>> ', [reserveId, amount, account])
-    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
-    const erc20Contract = this.getErc20Contract(lendConfig.underlyingTokenAddress)
+  public async requireAllowance(tokenAddress: Address, targetAddress: Address, amount: bigint, useNativeETH = true) {
+    if (useNativeETH && isWETH(this.chainId, tokenAddress)) {
+      return false
+    }
+    const tokenContract = getContract({
+      address: tokenAddress,
+      abi: ERC20ABI,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
+      }
+    })
+    console.log('readallowance :>> ', [this.account, targetAddress]);
+    const res = await tokenContract.read.allowance([this.account, targetAddress])
+    console.log('readallowance :>> ', res);
+    return res < amount
+  }
 
-    await erc20Contract.write.approve([account, amount])
+  public async approve(address: Address, tokenAddr: Address, amount: bigint) {
+    console.log('deposit lending :>> ', [tokenAddr, amount, address])
+    // const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
+    const erc20Contract = this.getErc20Contract(tokenAddr)
+
+    await erc20Contract.write.approve([address, amount])
+  }
+
+  public healthManagerContract() {
+    return getContract({
+      address: CONTRACT_ADDRESSES[this.chainId]?.healthManager,
+      abi: HealthManagerABI,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
+      }
+    })
+  }
+
+  public getExtraXAccountContract() {
+    return getContract({
+      address: CONTRACT_ADDRESSES[this.chainId]?.accountSingleton,
+      abi: ExtraXAccountABI,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
+      }
+    })
+  }
+
+  public async buildSetAsCollateralTx(assetId: bigint, chainId?: SupportedChainId) {
+    const funcData = encodeFunctionData({
+      abi: HealthManagerABI,
+      functionName: 'setAsCollateral',
+      args: [
+        assetId,
+      ]
+    })
+    let metaTx = {
+      to: CONTRACT_ADDRESSES[chainId || this.chainId]?.healthManager,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+
+  public async buildDepositToAccountTx(
+    tokenAddress: Address,
+    safeAccount: Address,
+    amount: bigint,
+  ) {
+    const funcData = encodeFunctionData({
+      abi: ERC20ABI,
+      functionName: 'transferFrom',
+      args: [
+        this.account,
+        safeAccount,
+        amount,
+      ]
+    })
+    let metaTx = {
+      to: tokenAddress,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+
+  public async buildApproveLendingTx(
+    tokenAddress: Address,
+    amount: bigint,
+    chainId?: SupportedChainId
+  ) {
+    const funcData = encodeFunctionData({
+      abi: ERC20ABI,
+      functionName: 'approve',
+      args: [
+        CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
+        amount,
+      ]
+    })
+    let metaTx = {
+      to: tokenAddress,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+  
+  public async buildDepositToLendingTx(
+    reserveId: bigint,
+    amount: bigint,
+    nativeETH?: boolean,
+    chainId?: SupportedChainId
+  ) {
+    const funcData = encodeFunctionData({
+      abi: ExtraXLendingABI,
+      functionName: 'deposit',
+      args: [
+        reserveId,
+        amount,
+      ]
+    })
+    let metaTx = {
+      to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
+      data: funcData,
+      value: nativeETH ? amount : 0n,
+    };
+    return metaTx;
+  }
+
+  public async multiSend(
+    safeAccount: Address,
+    transactions: { to: Address; value: bigint; data: Address }[]
+  ) {
+    let nonce = await this.getExtraXAccountContract().read.nonce();
+  
+    let signedSafeTransactions: MetaTransaction[] = [];
+  
+    for (let tx of transactions) {
+      console.log(tx);
+  
+      signedSafeTransactions.push(
+        await buildSignedMetaTransaction(this.publicClient, this.walletClient, this.account, safeAccount, tx, nonce++)
+      );
+    }
+  
+    let encodedMultiSendTx = encodeMultiSend(signedSafeTransactions);
+  
+    const multiSendCall = this.getMultiSendCallOnlyContract()
+  
+    const res = await multiSendCall.write.multiSend([encodedMultiSendTx], {
+      gasLimit: "2000000",
+    });
+  
+    return res
+  }
+
+  public async depositToLending(safeAccount: Address, reserveId: bigint, amount: bigint, useNativeETH = true) {
+    console.log('depositToLending :>> ', {safeAccount, reserveId, amount, useNativeETH});
+    // Apprve the Account transfer assets from user's wallet
+    // Note: This tx cannot be batched to a multiSend Transaction
+    console.log("approve ...");
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
+    const token = lendConfig.name
+    const requireAllowance =  await this.requireAllowance(lendConfig.underlyingTokenAddress, safeAccount, amount, useNativeETH)
+    console.log('requireAllowance :>> ', requireAllowance);
+    if (requireAllowance) {
+      await this.approve(
+        safeAccount,
+        lendConfig.underlyingTokenAddress,
+        amount
+      );
+    }
+  
+    let transactions: { to: Hex; data: Hex; value: bigint }[] = [];
+  
+    transactions.push(
+      await this.buildSetAsCollateralTx(
+        HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId
+      )
+    );
+  
+    transactions.push(
+      await this.buildSetAsCollateralTx(
+        HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId
+      )
+    );
+  
+    transactions.push(
+      await this.buildDepositToAccountTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        safeAccount,
+        amount
+      )
+    );
+  
+    transactions.push(
+      await this.buildApproveLendingTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        amount
+      )
+    );
+  
+    transactions.push(
+      await this.buildDepositToLendingTx(
+        LendingConfig[this.chainId][token].reserveId,
+        amount
+      )
+    );
+  
+    console.log("(MultiSend) deposit to lending pool ...");
+    const res = await this.multiSend(safeAccount, transactions);
+    console.log('multiSend res :>> ', res);
   }
 }

@@ -8,7 +8,7 @@ import { Client } from 'viem'
 import { defaultChainId } from '@/constants'
 import { SupportedChainId } from '@/constants/chains'
 
-const ExtraXAccountDefaultNonce = 100n;
+const ExtraXAccountDefaultNonce = 12341n;
 
 export class AccountManager {
   public chainId = defaultChainId

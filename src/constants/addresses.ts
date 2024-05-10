@@ -40,4 +40,4 @@ export const CONTRACT_ADDRESSES = {
     healthManager: '0x9099a2dC1FE0b801A7eb890C0137F2099B7d4dB6',
     lendingPool: '0xb72A7F71E0c3Ec96d99888eAF49fc4A6b79FB536',
   },
-}
+} as const

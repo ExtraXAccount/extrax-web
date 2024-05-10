@@ -24,4 +24,4 @@ export const LendingConfig = {
       debtToken: "0x55b9DD7B0d177F3a454f883c883FE8bf2eCedfF8",
     },
   },
-};
+} as const
