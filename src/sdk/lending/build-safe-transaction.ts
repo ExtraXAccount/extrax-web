@@ -1,25 +1,30 @@
-import { WalletClient, encodeFunctionData, erc20Abi, getContract, PublicClient, Client, Address } from 'viem'
+import { WalletClient, encodeFunctionData, erc20Abi, getContract, PublicClient, Client, Address, decodeFunctionData } from 'viem'
+// import { Contract } from 'ethers'
 import { signMessageForSafe } from "../utils/signMessage";
 import { SafeABI } from './SafeABI';
+// import { clientToSigner } from '../utils/clientToSigner';
+// import { Hex } from 'viem';
 
 export async function buildSignedMetaTransaction(
   publicClient: Client,
   walletClient: Client,
   userAddress: Address,
-  account: Address,
+  safeAccount: Address,
   tx: { to: Address; data: Address; value: bigint },
   nonce: bigint
 ) {
   console.log(`buildSignedMetaTransaction ...`);
 
   const safeContract = getContract({
-    address: account,
+    address: safeAccount,
     abi: SafeABI,
     client: {
       public: publicClient,
       wallet: walletClient,
     }
   })
+
+  // const safeEthersContract = new Contract(safeAccount, SafeABI, clientToSigner(walletClient))
 
   let EnumOperation = 0; // 0: call  1:delegateCall
   let safeTxGas = 500000n; // 0.5 M
@@ -40,13 +45,26 @@ export async function buildSignedMetaTransaction(
     refundReceiver,
     nonce
   ]);
-  // console.log("\t TransactionDataHash:", transactionDataHash);
+  console.log("TransactionDataHash:", transactionDataHash);
 
   // sign safe transaction
   let signatures = await signMessageForSafe(walletClient, userAddress, transactionDataHash);
-  // console.log("\t Signatures:", signatures);
+  console.log("Signatures:", signatures);
 
-  const safeTx = encodeFunctionData({
+  // const safeTx = await safeContract.simulate.execTransaction([
+  //   tx.to,
+  //   tx.value,
+  //   tx.data,
+  //   EnumOperation,
+  //   safeTxGas,
+  //   baseGas,
+  //   gasPrice,
+  //   gasToken,
+  //   refundReceiver,
+  //   signatures,
+  // ])
+  // console.log('safeTx :>> ', safeTx);
+  const encodedFuncData = encodeFunctionData({
     abi: SafeABI,
     functionName: 'execTransaction',
     args: [
@@ -63,7 +81,15 @@ export async function buildSignedMetaTransaction(
     ],
   })
 
-  // let safeTx = await safeContract.write.execTransaction.populateTransaction(
+  console.log('encodedFuncData :>> ', encodedFuncData);
+
+  return {
+    to: safeAccount,
+    value: tx.value,
+    data: encodedFuncData,
+    operation: 0, // only 0 is allowed!
+  };
+  // let safeTx = await safeEthersContract.execTransaction.populateTransaction(
   //   tx.to,
   //   tx.value,
   //   tx.data,
@@ -79,11 +105,16 @@ export async function buildSignedMetaTransaction(
   //     gasLimit: 2000000,
   //   }
   // );
+  // console.log('safeTx.data :>> ', safeTx.data);
+  // const safeTx2 = decodeFunctionData({
+  //   abi: SafeABI,
+  //   data: encodedFuncData
+  // })
 
-  return {
-    to: tx.to,
-    value: tx.value,
-    data: safeTx,
-    operation: 0, // only 0 is allowed!
-  };
+  // return {
+  //   to: safeTx.to as Address,
+  //   value: safeTx.value,
+  //   data: safeTx.data as Hex,
+  //   operation: 0, // only 0 is allowed!
+  // };
 }

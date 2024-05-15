@@ -1,4 +1,3 @@
-
 import { WalletClient, encodeFunctionData, erc20Abi, getContract, PublicClient, Client, toBytes, encodePacked } from 'viem'
 import { Address } from "@/types";
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
@@ -230,7 +229,8 @@ export class LendingManager {
     transactions: { to: Address; value: bigint; data: Address }[]
   ) {
     let nonce = await this.getExtraXAccountContract().read.nonce();
-  
+    
+    console.log('nonce :>> ', nonce);
     let signedSafeTransactions: MetaTransaction[] = [];
   
     for (let tx of transactions) {
@@ -243,8 +243,12 @@ export class LendingManager {
   
     let encodedMultiSendTx = encodeMultiSend(signedSafeTransactions);
   
+    console.log('encodedMultiSendTx :>> ', signedSafeTransactions, encodedMultiSendTx);
     const multiSendCall = this.getMultiSendCallOnlyContract()
-  
+
+    const estimateFee = await multiSendCall.estimateGas.multiSend([encodedMultiSendTx]);
+    console.log('estimateFee :>> ', estimateFee);
+
     const res = await multiSendCall.write.multiSend([encodedMultiSendTx], {
       gasLimit: "2000000",
     });
@@ -270,42 +274,47 @@ export class LendingManager {
     }
   
     let transactions: { to: Hex; data: Hex; value: bigint }[] = [];
-  
+
+    console.log('assetId :>> ', HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId);
     transactions.push(
       await this.buildSetAsCollateralTx(
         HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId
       )
     );
+    console.log('transactions :>> ', transactions);
   
-    transactions.push(
-      await this.buildSetAsCollateralTx(
-        HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId
-      )
-    );
+    // transactions.push(
+    //   await this.buildSetAsCollateralTx(
+    //     HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId
+    //   )
+    // );
   
-    transactions.push(
-      await this.buildDepositToAccountTx(
-        LendingConfig[this.chainId][token].underlyingTokenAddress,
-        safeAccount,
-        amount
-      )
-    );
+    // transactions.push(
+    //   await this.buildDepositToAccountTx(
+    //     LendingConfig[this.chainId][token].underlyingTokenAddress,
+    //     safeAccount,
+    //     amount
+    //   )
+    // );
   
-    transactions.push(
-      await this.buildApproveLendingTx(
-        LendingConfig[this.chainId][token].underlyingTokenAddress,
-        amount
-      )
-    );
+    // transactions.push(
+    //   await this.buildApproveLendingTx(
+    //     LendingConfig[this.chainId][token].underlyingTokenAddress,
+    //     amount
+    //   )
+    // );
   
-    transactions.push(
-      await this.buildDepositToLendingTx(
-        LendingConfig[this.chainId][token].reserveId,
-        amount
-      )
-    );
+    // transactions.push(
+    //   await this.buildDepositToLendingTx(
+    //     LendingConfig[this.chainId][token].reserveId,
+    //     amount
+    //   )
+    // );
   
-    console.log("(MultiSend) deposit to lending pool ...");
+    console.log("(MultiSend) deposit to lending pool ...", {
+      safeAccount,
+      transactions,
+    });
     const res = await this.multiSend(safeAccount, transactions);
     console.log('multiSend res :>> ', res);
   }

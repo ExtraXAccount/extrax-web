@@ -1,5 +1,4 @@
 import { WalletClient, bytesToHex, hexToBytes } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts';
 import { Address } from '@/types';
 
 export async function signMessageForSafe(

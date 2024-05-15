@@ -3,12 +3,11 @@ import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 
 import {HealthManagerABI} from './HealthManagerABI'
 import { ExtraXAccountFactoryABI } from './ExtraXAccountFactoryABI'
-import { erc20Abi, getContract } from 'viem'
-import { Client } from 'viem'
+import { erc20Abi, getContract, PublicClient, Client } from 'viem'
 import { defaultChainId } from '@/constants'
 import { SupportedChainId } from '@/constants/chains'
 
-const ExtraXAccountDefaultNonce = 12341n;
+const ExtraXAccountDefaultNonce = 12345n;
 
 export class AccountManager {
   public chainId = defaultChainId
@@ -16,7 +15,7 @@ export class AccountManager {
   publicClient: Client
   walletClient: Client
 
-  constructor(chainId: SupportedChainId, publicClient, walletClient, account?: Address, ) {
+  constructor(chainId: SupportedChainId, publicClient: Client, walletClient: Client, account?: Address, ) {
     if (chainId && chainId in SupportedChainId) {
       this.chainId = chainId
     }
@@ -67,9 +66,14 @@ export class AccountManager {
   }
 
   public async getAccount() {
+    const currentBlock = await (this.publicClient as PublicClient).getBlockNumber()
+    // console.log('currentBlock :>> ', currentBlock);
     const evts = await this.factoryContract().getEvents.ExtraAccountCreation({
       user: this.account,
-      saltNonce: ExtraXAccountDefaultNonce
+      saltNonce: ExtraXAccountDefaultNonce,
+    }, {
+      fromBlock: currentBlock - 1000n,
+      toBlock: currentBlock,
     })
 
     console.log('getAccount evts :>> ', evts);
