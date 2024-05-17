@@ -1,9 +1,9 @@
 import { WalletClient, encodeFunctionData, erc20Abi, getContract, PublicClient, Client, Address, decodeFunctionData } from 'viem'
-// import { Contract } from 'ethers'
-import { signMessageForSafe } from "../utils/signMessage";
+import { Contract } from 'ethers'
+import { ethSignMessageForSafe, signMessageForSafe } from "../utils/signMessage";
 import { SafeABI } from './SafeABI';
-// import { clientToSigner } from '../utils/clientToSigner';
-// import { Hex } from 'viem';
+import { clientToSigner } from '../utils/clientToSigner';
+import { Hex } from 'viem';
 
 export async function buildSignedMetaTransaction(
   publicClient: Client,
@@ -27,7 +27,7 @@ export async function buildSignedMetaTransaction(
   // const safeEthersContract = new Contract(safeAccount, SafeABI, clientToSigner(walletClient))
 
   let EnumOperation = 0; // 0: call  1:delegateCall
-  let safeTxGas = 500000n; // 0.5 M
+  let safeTxGas = 0n; // 0.5 M
   let baseGas = 0n;
   let gasPrice = 0n;
   let gasToken = "0x0000000000000000000000000000000000000000" as Address;
@@ -48,8 +48,9 @@ export async function buildSignedMetaTransaction(
   console.log("TransactionDataHash:", transactionDataHash);
 
   // sign safe transaction
-  let signatures = await signMessageForSafe(walletClient, userAddress, transactionDataHash);
-  console.log("Signatures:", signatures);
+  // let signatures = await signMessageForSafe(walletClient, userAddress, transactionDataHash);
+  const signatures = await ethSignMessageForSafe(walletClient, transactionDataHash);
+  console.log("Signatures:", {signatures});
 
   // const safeTx = await safeContract.simulate.execTransaction([
   //   tx.to,

@@ -12,6 +12,16 @@ import { useAccountManager } from '@/hooks/useSDK'
 
 export const INFINITY = '∞'
 
+export interface AccountInfo {
+  account: `0x${string}`;
+  collateral: bigint;
+  collateralDeciamls: number;
+  debt: bigint;
+  debtDecimals: number;
+  depositedVal: number
+  debtVal: number
+}
+
 export default function useSmartAccount() {
   const { prices } = usePrices()
   // const { depositedVal, depositedAssets } = useDeposited()
@@ -21,7 +31,7 @@ export default function useSmartAccount() {
   // const { account = '', smartAccount } = useWagmiCtx()
   const positions = useAppSelector((state) => state.position.userPositions)
 
-  const [accountInfo, setAccountInfo] = useState({} as any);
+  const [accountInfo, setAccountInfo] = useState({} as AccountInfo);
   const [accounts, setAccounts] = useState([]);
   const [supportedAssets, setSupportedAssets] = useState([]);
   const [supportedDebts, setSupportedDebts] = useState([]);
@@ -33,22 +43,22 @@ export default function useSmartAccount() {
     if (!accounts[0]) {
       return
     }
-    const res = await accountMng.getCollateralAndDebtValue(accounts[0])
-    const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
+    const {account, collateral, collateralDeciamls, debt, debtDecimals} = await accountMng.getCollateralAndDebtValue(accounts[0])
 
     setAccountInfo({
+      account,
       collateral, collateralDeciamls, debt, debtDecimals,
-      depositedVal: collateral / BigInt(10 ** collateralDeciamls),
-      debtVal: debt / BigInt(10 ** debtDecimals),
+      depositedVal: Number((collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()),
+      debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
     })
   }, [accounts, accountMng])
 
-  const depositedVal = accountInfo.depositedVal || 0
+  const depositedVal = accountInfo.depositedVal
   // console.log('accountInfo :>> ', accountInfo);
-  const debtVal = accountInfo.debtVal || 0
+  const debtVal = accountInfo.debtVal
 
   useEffect(() => {
-    accountMng.getAccount()
+    accountMng.getAccounts()
     .then(res => {
       setAccounts(res)
     })

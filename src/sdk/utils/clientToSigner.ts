@@ -1,4 +1,4 @@
-import { FallbackProvider, JsonRpcProvider, JsonRpcSigner } from 'ethers'
+import { BrowserProvider, FallbackProvider, JsonRpcProvider, JsonRpcSigner } from 'ethers'
 import type { Transport } from 'viem'
 import { PublicClient, WalletClient } from 'viem'
 
@@ -26,9 +26,9 @@ export function clientToSigner(client: PublicClient | WalletClient) {
     name: chain.name,
     ensAddress: chain.contracts?.ensRegistry?.address,
   }
-  const provider = new JsonRpcProvider(transport.url, network)
-  // const provider = new BrowserProvider(transport, network)
-  // const provider = clientToProvider(client)
+  // const provider = new providers.Web3Provider(transport, network)
+  // const signer = provider.getSigner(account.address)
+  const provider = new BrowserProvider(transport as any, network)
   const signer = new JsonRpcSigner(provider, account.address)
   return signer
 }

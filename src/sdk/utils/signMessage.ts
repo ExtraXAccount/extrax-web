@@ -1,5 +1,8 @@
-import { WalletClient, bytesToHex, hexToBytes } from 'viem'
+import { WalletClient, bytesToHex, hexToBytes, Hex } from 'viem'
 import { Address } from '@/types';
+import { hexlify } from "ethers";
+import { hexToUint8Array } from "./hex";
+import { clientToSigner } from './clientToSigner';
 
 export async function signMessageForSafe(
   client: WalletClient,
@@ -25,4 +28,30 @@ export async function signMessageForSafe(
   signatures = bytesToHex(sigBytes);
 
   return signatures;
+}
+
+export async function ethSignMessageForSafe(
+  walletClient: WalletClient,
+  hex: Hex
+) {
+  const signer = clientToSigner(walletClient)
+  const bytes = hexToUint8Array(hex);
+  console.log('signer :>> ', {signer, bytes});
+
+  let signatures = await signer.signMessage(bytes);
+
+  let sigBytes = hexToUint8Array(signatures);
+
+  if (sigBytes.length != 65) {
+    console.error("!!!Invalid Signature!!!");
+
+    // return "";
+    throw new Error("!!!Invalid Signature!!!")
+  }
+
+  //!!! 'v += 4' here to accommodate the validation logic of the Safe contract.
+  sigBytes[64] += 4;
+  signatures = hexlify(sigBytes);
+
+  return signatures as Hex;
 }

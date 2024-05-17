@@ -70,17 +70,17 @@ export default function AccountDepositDialog({
 
   const deposit = useCallback(async () => {
     console.log('deposit :>> ', accounts);
+    let newAccounts = [...accounts]
     if (!accounts.length) {
       setCreatingAccount(true)
       try {
-        await accountMng.createAccount()
+        newAccounts = await accountMng.createAccount()
         // await depositAndStake('2', '4839')
       } finally {
         setCreatingAccount(false)
       }
     }
-
-    mng.depositToLending(accounts[0], 2n, BigInt(value) * (10n ** 6n))
+    mng.depositToLending(newAccounts[0], 2n, BigInt(value) * (10n ** 6n))
 
     // const parsedValue = toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
     // await sendTransaction({ to: accounts[0], value: parseEther(parsedValue) }) 

@@ -283,33 +283,33 @@ export class LendingManager {
     );
     console.log('transactions :>> ', transactions);
   
-    // transactions.push(
-    //   await this.buildSetAsCollateralTx(
-    //     HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId
-    //   )
-    // );
+    transactions.push(
+      await this.buildSetAsCollateralTx(
+        HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId
+      )
+    );
   
-    // transactions.push(
-    //   await this.buildDepositToAccountTx(
-    //     LendingConfig[this.chainId][token].underlyingTokenAddress,
-    //     safeAccount,
-    //     amount
-    //   )
-    // );
+    transactions.push(
+      await this.buildDepositToAccountTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        safeAccount,
+        amount
+      )
+    );
   
-    // transactions.push(
-    //   await this.buildApproveLendingTx(
-    //     LendingConfig[this.chainId][token].underlyingTokenAddress,
-    //     amount
-    //   )
-    // );
+    transactions.push(
+      await this.buildApproveLendingTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        amount
+      )
+    );
   
-    // transactions.push(
-    //   await this.buildDepositToLendingTx(
-    //     LendingConfig[this.chainId][token].reserveId,
-    //     amount
-    //   )
-    // );
+    transactions.push(
+      await this.buildDepositToLendingTx(
+        LendingConfig[this.chainId][token].reserveId,
+        amount
+      )
+    );
   
     console.log("(MultiSend) deposit to lending pool ...", {
       safeAccount,

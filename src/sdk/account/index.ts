@@ -7,7 +7,7 @@ import { erc20Abi, getContract, PublicClient, Client } from 'viem'
 import { defaultChainId } from '@/constants'
 import { SupportedChainId } from '@/constants/chains'
 
-const ExtraXAccountDefaultNonce = 12345n;
+const ExtraXAccountDefaultNonce = 12360n;
 
 export class AccountManager {
   public chainId = defaultChainId
@@ -65,7 +65,7 @@ export class AccountManager {
     })
   }
 
-  public async getAccount() {
+  public async getAccounts() {
     const currentBlock = await (this.publicClient as PublicClient).getBlockNumber()
     // console.log('currentBlock :>> ', currentBlock);
     const evts = await this.factoryContract().getEvents.ExtraAccountCreation({
@@ -94,9 +94,9 @@ export class AccountManager {
     const res = await this.factoryContract().write.createProxyWithNonce(['0x200', ExtraXAccountDefaultNonce])
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('createAccount res :>> ', res);
-    const account = await this.getAccount()
-    console.log('createAccount :>> ', account)
-    return account
+    const accounts = await this.getAccounts()
+    console.log('createAccount :>> ', accounts)
+    return accounts
   }
 
 
@@ -138,9 +138,9 @@ export class AccountManager {
 
   public async getCollateralAndDebtValue(account: Address) {
     const res = await this.healthManagerContract().read.getCollateralAndDebtValue([account])
-    const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
+    const [ collateral, collateralDeciamls, debt, debtDecimals ] = res
     console.log('getCollateralAndDebtValue :>> ', {account, collateral, collateralDeciamls, debt, debtDecimals})
-    return res
+    return {account, collateral, collateralDeciamls, debt, debtDecimals}
   }
 }
 
