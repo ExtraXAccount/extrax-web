@@ -5,6 +5,7 @@ import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 import { useAppSelector } from '@/state'
 
 import lendingPoolABI from './LendingPoolABI.json'
+import Item from 'antd/es/list/Item'
 // import lendData from './mock.json'
 
 // export const lendingList = lendData
@@ -16,7 +17,10 @@ export default function useLendContract() {
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const lendList = useMemo(() => {
-    return lendingList
+    return lendingList.map(item => ({
+      ...item,
+      deposited: 1
+    }))
   }, [lendingList])
 
   const totalSavingsDAI = useMemo(() => {

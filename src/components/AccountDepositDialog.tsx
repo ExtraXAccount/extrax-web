@@ -43,7 +43,7 @@ export default function AccountDepositDialog({
   const { depositedVal } = useDeposited()
 
   const accountMng = useAccountManager()
-  const mng = useLendingManager()
+  const lendMng = useLendingManager()
 
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
@@ -80,7 +80,7 @@ export default function AccountDepositDialog({
         setCreatingAccount(false)
       }
     }
-    mng.depositToLending(newAccounts[0], 2n, BigInt(value) * (10n ** 6n))
+    lendMng.depositToLending(newAccounts[0], 2n, BigInt(value) * (10n ** 6n))
 
     // const parsedValue = toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
     // await sendTransaction({ to: accounts[0], value: parseEther(parsedValue) }) 

@@ -8,11 +8,11 @@ import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import useLendContract from '@/sdk/lend'
 import { useAppDispatch, useAppSelector } from '@/state'
-import { setLendingStatus } from '@/state/lending/reducer'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
-import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import { useLendingManager } from '@/hooks/useSDK'
 
 export default function WithdrawDialog({
   open,
@@ -23,6 +23,11 @@ export default function WithdrawDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
+  const {
+    smartAccount,
+  } = useSmartAccount()
+  const lendMng = useLendingManager()
+
   const { prices, getPrice } = usePrices()
   const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
@@ -59,23 +64,9 @@ export default function WithdrawDialog({
   }
 
   const withdraw = useCallback(async () => {
-    const res = await unStakeAndWithdraw(
-      currentLendingPoolDetail?.ReserveId,
-      toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
-    )
-
-    const newLendList = [...lendList]
-    const targetIndex = newLendList.findIndex((item) => item.ReserveId === currentLendingPoolDetail?.ReserveId)
-    const target = newLendList[targetIndex]
-    newLendList.splice(targetIndex, 1, {
-      ...target,
-      deposited: target.deposited - Number(value),
-    })
-    // console.log('newLendingData :>> ', targetIndex, newLendList)
-    dispatch(setLendingStatus(newLendList))
-    reset()
-    onClose()
-
+    console.log('withdraw :>> ', smartAccount);
+    const res = await lendMng.withdraw(smartAccount, 2n, BigInt(value) * (10n ** 6n))
+    // onClose()
     return res
   }, [
     unStakeAndWithdraw,

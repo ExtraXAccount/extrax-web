@@ -14,6 +14,7 @@ import { buildSignedMetaTransaction } from './build-safe-transaction';
 import { Hex } from 'viem';
 import { HealthManagerConfig } from './health-manager-config';
 import { isWETH } from '../utils/token';
+import { calculateGasLimit } from '../utils/calculateGasMargin';
 
 export interface MetaTransaction {
   to: Address;
@@ -250,7 +251,7 @@ export class LendingManager {
     console.log('estimateFee :>> ', estimateFee);
 
     const res = await multiSendCall.write.multiSend([encodedMultiSendTx], {
-      gasLimit: "2000000",
+      gasLimit: calculateGasLimit(estimateFee),
     });
   
     return res
@@ -281,7 +282,6 @@ export class LendingManager {
         HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId
       )
     );
-    console.log('transactions :>> ', transactions);
   
     transactions.push(
       await this.buildSetAsCollateralTx(
@@ -312,6 +312,152 @@ export class LendingManager {
     );
   
     console.log("(MultiSend) deposit to lending pool ...", {
+      safeAccount,
+      transactions,
+    });
+    const res = await this.multiSend(safeAccount, transactions);
+    console.log('multiSend res :>> ', res);
+  }
+
+  public async buildWithdrawTransaction(
+    reserveId: bigint,
+    eTokenAmount: bigint,
+    chainId?: SupportedChainId
+  ) {
+    const funcData = encodeFunctionData({
+      abi: ExtraXLendingABI,
+      functionName: 'withdraw',
+      args: [
+        reserveId,
+        eTokenAmount,
+      ]
+    })
+    let metaTx = {
+      to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+  public async withdraw(safeAccount: Address, reserveId: bigint, amount: bigint) {
+    console.log('withdraw :>> ', {safeAccount, reserveId, amount});
+
+    let transactions: { to: Hex; data: Hex; value: bigint }[] = [];
+    transactions.push(
+      await this.buildWithdrawTransaction(
+        reserveId,
+        amount,
+      )
+    );
+
+    console.log("(MultiSend) withraw lending pool ...", {
+      safeAccount,
+      transactions,
+    });
+    const res = await this.multiSend(safeAccount, transactions);
+    console.log('multiSend res :>> ', res);
+  }
+
+  public async buildActivateUserDebtTx(
+    userAccount: Address,
+    reserveId: bigint,
+    chainId?: SupportedChainId
+  ) {
+    const funcData = encodeFunctionData({
+      abi: HealthManagerABI,
+      functionName: 'activateUserDebt',
+      args: [
+        userAccount,
+        reserveId,
+      ]
+    })
+    let metaTx = {
+      to: CONTRACT_ADDRESSES[chainId || this.chainId]?.healthManager,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+  public async buildBorrowTransaction(
+    reserveId: bigint,
+    eTokenAmount: bigint,
+    chainId?: SupportedChainId
+  ) {
+    const funcData = encodeFunctionData({
+      abi: ExtraXLendingABI,
+      functionName: 'borrow',
+      args: [
+        reserveId,
+        eTokenAmount,
+      ]
+    })
+    let metaTx = {
+      to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+  public async borrow(safeAccount: Address, reserveId: bigint, amount: bigint, debtId: bigint) {
+    console.log('borrow :>> ', {safeAccount, reserveId, amount});
+
+    let transactions: { to: Hex; data: Hex; value: bigint }[] = [];
+    transactions.push(await this.buildActivateUserDebtTx(this.account, debtId));
+    transactions.push(
+      await this.buildBorrowTransaction(
+        reserveId,
+        amount,
+      )
+    );
+
+    console.log("(MultiSend) borrow lending pool ...", {
+      safeAccount,
+      transactions,
+    });
+    const res = await this.multiSend(safeAccount, transactions);
+    console.log('multiSend res :>> ', res);
+  }
+
+  public async buildRepayTransaction(
+    reserveId: bigint,
+    eTokenAmount: bigint,
+    chainId?: SupportedChainId
+  ) {
+    const funcData = encodeFunctionData({
+      abi: ExtraXLendingABI,
+      functionName: 'repay',
+      args: [
+        reserveId,
+        eTokenAmount,
+      ]
+    })
+    let metaTx = {
+      to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
+      data: funcData,
+      value: 0n,
+    };
+    return metaTx;
+  }
+  public async repay(safeAccount: Address, reserveId: bigint, amount: bigint) {
+    console.log('repay :>> ', {safeAccount, reserveId, amount});
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
+    const token = lendConfig.name
+
+    let transactions: { to: Hex; data: Hex; value: bigint }[] = [];
+    transactions.push(
+      await this.buildApproveLendingTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        amount
+      )
+    );
+    transactions.push(
+      await this.buildRepayTransaction(
+        reserveId,
+        amount,
+      )
+    );
+
+    console.log("(MultiSend) repay lending pool ...", {
       safeAccount,
       transactions,
     });
