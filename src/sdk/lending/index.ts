@@ -133,9 +133,9 @@ export class LendingManager {
     })
   }
 
-  public getExtraXAccountContract() {
+  public getExtraXAccountContract(safeAccount: Address) {
     return getContract({
-      address: CONTRACT_ADDRESSES[this.chainId]?.accountSingleton,
+      address: safeAccount,
       abi: ExtraXAccountABI,
       client: {
         public: this.publicClient,
@@ -229,8 +229,8 @@ export class LendingManager {
     safeAccount: Address,
     transactions: { to: Address; value: bigint; data: Address }[]
   ) {
-    let nonce = await this.getExtraXAccountContract().read.nonce();
-    
+    let nonce = await this.getExtraXAccountContract(safeAccount).read.nonce();
+
     console.log('nonce :>> ', nonce);
     let signedSafeTransactions: MetaTransaction[] = [];
   
@@ -247,11 +247,12 @@ export class LendingManager {
     console.log('encodedMultiSendTx :>> ', signedSafeTransactions, encodedMultiSendTx);
     const multiSendCall = this.getMultiSendCallOnlyContract()
 
-    const estimateFee = await multiSendCall.estimateGas.multiSend([encodedMultiSendTx]);
-    console.log('estimateFee :>> ', estimateFee);
+    // const estimateFee = await multiSendCall.estimateGas.multiSend([encodedMultiSendTx]);
+    // console.log('estimateFee :>> ', estimateFee);
 
     const res = await multiSendCall.write.multiSend([encodedMultiSendTx], {
-      gasLimit: calculateGasLimit(estimateFee),
+      // gasLimit: calculateGasLimit(estimateFee),
+      gasLimit: "2000000",
     });
   
     return res

@@ -19,7 +19,8 @@ export default function useLendContract() {
   const lendList = useMemo(() => {
     return lendingList.map(item => ({
       ...item,
-      deposited: 1
+      deposited: 10,
+      borrowed: 2,
     }))
   }, [lendingList])
 

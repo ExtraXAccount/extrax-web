@@ -6,8 +6,9 @@ import { ExtraXAccountFactoryABI } from './ExtraXAccountFactoryABI'
 import { erc20Abi, getContract, PublicClient, Client } from 'viem'
 import { defaultChainId } from '@/constants'
 import { SupportedChainId } from '@/constants/chains'
+import { BalanceCheckerABI } from "./BalanceCheckerABI";
 
-const ExtraXAccountDefaultNonce = 12360n;
+const ExtraXAccountDefaultNonce = 100n;
 
 export class AccountManager {
   public chainId = defaultChainId
@@ -141,6 +142,21 @@ export class AccountManager {
     const [ collateral, collateralDeciamls, debt, debtDecimals ] = res
     console.log('getCollateralAndDebtValue :>> ', {account, collateral, collateralDeciamls, debt, debtDecimals})
     return {account, collateral, collateralDeciamls, debt, debtDecimals}
+  }
+
+  public async getBalances(accounts: Address[], tokens: Address[]) {
+    const balanceChecker = getContract({
+      address: CONTRACT_ADDRESSES[this.chainId]?.BalanceChecker,
+      abi: BalanceCheckerABI,
+      client: {
+        public: this.publicClient,
+        wallet: this.walletClient,
+      }
+    })
+
+    const balances = await balanceChecker.read.balances([accounts, tokens])
+    console.log('balanceChecker.balances :>> ', balances);
+    return balances
   }
 }
 

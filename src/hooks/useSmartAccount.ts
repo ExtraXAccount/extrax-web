@@ -9,11 +9,14 @@ import usePrices from '@/hooks/usePrices'
 import { useAppSelector } from '@/state'
 import { addComma, aprToApy, toPrecision } from '@/utils/math'
 import { useAccountManager } from '@/hooks/useSDK'
+import { LendingConfig } from '@/sdk/lending/lending-pool'
+import { useWagmiCtx } from '@/components/WagmiContext'
 
 export const INFINITY = '∞'
 
 export interface AccountInfo {
   account: `0x${string}`;
+  balances: any;
   collateral: bigint;
   collateralDeciamls: number;
   debt: bigint;
@@ -31,6 +34,8 @@ export default function useSmartAccount() {
   // const { account = '', smartAccount } = useWagmiCtx()
   const positions = useAppSelector((state) => state.position.userPositions)
 
+  const { chainId } = useWagmiCtx()
+
   const [accountInfo, setAccountInfo] = useState({} as AccountInfo);
   const [accounts, setAccounts] = useState([]);
   const [supportedAssets, setSupportedAssets] = useState([]);
@@ -43,9 +48,23 @@ export default function useSmartAccount() {
     if (!accounts[0]) {
       return
     }
+    const balances = await accountMng.getBalances(accounts, [
+      LendingConfig[chainId]["USDC.e"].underlyingTokenAddress,
+      LendingConfig[chainId]["OP"].underlyingTokenAddress,
+      LendingConfig[chainId]["WETH"].underlyingTokenAddress,
+  
+      LendingConfig[chainId]["USDC.e"].eToken,
+      LendingConfig[chainId]["OP"].eToken,
+      LendingConfig[chainId]["WETH"].eToken,
+  
+      LendingConfig[chainId]["USDC.e"].debtToken,
+      LendingConfig[chainId]["OP"].debtToken,
+      LendingConfig[chainId]["WETH"].debtToken,
+    ]);
     const {account, collateral, collateralDeciamls, debt, debtDecimals} = await accountMng.getCollateralAndDebtValue(accounts[0])
 
     setAccountInfo({
+      balances,
       account,
       collateral, collateralDeciamls, debt, debtDecimals,
       depositedVal: Number((collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()),

@@ -13,6 +13,10 @@ import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import { useLendingManager } from '@/hooks/useSDK'
+import { HealthManagerConfig } from '@/sdk/lending/health-manager-config'
+import { SupportedChainId } from '@/constants/chains'
 
 const maxBorrowedRatio = 0.8
 
@@ -25,6 +29,11 @@ export default function BorrowDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
+  const {
+    smartAccount,
+  } = useSmartAccount()
+  const lendMng = useLendingManager()
+
   const { prices, getPrice } = usePrices()
   const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
@@ -60,24 +69,16 @@ export default function BorrowDialog({
     setValue('')
   }
   const borrow = useCallback(async () => {
-    const res = await unStakeAndWithdraw(
-      currentLendingPoolDetail?.ReserveId,
-      toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
-    )
+    // const res = await unStakeAndWithdraw(
+    //   currentLendingPoolDetail?.ReserveId,
+    //   toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
+    // )
 
-    const newLendList = [...lendList]
-    const targetIndex = newLendList.findIndex((item) => item.ReserveId === currentLendingPoolDetail?.ReserveId)
-    const target = newLendList[targetIndex]
-    newLendList.splice(targetIndex, 1, {
-      ...target,
-      borrowed: (target.borrowed || 0) + Number(value),
-    })
-    // console.log('newLendingData :>> ', targetIndex, newLendList)
-    dispatch(setLendingStatus(newLendList))
-    reset()
-    onClose()
-
+    console.log('borrow :>> ', smartAccount);
+    const res = await lendMng.borrow(smartAccount, 2n, BigInt(value) * (10n ** 6n), HealthManagerConfig[SupportedChainId.OPTIMISM].debts["USDC.e_DEBT"].debtId)
+    // onClose()
     return res
+
   }, [
     unStakeAndWithdraw,
     value,

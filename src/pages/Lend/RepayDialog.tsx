@@ -13,6 +13,8 @@ import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import { useLendingManager } from '@/hooks/useSDK'
 
 export default function RepayDialog({
   open,
@@ -23,6 +25,11 @@ export default function RepayDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
+  const {
+    smartAccount,
+  } = useSmartAccount()
+  const lendMng = useLendingManager()
+
   const { prices, getPrice } = usePrices()
   const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
@@ -43,10 +50,8 @@ export default function RepayDialog({
   }
 
   const repay = useCallback(async () => {
-    const res = await unStakeAndWithdraw(
-      currentLendingPoolDetail?.ReserveId,
-      toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
-    )
+    console.log('repay :>> ', smartAccount);
+    const res = await lendMng.repay(smartAccount, 2n, BigInt(value) * (10n ** 6n))
 
     const newLendList = [...lendList]
     const targetIndex = newLendList.findIndex((item) => item.ReserveId === currentLendingPoolDetail?.ReserveId)
