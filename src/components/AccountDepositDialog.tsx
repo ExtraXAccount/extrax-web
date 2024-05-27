@@ -16,6 +16,7 @@ import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
+import useSmartAccount from '@/hooks/useSmartAccount'
 
 export default function AccountDepositDialog({
   accounts,
@@ -28,6 +29,7 @@ export default function AccountDepositDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
+  const { getAccountInfo: updateAccountInfo } = useSmartAccount()
   const { getPrice } = usePrices()
   const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
@@ -80,7 +82,8 @@ export default function AccountDepositDialog({
         setCreatingAccount(false)
       }
     }
-    lendMng.depositToLending(newAccounts[0], 2n, BigInt(value) * (10n ** 6n))
+    await lendMng.depositToLending(newAccounts[0], 2n, BigInt(value) * (10n ** 6n))
+    await updateAccountInfo()
 
     // const parsedValue = toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
     // await sendTransaction({ to: accounts[0], value: parseEther(parsedValue) }) 

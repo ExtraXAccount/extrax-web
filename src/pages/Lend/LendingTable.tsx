@@ -6,16 +6,18 @@ import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
-import useLendContract from '@/sdk/lend'
-import { useLendingManager } from '@/hooks/useSDK'
+// import useLendContract from '@/sdk/lend'
+// import { useLendingManager } from '@/hooks/useSDK'
 import { formatSymbol } from '@/sdk/utils/token'
 import { nameChecker } from '@/utils'
-import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
+import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
 
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
 import RepayDialog from './RepayDialog'
 import WithdrawDialog from './WithdrawDialog'
+import useLendingList from './useLendingList'
+import { bi2num } from '@/utils/bigInt'
 
 const { Column } = Table
 
@@ -24,8 +26,18 @@ export default function LendingTable() {
   const { openConnectModal } = useConnectModal()
   const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
-  const { lendList } = useLendContract()
-  const mng = useLendingManager()
+  // const { lendList } = useLendContract()
+  // const mng = useLendingManager()
+
+  const {
+    formattedLendPools,
+    fetchLendPools,
+    isFetching: isFetchingLendingList,
+  } = useLendingList()
+
+  useEffect(() => {
+    console.log('formattedLendPools :>> ', formattedLendPools);
+  }, [formattedLendPools])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
   const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
@@ -34,9 +46,9 @@ export default function LendingTable() {
   const [repayDialogOpen, setRepayDialogOpen] = useState(false)
   const [borrowDialogOpen, setBorrowDialogOpen] = useState(false)
 
-  useEffect(() => {
-    mng.getPoolStatus(2n)
-  }, [mng])
+  // useEffect(() => {
+  //   mng.multicallPoolsStatus([1n, 2n, 3n])
+  // }, [mng])
 
   return (
     <>
@@ -66,7 +78,7 @@ export default function LendingTable() {
 
       <Table
         sortDirections={['descend', 'ascend']}
-        dataSource={lendList || []}
+        dataSource={formattedLendPools}
         pagination={false}
         rowKey={(i) => i.poolKey}
         locale={{
@@ -88,12 +100,11 @@ export default function LendingTable() {
           title="Pool"
           dataIndex=""
           key="poolKey"
-          render={(i) => {
-            const specialPoolSymbol = i.poolKey.includes('V1') || i.poolKey.includes('OLD') ? i.poolKey : i.tokenSymbol
+          render={(pool) => {
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  <LPName token0={nameChecker(formatSymbol(i.tokenSymbol))} title={nameChecker(specialPoolSymbol)} />
+                  <LPName token0={nameChecker(formatSymbol(pool.tokenSymbol))} title={nameChecker(pool.tokenSymbol)} />
                 </div>
               </>
             )
@@ -108,7 +119,7 @@ export default function LendingTable() {
             return a.value - b.value
           }}
           render={(i) => {
-            const { amount } = i
+            const amount = Number(i.availableLiquidity.toString())
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <>
@@ -134,14 +145,14 @@ export default function LendingTable() {
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
                 <div className="farm-buffer-safe flex ai-ct" style={{ fontWeight: 'bold' }}>
-                  +{formatFloatNumber(aprToApy100(i.apr * 100))}%
+                  +{toPrecision(aprToApy100(i.apr * 100))}%
                 </div>
               </>
             )
           }}
         />
 
-        <Column
+        {/* <Column
           title="Total Borrowed"
           dataIndex=""
           key="borrowed"
@@ -159,27 +170,27 @@ export default function LendingTable() {
               </>
             )
           }}
-        />
+        /> */}
         <Column
           title="Borrow APR"
           dataIndex=""
           key="borrowingRate"
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
-            return a.borrowingRate - b.borrowingRate
+            return a.borrowApr - b.borrowApr
           }}
           render={(i) => {
             return (
               <>
                 <div className="farm-buffer-danger flex ai-ct" style={{ fontWeight: 'bold' }}>
-                  -{formatFloatNumber(i.borrowingRate * 100)}%
+                  -{toPrecision(i.borrowApr * 100)}%
                 </div>
               </>
             )
           }}
         />
 
-        <Column
+        {/* <Column
           title="Utilization"
           dataIndex=""
           key="position"
@@ -190,7 +201,7 @@ export default function LendingTable() {
               </>
             )
           }}
-        />
+        /> */}
         <Column
           title="Deposited"
           dataIndex=""
@@ -203,7 +214,7 @@ export default function LendingTable() {
               <>
                 <div>{toPrecision(i.deposited)}</div>
                 <div className="text-sm-2">
-                  ${formatNumberByUnit(formatFloatNumber(i.deposited * getPrice(i.tokenSymbol)))}
+                  ${formatNumberByUnit(toPrecisionNum(i.deposited * getPrice(i.tokenSymbol)))}
                 </div>
               </>
             )
@@ -221,7 +232,7 @@ export default function LendingTable() {
               <>
                 <div>{toPrecision(i.borrowed)}</div>
                 <div className="text-sm-2">
-                  ${formatNumberByUnit(formatFloatNumber(i.borrowed * getPrice(i.tokenSymbol)))}
+                  ${formatNumberByUnit(toPrecisionNum(i.borrowed * getPrice(i.tokenSymbol)))}
                 </div>
               </>
             )

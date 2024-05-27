@@ -48,23 +48,23 @@ export default function useSmartAccount() {
     if (!accounts[0]) {
       return
     }
-    const balances = await accountMng.getBalances(accounts, [
-      LendingConfig[chainId]["USDC.e"].underlyingTokenAddress,
-      LendingConfig[chainId]["OP"].underlyingTokenAddress,
-      LendingConfig[chainId]["WETH"].underlyingTokenAddress,
+    // const balances = await accountMng.getBalances(accounts, [
+      // LendingConfig[chainId]["USDC.e"].underlyingTokenAddress,
+      // LendingConfig[chainId]["OP"].underlyingTokenAddress,
+      // LendingConfig[chainId]["WETH"].underlyingTokenAddress,
   
-      LendingConfig[chainId]["USDC.e"].eToken,
-      LendingConfig[chainId]["OP"].eToken,
-      LendingConfig[chainId]["WETH"].eToken,
+      // LendingConfig[chainId]["USDC.e"].eToken,
+      // LendingConfig[chainId]["OP"].eToken,
+      // LendingConfig[chainId]["WETH"].eToken,
   
-      LendingConfig[chainId]["USDC.e"].debtToken,
-      LendingConfig[chainId]["OP"].debtToken,
-      LendingConfig[chainId]["WETH"].debtToken,
-    ]);
+      // LendingConfig[chainId]["USDC.e"].debtToken,
+      // LendingConfig[chainId]["OP"].debtToken,
+      // LendingConfig[chainId]["WETH"].debtToken,
+    // ]);
     const {account, collateral, collateralDeciamls, debt, debtDecimals} = await accountMng.getCollateralAndDebtValue(accounts[0])
 
     setAccountInfo({
-      balances,
+      balances: [],
       account,
       collateral, collateralDeciamls, debt, debtDecimals,
       depositedVal: Number((collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()),
@@ -125,6 +125,7 @@ export default function useSmartAccount() {
     // smartAccount: depositedVal ? smartAccount : '',
     smartAccount: accounts[0],
     depositedVal,
+    getAccountInfo,
     // depositedAssets,
     debtVal,
     // debtAssets,

@@ -155,7 +155,7 @@ export class AccountManager {
     })
 
     const balances = await balanceChecker.read.balances([accounts, tokens])
-    console.log('balanceChecker.balances :>> ', balances);
+    // console.log('balanceChecker.balances :>> ', balances);
     return balances
   }
 }

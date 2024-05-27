@@ -68,7 +68,7 @@ export default function AccountInfo() {
             <div className="extrax-account-info-detail-item extrax-account-info-deposited">
               <b>Deposited</b>
               <em className="text-highlight">{!depositedVal ? '--' : `$${toPrecision(depositedVal)}`}</em>
-              <button className="btn-base btn-base-mini" onClick={handleAddDeposit}></button>
+              <button className="btn-add" onClick={handleAddDeposit}></button>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-credit">
               <Tooltip title="Available Credit / Max Credit">

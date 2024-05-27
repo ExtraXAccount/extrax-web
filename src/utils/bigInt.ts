@@ -13,6 +13,10 @@ export function bi2ebn(bi: bigint) {
   return EthersBN.from(bi.toString())
 }
 
+export function bi2num(bi: bigint) {
+  return Number(bi)
+}
+
 export function ebn2bi(bn: EthersBN) {
   return BigInt(bn.toString())
 }

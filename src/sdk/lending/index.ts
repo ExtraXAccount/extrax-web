@@ -95,6 +95,23 @@ export class LendingManager {
     console.log('getPoolStatus :>> ', res)
     return res
   }
+  public async multicallPoolsStatus(reserveIds: bigint[]) {
+    const lendContract = {
+      address: CONTRACT_ADDRESSES[this.chainId]?.lendingPool,
+      abi: ExtraXLendingABI,
+      functionName: 'getReserve',
+    }
+    const results = await (this.publicClient as any).multicall({
+      contracts: reserveIds.map((reserveId) => {
+        return {
+          ...lendContract,
+          args: [reserveId],
+        }
+      }),
+    })
+    console.log('multicallPoolsStatus :>> ', results);
+    return results.map(item => item.result)
+  }
 
   public async requireAllowance(tokenAddress: Address, targetAddress: Address, amount: bigint, useNativeETH = true) {
     if (useNativeETH && isWETH(this.chainId, tokenAddress)) {
@@ -244,7 +261,7 @@ export class LendingManager {
   
     let encodedMultiSendTx = encodeMultiSend(signedSafeTransactions);
   
-    console.log('encodedMultiSendTx :>> ', signedSafeTransactions, encodedMultiSendTx);
+    // console.log('encodedMultiSendTx :>> ', signedSafeTransactions, encodedMultiSendTx);
     const multiSendCall = this.getMultiSendCallOnlyContract()
 
     // const estimateFee = await multiSendCall.estimateGas.multiSend([encodedMultiSendTx]);
