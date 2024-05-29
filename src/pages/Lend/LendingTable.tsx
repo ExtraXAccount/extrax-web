@@ -252,6 +252,7 @@ export default function LendingTable() {
                       openConnectModal()
                       return
                     }
+                    console.log('Deposit :>> ', i);
                     setCurrentLendingPoolDetail(i)
                     setDepositDialogOpen(true)
                   }}

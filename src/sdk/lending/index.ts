@@ -136,7 +136,9 @@ export class LendingManager {
     // const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
     const erc20Contract = this.getErc20Contract(tokenAddr)
 
-    await erc20Contract.write.approve([address, amount])
+    const hash = await erc20Contract.write.approve([address, amount])
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    return tx
   }
 
   public healthManagerContract() {
@@ -333,8 +335,10 @@ export class LendingManager {
       safeAccount,
       transactions,
     });
-    const res = await this.multiSend(safeAccount, transactions);
-    console.log('multiSend res :>> ', res);
+    const hash = await this.multiSend(safeAccount, transactions);
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    console.log('multiSend tx :>> ', {tx});
+    return tx
   }
 
   public async buildWithdrawTransaction(
@@ -372,8 +376,10 @@ export class LendingManager {
       safeAccount,
       transactions,
     });
-    const res = await this.multiSend(safeAccount, transactions);
-    console.log('multiSend res :>> ', res);
+    const hash = await this.multiSend(safeAccount, transactions);
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    console.log('multiSend tx :>> ', {tx});
+    return tx
   }
 
   public async buildActivateUserDebtTx(
@@ -432,8 +438,10 @@ export class LendingManager {
       safeAccount,
       transactions,
     });
-    const res = await this.multiSend(safeAccount, transactions);
-    console.log('multiSend res :>> ', res);
+    const hash = await this.multiSend(safeAccount, transactions);
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    console.log('multiSend tx :>> ', {tx});
+    return tx
   }
 
   public async buildRepayTransaction(

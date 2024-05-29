@@ -4,15 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
-import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
-import useLendContract from '@/sdk/lend'
-import { useAppDispatch, useAppSelector } from '@/state'
 import { nameChecker } from '@/utils'
-import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
-import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
+import { toPrecision } from '@/utils/math'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { useLendingManager } from '@/hooks/useSDK'
+import useLendingList from './useLendingList'
 
 export default function WithdrawDialog({
   open,
@@ -27,54 +24,36 @@ export default function WithdrawDialog({
     smartAccount,
   } = useSmartAccount()
   const lendMng = useLendingManager()
+  const { fetchLendPools } = useLendingList()
 
   const { prices, getPrice } = usePrices()
-  const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
   // const [allowance, setAllowance] = useState(0)
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
-  // const [isApproving, setIsApproving] = useState(false)
-  // const [isDepositing, setIsDepositing] = useState(false)
-  // const lendManager = useLendManager()
-  // const dispatch = useAppDispatch()
-  const { lendList, depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
-
-  const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
-  const { balance: ethBalance } = useFetchEthBalance()
-
-  const nextApy = useMemo(() => {
-    if (currentLendingPoolDetail) {
-      // console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
-      const totalLiquidity = currentLendingPoolDetail.amount
-      const { nextBorrowingRate, nextUtilizationRate } = calculateNextBorrowingRate({
-        liquidityChangedValue: Number(value),
-        poolKey: currentLendingPoolDetail.poolKey,
-        totalLiquidity,
-        utilizationRate: currentLendingPoolDetail.utilizationRate,
-      })
-      // console.log('calculateNextBorrowingRate :>> ', { nextBorrowingRate, nextUtilizationRate })
-      return aprToApy(nextBorrowingRate * nextUtilizationRate) * 100
-    }
-    return 0
-  }, [currentLendingPoolDetail, value])
+  const [loading, setLoading] = useState(false);
 
   function reset() {
     setValue('')
   }
 
   const withdraw = useCallback(async () => {
-    console.log('withdraw :>> ', smartAccount);
-    const res = await lendMng.withdraw(smartAccount, 2n, BigInt(value) * (10n ** 6n))
-    // onClose()
-    return res
+    console.log('withdraw :>> ', smartAccount, currentLendingPoolDetail);
+    setLoading(true)
+    try {
+      const res = await lendMng.withdraw(smartAccount, currentLendingPoolDetail?.reserveId, BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)))
+      console.log('withdraw res :>> ', res);
+      fetchLendPools()
+      onClose()
+      return res
+    } finally {
+      setLoading(false)
+    }
   }, [
-    unStakeAndWithdraw,
     value,
     currentLendingPoolDetail?.tokenDecimals,
     currentLendingPoolDetail?.ReserveId,
-    lendList,
-    dispatch,
+    fetchLendPools,
     onClose,
   ])
 
@@ -119,7 +98,7 @@ export default function WithdrawDialog({
       </ul>
       <div className="dialog-btns flex jc-sb">
         <Button
-          loading={writeLoading}
+          loading={loading}
           disabled={!Number(value)}
           className={classNames('btn-base flex1', {
             // 'btn-disable': !Number(value) || isApproveActive,
@@ -128,7 +107,7 @@ export default function WithdrawDialog({
             withdraw()
           }}
         >
-          {writeLoading ? 'Withdrawing' : 'Withdraw'}
+          {loading ? 'Withdrawing' : 'Withdraw'}
         </Button>
       </div>
     </Dialog>

@@ -4,48 +4,37 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
-import useDeposited from '@/hooks/useDeposited'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
-import useLendContract from '@/sdk/lend'
-import { useAppDispatch, useAppSelector } from '@/state'
-import { setLendingStatus } from '@/state/lending/reducer'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
-import { toBNString } from '@/utils/math/bn'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
-import { LendingConfig } from '@/sdk/lending/lending-pool'
 import useSmartAccount from '@/hooks/useSmartAccount'
+import useLendingList from '@/pages/Lend/useLendingList'
 
 export default function AccountDepositDialog({
   accounts,
   open,
-  currentLendingPoolDetail,
+  currentLendingPoolDetail: currentLendingPool,
   onClose,
 }: {
   accounts: any
   open: boolean
   onClose: any
-  currentLendingPoolDetail: any
+  currentLendingPoolDetail?: any
 }) {
   const { getAccountInfo: updateAccountInfo } = useSmartAccount()
   const { getPrice } = usePrices()
-  const dispatch = useAppDispatch()
   const [useNativeETH, setUseNativeETH] = useState(true)
-  // const [allowance, setAllowance] = useState(0)
-  // const [balance, setBalance] = useState('')
+  const { formattedLendPools, fetchLendPools } = useLendingList()
   const [value, setValue] = useState('')
-  const [creatingAccount, setCreatingAccount] = useState(false)
-  // const [isApproving, setIsApproving] = useState(false)
-  // const [isDepositing, setIsDepositing] = useState(false)
-  // const lendManager = useLendManager()
-  // const dispatch = useAppDispatch()
-  const { lendList, depositAndStake, writeLoading } = useLendContract()
-  const { depositedVal } = useDeposited()
+  const [loading, setLoading] = useState({ writing: false, desc: '' });
 
   const accountMng = useAccountManager()
   const lendMng = useLendingManager()
+
+  const currentLendingPoolDetail = useMemo(() => currentLendingPool || formattedLendPools[1], [currentLendingPool, formattedLendPools[0]])
 
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
@@ -71,39 +60,41 @@ export default function AccountDepositDialog({
   }
 
   const deposit = useCallback(async () => {
-    console.log('deposit :>> ', accounts);
+    console.log('depositToLending :>> ', accounts);
     let newAccounts = [...accounts]
-    if (!accounts.length) {
-      setCreatingAccount(true)
-      try {
+    try {
+      if (!accounts.length) {
+        setLoading({writing: true, desc: 'Creating smart account'})
         newAccounts = await accountMng.createAccount()
-        // await depositAndStake('2', '4839')
-      } finally {
-        setCreatingAccount(false)
       }
+      setLoading({writing: true, desc: 'Depositing assets'})
+      await lendMng.depositToLending(
+        newAccounts[0],
+        currentLendingPoolDetail?.reserveId,
+        BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)),
+      )
+
+      updateAccountInfo()
+      fetchLendPools()
+      onClose()
+    } finally {
+      setLoading({writing: false, desc: ''})
     }
-    await lendMng.depositToLending(newAccounts[0], 2n, BigInt(value) * (10n ** 6n))
-    await updateAccountInfo()
-
-    // const parsedValue = toBNString(value || 0, currentLendingPoolDetail?.tokenDecimals)
-    // await sendTransaction({ to: accounts[0], value: parseEther(parsedValue) }) 
-    return
-
   }, [
+    updateAccountInfo,
+    fetchLendPools,
     accounts,
     accountMng,
-    // depositAndStake,
+    lendMng,
     value,
-    // currentLendingPoolDetail?.tokenDecimals,
-    // currentLendingPoolDetail?.ReserveId,
-    // lendList,
-    // dispatch,
-    // onClose,
+    currentLendingPoolDetail?.decimals,
+    currentLendingPoolDetail?.reserveId,
+    onClose,
   ])
 
   useEffect(() => {
     reset()
-  }, [currentLendingPoolDetail?.ReserveId])
+  }, [currentLendingPoolDetail?.reserveId])
 
   return (
     <Dialog
@@ -142,24 +133,14 @@ export default function AccountDepositDialog({
       </ul>
       <div className="dialog-btns flex jc-sb">
         <Button
-          loading={writeLoading}
+          loading={loading.writing}
           disabled={!Number(value)}
           className={classNames('btn-base flex1', {
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
-          onClick={async () => {
-            // if (!depositedVal) {
-            //   setCreatingAccount(true)
-            //   try {
-            //     await depositAndStake('2', '4839')
-            //   } finally {
-            //     setCreatingAccount(false)
-            //   }
-            // }
-            deposit()
-          }}
+          onClick={deposit}
         >
-          {writeLoading ? (!creatingAccount ? 'Depositing' : 'Creating Smart Account') : 'Deposit'}
+          {loading.writing ? loading.desc : 'Deposit'}
         </Button>
       </div>
     </Dialog>

@@ -25,7 +25,6 @@ export default function AccountInfo() {
     // usedCredit,
     safetyRatio,
     accountAPY,
-    lendingList,
     accounts,
   } = useSmartAccount()
 
@@ -40,7 +39,6 @@ export default function AccountInfo() {
       <AccountDepositDialog
         accounts={accounts}
         open={depositDialogOpen}
-        currentLendingPoolDetail={lendingList[0]}
         onClose={() => setDepositDialogOpen(false)}
       ></AccountDepositDialog>
 
