@@ -67,6 +67,7 @@ export default function useLendingList() {
         borrowApr: stringToDecimals(pool.currentBorrowRate.toString(), 18),
         tokenSymbol: config.name,
         poolKey: config.name,
+        totalSupply: stringToDecimals(pool.availableLiquidity.toString(), config.decimals),
         balance: stringToDecimals(balances[index * 3]?.toString(), config.decimals),
         deposited: stringToDecimals(balances[index * 3 + 1]?.toString(), config.decimals),
         borrowed: stringToDecimals(balances[index * 3 + 2]?.toString(), config.decimals),

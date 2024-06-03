@@ -186,11 +186,11 @@ export function toPrecision(num: number, precision = 3) {
     return 0
   }
   for (let ii = precision; ii > -1; ii--) {
-    if (num >= 10 ** ii) {
-      return round(num, precision - ii - 1)
+    if (num >= 10 ** (ii - 1)) {
+      return round(num, precision - ii)
     }
   }
-  return removeTrailingZero(num.toPrecision(precision) || '')
+  return removeTrailingZero(num.toPrecision?.(precision) || '')
 }
 
 export function toPrecisionNum(num: number, precision = 3) {

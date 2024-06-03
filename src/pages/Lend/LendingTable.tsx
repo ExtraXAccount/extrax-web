@@ -114,7 +114,7 @@ export default function LendingTable() {
             return a.value - b.value
           }}
           render={(i) => {
-            const amount = Number(i.availableLiquidity.toString())
+            const amount = i.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <>
