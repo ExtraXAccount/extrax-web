@@ -52,14 +52,14 @@ export default function WithdrawDialog({
   }, [
     value,
     currentLendingPoolDetail?.tokenDecimals,
-    currentLendingPoolDetail?.ReserveId,
+    currentLendingPoolDetail?.reserveId,
     fetchLendPools,
     onClose,
   ])
 
   useEffect(() => {
     reset()
-  }, [currentLendingPoolDetail?.ReserveId])
+  }, [currentLendingPoolDetail?.reserveId])
 
   return (
     <Dialog

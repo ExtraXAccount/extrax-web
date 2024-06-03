@@ -6,8 +6,6 @@ import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
-// import useLendContract from '@/sdk/lend'
-// import { useLendingManager } from '@/hooks/useSDK'
 import { formatSymbol } from '@/sdk/utils/token'
 import { nameChecker } from '@/utils'
 import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
@@ -17,7 +15,6 @@ import DepositDialog from './DepositDialog'
 import RepayDialog from './RepayDialog'
 import WithdrawDialog from './WithdrawDialog'
 import useLendingList from './useLendingList'
-import { bi2num } from '@/utils/bigInt'
 
 const { Column } = Table
 
@@ -26,8 +23,6 @@ export default function LendingTable() {
   const { openConnectModal } = useConnectModal()
   const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
-  // const { lendList } = useLendContract()
-  // const mng = useLendingManager()
 
   const {
     formattedLendPools,
