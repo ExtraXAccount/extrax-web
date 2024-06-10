@@ -1,16 +1,17 @@
 import { Button } from 'antd'
 import classNames from 'classnames'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
+import { SupportedChainId } from '@/constants/chains'
 import usePrices from '@/hooks/usePrices'
+import { useLendingManager } from '@/hooks/useSDK'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import { HealthManagerConfig } from '@/sdk/lending/health-manager-config'
 import { nameChecker } from '@/utils'
 import { toPrecision } from '@/utils/math'
-import useSmartAccount from '@/hooks/useSmartAccount'
-import { useLendingManager } from '@/hooks/useSDK'
-import { HealthManagerConfig } from '@/sdk/lending/health-manager-config'
-import { SupportedChainId } from '@/constants/chains'
+
 import useLendingList from './useLendingList'
 
 const maxBorrowedRatio = 0.8
@@ -24,38 +25,35 @@ export default function BorrowDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const {
-    smartAccount,
-  } = useSmartAccount()
+  const { smartAccount } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
   const { prices, getPrice } = usePrices()
   const [useNativeETH, setUseNativeETH] = useState(true)
   const [value, setValue] = useState('')
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   function reset() {
     setValue('')
   }
   const borrow = useCallback(async () => {
-    console.log('borrow :>> ', smartAccount, currentLendingPoolDetail);
+    console.log('borrow :>> ', smartAccount, currentLendingPoolDetail)
     setLoading(true)
     try {
-      const res = await lendMng.borrow(smartAccount, currentLendingPoolDetail?.reserveId, BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)), HealthManagerConfig[SupportedChainId.OPTIMISM].debts["USDC.e_DEBT"].debtId)
+      const res = await lendMng.borrow(
+        smartAccount,
+        currentLendingPoolDetail?.reserveId,
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
+        HealthManagerConfig[SupportedChainId.OPTIMISM].debts['USDC.e_DEBT'].debtId,
+      )
       fetchLendPools()
       onClose()
       return res
     } finally {
       setLoading(false)
     }
-  }, [
-    value,
-    currentLendingPoolDetail?.tokenDecimals,
-    currentLendingPoolDetail?.reserveId,
-    fetchLendPools,
-    onClose,
-  ])
+  }, [value, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.reserveId, fetchLendPools, onClose])
 
   useEffect(() => {
     reset()

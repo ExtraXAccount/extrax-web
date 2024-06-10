@@ -1,6 +1,6 @@
 import axios from 'axios'
-// import { Contract } from 'ethers'
 
+// import { Contract } from 'ethers'
 import { THE_GRAPH_ENDPOINT } from '@/constants/theGraph'
 
 import { SupportedChainId } from '../constants/chains'

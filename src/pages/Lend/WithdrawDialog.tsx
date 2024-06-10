@@ -1,14 +1,15 @@
 import { Button } from 'antd'
 import classNames from 'classnames'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
 import usePrices from '@/hooks/usePrices'
+import { useLendingManager } from '@/hooks/useSDK'
+import useSmartAccount from '@/hooks/useSmartAccount'
 import { nameChecker } from '@/utils'
 import { toPrecision } from '@/utils/math'
-import useSmartAccount from '@/hooks/useSmartAccount'
-import { useLendingManager } from '@/hooks/useSDK'
+
 import useLendingList from './useLendingList'
 
 export default function WithdrawDialog({
@@ -20,9 +21,7 @@ export default function WithdrawDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const {
-    smartAccount,
-  } = useSmartAccount()
+  const { smartAccount } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -31,31 +30,29 @@ export default function WithdrawDialog({
   // const [allowance, setAllowance] = useState(0)
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   function reset() {
     setValue('')
   }
 
   const withdraw = useCallback(async () => {
-    console.log('withdraw :>> ', smartAccount, currentLendingPoolDetail);
+    console.log('withdraw :>> ', smartAccount, currentLendingPoolDetail)
     setLoading(true)
     try {
-      const res = await lendMng.withdraw(smartAccount, currentLendingPoolDetail?.reserveId, BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)))
-      console.log('withdraw res :>> ', res);
+      const res = await lendMng.withdraw(
+        smartAccount,
+        currentLendingPoolDetail?.reserveId,
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
+      )
+      console.log('withdraw res :>> ', res)
       fetchLendPools()
       onClose()
       return res
     } finally {
       setLoading(false)
     }
-  }, [
-    value,
-    currentLendingPoolDetail?.tokenDecimals,
-    currentLendingPoolDetail?.reserveId,
-    fetchLendPools,
-    onClose,
-  ])
+  }, [value, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.reserveId, fetchLendPools, onClose])
 
   useEffect(() => {
     reset()

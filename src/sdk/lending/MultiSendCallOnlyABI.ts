@@ -1,28 +1,28 @@
 export const MultiSendCallOnlyABI = [
   {
-    "inputs": [],
-    "name": "EXTRA_GLOBAL_VERSION",
-    "outputs": [
+    inputs: [],
+    name: 'EXTRA_GLOBAL_VERSION',
+    outputs: [
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "bytes",
-        "name": "transactions",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'transactions',
+        type: 'bytes',
+      },
     ],
-    "name": "multiSend",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  }
+    name: 'multiSend',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
 ] as const

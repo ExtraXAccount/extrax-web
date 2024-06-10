@@ -8,8 +8,8 @@ export const CONTRACT_ADDRESSES = {
 
     // extrax
     BalanceChecker: '0xB1c568e9C3E6bdaf755A60c7418C269eb11524FC',
-    MultiSendCallOnly: "0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B",
-    AddressRegistry: "0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D",
+    MultiSendCallOnly: '0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B',
+    AddressRegistry: '0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D',
 
     // The Following Addresses are registried in AddressRegistry contract
     accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',
@@ -20,12 +20,12 @@ export const CONTRACT_ADDRESSES = {
   [SupportedChainId.OPTIMISM_LOCAL_TEST]: {
     v2: '0xA128Eb2dD8bF17a2D4Fc2aC583fa330b79bA3CB4',
     lend: '0x2a2C3B2a78b6c09a15520C97747bD1c5cbf39431',
-    dataProvider: '0x1A97E89572Fc303e4BfD4FA49d02Cd94161744DD',    
+    dataProvider: '0x1A97E89572Fc303e4BfD4FA49d02Cd94161744DD',
 
     // extrax
     BalanceChecker: '0xB1c568e9C3E6bdaf755A60c7418C269eb11524FC',
-    MultiSendCallOnly: "0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B",
-    AddressRegistry: "0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D",
+    MultiSendCallOnly: '0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B',
+    AddressRegistry: '0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D',
 
     // The Following Addresses are registried in AddressRegistry contract
     accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',
@@ -40,8 +40,8 @@ export const CONTRACT_ADDRESSES = {
 
     // extrax
     BalanceChecker: '0xB1c568e9C3E6bdaf755A60c7418C269eb11524FC',
-    MultiSendCallOnly: "0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B",
-    AddressRegistry: "0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D",
+    MultiSendCallOnly: '0xA1dabEF33b3B82c7814B6D82A79e50F4AC44102B',
+    AddressRegistry: '0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D',
 
     // The Following Addresses are registried in AddressRegistry contract
     accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',

@@ -1,15 +1,16 @@
 import { Button } from 'antd'
 import classNames from 'classnames'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
+import { useLendingManager } from '@/hooks/useSDK'
+import useSmartAccount from '@/hooks/useSmartAccount'
 import { nameChecker } from '@/utils'
 import { toPrecision } from '@/utils/math'
-import useSmartAccount from '@/hooks/useSmartAccount'
-import { useLendingManager } from '@/hooks/useSDK'
+
 import useLendingList from './useLendingList'
 
 export default function RepayDialog({
@@ -21,9 +22,7 @@ export default function RepayDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const {
-    smartAccount,
-  } = useSmartAccount()
+  const { smartAccount } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -32,7 +31,7 @@ export default function RepayDialog({
   // const [allowance, setAllowance] = useState(0)
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
 
@@ -41,24 +40,22 @@ export default function RepayDialog({
   }
 
   const repay = useCallback(async () => {
-    console.log('repay :>> ', smartAccount);
+    console.log('repay :>> ', smartAccount)
     setLoading(true)
     try {
-      const res = await lendMng.repay(smartAccount, currentLendingPoolDetail?.reserveId, BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)))
-      console.log('repay res :>> ', res);
+      const res = await lendMng.repay(
+        smartAccount,
+        currentLendingPoolDetail?.reserveId,
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
+      )
+      console.log('repay res :>> ', res)
       fetchLendPools()
       onClose()
       return res
     } finally {
       setLoading(false)
     }
-  }, [
-    value,
-    currentLendingPoolDetail?.tokenDecimals,
-    currentLendingPoolDetail?.reserveId,
-    fetchLendPools,
-    onClose,
-  ])
+  }, [value, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.reserveId, fetchLendPools, onClose])
 
   useEffect(() => {
     reset()
@@ -90,7 +87,7 @@ export default function RepayDialog({
           }}
         />
       </div>
-      <ul className="summary-list" style={{marginTop: 20}}>
+      <ul className="summary-list" style={{ marginTop: 20 }}>
         <li>
           <p>Value:</p>
           <b className="text-highlight">

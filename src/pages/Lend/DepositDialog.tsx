@@ -6,11 +6,12 @@ import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
+import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import useSmartAccount from '@/hooks/useSmartAccount'
 import { nameChecker } from '@/utils'
 import { aprToApy, formatFloatNumber, toPrecision } from '@/utils/math'
 import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
-import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
-import useSmartAccount from '@/hooks/useSmartAccount'
+
 import useLendingList from './useLendingList'
 
 export default function DepositDialog({
@@ -26,7 +27,7 @@ export default function DepositDialog({
   const { getPrice } = usePrices()
   const [useNativeETH, setUseNativeETH] = useState(true)
   const [value, setValue] = useState('')
-  const [loading, setLoading] = useState({ writing: false, desc: '' });
+  const [loading, setLoading] = useState({ writing: false, desc: '' })
 
   const { fetchLendPools } = useLendingList()
   const accountMng = useAccountManager()
@@ -55,25 +56,25 @@ export default function DepositDialog({
   }
 
   const deposit = useCallback(async () => {
-    console.log('depositToLending :>> ', accounts);
+    console.log('depositToLending :>> ', accounts)
     let newAccounts = [...accounts]
     try {
       if (!accounts.length) {
-        setLoading({writing: true, desc: 'Creating smart account'})
+        setLoading({ writing: true, desc: 'Creating smart account' })
         newAccounts = await accountMng.createAccount()
       }
-      setLoading({writing: true, desc: 'Depositing assets'})
+      setLoading({ writing: true, desc: 'Depositing assets' })
       await lendMng.depositToLending(
         newAccounts[0],
         currentLendingPoolDetail?.reserveId,
-        BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)),
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )
 
       updateAccountInfo()
       fetchLendPools()
       onClose()
     } finally {
-      setLoading({writing: false, desc: ''})
+      setLoading({ writing: false, desc: '' })
     }
   }, [
     updateAccountInfo,
@@ -127,7 +128,7 @@ export default function DepositDialog({
         </li>
       </ul>
       <div className="dialog-btns flex jc-sb">
-       <Button
+        <Button
           loading={loading.writing}
           disabled={!Number(value)}
           className={classNames('btn-base flex1', {
