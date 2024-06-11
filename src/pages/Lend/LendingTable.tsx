@@ -1,6 +1,6 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { Table, Tooltip } from 'antd'
-import { useState, useEffect } from 'react'
+import { Table } from 'antd'
+import { useEffect, useState } from 'react'
 
 import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
@@ -13,8 +13,8 @@ import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecisi
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
 import RepayDialog from './RepayDialog'
-import WithdrawDialog from './WithdrawDialog'
 import useLendingList from './useLendingList'
+import WithdrawDialog from './WithdrawDialog'
 
 const { Column } = Table
 
@@ -24,14 +24,10 @@ export default function LendingTable() {
   const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
 
-  const {
-    formattedLendPools,
-    fetchLendPools,
-    isFetching: isFetchingLendingList,
-  } = useLendingList()
+  const { formattedLendPools, fetchLendPools, isFetching: isFetchingLendingList } = useLendingList()
 
   useEffect(() => {
-    console.log('formattedLendPools :>> ', formattedLendPools);
+    console.log('formattedLendPools :>> ', formattedLendPools)
   }, [formattedLendPools])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
@@ -247,7 +243,7 @@ export default function LendingTable() {
                       openConnectModal()
                       return
                     }
-                    console.log('Deposit :>> ', i);
+                    console.log('Deposit :>> ', i)
                     setCurrentLendingPoolDetail(i)
                     setDepositDialogOpen(true)
                   }}

@@ -55,7 +55,15 @@ export default function RepayDialog({
     } finally {
       setLoading(false)
     }
-  }, [value, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.reserveId, fetchLendPools, onClose])
+  }, [
+    smartAccount,
+    lendMng,
+    currentLendingPoolDetail?.reserveId,
+    currentLendingPoolDetail?.decimals,
+    value,
+    fetchLendPools,
+    onClose,
+  ])
 
   useEffect(() => {
     reset()

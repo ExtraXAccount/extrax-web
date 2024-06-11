@@ -53,7 +53,7 @@ export default function BorrowDialog({
     } finally {
       setLoading(false)
     }
-  }, [value, currentLendingPoolDetail?.tokenDecimals, currentLendingPoolDetail?.reserveId, fetchLendPools, onClose])
+  }, [smartAccount, currentLendingPoolDetail, lendMng, value, fetchLendPools, onClose])
 
   useEffect(() => {
     reset()

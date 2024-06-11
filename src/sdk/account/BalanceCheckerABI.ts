@@ -1,50 +1,50 @@
 export const BalanceCheckerABI = [
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address[]",
-        "name": "users",
-        "type": "address[]"
+        internalType: 'address[]',
+        name: 'users',
+        type: 'address[]',
       },
       {
-        "internalType": "address[]",
-        "name": "tokens",
-        "type": "address[]"
-      }
+        internalType: 'address[]',
+        name: 'tokens',
+        type: 'address[]',
+      },
     ],
-    "name": "balances",
-    "outputs": [
+    name: 'balances',
+    outputs: [
       {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
+        internalType: 'uint256[]',
+        name: '',
+        type: 'uint256[]',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "tokenBalance",
-    "outputs": [
+    name: 'tokenBalance',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
-  }
+    stateMutability: 'view',
+    type: 'function',
+  },
 ] as const

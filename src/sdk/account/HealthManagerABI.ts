@@ -1,1201 +1,1201 @@
 export const HealthManagerABI = [
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "enum AssetTypes.Type",
-        "name": "assetType",
-        "type": "uint8"
+        indexed: true,
+        internalType: 'enum AssetTypes.Type',
+        name: 'assetType',
+        type: 'uint8',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        indexed: false,
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "name": "AssetSupport",
-    "type": "event"
+    name: 'AssetSupport',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "collateralFactor",
-        "type": "uint16"
+        indexed: false,
+        internalType: 'uint16',
+        name: 'collateralFactor',
+        type: 'uint16',
       },
       {
-        "indexed": false,
-        "internalType": "uint16",
-        "name": "debtFactor",
-        "type": "uint16"
-      }
+        indexed: false,
+        internalType: 'uint16',
+        name: 'debtFactor',
+        type: 'uint16',
+      },
     ],
-    "name": "BasicAssetAdded",
-    "type": "event"
+    name: 'BasicAssetAdded',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "BasicAssetDisabled",
-    "type": "event"
+    name: 'BasicAssetDisabled',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "BasicAssetEnabled",
-    "type": "event"
+    name: 'BasicAssetEnabled',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "enum AssetTypes.Type",
-        "name": "debtType",
-        "type": "uint8"
+        indexed: true,
+        internalType: 'enum AssetTypes.Type',
+        name: 'debtType',
+        type: 'uint8',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        indexed: false,
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "name": "DebtSupport",
-    "type": "event"
+    name: 'DebtSupport',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "uint8",
-        "name": "version",
-        "type": "uint8"
-      }
+        indexed: false,
+        internalType: 'uint8',
+        name: 'version',
+        type: 'uint8',
+      },
     ],
-    "name": "Initialized",
-    "type": "event"
+    name: 'Initialized',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "liquidator",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'liquidator',
+        type: 'address',
+      },
     ],
-    "name": "LiquidatorAdd",
-    "type": "event"
+    name: 'LiquidatorAdd',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "liquidator",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'liquidator',
+        type: 'address',
+      },
     ],
-    "name": "LiquidatorRemove",
-    "type": "event"
+    name: 'LiquidatorRemove',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "NotAsCollateral",
-    "type": "event"
+    name: 'NotAsCollateral',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "oracleManager",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'oracleManager',
+        type: 'address',
+      },
     ],
-    "name": "OracleManangerSet",
-    "type": "event"
+    name: 'OracleManangerSet',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
-    "name": "OwnershipTransferred",
-    "type": "event"
+    name: 'OwnershipTransferred',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        indexed: false,
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "SetAsCollateral",
-    "type": "event"
+    name: 'SetAsCollateral',
+    type: 'event',
   },
   {
-    "inputs": [],
-    "name": "EXTRA_GLOBAL_VERSION",
-    "outputs": [
+    inputs: [],
+    name: 'EXTRA_GLOBAL_VERSION',
+    outputs: [
       {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
+        internalType: 'string',
+        name: '',
+        type: 'string',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "activateUserDebt",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'activateUserDebt',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
       },
       {
-        "internalType": "uint16",
-        "name": "collateralFactor",
-        "type": "uint16"
+        internalType: 'uint16',
+        name: 'collateralFactor',
+        type: 'uint16',
       },
       {
-        "internalType": "uint16",
-        "name": "debtFactor",
-        "type": "uint16"
-      }
+        internalType: 'uint16',
+        name: 'debtFactor',
+        type: 'uint16',
+      },
     ],
-    "name": "addBasicAsset",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'addBasicAsset',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "liq",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'liq',
+        type: 'address',
+      },
     ],
-    "name": "addLiquidator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'addLiquidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
     ],
-    "name": "assetExist",
-    "outputs": [
+    name: 'assetExist',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "name": "assets",
-    "outputs": [
+    name: 'assets',
+    outputs: [
       {
-        "internalType": "enum AssetTypes.Type",
-        "name": "assetType",
-        "type": "uint8"
+        internalType: 'enum AssetTypes.Type',
+        name: 'assetType',
+        type: 'uint8',
       },
       {
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    "name": "basicAssets",
-    "outputs": [
+    name: 'basicAssets',
+    outputs: [
       {
-        "internalType": "uint16",
-        "name": "collateralFactor",
-        "type": "uint16"
+        internalType: 'uint16',
+        name: 'collateralFactor',
+        type: 'uint16',
       },
       {
-        "internalType": "uint16",
-        "name": "debtFactor",
-        "type": "uint16"
+        internalType: 'uint16',
+        name: 'debtFactor',
+        type: 'uint16',
       },
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "components": [
+        components: [
           {
-            "internalType": "enum AssetTypes.Type",
-            "name": "assetType",
-            "type": "uint8"
+            internalType: 'enum AssetTypes.Type',
+            name: 'assetType',
+            type: 'uint8',
           },
           {
-            "internalType": "address",
-            "name": "underlyingTokensCalculator",
-            "type": "address"
+            internalType: 'address',
+            name: 'underlyingTokensCalculator',
+            type: 'address',
           },
           {
-            "internalType": "bytes",
-            "name": "data",
-            "type": "bytes"
-          }
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
+          },
         ],
-        "internalType": "struct AssetTypes.Asset",
-        "name": "asset",
-        "type": "tuple"
-      }
+        internalType: 'struct AssetTypes.Asset',
+        name: 'asset',
+        type: 'tuple',
+      },
     ],
-    "name": "checkAssetData",
-    "outputs": [],
-    "stateMutability": "view",
-    "type": "function"
+    name: 'checkAssetData',
+    outputs: [],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "components": [
+        components: [
           {
-            "internalType": "enum AssetTypes.DebtType",
-            "name": "assetType",
-            "type": "uint8"
+            internalType: 'enum AssetTypes.DebtType',
+            name: 'assetType',
+            type: 'uint8',
           },
           {
-            "internalType": "address",
-            "name": "underlyingTokensCalculator",
-            "type": "address"
+            internalType: 'address',
+            name: 'underlyingTokensCalculator',
+            type: 'address',
           },
           {
-            "internalType": "bytes",
-            "name": "data",
-            "type": "bytes"
-          }
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
+          },
         ],
-        "internalType": "struct AssetTypes.Debt",
-        "name": "debt",
-        "type": "tuple"
-      }
+        internalType: 'struct AssetTypes.Debt',
+        name: 'debt',
+        type: 'tuple',
+      },
     ],
-    "name": "checkDebtData",
-    "outputs": [],
-    "stateMutability": "view",
-    "type": "function"
+    name: 'checkDebtData',
+    outputs: [],
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "creadits",
-    "outputs": [
+    name: 'creadits',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "deactivateUserDebt",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'deactivateUserDebt',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
     ],
-    "name": "debtExist",
-    "outputs": [
+    name: 'debtExist',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "name": "debts",
-    "outputs": [
+    name: 'debts',
+    outputs: [
       {
-        "internalType": "enum AssetTypes.DebtType",
-        "name": "assetType",
-        "type": "uint8"
+        internalType: 'enum AssetTypes.DebtType',
+        name: 'assetType',
+        type: 'uint8',
       },
       {
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "disableBasicAsset",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'disableBasicAsset',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "enableBasicAsset",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'enableBasicAsset',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    "name": "getAssetCollateralValue",
-    "outputs": [
+    name: 'getAssetCollateralValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    "name": "getAssetDebtValue",
-    "outputs": [
+    name: 'getAssetDebtValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "enum AssetTypes.Type",
-        "name": "assetType",
-        "type": "uint8"
+        internalType: 'enum AssetTypes.Type',
+        name: 'assetType',
+        type: 'uint8',
       },
       {
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "name": "getAssetKey",
-    "outputs": [
+    name: 'getAssetKey',
+    outputs: [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
     ],
-    "stateMutability": "pure",
-    "type": "function"
+    stateMutability: 'pure',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'amount',
+        type: 'uint256',
+      },
     ],
-    "name": "getAssetValue",
-    "outputs": [
+    name: 'getAssetValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "getCollateralAndDebtValue",
-    "outputs": [
+    name: 'getCollateralAndDebtValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "collateral",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'collateral',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "collateralDeciamls",
-        "type": "uint8"
+        internalType: 'uint8',
+        name: 'collateralDeciamls',
+        type: 'uint8',
       },
       {
-        "internalType": "uint256",
-        "name": "debt",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'debt',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "debtDecimals",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: 'debtDecimals',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "getD2C",
-    "outputs": [
+    name: 'getD2C',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "enum AssetTypes.DebtType",
-        "name": "debtType",
-        "type": "uint8"
+        internalType: 'enum AssetTypes.DebtType',
+        name: 'debtType',
+        type: 'uint8',
       },
       {
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "name": "getDebtKey",
-    "outputs": [
+    name: 'getDebtKey',
+    outputs: [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
+        internalType: 'bytes32',
+        name: '',
+        type: 'bytes32',
+      },
     ],
-    "stateMutability": "pure",
-    "type": "function"
+    stateMutability: 'pure',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'token',
+        type: 'address',
+      },
     ],
-    "name": "getPrice",
-    "outputs": [
+    name: 'getPrice',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: '',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "getUserCollateralValue",
-    "outputs": [
+    name: 'getUserCollateralValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "valueDecimals",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: 'valueDecimals',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "getUserCollateralValue",
-    "outputs": [
+    name: 'getUserCollateralValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "valueDecimals",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: 'valueDecimals',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "getUserCollaterals",
-    "outputs": [
+    name: 'getUserCollaterals',
+    outputs: [
       {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
+        internalType: 'uint256[]',
+        name: '',
+        type: 'uint256[]',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "debtId",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'debtId',
+        type: 'uint256',
+      },
     ],
-    "name": "getUserDebtValue",
-    "outputs": [
+    name: 'getUserDebtValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "value",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'value',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "decimals",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: 'decimals',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "getUserDebtValue",
-    "outputs": [
+    name: 'getUserDebtValue',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "debt",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'debt',
+        type: 'uint256',
       },
       {
-        "internalType": "uint8",
-        "name": "debtDecimals",
-        "type": "uint8"
-      }
+        internalType: 'uint8',
+        name: 'debtDecimals',
+        type: 'uint8',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "getUserDebts",
-    "outputs": [
+    name: 'getUserDebts',
+    outputs: [
       {
-        "internalType": "uint256[]",
-        "name": "",
-        "type": "uint256[]"
-      }
+        internalType: 'uint256[]',
+        name: '',
+        type: 'uint256[]',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "healthD2C",
-    "outputs": [
+    inputs: [],
+    name: 'healthD2C',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "admin",
-        "type": "address"
+        internalType: 'address',
+        name: 'admin',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "_addressRegistry",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: '_addressRegistry',
+        type: 'address',
+      },
     ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "isHealth",
-    "outputs": [
+    name: 'isHealth',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "liq",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'liq',
+        type: 'address',
+      },
     ],
-    "name": "isValidLiquidator",
-    "outputs": [
+    name: 'isValidLiquidator',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "liquidateD2C",
-    "outputs": [
+    inputs: [],
+    name: 'liquidateD2C',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    "name": "liquidators",
-    "outputs": [
+    name: 'liquidators',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "nextAssetId",
-    "outputs": [
+    inputs: [],
+    name: 'nextAssetId',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "nextDebtId",
-    "outputs": [
+    inputs: [],
+    name: 'nextDebtId',
+    outputs: [
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "notAsCollateral",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'notAsCollateral',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "oracleManager",
-    "outputs": [
+    inputs: [],
+    name: 'oracleManager',
+    outputs: [
       {
-        "internalType": "contract IOracleManager",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'contract IOracleManager',
+        name: '',
+        type: 'address',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
+    inputs: [],
+    name: 'owner',
+    outputs: [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "liq",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'liq',
+        type: 'address',
+      },
     ],
-    "name": "removeLiquidator",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'removeLiquidator',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    inputs: [],
+    name: 'renounceOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "assetId",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'assetId',
+        type: 'uint256',
+      },
     ],
-    "name": "setAsCollateral",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'setAsCollateral',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "param",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'param',
+        type: 'uint256',
+      },
     ],
-    "name": "setHealthD2C",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'setHealthD2C',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "uint256",
-        "name": "param",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'param',
+        type: 'uint256',
+      },
     ],
-    "name": "setLiquidateD2C",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'setLiquidateD2C',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
     ],
-    "name": "shouldBeLiquidated",
-    "outputs": [
+    name: 'shouldBeLiquidated',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: '',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "enum AssetTypes.DebtType",
-        "name": "debtType",
-        "type": "uint8"
+        internalType: 'enum AssetTypes.DebtType',
+        name: 'debtType',
+        type: 'uint8',
       },
       {
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "name": "supportDebt",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'supportDebt',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "enum AssetTypes.Type",
-        "name": "assetType",
-        "type": "uint8"
+        internalType: 'enum AssetTypes.Type',
+        name: 'assetType',
+        type: 'uint8',
       },
       {
-        "internalType": "address",
-        "name": "underlyingTokensCalculator",
-        "type": "address"
+        internalType: 'address',
+        name: 'underlyingTokensCalculator',
+        type: 'address',
       },
       {
-        "internalType": "bytes",
-        "name": "data",
-        "type": "bytes"
-      }
+        internalType: 'bytes',
+        name: 'data',
+        type: 'bytes',
+      },
     ],
-    "name": "supportNewAsset",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'supportNewAsset',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    name: 'transferOwnership',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const

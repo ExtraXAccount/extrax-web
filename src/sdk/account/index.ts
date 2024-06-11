@@ -1,14 +1,15 @@
-import { Address } from "@/types";
-import { CONTRACT_ADDRESSES } from '@/constants/addresses'
+import { Client, erc20Abi, getContract, PublicClient } from 'viem'
 
-import {HealthManagerABI} from './HealthManagerABI'
-import { ExtraXAccountFactoryABI } from './ExtraXAccountFactoryABI'
-import { erc20Abi, getContract, PublicClient, Client } from 'viem'
 import { defaultChainId } from '@/constants'
+import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 import { SupportedChainId } from '@/constants/chains'
-import { BalanceCheckerABI } from "./BalanceCheckerABI";
+import { Address } from '@/types'
 
-const ExtraXAccountDefaultNonce = 100n;
+import { BalanceCheckerABI } from './BalanceCheckerABI'
+import { ExtraXAccountFactoryABI } from './ExtraXAccountFactoryABI'
+import { HealthManagerABI } from './HealthManagerABI'
+
+const ExtraXAccountDefaultNonce = 100n
 
 export class AccountManager {
   public chainId = defaultChainId
@@ -16,7 +17,7 @@ export class AccountManager {
   publicClient: Client
   walletClient: Client
 
-  constructor(chainId: SupportedChainId, publicClient: Client, walletClient: Client, account?: Address, ) {
+  constructor(chainId: SupportedChainId, publicClient: Client, walletClient: Client, account?: Address) {
     if (chainId && chainId in SupportedChainId) {
       this.chainId = chainId
     }
@@ -38,7 +39,7 @@ export class AccountManager {
       client: {
         public: this.publicClient,
         wallet: this.walletClient,
-      }
+      },
     })
   }
 
@@ -49,7 +50,7 @@ export class AccountManager {
       client: {
         public: this.publicClient,
         wallet: this.walletClient,
-      }
+      },
     })
 
     const res = await contract.write.approve([erc20TokenAddr, 100n])
@@ -62,23 +63,26 @@ export class AccountManager {
       client: {
         public: this.publicClient,
         wallet: this.walletClient,
-      }
+      },
     })
   }
 
   public async getAccounts() {
     const currentBlock = await (this.publicClient as PublicClient).getBlockNumber()
     // console.log('currentBlock :>> ', currentBlock);
-    const evts = await this.factoryContract().getEvents.ExtraAccountCreation({
-      user: this.account,
-      saltNonce: ExtraXAccountDefaultNonce,
-    }, {
-      fromBlock: currentBlock - 1000n,
-      toBlock: currentBlock,
-    })
+    const evts = await this.factoryContract().getEvents.ExtraAccountCreation(
+      {
+        user: this.account,
+        saltNonce: ExtraXAccountDefaultNonce,
+      },
+      {
+        fromBlock: currentBlock - 1000n,
+        toBlock: currentBlock,
+      },
+    )
 
-    console.log('getAccount evts :>> ', evts);
-    const accounts = evts.map(evt => evt.args.proxy)
+    console.log('getAccount evts :>> ', evts)
+    const accounts = evts.map((evt) => evt.args.proxy)
     // const accounts = evts.forEach((evt) => {
     //   return {
     //     user: evt.args[0],
@@ -86,28 +90,27 @@ export class AccountManager {
     //     account: evt.args[2],
     //   };
     // });
-    console.log('accounts :>> ', accounts);
+    console.log('accounts :>> ', accounts)
     return accounts
   }
 
   public async createAccount() {
-    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce]);
+    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce])
     const res = await this.factoryContract().write.createProxyWithNonce(['0x200', ExtraXAccountDefaultNonce])
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
-    console.log('createAccount res :>> ', res);
+    console.log('createAccount res :>> ', res)
     const accounts = await this.getAccounts()
     console.log('createAccount :>> ', accounts)
     return accounts
   }
-
 
   public async getSupportedAssets() {
     const nextAssetId: any = await this.healthManagerContract().read.nextAssetId()
     // console.log('getSupportedAssets :>> ', nextAssetId)
     const result = [] as any[]
     for (let i = 1n; i < nextAssetId; i++) {
-      const res: any = await this.healthManagerContract().read.assets([i]);
-      const [ assetType, underlyingTokensCalculator, data ] = res
+      const res: any = await this.healthManagerContract().read.assets([i])
+      const [assetType, underlyingTokensCalculator, data] = res
       result.push({
         assetId: i,
         assetType,
@@ -115,7 +118,7 @@ export class AccountManager {
         data,
       })
     }
-    console.log('getSupportedAssets :>> ', result);
+    console.log('getSupportedAssets :>> ', result)
     return result
   }
 
@@ -124,8 +127,8 @@ export class AccountManager {
     // console.log('getSupportedDebts :>> ', nextDebtId)
     const result = [] as any[]
     for (let i = 1n; i < nextDebtId; i++) {
-      const res: any = await this.healthManagerContract().read.debts([i]);
-      const [ assetType, underlyingTokensCalculator, data ] = res
+      const res: any = await this.healthManagerContract().read.debts([i])
+      const [assetType, underlyingTokensCalculator, data] = res
       result.push({
         assetId: i,
         assetType,
@@ -133,15 +136,15 @@ export class AccountManager {
         data,
       })
     }
-    console.log('getSupportedDebts :>> ', result);
+    console.log('getSupportedDebts :>> ', result)
     return result
   }
 
   public async getCollateralAndDebtValue(account: Address) {
     const res = await this.healthManagerContract().read.getCollateralAndDebtValue([account])
-    const [ collateral, collateralDeciamls, debt, debtDecimals ] = res
-    console.log('getCollateralAndDebtValue :>> ', {account, collateral, collateralDeciamls, debt, debtDecimals})
-    return {account, collateral, collateralDeciamls, debt, debtDecimals}
+    const [collateral, collateralDeciamls, debt, debtDecimals] = res
+    console.log('getCollateralAndDebtValue :>> ', { account, collateral, collateralDeciamls, debt, debtDecimals })
+    return { account, collateral, collateralDeciamls, debt, debtDecimals }
   }
 
   public async getBalances(accounts: Address[], tokens: Address[]) {
@@ -151,7 +154,7 @@ export class AccountManager {
       client: {
         public: this.publicClient,
         wallet: this.walletClient,
-      }
+      },
     })
 
     const balances = await balanceChecker.read.balances([accounts, tokens])
@@ -159,7 +162,6 @@ export class AccountManager {
     return balances
   }
 }
-
 
 // export default function useAccountContract() {
 //   const { account, blockNumber, chainId, publicClient, walletClient } = useWagmiCtx()
@@ -277,7 +279,6 @@ export class AccountManager {
 //     return res
 //   }, [readContract])
 
-
 //   const getAccount = useCallback(async () => {
 //     const evts: any = await publicClient.getContractEvents({
 //       address: CONTRACT_ADDRESSES[chainId]?.accountFactory,
@@ -287,7 +288,7 @@ export class AccountManager {
 //         user: account,
 //         saltNonce: ExtraXAccountDefaultNonce
 //       },
-//       // fromBlock: 16330000n, 
+//       // fromBlock: 16330000n,
 //       // toBlock: '16330050n'
 //     })
 

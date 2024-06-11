@@ -79,7 +79,7 @@ export default function useLendingList() {
         borrowed: stringToDecimals(balances[index * 3 + 2]?.toString(), config.decimals),
       }
     })
-  }, [balances, lendPools])
+  }, [balances, chainLendingConfig, lendPools])
 
   return {
     formattedLendPools,
