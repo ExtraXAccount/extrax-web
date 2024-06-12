@@ -59,7 +59,10 @@ function supportsStorage() {
 // Check to set if the error is us dealing with being out of space
 function isOutOfSpace(e: Error) {
   return (
-    e && (e.name === 'QUOTA_EXCEEDED_ERR' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED' || e.name === 'QuotaExceededError')
+    e &&
+    (e.name === 'QUOTA_EXCEEDED_ERR' ||
+      e.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+      e.name === 'QuotaExceededError')
   )
 }
 
@@ -117,7 +120,9 @@ function removeItem(key: string) {
 }
 
 function eachKey(fn: any) {
-  const prefixRegExp = new RegExp('^' + CACHE_PREFIX + escapeRegExpSpecialCharacters(cacheBucket) + '(.*)')
+  const prefixRegExp = new RegExp(
+    '^' + CACHE_PREFIX + escapeRegExpSpecialCharacters(cacheBucket) + '(.*)',
+  )
   // We first identify which keys to process
   const keysToProcess = []
   let key, i

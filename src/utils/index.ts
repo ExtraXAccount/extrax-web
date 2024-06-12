@@ -7,7 +7,19 @@ export function nameChecker(tokenName: string) {
 
 // get pair default base token
 export function getDefaultBaseToken(token0: string, token1: string) {
-  const baseTokenPriority = ['USDC', 'USDbC', 'USDT', 'DAI', 'DOLA', 'ETH', 'WETH', 'BUSD', 'OP', 'VELO', 'EXTRA']
+  const baseTokenPriority = [
+    'USDC',
+    'USDbC',
+    'USDT',
+    'DAI',
+    'DOLA',
+    'ETH',
+    'WETH',
+    'BUSD',
+    'OP',
+    'VELO',
+    'EXTRA',
+  ]
   for (let ii = 0; ii < baseTokenPriority.length; ii++) {
     const item = baseTokenPriority[ii]
     if (item === token0) {

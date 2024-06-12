@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {

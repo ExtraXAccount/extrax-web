@@ -1,7 +1,7 @@
 import './index.scss'
 
 import { BigNumber as BN } from '@ethersproject/bignumber'
-import { InputNumber, Select, Switch } from 'antd/es'
+import { InputNumber, Select } from 'antd/es'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { round } from 'lodash'
@@ -44,13 +44,18 @@ export default function UniV3LYF() {
   const navigate = useNavigate()
   const { poolId = '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8' } = useParams()
   const v3TopTvlPools = usePools()
-  const { lendList, depositAndStake, unStakeAndWithdraw, writeLoading } = useLendContract()
+  const { lendList, depositAndStake, unStakeAndWithdraw, writeLoading } =
+    useLendContract()
   const dispatch = useAppDispatch()
   // const poolId = useMemo(() => {
   //   return v3TopTvlPools?.[0]?.id
   // }, [v3TopTvlPools])
 
-  const { baseInfo: poolInfo, daysData: poolDayDatas, ticks: poolTicks } = usePoolInfo(poolId)
+  const {
+    baseInfo: poolInfo,
+    daysData: poolDayDatas,
+    ticks: poolTicks,
+  } = usePoolInfo(poolId)
 
   // useEffect(() => {
   //   console.log('usePoolInfo :>> ', { poolInfo, poolDayDatas, poolTicks })
@@ -116,24 +121,30 @@ export default function UniV3LYF() {
     }
   }, [poolInfo])
 
-  const { invertBaseToken: reverseBaseToken, View: BaseTokenSwitch } = useBaseTokenSwitch(token0.symbol, token1.symbol)
+  const { invertBaseToken: reverseBaseToken, View: BaseTokenSwitch } = useBaseTokenSwitch(
+    token0.symbol,
+    token1.symbol,
+  )
 
   const relativePrice = useMemo(() => {
-    return !reverseBaseToken ? parseFloat(poolInfo.token0Price) : parseFloat(poolInfo.token1Price)
+    return !reverseBaseToken
+      ? parseFloat(poolInfo.token0Price)
+      : parseFloat(poolInfo.token1Price)
   }, [poolInfo, reverseBaseToken])
 
   const [_token0, _token1] = useMemo(() => {
-    return [TOKEN_LIST[chainId]?.[token0.symbol] || token0, TOKEN_LIST[chainId]?.[token1.symbol] || token1].map(
-      (item) => {
-        return item
-          ? {
-              ...item,
-              symbol: item.symbol || item.name,
-              id: item.id || item.address,
-            }
-          : {}
-      }
-    )
+    return [
+      TOKEN_LIST[chainId]?.[token0.symbol] || token0,
+      TOKEN_LIST[chainId]?.[token1.symbol] || token1,
+    ].map((item) => {
+      return item
+        ? {
+            ...item,
+            symbol: item.symbol || item.name,
+            id: item.id || item.address,
+          }
+        : {}
+    })
   }, [token0, token1, chainId])
 
   const isStable = useMemo(() => {
@@ -155,8 +166,12 @@ export default function UniV3LYF() {
   }, [isStable])
 
   useEffect(() => {
-    setPriceMin(toPrecisionNum(Number(poolInfo.token0Price) * (1 + priceOptions[0][0]), 4))
-    setPriceMax(toPrecisionNum(Number(poolInfo.token0Price) * (1 + priceOptions[0][1]), 4))
+    setPriceMin(
+      toPrecisionNum(Number(poolInfo.token0Price) * (1 + priceOptions[0][0]), 4),
+    )
+    setPriceMax(
+      toPrecisionNum(Number(poolInfo.token0Price) * (1 + priceOptions[0][1]), 4),
+    )
   }, [priceOptions, poolInfo])
 
   const { token0PriceLower, token0PriceUpper } = useMemo(() => {
@@ -304,7 +319,7 @@ export default function UniV3LYF() {
       setUpperPricePos(ui.y)
     },
     // []
-    [chartMaxVal, chartMinVal]
+    [chartMaxVal, chartMinVal],
   )
 
   const onDragUpperStop = useCallback(
@@ -315,7 +330,7 @@ export default function UniV3LYF() {
       // setUpperDragging(false)
       // console.log('setPriceMax :>> ', toPrecisionNum(chartMaxVal - delta, 2));
     },
-    [chartMaxVal, chartMinVal]
+    [chartMaxVal, chartMinVal],
   )
 
   const onDragLower = useCallback(
@@ -327,7 +342,7 @@ export default function UniV3LYF() {
       setLowerDragging(toPrecisionNum(chartMaxVal - delta, 4))
     },
     // []
-    [chartMaxVal, chartMinVal]
+    [chartMaxVal, chartMinVal],
   )
 
   const onDragLowerStop = useCallback(
@@ -338,7 +353,7 @@ export default function UniV3LYF() {
       // setLowerDragging(false)
       // console.log('setPriceMin :>> ', toPrecisionNum(chartMaxVal - delta, 2));
     },
-    [chartMaxVal, chartMinVal]
+    [chartMaxVal, chartMinVal],
   )
 
   // const handleDrageUpperEnd = useCallback((event) => {
@@ -365,7 +380,7 @@ export default function UniV3LYF() {
       // setReverseBaseToken(false)
       navigate(`/leveragedapps/uniswapv3/${poolId}`)
     },
-    [navigate]
+    [navigate],
   )
 
   const inited = useMemo(() => {
@@ -409,7 +424,9 @@ export default function UniV3LYF() {
       await depositAndStake('2', '4839')
 
       const newLendList = [...lendList]
-      const targetIndex = newLendList.findIndex((item) => item.tokenSymbol === token0.symbol)
+      const targetIndex = newLendList.findIndex(
+        (item) => item.tokenSymbol === token0.symbol,
+      )
       const target = newLendList[targetIndex]
       newLendList.splice(targetIndex, 1, {
         ...target,
@@ -417,7 +434,9 @@ export default function UniV3LYF() {
       })
       // console.log('target2Index :>> ', targetIndex, newLendList)
 
-      const target2Index = newLendList.findIndex((item) => item.tokenSymbol === token1.symbol)
+      const target2Index = newLendList.findIndex(
+        (item) => item.tokenSymbol === token1.symbol,
+      )
       // console.log('target2Index :>> ', target2Index)
       const target2 = newLendList[target2Index]
       newLendList.splice(target2Index, 1, {
@@ -433,12 +452,20 @@ export default function UniV3LYF() {
           token0: token0.symbol,
           token1: token1.symbol,
           totalPositionValue: depositParams.positionVal,
-          token0Amount: BN.from(new BigNumber(depositParams.amount0).multipliedBy(1e18).toString()),
-          token1Amount: BN.from(new BigNumber(depositParams.amount1).multipliedBy(1e18).toString()),
-          token0Debt: BN.from(new BigNumber(depositParams.amount0Borrow).multipliedBy(1e18).toString()),
-          token1Debt: BN.from(new BigNumber(depositParams.amount1Borrow).multipliedBy(1e18).toString()),
+          token0Amount: BN.from(
+            new BigNumber(depositParams.amount0).multipliedBy(1e18).toString(),
+          ),
+          token1Amount: BN.from(
+            new BigNumber(depositParams.amount1).multipliedBy(1e18).toString(),
+          ),
+          token0Debt: BN.from(
+            new BigNumber(depositParams.amount0Borrow).multipliedBy(1e18).toString(),
+          ),
+          token1Debt: BN.from(
+            new BigNumber(depositParams.amount1Borrow).multipliedBy(1e18).toString(),
+          ),
           apr,
-        })
+        }),
       )
       navigate(`/positions`)
     } catch (err) {
@@ -447,7 +474,17 @@ export default function UniV3LYF() {
     } finally {
       setDepositing(false)
     }
-  }, [depositParams, depositAndStake, lendList, dispatch, poolKey, token0, token1, apr, navigate])
+  }, [
+    depositParams,
+    depositAndStake,
+    lendList,
+    dispatch,
+    poolKey,
+    token0,
+    token1,
+    apr,
+    navigate,
+  ])
 
   const onChangeDepositParams = useCallback((params) => {
     setDepositParams(params)
@@ -455,7 +492,11 @@ export default function UniV3LYF() {
   }, [])
 
   return (
-    <div className={classNames('farm-page', { 'farm-page-extends': showNextSteps })}>
+    <div
+      className={classNames('farm-page', {
+        'farm-page-extends': showNextSteps,
+      })}
+    >
       <section className="farm-page-layout-lf">
         <div className="farm-page-title">
           <div className="farm-page-title-main">
@@ -472,7 +513,9 @@ export default function UniV3LYF() {
             >
               {v3TopTvlPools.map((pool) => (
                 <Select.Option key={pool.id} value={pool.id}>
-                  {`${pool.token1.symbol}/${pool.token0.symbol} (${getFeeTierPercentage(pool.feeTier) * 100 + '%'})`}
+                  {`${pool.token1.symbol}/${pool.token0.symbol} (${
+                    getFeeTierPercentage(pool.feeTier) * 100 + '%'
+                  })`}
                 </Select.Option>
               ))}
             </Select>
@@ -535,7 +578,10 @@ export default function UniV3LYF() {
                 display: !inited ? 'none' : 'block',
               }}
             >
-              <div className="current-price-line" style={{ top: priceChartLinesPos.currentPos || 0 }}></div>
+              <div
+                className="current-price-line"
+                style={{ top: priceChartLinesPos.currentPos || 0 }}
+              ></div>
               <div
                 className="price-range-area"
                 style={{
@@ -583,7 +629,8 @@ export default function UniV3LYF() {
             {priceOptions.map((item, idx) => (
               <div
                 className={classNames('price-select-option', {
-                  'price-select-option-active': priceMin === item[0] && priceMax === item[1],
+                  'price-select-option-active':
+                    priceMin === item[0] && priceMax === item[1],
                 })}
                 key={idx}
                 onClick={() => {
@@ -626,7 +673,9 @@ export default function UniV3LYF() {
                 ></i>
               </div>
               <span className="text-sm">
-                {!reverseBaseToken ? `${token0.symbol} per ${token1.symbol}` : `${token1.symbol} per ${token0.symbol}`}
+                {!reverseBaseToken
+                  ? `${token0.symbol} per ${token1.symbol}`
+                  : `${token1.symbol} per ${token0.symbol}`}
               </span>
             </div>
             <div className="price-input-item">
@@ -657,7 +706,9 @@ export default function UniV3LYF() {
                 ></i>
               </div>
               <span className="text-sm">
-                {!reverseBaseToken ? `${token0.symbol} per ${token1.symbol}` : `${token1.symbol} per ${token0.symbol}`}
+                {!reverseBaseToken
+                  ? `${token0.symbol} per ${token1.symbol}`
+                  : `${token1.symbol} per ${token0.symbol}`}
               </span>
             </div>
           </div>
@@ -725,7 +776,10 @@ export default function UniV3LYF() {
                 className="btn-confirm btn-base btn-base-primary"
                 onClick={clickConfirm}
                 disabled={
-                  approvingToken0 || approvingToken1 || depositing || (!depositParams.amount0 && !depositParams.amount1)
+                  approvingToken0 ||
+                  approvingToken1 ||
+                  depositing ||
+                  (!depositParams.amount0 && !depositParams.amount1)
                 }
               >
                 {(approvingToken0 || approvingToken1 || depositing) && <Loading />}

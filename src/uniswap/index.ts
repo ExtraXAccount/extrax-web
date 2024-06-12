@@ -42,7 +42,10 @@ const _queryUniswap = async (query: string, useCache = true): Promise<any> => {
   }
 }
 
-export const getPoolHourData = async (poolAddress: string, numberOfDays = 14): Promise<PoolHourData[]> => {
+export const getPoolHourData = async (
+  poolAddress: string,
+  numberOfDays = 14,
+): Promise<PoolHourData[]> => {
   const { poolHourDatas } = await _queryUniswap(`{
     poolHourDatas(skip: 0, first: ${
       numberOfDays * 24
@@ -61,7 +64,10 @@ export const getPoolHourData = async (poolAddress: string, numberOfDays = 14): P
   return poolHourDatas
 }
 
-export const getPoolDayData = async (poolAddress: string, numberOfDays = 30): Promise<PoolDayData[]> => {
+export const getPoolDayData = async (
+  poolAddress: string,
+  numberOfDays = 30,
+): Promise<PoolDayData[]> => {
   const { poolDayDatas } = await _queryUniswap(`{
     poolDayDatas(skip: 0, first: ${numberOfDays}, orderBy: date, orderDirection: desc, where:{pool: "${poolAddress}"}) {
       open
@@ -83,9 +89,14 @@ export const getPoolDayData = async (poolAddress: string, numberOfDays = 30): Pr
   return poolDayDatas
 }
 
-const _getPoolTicksByPage = async (poolAddress: string, page: number): Promise<Tick[]> => {
+const _getPoolTicksByPage = async (
+  poolAddress: string,
+  page: number,
+): Promise<Tick[]> => {
   const res = await _queryUniswap(`{
-    ticks(first: 1000, skip: ${page * 1000}, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
+    ticks(first: 1000, skip: ${
+      page * 1000
+    }, where: { poolAddress: "${poolAddress}" }, orderBy: tickIdx) {
       tickIdx
       liquidityNet
       liquidityGross
@@ -147,7 +158,8 @@ const _processTokenInfo = (token: Token) => {
   if (token.name === 'Wrapped Ether' || token.name === 'Wrapped Ethereum') {
     token.name = 'Ethereum'
     token.symbol = 'ETH'
-    token.logoURI = 'https://cdn.iconscout.com/icon/free/png-128/ethereum-2752194-2285011.png'
+    token.logoURI =
+      'https://cdn.iconscout.com/icon/free/png-128/ethereum-2752194-2285011.png'
   }
   if (token.name === 'Wrapped Matic') {
     token.name = 'Polygon Native Token'
@@ -160,7 +172,9 @@ const _processTokenInfo = (token: Token) => {
 export const getTopTokenList = async (): Promise<Token[]> => {
   const cacheKey = `${getCurrentNetwork().id}_getTopTokenList`
   const cacheData = lscache.get(cacheKey)
-  const searchTokenPageItems = localStorage.getItem(`SearchTokenPage_${getCurrentNetwork().id}_tokens`)
+  const searchTokenPageItems = localStorage.getItem(
+    `SearchTokenPage_${getCurrentNetwork().id}_tokens`,
+  )
   if (cacheData) {
     if (searchTokenPageItems !== null) {
       return [...cacheData, ...JSON.parse(searchTokenPageItems)]

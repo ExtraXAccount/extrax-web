@@ -13,7 +13,8 @@ const store = configureStore({
     price,
     position,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 })
 
 export type RootState = ReturnType<typeof store.getState>

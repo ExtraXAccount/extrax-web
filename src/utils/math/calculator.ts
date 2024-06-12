@@ -130,7 +130,9 @@ export function getLiquadationPos({
   const APY2 = getDaysApy(weightBorAPR, days)
   const A = E0 * (L - 1) * C1.borRate * (1 + APY2 / 2)
   const a = A ** 2
-  const C = (1 + APY2 / 2) * E0 * (L - 1) * C0.change * C0.borRate + (APY2 * D0 - lqdThreshold * APY1 * P0) / 2
+  const C =
+    (1 + APY2 / 2) * E0 * (L - 1) * C0.change * C0.borRate +
+    (APY2 * D0 - lqdThreshold * APY1 * P0) / 2
   const b = 2 * A * C - ((1 + APY1 / 2) * lqdThreshold * E0 * L) ** 2 * C0.change
   const c = C ** 2
 

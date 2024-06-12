@@ -1,12 +1,8 @@
 // import { getDefaultConfig } from '@rainbow-me/rainbowkit';
-import { http } from 'wagmi';
-import { optimism } from 'wagmi/chains';
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
-import {
-  injectedWallet,
-  walletConnectWallet,
-} from '@rainbow-me/rainbowkit/wallets';
-import { createConfig } from 'wagmi';
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import { injectedWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wallets'
+import { createConfig, http } from 'wagmi'
+import { optimism } from 'wagmi/chains'
 
 const appName = 'ExtraX'
 const projectId = 'ae9bc6c16bf3d9121367f023f740150a' // Project ID of WalletConnect Cloud
@@ -21,8 +17,8 @@ const connectors = connectorsForWallets(
   {
     appName,
     projectId,
-  }
-);
+  },
+)
 
 // export const defaultConfig = getDefaultConfig({
 //   appName,
@@ -40,7 +36,9 @@ export const wagmiConfig = createConfig({
   // projectId,
   chains: [optimism] as any,
   transports: {
-    [optimism.id]: http('https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0'),
+    [optimism.id]: http(
+      'https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0',
+    ),
     // [base.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
   },
 })

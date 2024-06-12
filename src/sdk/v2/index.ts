@@ -3,7 +3,6 @@ import { useCallback, useEffect } from 'react'
 // import { publicClient } from '@/components/RainbowKit/getChainsConfig'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
-import { SupportedChainId } from '@/constants/chains'
 import { V2_CONFIG } from '@/constants/v2'
 
 import dataProviderABI from '../abis/DataProvider.json'
@@ -31,7 +30,7 @@ export default function useV2Contract() {
         ...options,
       })
     },
-    [chainId, publicClient]
+    [chainId, publicClient],
   )
 
   useEffect(() => {

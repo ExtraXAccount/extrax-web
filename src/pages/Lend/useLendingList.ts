@@ -25,13 +25,17 @@ export default function useLendingList() {
   } = useSmartAccount()
 
   const chainLendingConfig = useMemo(() => {
-    return Object.values<(typeof LendingConfig)[chainId][LendPoolConfig]>(LendingConfig[chainId] || {})
+    return Object.values<(typeof LendingConfig)[chainId][LendPoolConfig]>(
+      LendingConfig[chainId] || {},
+    )
   }, [chainId])
 
   const fetchLendPools = useCallback(async () => {
     setIsFetching(true)
     try {
-      const res = await lendingMng.multicallPoolsStatus(chainLendingConfig.map((item) => item.reserveId))
+      const res = await lendingMng.multicallPoolsStatus(
+        chainLendingConfig.map((item) => item.reserveId),
+      )
       setLendPools(res)
     } finally {
       setIsFetching(false)
@@ -44,7 +48,8 @@ export default function useLendingList() {
         return []
       }
       const tokens = chainLendingConfig.reduce(
-        (arr, item) => arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
+        (arr, item) =>
+          arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
         [],
       )
       console.log('fetchBalances :>> ', tokens)
@@ -73,7 +78,10 @@ export default function useLendingList() {
         borrowApr: stringToDecimals(pool.currentBorrowRate.toString(), 18),
         tokenSymbol: config.name,
         poolKey: config.name,
-        totalSupply: stringToDecimals(pool.availableLiquidity.toString(), config.decimals),
+        totalSupply: stringToDecimals(
+          pool.availableLiquidity.toString(),
+          config.decimals,
+        ),
         balance: stringToDecimals(balances[index * 3]?.toString(), config.decimals),
         deposited: stringToDecimals(balances[index * 3 + 1]?.toString(), config.decimals),
         borrowed: stringToDecimals(balances[index * 3 + 2]?.toString(), config.decimals),

@@ -8,7 +8,14 @@ import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
 import { formatSymbol } from '@/sdk/utils/token'
 import { nameChecker } from '@/utils'
-import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
+import {
+  addComma,
+  aprToApy100,
+  formatFloatNumber,
+  formatNumberByUnit,
+  toPrecision,
+  toPrecisionNum,
+} from '@/utils/math'
 
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
@@ -24,7 +31,11 @@ export default function LendingTable() {
   const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
 
-  const { formattedLendPools, fetchLendPools, isFetching: isFetchingLendingList } = useLendingList()
+  const {
+    formattedLendPools,
+    fetchLendPools,
+    isFetching: isFetchingLendingList,
+  } = useLendingList()
 
   useEffect(() => {
     console.log('formattedLendPools :>> ', formattedLendPools)
@@ -95,7 +106,10 @@ export default function LendingTable() {
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  <LPName token0={nameChecker(formatSymbol(pool.tokenSymbol))} title={nameChecker(pool.tokenSymbol)} />
+                  <LPName
+                    token0={nameChecker(formatSymbol(pool.tokenSymbol))}
+                    title={nameChecker(pool.tokenSymbol)}
+                  />
                 </div>
               </>
             )
@@ -116,7 +130,8 @@ export default function LendingTable() {
               <>
                 {isMobile && <div className="text-bold-small">Total Supply</div>}
                 <div>
-                  {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)} {nameChecker(i.tokenSymbol)}
+                  {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
+                  {nameChecker(i.tokenSymbol)}
                 </div>
                 <div className="text-sm-2">${formatNumberByUnit(value)}</div>
               </>
@@ -135,7 +150,10 @@ export default function LendingTable() {
             return (
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
-                <div className="farm-buffer-safe flex ai-ct" style={{ fontWeight: 'bold' }}>
+                <div
+                  className="farm-buffer-safe flex ai-ct"
+                  style={{ fontWeight: 'bold' }}
+                >
                   +{toPrecision(aprToApy100(i.apr * 100))}%
                 </div>
               </>
@@ -173,7 +191,10 @@ export default function LendingTable() {
           render={(i) => {
             return (
               <>
-                <div className="farm-buffer-danger flex ai-ct" style={{ fontWeight: 'bold' }}>
+                <div
+                  className="farm-buffer-danger flex ai-ct"
+                  style={{ fontWeight: 'bold' }}
+                >
                   -{toPrecision(i.borrowApr * 100)}%
                 </div>
               </>
@@ -205,7 +226,10 @@ export default function LendingTable() {
               <>
                 <div>{toPrecision(i.deposited)}</div>
                 <div className="text-sm-2">
-                  ${formatNumberByUnit(toPrecisionNum(i.deposited * getPrice(i.tokenSymbol)))}
+                  $
+                  {formatNumberByUnit(
+                    toPrecisionNum(i.deposited * getPrice(i.tokenSymbol)),
+                  )}
                 </div>
               </>
             )
@@ -223,7 +247,10 @@ export default function LendingTable() {
               <>
                 <div>{toPrecision(i.borrowed)}</div>
                 <div className="text-sm-2">
-                  ${formatNumberByUnit(toPrecisionNum(i.borrowed * getPrice(i.tokenSymbol)))}
+                  $
+                  {formatNumberByUnit(
+                    toPrecisionNum(i.borrowed * getPrice(i.tokenSymbol)),
+                  )}
                 </div>
               </>
             )

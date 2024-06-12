@@ -1,6 +1,5 @@
 import { BrowserProvider, FallbackProvider, JsonRpcProvider, JsonRpcSigner } from 'ethers'
-import type { Transport } from 'viem'
-import { PublicClient, WalletClient } from 'viem'
+import { PublicClient, Transport, WalletClient } from 'viem'
 
 export function clientToProvider(client: PublicClient | WalletClient) {
   const { chain, transport } = client

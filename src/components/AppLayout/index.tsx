@@ -4,13 +4,13 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 // import { Dropdown, MenuProps } from 'antd'
 import classNames from 'classnames'
 import { useEffect } from 'react'
-import { Link, NavLink, Outlet, useLocation, useParams, useSearchParams } from 'react-router-dom'
+import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import lendingData from '@/sdk/lend/mock.json'
 import { getCoingeckoPriceByIds } from '@/sdk/utils/coingecko'
-import { useAppDispatch, useAppSelector } from '@/state'
+import { useAppDispatch } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
 import { setPrices } from '@/state/price/reducer'
 
@@ -80,7 +80,11 @@ export default function AppLayout() {
         <div className="nav-menu">
           {navList.map((i) => {
             return (
-              <NavLink to={i.link + '?' + searchParams.toString()} className="nav-menu-item" key={i.name}>
+              <NavLink
+                to={i.link + '?' + searchParams.toString()}
+                className="nav-menu-item"
+                key={i.name}
+              >
                 <p>{i.name}</p>
               </NavLink>
             )

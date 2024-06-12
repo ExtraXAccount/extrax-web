@@ -1,5 +1,13 @@
-import { Client, encodeFunctionData, encodePacked, erc20Abi, getContract, PublicClient, toBytes } from 'viem'
-import { Hex } from 'viem'
+import {
+  Client,
+  encodeFunctionData,
+  encodePacked,
+  erc20Abi,
+  getContract,
+  Hex,
+  PublicClient,
+  toBytes,
+} from 'viem'
 
 import { defaultChainId } from '@/constants'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
@@ -113,7 +121,12 @@ export class LendingManager {
     return results.map((item) => item.result)
   }
 
-  public async requireAllowance(tokenAddress: Address, targetAddress: Address, amount: bigint, useNativeETH = true) {
+  public async requireAllowance(
+    tokenAddress: Address,
+    targetAddress: Address,
+    amount: bigint,
+    useNativeETH = true,
+  ) {
     if (useNativeETH && isWETH(this.chainId, tokenAddress)) {
       return false
     }
@@ -137,7 +150,9 @@ export class LendingManager {
     const erc20Contract = this.getErc20Contract(tokenAddr)
 
     const hash = await erc20Contract.write.approve([address, amount])
-    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
+      hash,
+    })
     return tx
   }
 
@@ -177,7 +192,11 @@ export class LendingManager {
     return metaTx
   }
 
-  public async buildDepositToAccountTx(tokenAddress: Address, safeAccount: Address, amount: bigint) {
+  public async buildDepositToAccountTx(
+    tokenAddress: Address,
+    safeAccount: Address,
+    amount: bigint,
+  ) {
     const funcData = encodeFunctionData({
       abi: ERC20ABI,
       functionName: 'transferFrom',
@@ -191,7 +210,11 @@ export class LendingManager {
     return metaTx
   }
 
-  public async buildApproveLendingTx(tokenAddress: Address, amount: bigint, chainId?: SupportedChainId) {
+  public async buildApproveLendingTx(
+    tokenAddress: Address,
+    amount: bigint,
+    chainId?: SupportedChainId,
+  ) {
     const funcData = encodeFunctionData({
       abi: ERC20ABI,
       functionName: 'approve',
@@ -224,7 +247,10 @@ export class LendingManager {
     return metaTx
   }
 
-  public async multiSend(safeAccount: Address, transactions: { to: Address; value: bigint; data: Address }[]) {
+  public async multiSend(
+    safeAccount: Address,
+    transactions: { to: Address; value: bigint; data: Address }[],
+  ) {
     let nonce = await this.getExtraXAccountContract(safeAccount).read.nonce()
 
     console.log('nonce :>> ', nonce)
@@ -234,7 +260,14 @@ export class LendingManager {
       console.log(tx)
 
       signedSafeTransactions.push(
-        await buildSignedMetaTransaction(this.publicClient, this.walletClient, this.account, safeAccount, tx, nonce++),
+        await buildSignedMetaTransaction(
+          this.publicClient,
+          this.walletClient,
+          this.account,
+          safeAccount,
+          tx,
+          nonce++,
+        ),
       )
     }
 
@@ -254,12 +287,24 @@ export class LendingManager {
     return res
   }
 
-  public async depositToLending(safeAccount: Address, reserveId: bigint, amount: bigint, useNativeETH = true) {
-    console.log('depositToLending :>> ', { safeAccount, reserveId, amount, useNativeETH })
+  public async depositToLending(
+    safeAccount: Address,
+    reserveId: bigint,
+    amount: bigint,
+    useNativeETH = true,
+  ) {
+    console.log('depositToLending :>> ', {
+      safeAccount,
+      reserveId,
+      amount,
+      useNativeETH,
+    })
     // Apprve the Account transfer assets from user's wallet
     // Note: This tx cannot be batched to a multiSend Transaction
     console.log('approve ...')
-    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find(
+      (item: any) => item.reserveId === reserveId,
+    )
     const token = lendConfig.name
     const requireAllowance = await this.requireAllowance(
       lendConfig.underlyingTokenAddress,
@@ -274,13 +319,20 @@ export class LendingManager {
 
     const transactions: { to: Hex; data: Hex; value: bigint }[] = []
 
-    console.log('assetId :>> ', HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId)
+    console.log(
+      'assetId :>> ',
+      HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId,
+    )
     transactions.push(
-      await this.buildSetAsCollateralTx(HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId),
+      await this.buildSetAsCollateralTx(
+        HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId,
+      ),
     )
 
     transactions.push(
-      await this.buildSetAsCollateralTx(HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId),
+      await this.buildSetAsCollateralTx(
+        HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId,
+      ),
     )
 
     transactions.push(
@@ -292,22 +344,36 @@ export class LendingManager {
     )
 
     transactions.push(
-      await this.buildApproveLendingTx(LendingConfig[this.chainId][token].underlyingTokenAddress, amount),
+      await this.buildApproveLendingTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        amount,
+      ),
     )
 
-    transactions.push(await this.buildDepositToLendingTx(LendingConfig[this.chainId][token].reserveId, amount))
+    transactions.push(
+      await this.buildDepositToLendingTx(
+        LendingConfig[this.chainId][token].reserveId,
+        amount,
+      ),
+    )
 
     console.log('(MultiSend) deposit to lending pool ...', {
       safeAccount,
       transactions,
     })
     const hash = await this.multiSend(safeAccount, transactions)
-    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
+      hash,
+    })
     console.log('multiSend tx :>> ', { tx })
     return tx
   }
 
-  public async buildWithdrawTransaction(reserveId: bigint, eTokenAmount: bigint, chainId?: SupportedChainId) {
+  public async buildWithdrawTransaction(
+    reserveId: bigint,
+    eTokenAmount: bigint,
+    chainId?: SupportedChainId,
+  ) {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'withdraw',
@@ -331,12 +397,18 @@ export class LendingManager {
       transactions,
     })
     const hash = await this.multiSend(safeAccount, transactions)
-    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
+      hash,
+    })
     console.log('multiSend tx :>> ', { tx })
     return tx
   }
 
-  public async buildActivateUserDebtTx(userAccount: Address, reserveId: bigint, chainId?: SupportedChainId) {
+  public async buildActivateUserDebtTx(
+    userAccount: Address,
+    reserveId: bigint,
+    chainId?: SupportedChainId,
+  ) {
     const funcData = encodeFunctionData({
       abi: HealthManagerABI,
       functionName: 'activateUserDebt',
@@ -349,7 +421,11 @@ export class LendingManager {
     }
     return metaTx
   }
-  public async buildBorrowTransaction(reserveId: bigint, eTokenAmount: bigint, chainId?: SupportedChainId) {
+  public async buildBorrowTransaction(
+    reserveId: bigint,
+    eTokenAmount: bigint,
+    chainId?: SupportedChainId,
+  ) {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'borrow',
@@ -362,7 +438,12 @@ export class LendingManager {
     }
     return metaTx
   }
-  public async borrow(safeAccount: Address, reserveId: bigint, amount: bigint, debtId: bigint) {
+  public async borrow(
+    safeAccount: Address,
+    reserveId: bigint,
+    amount: bigint,
+    debtId: bigint,
+  ) {
     console.log('borrow :>> ', { safeAccount, reserveId, amount })
 
     const transactions: { to: Hex; data: Hex; value: bigint }[] = []
@@ -374,12 +455,18 @@ export class LendingManager {
       transactions,
     })
     const hash = await this.multiSend(safeAccount, transactions)
-    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({ hash })
+    const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
+      hash,
+    })
     console.log('multiSend tx :>> ', { tx })
     return tx
   }
 
-  public async buildRepayTransaction(reserveId: bigint, eTokenAmount: bigint, chainId?: SupportedChainId) {
+  public async buildRepayTransaction(
+    reserveId: bigint,
+    eTokenAmount: bigint,
+    chainId?: SupportedChainId,
+  ) {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'repay',
@@ -394,12 +481,17 @@ export class LendingManager {
   }
   public async repay(safeAccount: Address, reserveId: bigint, amount: bigint) {
     console.log('repay :>> ', { safeAccount, reserveId, amount })
-    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find(
+      (item: any) => item.reserveId === reserveId,
+    )
     const token = lendConfig.name
 
     const transactions: { to: Hex; data: Hex; value: bigint }[] = []
     transactions.push(
-      await this.buildApproveLendingTx(LendingConfig[this.chainId][token].underlyingTokenAddress, amount),
+      await this.buildApproveLendingTx(
+        LendingConfig[this.chainId][token].underlyingTokenAddress,
+        amount,
+      ),
     )
     transactions.push(await this.buildRepayTransaction(reserveId, amount))
 

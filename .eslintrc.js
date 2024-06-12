@@ -1,16 +1,59 @@
-/* eslint-env node */
-
-require('@uniswap/eslint-config/load')
-
 module.exports = {
-  extends: '@uniswap/eslint-config/react',
+  root: true,
+  parser: '@typescript-eslint/parser',
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+    'import/resolver': {
+      node: {
+        paths: ['src'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
+    },
+  },
+  env: {
+    browser: true,
+    amd: true,
+    node: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended', // Make sure this is always the last element in the array.
+  ],
+  plugins: ['import', 'simple-import-sort', 'prettier'],
   rules: {
-    '@typescript-eslint/no-non-null-assertion': 0,
-    '@typescript-eslint/no-restricted-imports': 1,
-    '@typescript-eslint/no-unused-vars': 0,
-    'no-unused-imports': 0,
-    'import/no-unused-modules': 0,
-    'react/no-unescaped-entities': 1,
-    // 'prettier/prettier': 0,
+    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
+    // 'no-duplicate-imports': 'error',
+    'import/no-unused-modules': 'warn',
+    'import/no-duplicates': 'error',
+    'react/react-in-jsx-scope': 'off',
+    'jsx-a11y/accessible-emoji': 'off',
+    'react/prop-types': 'off',
+    'react/no-unescaped-entities': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/no-noninteractive-element-interactions': 'off',
+    'jsx-a11y/anchor-is-valid': [
+      'off',
+      {
+        components: ['Link'],
+        specialLink: ['hrefLeft', 'hrefRight'],
+        aspects: ['invalidHref', 'preferButton'],
+      },
+    ],
   },
 }

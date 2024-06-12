@@ -1,5 +1,5 @@
 interface Window {
-  ethereum: any;
+  ethereum: any
 }
 
 export type Address = `0x${string}`

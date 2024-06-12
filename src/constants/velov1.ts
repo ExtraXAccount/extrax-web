@@ -33,7 +33,10 @@ export const VELO_V1_POOLS = {
     token1: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
     stable: false,
     vaultAddress: '0xbc19F5A7eac4bEF3d0896D8094ae3d6c7D1B418D',
-    rewards: ['0x3c8B650257cFb5f272f799F5e2b4e65093a11a05', '0x7F5c764cBc14f9669B88837ca1490cCa17c31607'],
+    rewards: [
+      '0x3c8B650257cFb5f272f799F5e2b4e65093a11a05',
+      '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+    ],
     routes: [[], []],
   },
   'vAMM-OP/USDC': {

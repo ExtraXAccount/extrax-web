@@ -124,10 +124,13 @@ export default function V3EChart(props: any) {
 
       const userBaseTotalValue = token1.baseValue + token0.baseValue
       for (let index = 0; index < pointCount; index++) {
-        const token1PriceChange: number = index * ((xAxisMax - xAxisMin) / pointCount) + xAxisMin
+        const token1PriceChange: number =
+          index * ((xAxisMax - xAxisMin) / pointCount) + xAxisMin
         const v3Value = getEquityChange(1 + token1PriceChange)
 
-        const hodlEquity = (token0.baseValue + token1.baseValue * (1 + token1PriceChange)) / userBaseTotalValue
+        const hodlEquity =
+          (token0.baseValue + token1.baseValue * (1 + token1PriceChange)) /
+          userBaseTotalValue
 
         result.v3.push([token1PriceChange, v3Value / userBaseTotalValue])
         result.hodl.push([token1PriceChange, hodlEquity])
@@ -221,9 +224,9 @@ export default function V3EChart(props: any) {
           return `
           <div>
             <p>${token1.name}/${token0.name} Price Change: ${round(value[0] * 100)}%</p>
-            <p>${token1.name} Price: ${formatFloatNumber(token1CurrentPriceBaseOnToken0 * (1 + value[0]))}${
-            token0.name
-          }</p>
+            <p>${token1.name} Price: ${formatFloatNumber(
+            token1CurrentPriceBaseOnToken0 * (1 + value[0]),
+          )}${token0.name}</p>
             <p>Equity(V3 Stratety): ${formatFloatNumber(value[1] * 100)}%</p>
           </div>
           `
@@ -450,7 +453,9 @@ export default function V3EChart(props: any) {
             token1price,
             token1price0,
             // poolDayData: item,
-            volume: !reverseBaseToken ? parseFloat(item.volumeToken0) : parseFloat(item.volumeToken1),
+            volume: !reverseBaseToken
+              ? parseFloat(item.volumeToken0)
+              : parseFloat(item.volumeToken1),
           })
           const assetsValue = getUpdateAsset(token1price, token1price0)
           // if (index === 0) {
@@ -486,7 +491,7 @@ export default function V3EChart(props: any) {
       console.log('equityChangeData :>> ', equityChangeData, _backDays)
       return equityChangeData
     },
-    [Pl, Pu, feeTier, token0, token1, poolTicks, v3PoolDaysData, reverseBaseToken]
+    [Pl, Pu, feeTier, token0, token1, poolTicks, v3PoolDaysData, reverseBaseToken],
   )
 
   const echartOptionBacktest = useMemo(() => {
@@ -669,7 +674,7 @@ export default function V3EChart(props: any) {
       poolTicks,
       liquidity,
       Number(tick),
-      feeTier
+      feeTier,
     )
     return result
   }, [poolTicks, token1.token1Info, token0.token0Info, liquidity, tick, feeTier])
@@ -705,12 +710,12 @@ export default function V3EChart(props: any) {
         low: Math.min(
           getValueByBaseToken(item.low),
           getValueByBaseToken(item.close),
-          getValueByBaseToken(daysData[index - 1]?.close || item.open)
+          getValueByBaseToken(daysData[index - 1]?.close || item.open),
         ),
         high: Math.max(
           getValueByBaseToken(item.high),
           getValueByBaseToken(item.close),
-          getValueByBaseToken(daysData[index - 1]?.close || item.open)
+          getValueByBaseToken(daysData[index - 1]?.close || item.open),
         ),
       }
     })
@@ -733,8 +738,16 @@ export default function V3EChart(props: any) {
     let minVal = getValueByBaseToken(daysData[0].low)
     let maxVal = getValueByBaseToken(daysData[0].high)
     daysData.forEach((item) => {
-      minVal = Math.min(minVal, getValueByBaseToken(item.low), getValueByBaseToken(item.close))
-      maxVal = Math.max(maxVal, getValueByBaseToken(item.high), getValueByBaseToken(item.close))
+      minVal = Math.min(
+        minVal,
+        getValueByBaseToken(item.low),
+        getValueByBaseToken(item.close),
+      )
+      maxVal = Math.max(
+        maxVal,
+        getValueByBaseToken(item.high),
+        getValueByBaseToken(item.close),
+      )
     })
 
     const formatData = (data) => {
@@ -786,12 +799,12 @@ export default function V3EChart(props: any) {
         Math.min(
           getValueByBaseToken(item.low),
           getValueByBaseToken(item.close),
-          getValueByBaseToken(daysData[index - 1]?.close || item.open)
+          getValueByBaseToken(daysData[index - 1]?.close || item.open),
         ),
         Math.max(
           getValueByBaseToken(item.high),
           getValueByBaseToken(item.close),
-          getValueByBaseToken(daysData[index - 1]?.close || item.open)
+          getValueByBaseToken(daysData[index - 1]?.close || item.open),
         ),
       ]
     })
@@ -934,21 +947,29 @@ export default function V3EChart(props: any) {
         const { start, end, batch } = eventData
         const length = xAxisMax - xAxisMin
         if (!isNil(start) && !isNil(end)) {
-          setXAxisRange([(start / 100) * length + xAxisMin, (end / 100) * length + xAxisMin])
+          setXAxisRange([
+            (start / 100) * length + xAxisMin,
+            (end / 100) * length + xAxisMin,
+          ])
         } else {
           const { start, end } = batch?.[0] || {}
           if (!isNil(start) && !isNil(end)) {
-            setXAxisRange([(start / 100) * length + xAxisMin, (end / 100) * length + xAxisMin])
+            setXAxisRange([
+              (start / 100) * length + xAxisMin,
+              (end / 100) * length + xAxisMin,
+            ])
           }
         }
       },
     }),
-    [xAxisMin, xAxisMax]
+    [xAxisMin, xAxisMax],
   )
 
   return (
     <div className="calculator-echarts-wrapper">
-      <h4>APR based on the backtest Fee of last 30 days: {round(backtestApr * 100, 2)}%</h4>
+      <h4>
+        APR based on the backtest Fee of last 30 days: {round(backtestApr * 100, 2)}%
+      </h4>
       <section className="lightweight-chart">
         {/* <LightweightChart data={lwcCandleData} vertData={vertLiquidityData}></LightweightChart> */}
       </section>

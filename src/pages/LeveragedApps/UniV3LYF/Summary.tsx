@@ -3,7 +3,6 @@ import cx from 'classnames'
 import { sumBy } from 'lodash'
 import { useMemo } from 'react'
 
-import { INFINITY } from '@/components/AppLayout/AccountInfo'
 import { CoinAmountGroup } from '@/components/CoinAmount'
 import usePrices from '@/hooks/usePrices'
 import useSmartAccount from '@/hooks/useSmartAccount'
@@ -34,7 +33,10 @@ export default function Summary(props: ISummaryProps) {
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const positionTotalVal = useMemo(() => {
-    return summary.amount0Borrow * prices[token0.symbol] + summary.amount1Borrow * prices[token0.symbol]
+    return (
+      summary.amount0Borrow * prices[token0.symbol] +
+      summary.amount1Borrow * prices[token0.symbol]
+    )
   }, [prices, summary.amount0Borrow, summary.amount1Borrow, token0.symbol])
 
   const {
@@ -92,7 +94,10 @@ export default function Summary(props: ISummaryProps) {
   ])
 
   const borrowInterest = useMemo(() => {
-    return token0data.borrowingRate * summary.tk0BorrowRatio + token1data.borrowingRate * (1 - summary.tk0BorrowRatio)
+    return (
+      token0data.borrowingRate * summary.tk0BorrowRatio +
+      token1data.borrowingRate * (1 - summary.tk0BorrowRatio)
+    )
   }, [summary.tk0BorrowRatio, token0data.borrowingRate, token1data.borrowingRate])
 
   const nextSafetyFactor = useMemo(() => {
@@ -115,7 +120,7 @@ export default function Summary(props: ISummaryProps) {
         lendingList,
         (item) =>
           aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
-          item.borrowingRate * item.borrowed * prices[item.tokenSymbol]
+          item.borrowingRate * item.borrowed * prices[item.tokenSymbol],
       ) +
         borrowedVal * summary.baseApr) /
       depositedVal
@@ -131,13 +136,17 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Farming APR</p>
             <b>
-              <span className="farm-buffer-safe">{toPrecision(summary.baseApr * 100)}%</span>
+              <span className="farm-buffer-safe">
+                {toPrecision(summary.baseApr * 100)}%
+              </span>
             </b>
           </li>
           <li>
             <p>Borrowing APR</p>
             <b>
-              <span className="item-pre farm-buffer-danger">-{toPrecision(borrowInterest * 100)}%</span>
+              <span className="item-pre farm-buffer-danger">
+                -{toPrecision(borrowInterest * 100)}%
+              </span>
             </b>
           </li>
           <li>
@@ -186,7 +195,9 @@ export default function Summary(props: ISummaryProps) {
             <p>Left Credit</p>
             <b>
               <span className="item-pre">{toPrecision(availableCredit)} →</span>
-              <span className="text-highlight">{toPrecision(availableCredit - positionTotalVal)}</span>
+              <span className="text-highlight">
+                {toPrecision(availableCredit - positionTotalVal)}
+              </span>
             </b>
           </li>
           <li>

@@ -80,7 +80,10 @@ export function addComma(numStr: string | number) {
   const intStr = String(Math.floor(Number(numStr)))
   const floatStr = String(numStr).split('.')[1] || ''
   if (withFloat) {
-    return intStr.replace(/(?=(\B)(\d{3})+$)/g, ',') + (floatStr ? `.${floatStr.slice(0, 2)}` : '')
+    return (
+      intStr.replace(/(?=(\B)(\d{3})+$)/g, ',') +
+      (floatStr ? `.${floatStr.slice(0, 2)}` : '')
+    )
   }
   return intStr.replace(/(?=(\B)(\d{3})+$)/g, ',')
 }
@@ -95,8 +98,16 @@ export function range(num: number, min: number, max: number) {
 }
 
 export function getDynamicFee(bullEquity: number, bearEquity: number) {
-  const bullDynamicFee = range(-(bullEquity - bearEquity) / (bullEquity * 100), -0.01, 0.01)
-  const bearDynamicFee = range((bullEquity - bearEquity) / (bearEquity * 100), -0.01, 0.01)
+  const bullDynamicFee = range(
+    -(bullEquity - bearEquity) / (bullEquity * 100),
+    -0.01,
+    0.01,
+  )
+  const bearDynamicFee = range(
+    (bullEquity - bearEquity) / (bearEquity * 100),
+    -0.01,
+    0.01,
+  )
 
   // console.log('eee', bullEquity - bearEquity, bullEquity, bearEquity);
   // console.log('bullDynamicFee', bullDynamicFee, bearDynamicFee);

@@ -11,7 +11,13 @@ export default function useBaseTokenSwitch(token0 = '', token1 = '') {
   }, [token1])
 
   const View = useMemo(() => {
-    return function BaseTokenSwitch({ label = true, onChange }: { label?: boolean; onChange?: () => any }) {
+    return function BaseTokenSwitch({
+      label = true,
+      onChange,
+    }: {
+      label?: boolean
+      onChange?: () => any
+    }) {
       if (!token0 || !token1) {
         return null
       }
@@ -27,10 +33,18 @@ export default function useBaseTokenSwitch(token0 = '', token1 = '') {
             }}
           >
             <Radio.Button value={0}>
-              {tooltip ? <Tooltip title={`Set base token to ${token0}`}>{token0}</Tooltip> : token0}
+              {tooltip ? (
+                <Tooltip title={`Set base token to ${token0}`}>{token0}</Tooltip>
+              ) : (
+                token0
+              )}
             </Radio.Button>
             <Radio.Button value={1}>
-              {tooltip ? <Tooltip title={`Set base token to ${token1}`}>{token1}</Tooltip> : token1}
+              {tooltip ? (
+                <Tooltip title={`Set base token to ${token1}`}>{token1}</Tooltip>
+              ) : (
+                token1
+              )}
             </Radio.Button>
           </Radio.Group>
         )

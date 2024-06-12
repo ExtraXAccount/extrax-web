@@ -88,9 +88,13 @@ export const RPC_URLS = {
 }
 
 export const ALCHEMY_API_KEY =
-  process.env.NODE_ENV === 'development' ? '6Rjc8z4uE-izjcZf2w_BbbdXiuyZden9' : 'oEk9gsFsYITNlTL4guXm5BmhcRZ24NfA'
+  process.env.NODE_ENV === 'development'
+    ? '6Rjc8z4uE-izjcZf2w_BbbdXiuyZden9'
+    : 'oEk9gsFsYITNlTL4guXm5BmhcRZ24NfA'
 const ALCHEMY_API_KEY_BASE =
-  process.env.NODE_ENV === 'development' ? '4uTkolRkEpkMx7Egth0pzjJAd9IbYsJc' : '4uTkolRkEpkMx7Egth0pzjJAd9IbYsJc'
+  process.env.NODE_ENV === 'development'
+    ? '4uTkolRkEpkMx7Egth0pzjJAd9IbYsJc'
+    : '4uTkolRkEpkMx7Egth0pzjJAd9IbYsJc'
 
 export const BASE_ALCHEMY_URL = `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY_BASE}`
 export const OP_ALCHEMY_URL = `https://opt-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`

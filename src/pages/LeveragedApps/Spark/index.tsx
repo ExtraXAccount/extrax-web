@@ -2,7 +2,7 @@ import './index.scss'
 
 import { Button } from 'antd'
 import classNames from 'classnames'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import { SupportedChainId } from '@/constants/chains'
@@ -11,7 +11,7 @@ import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendContract from '@/sdk/lend'
 import { useAppDispatch } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
-import { aprToApy, toPrecision } from '@/utils/math'
+import { toPrecision } from '@/utils/math'
 import { toBNString } from '@/utils/math/bn'
 
 const DAI = {
@@ -34,7 +34,9 @@ export default function Spark() {
       return 0
     }
     const borrowedVal = Number(value) || 0
-    const borrowInterest = lendList.find((item) => item.tokenSymbol === 'DAI').borrowingRate
+    const borrowInterest = lendList.find(
+      (item) => item.tokenSymbol === 'DAI',
+    ).borrowingRate
     const result = accountAPY + (borrowedVal * (sDAI_APY - borrowInterest)) / depositedVal
     return result
   }, [depositedVal, value, lendList, accountAPY])
@@ -44,8 +46,11 @@ export default function Spark() {
       return 0
     }
     const withdrawedVal = Number(withdrawVal) || 0
-    const borrowInterest = lendList.find((item) => item.tokenSymbol === 'DAI').borrowingRate
-    const result = accountAPY - (withdrawedVal * (sDAI_APY - borrowInterest)) / depositedVal
+    const borrowInterest = lendList.find(
+      (item) => item.tokenSymbol === 'DAI',
+    ).borrowingRate
+    const result =
+      accountAPY - (withdrawedVal * (sDAI_APY - borrowInterest)) / depositedVal
     return result
   }, [depositedVal, withdrawVal, lendList, accountAPY])
 
@@ -55,10 +60,15 @@ export default function Spark() {
 
   const deposit = useCallback(
     async ({ isWithdraw = false } = {}) => {
-      const res = await depositAndStake(DAI.ReserveId, toBNString(value || 0, DAI.decimals))
+      const res = await depositAndStake(
+        DAI.ReserveId,
+        toBNString(value || 0, DAI.decimals),
+      )
 
       const newLendList = [...lendList]
-      const targetIndex = newLendList.findIndex((item) => item.ReserveId === DAI.ReserveId)
+      const targetIndex = newLendList.findIndex(
+        (item) => item.ReserveId === DAI.ReserveId,
+      )
       const target = newLendList[targetIndex]
       newLendList.splice(targetIndex, 1, {
         ...target,
@@ -71,13 +81,14 @@ export default function Spark() {
 
       return res
     },
-    [depositAndStake, value, lendList, dispatch]
+    [depositAndStake, value, lendList, dispatch],
   )
 
   return (
     <div className="dapp-spark">
       <h3>
-        Deposit your Credit to SavingsDAI and earn <span className="text-highlight">5.00%</span> APY
+        Deposit your Credit to SavingsDAI and earn{' '}
+        <span className="text-highlight">5.00%</span> APY
       </h3>
       <div className="spark-sdai-wrapper">
         <div className="page-newtabs-wrapper">
@@ -121,7 +132,9 @@ export default function Spark() {
                 <p>Portfolio APY</p>
                 <b>
                   <span className="item-pre">{toPrecision(accountAPY * 100)}% →</span>
-                  <span className="text-highlight">{toPrecision(updatedAccountApy * 100)}%</span>
+                  <span className="text-highlight">
+                    {toPrecision(updatedAccountApy * 100)}%
+                  </span>
                 </b>
               </li>
             </ul>
@@ -155,7 +168,9 @@ export default function Spark() {
                 <p>Portfolio APY</p>
                 <b>
                   <span className="item-pre">{toPrecision(accountAPY * 100)}% →</span>
-                  <span className="text-highlight">{toPrecision(updatedWithdrawAccountApy * 100)}%</span>
+                  <span className="text-highlight">
+                    {toPrecision(updatedWithdrawAccountApy * 100)}%
+                  </span>
                 </b>
               </li>
             </ul>

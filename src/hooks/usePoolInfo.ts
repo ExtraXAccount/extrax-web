@@ -34,7 +34,9 @@ export default function usePoolInfo(poolAddress: string, options?: IUsePoolInfoO
     }
     const { isStable, priceLower, priceUpper, deposit0, deposit1 } = options || {}
 
-    const defaultPriceRange = isStable ? defaultPriceRangeSettings.stable : defaultPriceRangeSettings.unstable
+    const defaultPriceRange = isStable
+      ? defaultPriceRangeSettings.stable
+      : defaultPriceRangeSettings.unstable
     const res = getHistoricalAprFromPool({
       backDays: 30,
       Pl: priceLower ?? currentPrice * defaultPriceRange[0],

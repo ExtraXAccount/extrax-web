@@ -22,7 +22,7 @@ export default function computeSurroundingTicks(
   activeTickProcessed: TickProcessed,
   sortedTickData: Tick[],
   pivot: number,
-  ascending: boolean
+  ascending: boolean,
 ): TickProcessed[] {
   let previousTickProcessed: TickProcessed = {
     ...activeTickProcessed,
@@ -30,7 +30,11 @@ export default function computeSurroundingTicks(
   // Iterate outwards (either up or down depending on direction) from the active tick,
   // building active liquidity for every tick.
   let processedTicks: TickProcessed[] = []
-  for (let i = pivot + (ascending ? 1 : -1); ascending ? i < sortedTickData.length : i >= 0; ascending ? i++ : i--) {
+  for (
+    let i = pivot + (ascending ? 1 : -1);
+    ascending ? i < sortedTickData.length : i >= 0;
+    ascending ? i++ : i--
+  ) {
     const tick = Number(sortedTickData[i].tickIdx)
     const currentTickProcessed: TickProcessed = {
       liquidityActive: previousTickProcessed.liquidityActive,
@@ -46,13 +50,16 @@ export default function computeSurroundingTicks(
     if (ascending) {
       currentTickProcessed.liquidityActive = JSBI.add(
         previousTickProcessed.liquidityActive,
-        JSBI.BigInt(sortedTickData[i].liquidityNet)
+        JSBI.BigInt(sortedTickData[i].liquidityNet),
       )
-    } else if (!ascending && JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))) {
+    } else if (
+      !ascending &&
+      JSBI.notEqual(previousTickProcessed.liquidityNet, JSBI.BigInt(0))
+    ) {
       // We are iterating descending, so look at the previous tick and apply any net liquidity.
       currentTickProcessed.liquidityActive = JSBI.subtract(
         previousTickProcessed.liquidityActive,
-        previousTickProcessed.liquidityNet
+        previousTickProcessed.liquidityNet,
       )
     }
 
@@ -73,7 +80,7 @@ export function getPoolLiquidityDensity(
   ticks: Tick[],
   liquidity: string | number,
   tickCurrent: number,
-  feeAmount: FeeAmount
+  feeAmount: FeeAmount,
 ) {
   const activeTick = nearestUsableTick(tickCurrent, feeAmount)
 
@@ -96,7 +103,10 @@ export function getPoolLiquidityDensity(
   const activeTickProcessed: TickProcessed = {
     liquidityActive: JSBI.BigInt(liquidity),
     tick: activeTick,
-    liquidityNet: Number(ticks[pivot].tickIdx) === activeTick ? JSBI.BigInt(ticks[pivot].liquidityNet) : JSBI.BigInt(0),
+    liquidityNet:
+      Number(ticks[pivot].tickIdx) === activeTick
+        ? JSBI.BigInt(ticks[pivot].liquidityNet)
+        : JSBI.BigInt(0),
     price0: tick2token0price(activeTick, token0decimals, token1decimals),
   }
 
@@ -106,7 +116,7 @@ export function getPoolLiquidityDensity(
     activeTickProcessed,
     ticks,
     pivot,
-    true
+    true,
   )
 
   const previousTicks = computeSurroundingTicks(
@@ -115,7 +125,7 @@ export function getPoolLiquidityDensity(
     activeTickProcessed,
     ticks,
     pivot,
-    false
+    false,
   )
 
   const ticksProcessed = previousTicks.concat(activeTickProcessed).concat(subsequentTicks)

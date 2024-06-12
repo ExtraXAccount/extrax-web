@@ -1,51 +1,21 @@
 // import { ethers } from "hardhat";
-import {
-  ADDRESS_ID_EXTRA_ADMIN_CONTROL,
-  ADDRESS_ID_EXTRA_PROXY_UPDATE_CONTROLLER,
-  ADDRESS_ID_EXTRA_TREASURY,
-  ADDRESS_ID_EXTRA_X_ACCOUNT_FACTORY,
-  ADDRESS_ID_EXTRA_X_ACCOUNT_SINGLETON,
-  ADDRESS_ID_EXTRA_X_FUNC_FILTER_ERC20,
-  ADDRESS_ID_EXTRA_X_FUNC_FILTER_LENDING,
-  ADDRESS_ID_EXTRA_X_FUNC_FILTER_UNI_V3_PM,
-  ADDRESS_ID_EXTRA_X_FUNC_FILTER_UNI_V3_ROUTER,
-  ADDRESS_ID_EXTRA_X_HEALTH_MANAGER,
-  ADDRESS_ID_EXTRA_X_LENDINGPOOL,
-  ADDRESS_ID_EXTRA_X_Lending_DEBT_TOKEN_IMPL,
-  ADDRESS_ID_EXTRA_X_Lending_E_TOKEN_IMPL,
-  ADDRESS_ID_EXTRA_X_ORACLE_MANAGER,
-  ADDRESS_ID_EXTRA_X_TRANSACTION_FILTER,
-  ADDRESS_ID_EXTRA_X_UNDERLYING_TOKENS_DEBT_TOKEN,
-  ADDRESS_ID_EXTRA_X_UNDERLYING_TOKENS_E_TOKEN,
-  ADDRESS_ID_EXTRA_X_UNDERLYING_TOKENS_UNI_V3_POS,
-  ADDRESS_ID_WETH,
-  ADDRESS_ID_PRICE_FEED_CHAINLINK,
-  ADDRESS_ID_PRICE_FEED_UNISWAP_V3,
-  ADDRESS_ID_UNISWAP_V3_FACTORY,
-  ADDRESS_ID_UNISWAP_V3_ROUTER,
-  ADDRESS_ID_UNISWAP_V3_POS_MANAGER,
-} from "./address-id";
-import { defaultChainId } from "@/constants";
-import { CONTRACT_ADDRESSES } from "@/constants/addresses";
-import { useWagmiCtx } from '@/components/WagmiContext'
-import { useCallback } from "react";
+import { useCallback } from 'react'
+
+import { defaultChainId } from '@/constants'
+import { CONTRACT_ADDRESSES } from '@/constants/addresses'
+
 import AddressRegistry from './AddressRegistry.json'
 
-export type BigNumberish = string | number | bigint;
+export type BigNumberish = string | number | bigint
 
 const DEFAULT_CHAIN = defaultChainId
 const DeployedContracts = CONTRACT_ADDRESSES
 
-// getMultiAddress([ADDRESS_ID_EXTRA_X_ACCOUNT_FACTORY, ADDRESS_ID_EXTRA_X_ACCOUNT_SINGLETON, ADDRESS_ID_EXTRA_X_HEALTH_MANAGER, ADDRESS_ID_EXTRA_X_LENDINGPOOL]);
+// useMultiAddress([ADDRESS_ID_EXTRA_X_ACCOUNT_FACTORY, ADDRESS_ID_EXTRA_X_ACCOUNT_SINGLETON, ADDRESS_ID_EXTRA_X_HEALTH_MANAGER, ADDRESS_ID_EXTRA_X_LENDINGPOOL]);
 
-
-export async function getMultiAddress(
-  publicClient,
-  chainId,
-  idArr: BigNumberish[]
-) {
+export async function useMultiAddress(publicClient, chainId, idArr: BigNumberish[]) {
   // const { account, blockNumber, chainId, publicClient, walletClient } = useWagmiCtx()
-  console.log(`getAddress(${idArr})`);
+  console.log(`getAddress(${idArr})`)
 
   const readContract = useCallback(
     async (functionName: string, args?: any, options = {}) => {
@@ -63,40 +33,44 @@ export async function getMultiAddress(
         console.warn('readContract err: ', err)
       }
     },
-    [chainId, publicClient]
+    [chainId, publicClient],
   )
-  
-  const addrArr: any = await readContract("getAddress(uint256[])", idArr);
 
-  console.log('addrArr :>> ', addrArr);
+  const addrArr: any = await readContract('getAddress(uint256[])', idArr)
 
-  return addrArr;
+  console.log('addrArr :>> ', addrArr)
+
+  return addrArr
 }
 
-export async function getAddress(publicClient, chainId, id: BigNumberish): Promise<string> {
-  console.log(`getAddress(${id})`);
+export async function getAddress(
+  publicClient,
+  chainId,
+  id: BigNumberish,
+): Promise<string> {
+  console.log(`getAddress(${id})`)
 
   const readContract = async (functionName: string, args?: any, options = {}) => {
-      try {
-        const res = await publicClient.readContract({
-          address: CONTRACT_ADDRESSES[chainId]?.AddressRegistry as `0x${string}`,
-          abi: AddressRegistry,
-          functionName,
-          args,
-          ...options,
-        })
-        console.log('readContract :>> ', res)
-        return res
-      } catch (err) {
-        console.warn('readContract err: ', err)
-      }
+    try {
+      const res = await publicClient.readContract({
+        address: CONTRACT_ADDRESSES[chainId]?.AddressRegistry as `0x${string}`,
+        abi: AddressRegistry,
+        functionName,
+        args,
+        ...options,
+      })
+      console.log('readContract :>> ', res)
+      return res
+    } catch (err) {
+      console.warn('readContract err: ', err)
     }
-  
-  const addr: any = await readContract("getAddress(uint256)", id);
+  }
 
-  console.log(`${id}: ${addr}`);
+  const addr: any = await readContract('getAddress(uint256)', id)
 
-  return addr;
+  console.log(`${id}: ${addr}`)
+
+  return addr
 }
 
 // export async function getExtraUpdateController(): Promise<string> {

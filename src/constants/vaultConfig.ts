@@ -1,4 +1,4 @@
-import { find, forEach } from 'lodash'
+import { forEach } from 'lodash'
 
 import { SupportedChainId } from './chains'
 

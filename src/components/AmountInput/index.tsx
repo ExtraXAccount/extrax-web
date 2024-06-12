@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { Dropdown, Input, Slider } from 'antd/es'
+import { Dropdown, Input } from 'antd/es'
 import cx from 'classnames'
 import { useMemo, useState } from 'react'
 
@@ -50,7 +50,9 @@ export default function AmountInput(props: IAmountInputProps) {
     onUseNativeETH,
   } = props
   // console.log('token :>> ', { useNativeETH, token })
-  const [selectedToken, setSelectedToken] = useState(useNativeETH ? nameChecker(token) : token)
+  const [selectedToken, setSelectedToken] = useState(
+    useNativeETH ? nameChecker(token) : token,
+  )
 
   const max = useMemo(() => {
     return selectedToken === NativeETH ? ethBalance || _max : _max
@@ -127,7 +129,10 @@ export default function AmountInput(props: IAmountInputProps) {
       <section className="amount-input-number">
         <div className="flex jc-sb ai-ct">
           <div className="amount-input-number-max">
-            {maxText}: <span onClick={() => onChange(String(max))}>{toPrecision(Number(max), 5)}</span>
+            {maxText}:{' '}
+            <span onClick={() => onChange(String(max))}>
+              {toPrecision(Number(max), 5)}
+            </span>
           </div>
           <ul className="amount-input-percent-list flex ai-ct">
             {[0.25, 0.5, 0.75, 1].map((percent) => (
@@ -140,7 +145,7 @@ export default function AmountInput(props: IAmountInputProps) {
                     onChange(
                       mul(div(percent, 1).toString(), parsedSliderMax)
                         .toFixed(decimals)
-                        .replace(/\.?0+$/, '')
+                        .replace(/\.?0+$/, ''),
                     )
                   }
                 }}
@@ -153,7 +158,10 @@ export default function AmountInput(props: IAmountInputProps) {
         <div className="amount-input-number-wrap">
           <Input
             prefix={
-              <div className="amount-input-number-max-button" onClick={() => onChange(String(parsedSliderMax))}>
+              <div
+                className="amount-input-number-max-button"
+                onClick={() => onChange(String(parsedSliderMax))}
+              >
                 max
               </div>
             }
@@ -181,7 +189,8 @@ export default function AmountInput(props: IAmountInputProps) {
         </div>
         {sliderMax !== undefined && (
           <div className="amount-input-number-max">
-            {sliderMaxText}:<span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
+            {sliderMaxText}:
+            <span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
           </div>
         )}
       </section>

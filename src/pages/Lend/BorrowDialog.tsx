@@ -68,7 +68,10 @@ export default function BorrowDialog({
       <div>
         <AmountInput
           maxText="Available"
-          max={(currentLendingPoolDetail?.deposited - currentLendingPoolDetail?.borrowed) * maxBorrowedRatio}
+          max={
+            (currentLendingPoolDetail?.deposited - currentLendingPoolDetail?.borrowed) *
+            maxBorrowedRatio
+          }
           // ethBalance={ethBalance}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
@@ -82,7 +85,8 @@ export default function BorrowDialog({
         <li>
           <p>Value:</p>
           <b className="text-highlight">
-            ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
+            $
+            {toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
           </b>
         </li>
         {/* <li>

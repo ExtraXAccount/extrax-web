@@ -2,7 +2,6 @@ import './index.scss'
 
 import * as React from 'react'
 
-import { nameChecker } from '@/utils'
 import { formatFloatNumber } from '@/utils/math'
 
 import { specialNameChecker } from '../LPName'

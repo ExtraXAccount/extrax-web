@@ -5,7 +5,6 @@ import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 import { useAppSelector } from '@/state'
 
 import lendingPoolABI from './LendingPoolABI.json'
-import Item from 'antd/es/list/Item'
 // import lendData from './mock.json'
 
 // export const lendingList = lendData
@@ -17,7 +16,7 @@ export default function useLendContract() {
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const lendList = useMemo(() => {
-    return lendingList.map(item => ({
+    return lendingList.map((item) => ({
       ...item,
       deposited: 10,
       borrowed: 2,
@@ -44,7 +43,7 @@ export default function useLendContract() {
         console.warn('readContract err: ', err)
       }
     },
-    [chainId, publicClient]
+    [chainId, publicClient],
   )
 
   const writeContract = useCallback(
@@ -67,7 +66,7 @@ export default function useLendContract() {
         setWriteLoading(false)
       }
     },
-    [walletClient, account, chainId]
+    [walletClient, account, chainId],
   )
 
   const getPoolStatus = useCallback(async () => {
@@ -92,15 +91,25 @@ export default function useLendContract() {
       console.log('depositAndStake :>> ', [reserveId, amount, account, 1234])
       return writeContract('depositAndStake', [reserveId, amount, account, 1234])
     },
-    [writeContract, account]
+    [writeContract, account],
   )
 
   const unStakeAndWithdraw = useCallback(
     (reserveId: string, amount: string, receiveNativeETH = true) => {
-      console.log('unStakeAndWithdraw :>> ', [reserveId, amount, account, receiveNativeETH])
-      return writeContract('unStakeAndWithdraw', [reserveId, amount, account, receiveNativeETH])
+      console.log('unStakeAndWithdraw :>> ', [
+        reserveId,
+        amount,
+        account,
+        receiveNativeETH,
+      ])
+      return writeContract('unStakeAndWithdraw', [
+        reserveId,
+        amount,
+        account,
+        receiveNativeETH,
+      ])
     },
-    [writeContract, account]
+    [writeContract, account],
   )
 
   return {

@@ -45,7 +45,11 @@ export default function LeveragedApps() {
   return (
     <div className="page-leveraged-apps">
       <IntentView />
-      <Dialog open={showDappStore} onClose={() => setShowDappStore(false)} className="page-leveraged-apps-store">
+      <Dialog
+        open={showDappStore}
+        onClose={() => setShowDappStore(false)}
+        className="page-leveraged-apps-store"
+      >
         <h4>Dapp Store</h4>
         <p>
           Yield Farming <b>(Up to 7x)</b>
@@ -95,7 +99,10 @@ export default function LeveragedApps() {
             return (
               <NavLink
                 to={dapp.link}
-                className={classNames('side-bar-app-list-item', `side-bar-app-list-item-${dapp.id}`)}
+                className={classNames(
+                  'side-bar-app-list-item',
+                  `side-bar-app-list-item-${dapp.id}`,
+                )}
                 key={dapp.name}
               >
                 <p>{dapp.name}</p>

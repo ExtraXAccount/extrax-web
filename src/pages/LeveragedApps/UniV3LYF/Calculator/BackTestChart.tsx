@@ -124,7 +124,9 @@ export default function BackTestChart(props: any) {
             token1price,
             token1price0,
             // poolDayData: item,
-            volume: !reverseBaseToken ? parseFloat(item.volumeToken0) : parseFloat(item.volumeToken1),
+            volume: !reverseBaseToken
+              ? parseFloat(item.volumeToken0)
+              : parseFloat(item.volumeToken1),
           })
           const assetsValue = getUpdateAsset(token1price, token1price0)
           // if (index === 0) {
@@ -168,7 +170,7 @@ export default function BackTestChart(props: any) {
       // console.log('equityChangeData :>> ', equityChangeData, _backDays)
       return equityChangeData
     },
-    [Pl, Pu, feeTier, token0, token1, poolTicks, v3PoolDaysData, reverseBaseToken]
+    [Pl, Pu, feeTier, token0, token1, poolTicks, v3PoolDaysData, reverseBaseToken],
   )
 
   const echartsData = useMemo(() => {
@@ -186,7 +188,7 @@ export default function BackTestChart(props: any) {
         },
       })
     },
-    [chartStyle]
+    [chartStyle],
   )
 
   const handleMouseLeave = useCallback(
@@ -199,7 +201,7 @@ export default function BackTestChart(props: any) {
         },
       })
     },
-    [chartStyle]
+    [chartStyle],
   )
 
   return (
@@ -218,7 +220,10 @@ export default function BackTestChart(props: any) {
         >
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis dataKey="time" minTickGap={20} />
-          <YAxis minTickGap={10} tickFormatter={(val) => toPrecisionNum(val * 100) + '%'} />
+          <YAxis
+            minTickGap={10}
+            tickFormatter={(val) => toPrecisionNum(val * 100) + '%'}
+          />
           <Legend
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}

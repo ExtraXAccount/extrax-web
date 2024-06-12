@@ -13,7 +13,12 @@ export default function useCredit() {
   const { debtVal, debtAssets } = useDebt()
 
   const maxCredit = useMemo(() => {
-    return sumBy(depositedAssets, (item) => item.deposited * item.price * item.collateralFactor) * MAX_LEVERAGE
+    return (
+      sumBy(
+        depositedAssets,
+        (item) => item.deposited * item.price * item.collateralFactor,
+      ) * MAX_LEVERAGE
+    )
     // return depositedVal * MAX_LEVERAGE
   }, [depositedAssets])
 

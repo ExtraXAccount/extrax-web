@@ -1,4 +1,4 @@
-import { compact, find, forEach, trim } from 'lodash'
+import { compact, forEach } from 'lodash'
 
 import { INTENT_MAP, INTENTS, INTENTS_INPUT, isMonitor } from './intentList'
 
@@ -66,7 +66,7 @@ class DSLParser {
       method: string
       params: INTENTS_INPUT[]
     },
-    formattedArray: string[]
+    formattedArray: string[],
   ) {
     const tokenIndex = this.checkToken(formattedArray)
     const numberIndex = this.checkNumber(formattedArray)

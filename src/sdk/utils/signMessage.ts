@@ -6,7 +6,11 @@ import { Address } from '@/types'
 import { clientToSigner } from './clientToSigner'
 import { hexToUint8Array } from './hex'
 
-export async function signMessageForSafe(client: WalletClient, userAddress: Address, message: string) {
+export async function signMessageForSafe(
+  client: WalletClient,
+  userAddress: Address,
+  message: string,
+) {
   console.log('signMessageForSafe userAddress :>> ', userAddress)
   let signatures = await client.signMessage({
     account: userAddress,

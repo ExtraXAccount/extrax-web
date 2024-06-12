@@ -55,6 +55,6 @@ export default function Dialog(props: IPropTypes) {
         </CSSTransition>
       )}
     </TransitionGroup>,
-    document.body
+    document.body,
   )
 }

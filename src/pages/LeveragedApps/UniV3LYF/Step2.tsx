@@ -1,6 +1,6 @@
 import './Step2.scss'
 
-import { Dropdown, Form, Input, Select, Slider, Switch, Tooltip } from 'antd/es'
+import { Form, Slider, Switch, Tooltip } from 'antd/es'
 import cx from 'classnames'
 import { useEffect, useMemo, useState } from 'react'
 
@@ -137,7 +137,9 @@ export default function Step2(props: IStep2Props) {
                 }}
               >
                 <p>{item.name}</p>
-                {(idx === 0 || idx === 1) && <span>borrow {idx === 0 ? token0.symbol : token1.symbol}</span>}
+                {(idx === 0 || idx === 1) && (
+                  <span>borrow {idx === 0 ? token0.symbol : token1.symbol}</span>
+                )}
               </div>
             ))}
           </div>

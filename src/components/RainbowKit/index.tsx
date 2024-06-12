@@ -1,14 +1,15 @@
 import '@rainbow-me/rainbowkit/styles.css'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactNode } from 'react'
 // import { createConfig, WagmiConfig } from 'wagmi'
 import { WagmiProvider } from 'wagmi'
-import { wagmiConfig } from './getChainsConfig'
-import WagmiContextProvider from '../WagmiContext'
 
-const queryClient = new QueryClient();
+import WagmiContextProvider from '../WagmiContext'
+import { wagmiConfig } from './getChainsConfig'
+
+const queryClient = new QueryClient()
 
 const RainbowContextApp = ({ children }: { children: ReactNode }) => {
   // const theme = useTheme()

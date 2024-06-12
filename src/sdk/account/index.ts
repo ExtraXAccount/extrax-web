@@ -17,7 +17,12 @@ export class AccountManager {
   publicClient: Client
   walletClient: Client
 
-  constructor(chainId: SupportedChainId, publicClient: Client, walletClient: Client, account?: Address) {
+  constructor(
+    chainId: SupportedChainId,
+    publicClient: Client,
+    walletClient: Client,
+    account?: Address,
+  ) {
     if (chainId && chainId in SupportedChainId) {
       this.chainId = chainId
     }
@@ -95,8 +100,14 @@ export class AccountManager {
   }
 
   public async createAccount() {
-    console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce])
-    const res = await this.factoryContract().write.createProxyWithNonce(['0x200', ExtraXAccountDefaultNonce])
+    console.log('createAccount start :>> ', 'createProxyWithNonce', [
+      '0x200',
+      ExtraXAccountDefaultNonce,
+    ])
+    const res = await this.factoryContract().write.createProxyWithNonce([
+      '0x200',
+      ExtraXAccountDefaultNonce,
+    ])
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('createAccount res :>> ', res)
     const accounts = await this.getAccounts()
@@ -141,9 +152,17 @@ export class AccountManager {
   }
 
   public async getCollateralAndDebtValue(account: Address) {
-    const res = await this.healthManagerContract().read.getCollateralAndDebtValue([account])
+    const res = await this.healthManagerContract().read.getCollateralAndDebtValue([
+      account,
+    ])
     const [collateral, collateralDeciamls, debt, debtDecimals] = res
-    console.log('getCollateralAndDebtValue :>> ', { account, collateral, collateralDeciamls, debt, debtDecimals })
+    console.log('getCollateralAndDebtValue :>> ', {
+      account,
+      collateral,
+      collateralDeciamls,
+      debt,
+      debtDecimals,
+    })
     return { account, collateral, collateralDeciamls, debt, debtDecimals }
   }
 

@@ -99,7 +99,8 @@ export default function RepayDialog({
         <li>
           <p>Value:</p>
           <b className="text-highlight">
-            ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
+            $
+            {toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
           </b>
         </li>
         {/* <li>

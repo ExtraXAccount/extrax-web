@@ -102,7 +102,9 @@ export default function Calculator() {
     // const token1Price = parseFloat(latest.volumeUSD) / parseFloat(latest.volumeToken1);
     // const token0Price = parseFloat(latest.volumeUSD) / parseFloat(latest.volumeToken0);
     // const relativePrice = token1Price / token0Price;
-    const relativePrice = !reverseBaseToken ? parseFloat(targetPool.token0Price) : parseFloat(targetPool.token1Price)
+    const relativePrice = !reverseBaseToken
+      ? parseFloat(targetPool.token0Price)
+      : parseFloat(targetPool.token1Price)
     setForm({
       // token0CurrentPrice: toPrecisionNum(token0Price, 2),
       // token1CurrentPrice: toPrecisionNum(token1Price, 2),
@@ -167,9 +169,11 @@ export default function Calculator() {
           className="page-calculator-title"
           title={
             <div>
-              The graph below outputs the Equity Value when the price ratio of the paired tokens changes.
+              The graph below outputs the Equity Value when the price ratio of the paired
+              tokens changes.
               <br />
-              The values are simply ESTIMATIONS as relevant variables change over time and can't be predicted precisely.
+              The values are simply ESTIMATIONS as relevant variables change over time and
+              can't be predicted precisely.
             </div>
           }
           overlayStyle={{
@@ -193,19 +197,29 @@ export default function Calculator() {
               autoComplete="off"
               onValuesChange={onValuesChange}
             >
-              <Form.Item label="Farming Pool" name="poolId" className="calculator-options-pair">
+              <Form.Item
+                label="Farming Pool"
+                name="poolId"
+                className="calculator-options-pair"
+              >
                 <Select showSearch optionFilterProp="children">
                   {v3TopTvlPools.map((pool) => (
                     <Option key={pool.id} value={pool.id}>
                       {/* <i className={`coin coin-${pool.token1.toLowerCase()}`} /> */}
                       {/* <i className={`coin coin-${pool.token0.toLowerCase()}`} /> */}
-                      {`${pool.token1.symbol}/${pool.token0.symbol} (${getFeeTierPercentage(pool.feeTier) * 100}%)`}
+                      {`${pool.token1.symbol}/${pool.token0.symbol} (${
+                        getFeeTierPercentage(pool.feeTier) * 100
+                      }%)`}
                     </Option>
                   ))}
                 </Select>
               </Form.Item>
 
-              <Form.Item label="Base Token" name="baseToken" className="calculator-options-token">
+              <Form.Item
+                label="Base Token"
+                name="baseToken"
+                className="calculator-options-token"
+              >
                 <Select>
                   {pairTokens.map((token) => (
                     <Option key={token.id} value={token.symbol}>
@@ -274,11 +288,17 @@ export default function Calculator() {
                 </Select>
               </Form.Item> */}
 
-              <Form.Item label={`Amount of ${targetPool?.token0?.symbol} Supplied`} name="userBaseToken0Count">
+              <Form.Item
+                label={`Amount of ${targetPool?.token0?.symbol} Supplied`}
+                name="userBaseToken0Count"
+              >
                 <InputNumber min={0} max={1e10} />
               </Form.Item>
 
-              <Form.Item label={`Amount of ${targetPool?.token1?.symbol} Supplied`} name="userBaseToken1Count">
+              <Form.Item
+                label={`Amount of ${targetPool?.token1?.symbol} Supplied`}
+                name="userBaseToken1Count"
+              >
                 <InputNumber min={0} max={1e10} />
               </Form.Item>
 
@@ -293,7 +313,10 @@ export default function Calculator() {
               {
                 // advancedMode &&
                 <>
-                  <Form.Item label={`Initial price (${token0} per ${token1})`} name="token1CurrentPrice">
+                  <Form.Item
+                    label={`Initial price (${token0} per ${token1})`}
+                    name="token1CurrentPrice"
+                  >
                     <InputNumber min={0} max={1e10} />
                   </Form.Item>
 

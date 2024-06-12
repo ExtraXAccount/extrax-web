@@ -9,5 +9,5 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
 }
 
 export function calculateGasLimit(estimate: bigint) {
-  return estimate * 120n / 100n
+  return (estimate * 120n) / 100n
 }

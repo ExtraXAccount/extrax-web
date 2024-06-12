@@ -69,7 +69,8 @@ export const CHAIN_INFO = {
     // Optimism perfers same icon for both
     // circleLogoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl:
+      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     // color: darkTheme.chain_10,
     // backgroundColor: darkTheme.chain_10_background,
@@ -88,7 +89,8 @@ export const CHAIN_INFO = {
     // Optimism perfers same icon for both
     // circleLogoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl:
+      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     // color: darkTheme.chain_10,
     // backgroundColor: darkTheme.chain_10_background,
@@ -107,7 +109,8 @@ export const CHAIN_INFO = {
     // Optimism perfers same icon for both
     // circleLogoUrl: optimismLogoUrl,
     statusPage: 'https://optimism.io/status',
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl:
+      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     // color: darkTheme.chain_10,
     // backgroundColor: darkTheme.chain_10_background,

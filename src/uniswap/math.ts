@@ -53,10 +53,12 @@ export const getTokensAmountFromDepositAmountUSD = (
   Pu: number,
   priceUSDX: number,
   priceUSDY: number,
-  depositAmountUSD: number
+  depositAmountUSD: number,
 ): TokensAmount => {
   const deltaL =
-    depositAmountUSD / ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY + (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX)
+    depositAmountUSD /
+    ((Math.sqrt(P) - Math.sqrt(Pl)) * priceUSDY +
+      (1 / Math.sqrt(P) - 1 / Math.sqrt(Pu)) * priceUSDX)
 
   let deltaY = deltaL * (Math.sqrt(P) - Math.sqrt(Pl))
   if (deltaY * priceUSDY < 0) deltaY = 0
@@ -70,18 +72,30 @@ export const getTokensAmountFromDepositAmountUSD = (
 }
 
 // for calculation detail, please visit README.md (Section: Calculation Breakdown, No. 2)
-const getLiquidityForAmount0 = (sqrtRatioAX96: bn, sqrtRatioBX96: bn, amount0: bn): bn => {
+const getLiquidityForAmount0 = (
+  sqrtRatioAX96: bn,
+  sqrtRatioBX96: bn,
+  amount0: bn,
+): bn => {
   // amount0 * (sqrt(upper) * sqrt(lower)) / (sqrt(upper) - sqrt(lower))
   const intermediate = mulDiv(sqrtRatioBX96, sqrtRatioAX96, Q96)
   return mulDiv(amount0, intermediate, sqrtRatioBX96.minus(sqrtRatioAX96))
 }
 
-const getLiquidityForAmount1 = (sqrtRatioAX96: bn, sqrtRatioBX96: bn, amount1: bn): bn => {
+const getLiquidityForAmount1 = (
+  sqrtRatioAX96: bn,
+  sqrtRatioBX96: bn,
+  amount1: bn,
+): bn => {
   // amount1 / (sqrt(upper) - sqrt(lower))
   return mulDiv(amount1, Q96, sqrtRatioBX96.minus(sqrtRatioAX96))
 }
 
-const getSqrtPriceX96 = (price: number, token0Decimal: number, token1Decimal: number): bn => {
+const getSqrtPriceX96 = (
+  price: number,
+  token0Decimal: number,
+  token1Decimal: number,
+): bn => {
   const token0 = expandDecimals(price, token0Decimal)
   const token1 = expandDecimals(1, token1Decimal)
 
@@ -95,7 +109,7 @@ export const getLiquidityDelta = (
   amount0: number,
   amount1: number,
   token0Decimal: number,
-  token1Decimal: number
+  token1Decimal: number,
 ): bn => {
   const amt0 = expandDecimals(amount0, token1Decimal)
   const amt1 = expandDecimals(amount1, token0Decimal)
@@ -119,9 +133,16 @@ export const getLiquidityDelta = (
   return liquidity
 }
 
-export const estimateFee = (liquidityDelta: bn, liquidity: bn, volume24H: number, feeTier: string): number => {
+export const estimateFee = (
+  liquidityDelta: bn,
+  liquidity: bn,
+  volume24H: number,
+  feeTier: string,
+): number => {
   const feeTierPercentage = getFeeTierPercentage(feeTier)
-  const liquidityPercentage = liquidityDelta.div(liquidity.plus(liquidityDelta)).toNumber()
+  const liquidityPercentage = liquidityDelta
+    .div(liquidity.plus(liquidityDelta))
+    .toNumber()
 
   return feeTierPercentage * volume24H * liquidityPercentage
 }
@@ -168,7 +189,14 @@ export function getAssetsValue({ token1, token0, Pu, Pl, token1FuturePrice }) {
     //   Pu = Number(lastTick.price0);
     // }
 
-    const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(P, Pl, Pu, priceUSDX, priceUSDY, depositAmountUSD)
+    const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
+      P,
+      Pl,
+      Pu,
+      priceUSDX,
+      priceUSDY,
+      depositAmountUSD,
+    )
 
     return { price: P, amount0, amount1 }
   }
@@ -214,7 +242,14 @@ export function getEstimateFee24H({
   //   Pu = Number(lastTick.price0);
   // }
 
-  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(P, Pl, Pu, priceUSDX, priceUSDY, depositAmountUSD)
+  const { amount0, amount1 } = getTokensAmountFromDepositAmountUSD(
+    P,
+    Pl,
+    Pu,
+    priceUSDX,
+    priceUSDY,
+    depositAmountUSD,
+  )
 
   const deltaL = getLiquidityDelta(
     P,
@@ -223,14 +258,15 @@ export function getEstimateFee24H({
     amount0,
     amount1,
     Number(token0Decimal || 18),
-    Number(token1Decimal || 18)
+    Number(token1Decimal || 18),
   )
 
   const currentTick = token0price2tick(P, token0Decimal, token1Decimal)
 
   const L = getLiquidityFromTick(poolTicks || [], currentTick)
 
-  const estimatedFeeResult = P >= Pl && P <= Pu ? estimateFee(deltaL, L, volume24H, feeTier) : 0
+  const estimatedFeeResult =
+    P >= Pl && P <= Pu ? estimateFee(deltaL, L, volume24H, feeTier) : 0
 
   return estimatedFeeResult
 }
@@ -247,8 +283,13 @@ export const strategyV3b = (inputs) => {
   const maxToken1 = L2 / T - H
 
   const LP_a =
-    inputs.currentPrice > inputs.maxPrice ? 0 : (L / Math.sqrt(inputs.currentPrice) - H) * inputs.currentPrice
-  const LP_b = inputs.currentPrice > inputs.maxPrice ? maxToken2 : L * Math.sqrt(inputs.currentPrice) - T
+    inputs.currentPrice > inputs.maxPrice
+      ? 0
+      : (L / Math.sqrt(inputs.currentPrice) - H) * inputs.currentPrice
+  const LP_b =
+    inputs.currentPrice > inputs.maxPrice
+      ? maxToken2
+      : L * Math.sqrt(inputs.currentPrice) - T
   const LP = LP_a + LP_b
   const multiplier =
     inputs.currentPrice > inputs.minPrice
@@ -276,7 +317,13 @@ export const strategyV3b = (inputs) => {
 }
 
 // uni v3 simulator
-export const strategyV3 = ({ investment, currentPrice, minPrice, maxPrice, futurePrice }) => {
+export const strategyV3 = ({
+  investment,
+  currentPrice,
+  minPrice,
+  maxPrice,
+  futurePrice,
+}) => {
   // x = L * Math.sqrt(p)
   // y = L / Math.sqrt(p)
   const token1V2 = investment / 2
@@ -288,10 +335,12 @@ export const strategyV3 = ({ investment, currentPrice, minPrice, maxPrice, futur
   const maxTokenX = L2 / Ya - Xb // maxTokenXAmount = Xa - Xb
   const maxTokenY = L2 / Xb - Ya // maxTokenYAmount = Yb - Ya
 
-  const LP_y = currentPrice > maxPrice ? 0 : (L / Math.sqrt(currentPrice) - Ya) * currentPrice
+  const LP_y =
+    currentPrice > maxPrice ? 0 : (L / Math.sqrt(currentPrice) - Ya) * currentPrice
   const LP_x = currentPrice > maxPrice ? maxTokenX : L * Math.sqrt(currentPrice) - Xb
   const LP = LP_y + LP_x
-  const multiplier = currentPrice > minPrice ? investment / LP : investment / (currentPrice * maxTokenY)
+  const multiplier =
+    currentPrice > minPrice ? investment / LP : investment / (currentPrice * maxTokenY)
 
   let x, y, value
   const price = futurePrice
@@ -330,8 +379,10 @@ export const calcLiquidity1 = (sqrtA, sqrtB, amount, decimals) => {
 export const calc24HrFee = (priceData, decimal0, decimal1) => {
   // console.log('priceData :>> ', priceData);
 
-  const priceToken0usd = parseFloat(priceData.volumeUSD) / parseFloat(priceData.volumeToken0)
-  const priceToken1usd = parseFloat(priceData.volumeUSD) / parseFloat(priceData.volumeToken1)
+  const priceToken0usd =
+    parseFloat(priceData.volumeUSD) / parseFloat(priceData.volumeToken0)
+  const priceToken1usd =
+    parseFloat(priceData.volumeUSD) / parseFloat(priceData.volumeToken1)
 
   // const decimal0 = pool.token0.decimals;
   // const decimal1 = pool.token1.decimals;
@@ -342,7 +393,10 @@ export const calc24HrFee = (priceData, decimal0, decimal1) => {
   const sqrtClose = Math.sqrt(parseFloat(priceData.close)) // sqrt
 
   const target = 1
-  const delta = target / ((sqrtClose - sqrtLow) * priceToken0usd + (1 / sqrtClose - 1 / sqrtHigh) * priceToken1usd)
+  const delta =
+    target /
+    ((sqrtClose - sqrtLow) * priceToken0usd +
+      (1 / sqrtClose - 1 / sqrtHigh) * priceToken1usd)
   const amount1 = delta * (sqrtClose - sqrtLow)
   const amount0 = delta * (1 / sqrtClose - 1 / sqrtHigh)
 
@@ -364,6 +418,9 @@ export const calc24HrFee = (priceData, decimal0, decimal1) => {
     liquidity = calcLiquidity1(lowest, highest, amount1, decimal1)
   }
 
-  const fee = parseFloat(priceData.feesUSD) * (liquidity / (liquidity + parseFloat(priceData.liquidity))) * 100
+  const fee =
+    parseFloat(priceData.feesUSD) *
+    (liquidity / (liquidity + parseFloat(priceData.liquidity))) *
+    100
   return isNaN(fee) ? 0 : fee
 }

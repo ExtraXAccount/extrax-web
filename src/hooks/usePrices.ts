@@ -9,7 +9,7 @@ export default function usePrices() {
     (token: string) => {
       return prices?.[token] || 0
     },
-    [prices]
+    [prices],
   )
 
   // console.log('prices :>> ', prices)

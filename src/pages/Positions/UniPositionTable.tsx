@@ -2,9 +2,7 @@ import { Table } from 'antd'
 
 import { TokenAmount } from '@/components/Amount'
 import LPName from '@/components/LPName'
-import { formatSymbol } from '@/sdk/utils/token'
 import { useAppSelector } from '@/state'
-import { nameChecker } from '@/utils'
 import { remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
 
@@ -40,7 +38,11 @@ export default function UniPositionTable() {
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  <LPName token0={i.token0} token1={i.token1} title={`${i.token0}-${i.token1}`} />
+                  <LPName
+                    token0={i.token0}
+                    token1={i.token1}
+                    title={`${i.token0}-${i.token1}`}
+                  />
                 </div>
                 <div>Uniswap V3</div>
               </>
@@ -54,7 +56,9 @@ export default function UniPositionTable() {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">${toPrecision(i.totalPositionValue)}</div>
+                <div className="lending-list-title-wrap">
+                  ${toPrecision(i.totalPositionValue)}
+                </div>
                 <div className="position-amount-wrap">
                   <TokenAmount symbol={i.token0} amount={i.token0Amount} />
                   <TokenAmount symbol={i.token1} amount={i.token1Amount} />
@@ -70,7 +74,9 @@ export default function UniPositionTable() {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">${remain2Decimal(i.totalPositionValue)}</div>
+                <div className="lending-list-title-wrap">
+                  ${remain2Decimal(i.totalPositionValue)}
+                </div>
                 <div className="position-amount-wrap">
                   <TokenAmount symbol={i.token0} amount={i.token0Debt} />
                   <TokenAmount symbol={i.token1} amount={i.token1Debt} />
@@ -88,7 +94,8 @@ export default function UniPositionTable() {
               <>
                 <p>Farmed: $0</p>
                 <p>
-                  Daily: {toPrecision((i.apr * 100) / 365)}% (${toPrecision((i.apr / 365) * i.totalPositionValue)})
+                  Daily: {toPrecision((i.apr * 100) / 365)}% ($
+                  {toPrecision((i.apr / 365) * i.totalPositionValue)})
                 </p>
                 <p>APR: {toPrecision(i.apr * 100)}%</p>
               </>

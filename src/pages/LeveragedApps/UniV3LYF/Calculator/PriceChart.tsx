@@ -15,12 +15,12 @@ import {
 
 import useDebouncedMemo from '@/hooks/useDebouncedMemo'
 import usePoolBaseInfo from '@/hooks/usePoolBaseInfo'
-import usePoolDayData, { usePoolHourData } from '@/hooks/usePoolDayData'
+import { usePoolHourData } from '@/hooks/usePoolDayData'
 import usePoolTicks from '@/hooks/usePoolTicks'
 // import { PoolDayData } from '@/types/uniswap.interface'
 // import { averageArray, getEstimateFee24H, strategyV3 } from '@/uniswap/math'
 // import isH5 from '@/utils/isH5'
-import { formatFloatNumber, parsePrice, toPrecisionNum } from '@/utils/math'
+import { parsePrice, toPrecisionNum } from '@/utils/math'
 
 // import { price2tick } from '@/utils/math/priceTickConvert'
 import { getPoolLiquidityDensity } from './computeSurroundingTicks'
@@ -63,7 +63,7 @@ export default function PriceChart(props: any) {
       poolTicks,
       liquidity,
       Number(tick),
-      feeTier
+      feeTier,
     )
     return result
   }, [poolTicks, token1.token1Info, token0.token0Info, liquidity, tick, feeTier])
@@ -76,7 +76,11 @@ export default function PriceChart(props: any) {
     const priceCharData = liquidityDensity.data
       .filter((item) => {
         const price = reverseBaseToken ? 1 / item.price0 : item.price0
-        return parseFloat(item.liquidityActive.toString()) > 0 && price >= minVal && price <= maxVal
+        return (
+          parseFloat(item.liquidityActive.toString()) > 0 &&
+          price >= minVal &&
+          price <= maxVal
+        )
       })
       .map((item) => {
         return {
@@ -130,8 +134,20 @@ export default function PriceChart(props: any) {
             </linearGradient>
           </defs>
           {/* <CartesianGrid strokeDasharray="3 3" /> */}
-          <XAxis type="number" domain={([min, max]) => [min, max * 1.2]} tick={null} axisLine={false} />
-          <YAxis reversed type="number" dataKey="price" domain={[minVal, maxVal]} tick={null} axisLine={false} />
+          <XAxis
+            type="number"
+            domain={([min, max]) => [min, max * 1.2]}
+            tick={null}
+            axisLine={false}
+          />
+          <YAxis
+            reversed
+            type="number"
+            dataKey="price"
+            domain={[minVal, maxVal]}
+            tick={null}
+            axisLine={false}
+          />
           {/* <Tooltip /> */}
           <Legend
             iconType="plainline"
@@ -140,7 +156,13 @@ export default function PriceChart(props: any) {
               top: 10,
             }}
           />
-          <Area dataKey="liquidity" strokeWidth={2} stroke="#009BF2" fill="url(#areaFill)" dot={false} />
+          <Area
+            dataKey="liquidity"
+            strokeWidth={2}
+            stroke="#009BF2"
+            fill="url(#areaFill)"
+            dot={false}
+          />
           {/* <Line dataKey="uv" stroke="#82ca9d" /> */}
         </AreaChart>
       </ResponsiveContainer>
@@ -187,7 +209,13 @@ export default function PriceChart(props: any) {
             domain={[minVal, maxVal]}
             stroke="rgba(0,30,88,0.45)"
           />
-          <Line type="monotone" strokeWidth={2} dataKey="price" stroke="#82ca9d" dot={false} />
+          <Line
+            type="monotone"
+            strokeWidth={2}
+            dataKey="price"
+            stroke="#82ca9d"
+            dot={false}
+          />
           {/* <Line type="linear" strokeWidth={2} dataKey="price0" stroke="#82ca9d" strokeDasharray="5 5" dot={false} /> */}
         </LineChart>
       </ResponsiveContainer>

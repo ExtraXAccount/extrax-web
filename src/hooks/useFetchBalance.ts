@@ -25,14 +25,21 @@ export function useFetchEthBalance(chainId?: number) {
   }
 }
 
-export default function useFetchBalance(token: string, chainId?: number, replaceWethWithEth = false) {
+export default function useFetchBalance(
+  token: string,
+  chainId?: number,
+  replaceWethWithEth = false,
+) {
   const { account, chainId: connectedChainId } = useWagmiCtx()
 
   const res = useBalance({
     chainId: chainId || connectedChainId,
     address: account,
     // token: token as `0x${string}`,
-    token: replaceWethWithEth && isWETH(chainId || connectedChainId, token) ? undefined : (token as `0x${string}`),
+    token:
+      replaceWethWithEth && isWETH(chainId || connectedChainId, token)
+        ? undefined
+        : (token as `0x${string}`),
     // ...options,
   })
 

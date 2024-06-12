@@ -20,7 +20,12 @@ export default function TokenAmountGroup(props: {
   }
   const showPlus = props.showZero || (props.amount0?.gte(0) && props.amount1?.gte(0))
   return (
-    <div className={classNames('token-amount-group', `token-amount-group-${props.type || 1}`)}>
+    <div
+      className={classNames(
+        'token-amount-group',
+        `token-amount-group-${props.type || 1}`,
+      )}
+    >
       <TokenAmount
         symbol={props.symbol0}
         amount={props.amount0}

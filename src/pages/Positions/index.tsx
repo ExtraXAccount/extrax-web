@@ -1,7 +1,5 @@
 import './index.scss'
 
-import { useAppSelector } from '@/state'
-
 import UniPositionTable from './UniPositionTable'
 
 export default function Positions() {

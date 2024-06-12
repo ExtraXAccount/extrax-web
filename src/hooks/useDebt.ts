@@ -1,7 +1,7 @@
 import { sumBy } from 'lodash'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
-import { useAppDispatch, useAppSelector } from '@/state'
+import { useAppSelector } from '@/state'
 
 import usePrices from './usePrices'
 

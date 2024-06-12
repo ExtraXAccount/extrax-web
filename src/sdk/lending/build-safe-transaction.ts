@@ -66,7 +66,18 @@ export async function buildSignedMetaTransaction(
   const encodedFuncData = encodeFunctionData({
     abi: SafeABI,
     functionName: 'execTransaction',
-    args: [tx.to, tx.value, tx.data, EnumOperation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, signatures],
+    args: [
+      tx.to,
+      tx.value,
+      tx.data,
+      EnumOperation,
+      safeTxGas,
+      baseGas,
+      gasPrice,
+      gasToken,
+      refundReceiver,
+      signatures,
+    ],
   })
 
   console.log('encodedFuncData :>> ', encodedFuncData)

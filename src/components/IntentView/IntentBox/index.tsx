@@ -2,7 +2,6 @@ import './index.scss'
 
 import { Select } from 'antd'
 import classNames from 'classnames'
-import { map, toArray } from 'lodash'
 
 import { INTENT_MAP, INTENTS, INTENTS_INPUT } from '@/sdk/dsl/intentList'
 
@@ -67,7 +66,8 @@ export default function IntentBox(props: {
               </p>
             </div>
           )}
-          {(intent === INTENTS.INTENT_AUTOCOMPOUND || intent === INTENTS.INTENT_AUTOREBALANCE) && (
+          {(intent === INTENTS.INTENT_AUTOCOMPOUND ||
+            intent === INTENTS.INTENT_AUTOREBALANCE) && (
             <div>
               <p className="intent-box-item-content-pricerange-title">per 30minutes</p>
             </div>

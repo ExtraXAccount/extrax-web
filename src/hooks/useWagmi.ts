@@ -7,10 +7,15 @@ import { useAccount, useBlockNumber, usePublicClient, useWalletClient } from 'wa
 // import useDebouncedMemo from '@/hooks/useDebouncedMemo'
 
 export default function useWagmi() {
-  const { address: account, chain: { id: chainId } = {}, connector: activeConnector, isConnected: isActive } = useAccount()
+  const {
+    address: account,
+    chain: { id: chainId } = {},
+    connector: activeConnector,
+    isConnected: isActive,
+  } = useAccount()
   const publicClient = usePublicClient()
   const { data: walletClient } = useWalletClient()
-  const {data: blockNumber} = useBlockNumber()
+  const { data: blockNumber } = useBlockNumber()
   // const [searchParams] = useSearchParams()
 
   return {

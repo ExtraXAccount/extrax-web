@@ -60,7 +60,10 @@ export const V2_CONFIG = {
       token1: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
       stable: false,
       vaultAddress: '0x9E96dC0816484D878A27CA92a077a151eF9fd577',
-      rewards: ['0x3c8B650257cFb5f272f799F5e2b4e65093a11a05', '0x7F5c764cBc14f9669B88837ca1490cCa17c31607'],
+      rewards: [
+        '0x3c8B650257cFb5f272f799F5e2b4e65093a11a05',
+        '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+      ],
       routes: [[], []],
     },
     'vAMM-OP/USDC': {

@@ -16,7 +16,11 @@ export enum INTENTS_INPUT {
 }
 
 export const isMonitor = (intent: INTENTS) => {
-  return [INTENTS.INTENT_AUTOCOMPOUND, INTENTS.INTENT_AUTOREBALANCE, INTENTS.INTENT_RANGESTOP].includes(intent)
+  return [
+    INTENTS.INTENT_AUTOCOMPOUND,
+    INTENTS.INTENT_AUTOREBALANCE,
+    INTENTS.INTENT_RANGESTOP,
+  ].includes(intent)
 }
 
 export const INTENT_MAP = {

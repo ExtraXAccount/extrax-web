@@ -6,12 +6,12 @@ import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
-import { nameChecker } from '@/utils'
-import { aprToApy, formatFloatNumber, toPrecision } from '@/utils/math'
-import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
+import { nameChecker } from '@/utils'
+import { aprToApy, formatFloatNumber, toPrecision } from '@/utils/math'
+import { calculateNextBorrowingRate } from '@/utils/math/borrowInterest'
 
 export default function AccountDepositDialog({
   accounts,
@@ -29,12 +29,15 @@ export default function AccountDepositDialog({
   const [useNativeETH, setUseNativeETH] = useState(true)
   const { formattedLendPools, fetchLendPools } = useLendingList()
   const [value, setValue] = useState('')
-  const [loading, setLoading] = useState({ writing: false, desc: '' });
+  const [loading, setLoading] = useState({ writing: false, desc: '' })
 
   const accountMng = useAccountManager()
   const lendMng = useLendingManager()
 
-  const currentLendingPoolDetail = useMemo(() => currentLendingPool || formattedLendPools[1], [currentLendingPool, formattedLendPools[0]])
+  const currentLendingPoolDetail = useMemo(
+    () => currentLendingPool || formattedLendPools[1],
+    [currentLendingPool, formattedLendPools[0]],
+  )
 
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
@@ -60,25 +63,25 @@ export default function AccountDepositDialog({
   }
 
   const deposit = useCallback(async () => {
-    console.log('depositToLending :>> ', accounts);
+    console.log('depositToLending :>> ', accounts)
     let newAccounts = [...accounts]
     try {
       if (!accounts.length) {
-        setLoading({writing: true, desc: 'Creating smart account'})
+        setLoading({ writing: true, desc: 'Creating smart account' })
         newAccounts = await accountMng.createAccount()
       }
-      setLoading({writing: true, desc: 'Depositing assets'})
+      setLoading({ writing: true, desc: 'Depositing assets' })
       await lendMng.depositToLending(
         newAccounts[0],
         currentLendingPoolDetail?.reserveId,
-        BigInt(Number(value) * (10 ** currentLendingPoolDetail?.decimals)),
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )
 
       updateAccountInfo()
       fetchLendPools()
       onClose()
     } finally {
-      setLoading({writing: false, desc: ''})
+      setLoading({ writing: false, desc: '' })
     }
   }, [
     updateAccountInfo,
@@ -119,12 +122,15 @@ export default function AccountDepositDialog({
         <li>
           <p>Value:</p>
           <b className="text-highlight">
-            ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
+            $
+            {toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
           </b>
         </li>
         <li>
           <p>Current APY:</p>
-          <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%</b>
+          <b className="text-highlight">
+            {formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%
+          </b>
         </li>
         <li>
           <p>Updated APY:</p>
