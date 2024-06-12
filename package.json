@@ -2,17 +2,37 @@
   "name": "extrax-web",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --quiet --fix --ignore-path ./.gitignore",
+    "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
+    "lint": "yarn lint:format && yarn lint:fix ",
+    "type-check": "tsc"
+  },
+  "pre-commit": "lint",
+  "license": "MIT",
+  "browserslist": {
+    "production": [
+      "chrome >= 67",
+      "edge >= 79",
+      "firefox >= 68",
+      "opera >= 54",
+      "safari >= 14"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
   "dependencies": {
     "@ethersproject/bignumber": "^5.7.0",
     "@rainbow-me/rainbowkit": "^2.0.5",
     "@reduxjs/toolkit": "^1.9.7",
     "@tanstack/react-query": "^5.32.0",
-    "@testing-library/react": "^13.4.0",
-    "@types/jest": "^27.5.2",
-    "@types/lodash": "^4.14.199",
-    "@types/node": "^18.15.3",
-    "@types/react": "^18.2.25",
-    "@types/react-dom": "^18.2.11",
     "@uniswap/sdk-core": "^4.2.1",
     "@uniswap/v3-sdk": "^3.10.0",
     "antd": "^5.9.4",
@@ -38,37 +58,12 @@
     "wagmi": "^2.5.22",
     "web-vitals": "^2.1.4"
   },
-  "overrides": {
-    "typescript": "^5.2.2"
-  },
-  "scripts": {
-    "start": "npm run dev",
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      "chrome >= 67",
-      "edge >= 79",
-      "firefox >= 68",
-      "opera >= 54",
-      "safari >= 14"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
+    "@testing-library/react": "^13.4.0",
+    "@types/lodash": "^4.14.199",
+    "@types/node": "^18.15.3",
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.11",
     "@uniswap/eslint-config": "^1.1.1",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.29.0",

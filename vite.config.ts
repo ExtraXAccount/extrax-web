@@ -6,11 +6,19 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 // https://vitejs.dev/config/
 export default defineConfig(() => {
   return {
-    // backup to https://image.francium.io/backup
-    // base: 'https://image.francium.io/backup',
     define: {
       'process.env': {},
     },
+    server: {
+      port: 5173,
+      strictPort: false,
+      open: true,
+    },
+    build: {
+      outDir: 'dist',
+      target: 'modules',
+    },
+    publicDir: 'public',
     plugins: [react(), nodePolyfills()],
     resolve: {
       alias: {
