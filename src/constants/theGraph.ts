@@ -1,9 +1,7 @@
 import { SupportedChainId } from './chains'
 
 export const THE_GRAPH_ENDPOINT = {
-  // [SupportedChainId.GOERLI]: 'https://api.studio.thegraph.com/query/19651/goerli/3.0.0',
   [SupportedChainId.OPTIMISM]:
-    'https://api.thegraph.com/subgraphs/name/extrafi/extrasubgraph',
-  [SupportedChainId.BASE]:
-    'https://api.thegraph.com/subgraphs/name/extrafi/extrafionbase',
+  'https://gateway-arbitrum.network.thegraph.com/api/a4998f968b8ad324eb3e47ed20c00220/subgraphs/id/3Htp5TKs6BHCcwAYRCoBD6R4X62ThLRv2JiBBikyYze',
+  [SupportedChainId.BASE]: 'https://api.studio.thegraph.com/query/46015/extrafionbase/version/latest',
 }

@@ -53,8 +53,8 @@
     "recharts": "^2.8.0",
     "tua-body-scroll-lock": "^1.4.0",
     "use-debounce": "^9.0.4",
-    "viem": "^2.9.27",
-    "wagmi": "^2.5.22",
+    "viem": "^2.16.2",
+    "wagmi": "^2.10.7",
     "web-vitals": "^2.1.4"
   },
   "devDependencies": {
@@ -76,6 +76,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "pre-commit": "^1.2.2",
     "prettier": "^2.5.1",
+    "prettier-eslint": "^16.3.0",
     "sass": "^1.69.0",
     "typescript": "~5.2.2",
     "vite": "^5.1.5",

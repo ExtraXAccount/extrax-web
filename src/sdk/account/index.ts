@@ -1,4 +1,4 @@
-import { Client, erc20Abi, getContract, PublicClient } from 'viem'
+import { Client, erc20Abi, getContract, PublicClient, WalletClient } from 'viem'
 
 import { defaultChainId } from '@/constants'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
@@ -9,18 +9,19 @@ import { BalanceCheckerABI } from './BalanceCheckerABI'
 import { ExtraXAccountFactoryABI } from './ExtraXAccountFactoryABI'
 import { HealthManagerABI } from './HealthManagerABI'
 
-const ExtraXAccountDefaultNonce = 100n
+// const ExtraXAccountDefaultNonce = 100n
+const protocolTag = 1n
 
 export class AccountManager {
   public chainId = defaultChainId
   public account: Address
-  publicClient: Client
-  walletClient: Client
+  publicClient: PublicClient
+  walletClient: WalletClient
 
   constructor(
     chainId: SupportedChainId,
-    publicClient: Client,
-    walletClient: Client,
+    publicClient: PublicClient,
+    walletClient: WalletClient,
     account?: Address,
   ) {
     if (chainId && chainId in SupportedChainId) {
@@ -58,7 +59,11 @@ export class AccountManager {
       },
     })
 
-    const res = await contract.write.approve([erc20TokenAddr, 100n])
+    const res = await contract.write.approve([erc20TokenAddr, 100n], {
+      chain: this.walletClient.chain,
+      account: this.account,
+    })
+    return res
   }
 
   public factoryContract() {
@@ -75,10 +80,10 @@ export class AccountManager {
   public async getAccounts() {
     const currentBlock = await (this.publicClient as PublicClient).getBlockNumber()
     // console.log('currentBlock :>> ', currentBlock);
-    const evts = await this.factoryContract().getEvents.ExtraAccountCreation(
+    const evts = await this.factoryContract().getEvents.AccountCreated(
       {
-        user: this.account,
-        saltNonce: ExtraXAccountDefaultNonce,
+        owner: this.account,
+        // protocolTag,
       },
       {
         fromBlock: currentBlock - 1000n,
@@ -87,7 +92,7 @@ export class AccountManager {
     )
 
     console.log('getAccount evts :>> ', evts)
-    const accounts = evts.map((evt) => evt.args.proxy)
+    const accounts = evts.map((evt) => evt.args.account)
     // const accounts = evts.forEach((evt) => {
     //   return {
     //     user: evt.args[0],
@@ -100,14 +105,15 @@ export class AccountManager {
   }
 
   public async createAccount() {
-    console.log('createAccount start :>> ', 'createProxyWithNonce', [
-      '0x200',
-      ExtraXAccountDefaultNonce,
-    ])
-    const res = await this.factoryContract().write.createProxyWithNonce([
-      '0x200',
-      ExtraXAccountDefaultNonce,
-    ])
+    const userAccountTag = Math.floor(new Date().getTime() / 1000)
+    console.log('createAccount start :>> ', protocolTag, userAccountTag)
+    const res = await this.factoryContract().write.createAccount(
+      [protocolTag, BigInt(userAccountTag), '0x'],
+      {
+        chain: this.walletClient.chain,
+        account: this.account,
+      },
+    )
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('createAccount res :>> ', res)
     const accounts = await this.getAccounts()

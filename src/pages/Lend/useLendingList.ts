@@ -36,6 +36,7 @@ export default function useLendingList() {
       const res = await lendingMng.multicallPoolsStatus(
         chainLendingConfig.map((item) => item.reserveId),
       )
+      console.log('multicallPoolsStatus :>> ', res);
       setLendPools(res)
     } finally {
       setIsFetching(false)
@@ -74,8 +75,8 @@ export default function useLendingList() {
       return {
         ...config,
         ...pool,
-        apr: stringToDecimals(pool.currentBorrowRate.toString(), 18),
-        borrowApr: stringToDecimals(pool.currentBorrowRate.toString(), 18),
+        apr: stringToDecimals(pool.currentBorrowingRate.toString(), 18),
+        borrowApr: stringToDecimals(pool.currentBorrowingRate.toString(), 18),
         tokenSymbol: config.name,
         poolKey: config.name,
         totalSupply: stringToDecimals(

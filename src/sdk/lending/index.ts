@@ -7,6 +7,7 @@ import {
   Hex,
   PublicClient,
   toBytes,
+  WalletClient,
 } from 'viem'
 
 import { defaultChainId } from '@/constants'
@@ -46,11 +47,16 @@ export function encodeMultiSend(txs: MetaTransaction[]): Hex {
 
 export class LendingManager {
   public chainId = defaultChainId
-  public account: Address
-  public publicClient: Client
-  public walletClient: Client
+  public account: Address = '0x'
+  public publicClient: PublicClient
+  public walletClient: WalletClient
 
-  constructor(chainId: SupportedChainId, publicClient, walletClient, account?: Address) {
+  constructor(
+    chainId: SupportedChainId,
+    publicClient: PublicClient,
+    walletClient: WalletClient,
+    account?: Address,
+  ) {
     if (chainId && chainId in SupportedChainId) {
       this.chainId = chainId
     }
@@ -99,26 +105,40 @@ export class LendingManager {
   }
 
   public async getPoolStatus(reserveId: bigint) {
-    const res = await this.getExtraXLendingContract().read.getReserve([reserveId])
+    const res = await this.getExtraXLendingContract().read.getReserveStatus([
+      1n,
+      reserveId,
+    ])
     console.log('getPoolStatus :>> ', res)
     return res
   }
   public async multicallPoolsStatus(reserveIds: bigint[]) {
-    const lendContract = {
-      address: CONTRACT_ADDRESSES[this.chainId]?.lendingPool,
-      abi: ExtraXLendingABI,
-      functionName: 'getReserve',
-    }
-    const results = await (this.publicClient as any).multicall({
-      contracts: reserveIds.map((reserveId) => {
-        return {
-          ...lendContract,
-          args: [reserveId],
-        }
-      }),
+    const reserveStatus =
+      await this.getExtraXLendingContract().read.getMultiReserveStatus([1n, reserveIds])
+    const reserveStorage =
+      await this.getExtraXLendingContract().read.getMultiReserveStorage([1n, reserveIds])
+    console.log('getMultiReserveStatus :>> ', { reserveStatus, reserveStorage })
+    return reserveStorage.map((item, index) => {
+      return {
+        ...item,
+        ...reserveStatus[index],
+      }
     })
-    console.log('multicallPoolsStatus :>> ', results)
-    return results.map((item) => item.result)
+    // const lendContract = {
+    //   address: CONTRACT_ADDRESSES[this.chainId]?.lendingPool,
+    //   abi: ExtraXLendingABI,
+    //   functionName: 'getMultiReserveStatus',
+    // }
+    // const results = await (this.publicClient as any).multicall({
+    //   contracts: reserveIds.map((reserveId) => {
+    //     return {
+    //       ...lendContract,
+    //       args: [reserveId],
+    //     }
+    //   }),
+    // })
+    // console.log('multicallPoolsStatus :>> ', results)
+    // return results.map((item) => item.result)
   }
 
   public async requireAllowance(
@@ -149,7 +169,10 @@ export class LendingManager {
     // const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
     const erc20Contract = this.getErc20Contract(tokenAddr)
 
-    const hash = await erc20Contract.write.approve([address, amount])
+    const hash = await erc20Contract.write.approve([address, amount], {
+      chain: this.walletClient.chain,
+      account: this.account,
+    })
     const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
       hash,
     })
@@ -237,7 +260,8 @@ export class LendingManager {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'deposit',
-      args: [reserveId, amount],
+      // args: [reserveId, amount],
+      args: ['0x123'],
     })
     const metaTx = {
       to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
@@ -251,7 +275,8 @@ export class LendingManager {
     safeAccount: Address,
     transactions: { to: Address; value: bigint; data: Address }[],
   ) {
-    let nonce = await this.getExtraXAccountContract(safeAccount).read.nonce()
+    let nonce = 3n
+    // let nonce = await this.getExtraXAccountContract(safeAccount).read.nonce()
 
     console.log('nonce :>> ', nonce)
     const signedSafeTransactions: MetaTransaction[] = []
@@ -281,7 +306,9 @@ export class LendingManager {
 
     const res = await multiSendCall.write.multiSend([encodedMultiSendTx], {
       // gasLimit: calculateGasLimit(estimateFee),
-      gasLimit: '2000000',
+      chain: this.walletClient.chain,
+      account: this.account,
+      gas: 2000000n,
     })
 
     return res
@@ -377,7 +404,8 @@ export class LendingManager {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'withdraw',
-      args: [reserveId, eTokenAmount],
+      // args: [reserveId, eTokenAmount],
+      args: ['0x123'],
     })
     const metaTx = {
       to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
@@ -429,7 +457,8 @@ export class LendingManager {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'borrow',
-      args: [reserveId, eTokenAmount],
+      // args: [reserveId, eTokenAmount],
+      args: ['0x123'],
     })
     const metaTx = {
       to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
@@ -470,7 +499,8 @@ export class LendingManager {
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'repay',
-      args: [reserveId, eTokenAmount],
+      // args: [reserveId, eTokenAmount],
+      args: ['0x123'],
     })
     const metaTx = {
       to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,

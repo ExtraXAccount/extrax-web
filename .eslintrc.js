@@ -34,7 +34,8 @@ module.exports = {
   plugins: ['import', 'simple-import-sort', 'prettier'],
   rules: {
     'prettier/prettier': ['error', {}, { usePrettierrc: true }],
-    // 'no-duplicate-imports': 'error',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'no-duplicate-imports': 'error',
     'import/no-unused-modules': 'warn',
     'import/no-duplicates': 'error',
     'react/react-in-jsx-scope': 'off',
