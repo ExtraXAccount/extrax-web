@@ -44,9 +44,11 @@ body.dark{
   background: var(--box-bg);
   border-radius: var(--box-radius);
   box-shadow: var(--box-shadow);
+  border: var(--box-border);
 
   width: 100%;
-  margin: 0 auto 40px;
+  // margin: 0 auto 40px;
+  margin: 0 auto 24px;
   @media screen and (max-width: 720px) {
     margin-bottom: 20px;
   }
@@ -65,7 +67,7 @@ body.dark{
   width: 100%;
   // min-height: calc(100vh - var(--nav-height));
   padding: 100px 40px 0;
-  padding: 10px 40px 0;
+  padding: 40px 40px 0;
   // padding-top: var(--nav-height);
   // @media screen and (max-width: 1000px) {
   //   padding: 100px 70px 0;

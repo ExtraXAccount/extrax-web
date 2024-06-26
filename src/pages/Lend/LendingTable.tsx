@@ -1,5 +1,5 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { Table } from 'antd'
+import { Table, Tooltip } from 'antd/es'
 import { useEffect, useState } from 'react'
 
 import LPName from '@/components/LPName'
@@ -16,9 +16,11 @@ import {
   toPrecision,
   toPrecisionNum,
 } from '@/utils/math'
+import { div } from '@/utils/math/bigNumber'
 
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
+import PercentCircle from './PercentCircle'
 import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
 import WithdrawDialog from './WithdrawDialog'
@@ -33,8 +35,8 @@ export default function LendingTable() {
 
   const {
     formattedLendPools,
-    fetchLendPools,
-    isFetching: isFetchingLendingList,
+    // fetchLendPools,
+    // isFetching: isFetchingLendingList,
   } = useLendingList()
 
   useEffect(() => {
@@ -118,7 +120,7 @@ export default function LendingTable() {
         <Column
           title="Total Supply"
           dataIndex=""
-          key="total"
+          key="totalSupply"
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
             return a.value - b.value
@@ -129,19 +131,159 @@ export default function LendingTable() {
             return (
               <>
                 {isMobile && <div className="text-bold-small">Total Supply</div>}
+                <div className="flex ai-ct gap-10">
+                  <div>
+                    <div>
+                      {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
+                      {/* {nameChecker(i.tokenSymbol)} */}
+                    </div>
+                    <div className="text-sm-2">${formatNumberByUnit(value)}</div>
+                  </div>
+                  <Tooltip
+                    title={
+                      <div className="flex flex-column">
+                        <div>Supply Cap: {addComma(toPrecision(i.supplyCap))}</div>
+                        <div>Supply Used: {addComma(toPrecision(i.totalSupply))}</div>
+                        <div>
+                          Remaining: {addComma(toPrecision(i.supplyCap - i.totalSupply))}
+                        </div>
+                      </div>
+                    }
+                  >
+                    <div>
+                      <PercentCircle
+                        radix={10}
+                        percent={div(
+                          i.totalSupply.toString(),
+                          i.supplyCap.toString(),
+                        ).toNumber()}
+                        strokeWidth={3}
+                        strokeColor={'#38AD3D'}
+                      />
+                    </div>
+                  </Tooltip>
+                </div>
+              </>
+            )
+          }}
+        />
+        <Column
+          title="Total Borrowed"
+          dataIndex=""
+          key="totalBorrowed"
+          showSorterTooltip={false}
+          sorter={(a: any, b: any) => {
+            return a.value - b.value
+          }}
+          render={(i) => {
+            const amount = i.totalBorrowed
+            const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
+            return (
+              <>
+                {isMobile && <div className="text-bold-small">Total Supply</div>}
+                <div className="flex ai-ct gap-10">
+                  <div>
+                    <div>
+                      {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
+                      {/* {nameChecker(i.tokenSymbol)} */}
+                    </div>
+                    <div className="text-sm-2">${formatNumberByUnit(value)}</div>
+                  </div>
+                  <Tooltip
+                    title={
+                      <div className="flex flex-column">
+                        <div>Borrow Cap: {addComma(toPrecision(i.borrowCap))}</div>
+                        <div>Borrow Used: {addComma(toPrecision(i.totalBorrowed))}</div>
+                        <div>
+                          Remaining:{' '}
+                          {addComma(toPrecision(i.borrowCap - i.totalBorrowed))}
+                        </div>
+                      </div>
+                    }
+                  >
+                    <>
+                      <PercentCircle
+                        radix={10}
+                        percent={div(
+                          i.totalBorrowed.toString(),
+                          i.borrowCap.toString(),
+                        ).toNumber()}
+                        strokeWidth={3}
+                        strokeColor={'#EC6F14'}
+                      />
+                    </>
+                  </Tooltip>
+                </div>
+              </>
+            )
+          }}
+        />
+
+        <Column
+          title="Available Liquidity"
+          dataIndex=""
+          key="availableLiquidity"
+          showSorterTooltip={false}
+          sorter={(a: any, b: any) => {
+            return a.value - b.value
+          }}
+          render={(i) => {
+            const amount = i.availableLiquidity
+            const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
+            return (
+              <>
+                {isMobile && <div className="text-bold-small">Total Supply</div>}
                 <div>
                   {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
-                  {nameChecker(i.tokenSymbol)}
+                  {/* {nameChecker(i.tokenSymbol)} */}
                 </div>
                 <div className="text-sm-2">${formatNumberByUnit(value)}</div>
               </>
             )
           }}
         />
+
+        <Column
+          title="Utilization"
+          dataIndex=""
+          key="utilization"
+          showSorterTooltip={false}
+          sorter={(a: any, b: any) => {
+            return a.value - b.value
+          }}
+          render={(i) => {
+            return (
+              <>
+                {isMobile && <div className="text-bold-small">Utilization</div>}
+                <div>{toPrecision(i.utilization * 100)}%</div>
+              </>
+            )
+          }}
+        />
+
+        <Column
+          title="LTV"
+          dataIndex=""
+          key="ltv"
+          showSorterTooltip={false}
+          sorter={(a: any, b: any) => {
+            return a.value - b.value
+          }}
+          render={(i) => {
+            return (
+              <>
+                {isMobile && <div className="text-bold-small">LTV</div>}
+                <div>{toPrecision(i.config.LTV / 10000, 2)}</div>
+              </>
+            )
+          }}
+        />
+
         <Column
           title="Supply APY"
           dataIndex=""
           key="apr"
+          width={160}
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
             return a.apr - b.apr
@@ -151,38 +293,34 @@ export default function LendingTable() {
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
                 <div
-                  className="farm-buffer-safe flex ai-ct"
+                  className="farm-buffer-safe flex ai-ct gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
                   +{toPrecision(aprToApy100(i.apr * 100))}%
+                  <button
+                    className="btn-base btn-base-small"
+                    onClick={() => {
+                      if (!account) {
+                        openConnectModal?.()
+                        return
+                      }
+                      console.log('Deposit :>> ', i)
+                      setCurrentLendingPoolDetail(i)
+                      setDepositDialogOpen(true)
+                    }}
+                  >
+                    Deposit
+                  </button>
                 </div>
               </>
             )
           }}
         />
 
-        {/* <Column
-          title="Total Borrowed"
-          dataIndex=""
-          key="borrowed"
-          render={(i) => {
-            const amount = i.amount
-            const fixed = formatFloatNumber(amount * i.utilizationRate)
-            const value = formatFloatNumber(fixed * getPrice(i.tokenSymbol))
-            return (
-              <>
-                {isMobile && <div className="text-bold-small">Total Borrowed</div>}
-                <div>
-                  {fixed > 1000 ? addComma(fixed) : fixed} {nameChecker(i.tokenSymbol)}
-                </div>
-                <div className="text-sm-2">${formatNumberByUnit(value)}</div>
-              </>
-            )
-          }}
-        /> */}
         <Column
           title="Borrow APR"
           dataIndex=""
+          width={160}
           key="borrowingRate"
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
@@ -192,28 +330,25 @@ export default function LendingTable() {
             return (
               <>
                 <div
-                  className="farm-buffer-danger flex ai-ct"
+                  className="farm-buffer-danger flex ai-ct gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
                   -{toPrecision(i.borrowApr * 100)}%
+                  <button
+                    className="btn-base btn-base-small"
+                    onClick={() => {
+                      setCurrentLendingPoolDetail(i)
+                      setBorrowDialogOpen(true)
+                    }}
+                  >
+                    Borrow
+                  </button>
                 </div>
               </>
             )
           }}
         />
 
-        {/* <Column
-          title="Utilization"
-          dataIndex=""
-          key="position"
-          render={(i) => {
-            return (
-              <>
-                <div>{toPrecision(i.utilizationRate * 100)}%</div>
-              </>
-            )
-          }}
-        /> */}
         <Column
           title="Deposited"
           dataIndex=""
@@ -267,7 +402,7 @@ export default function LendingTable() {
                   className="btn-base btn-base-small"
                   onClick={() => {
                     if (!account) {
-                      openConnectModal()
+                      openConnectModal?.()
                       return
                     }
                     console.log('Deposit :>> ', i)
@@ -277,40 +412,36 @@ export default function LendingTable() {
                 >
                   Deposit
                 </button>
-                {!!i.deposited && (
-                  <>
-                    <button
-                      className="btn-base btn-base-small"
-                      onClick={() => {
-                        setCurrentLendingPoolDetail(i)
-                        setWithdrawDialogOpen(true)
-                      }}
-                    >
-                      Withdraw
-                    </button>
+                <button
+                  className="btn-base btn-base-small"
+                  onClick={() => {
+                    setCurrentLendingPoolDetail(i)
+                    setBorrowDialogOpen(true)
+                  }}
+                >
+                  Borrow
+                </button>
+                <button
+                  className="btn-base btn-base-small"
+                  disabled={!i.deposited}
+                  onClick={() => {
+                    setCurrentLendingPoolDetail(i)
+                    setWithdrawDialogOpen(true)
+                  }}
+                >
+                  Withdraw
+                </button>
 
-                    <button
-                      className="btn-base btn-base-small"
-                      onClick={() => {
-                        setCurrentLendingPoolDetail(i)
-                        setBorrowDialogOpen(true)
-                      }}
-                    >
-                      Borrow
-                    </button>
-                  </>
-                )}
-                {!!i.borrowed && (
-                  <button
-                    className="btn-base btn-base-small"
-                    onClick={() => {
-                      setCurrentLendingPoolDetail(i)
-                      setRepayDialogOpen(true)
-                    }}
-                  >
-                    Repay
-                  </button>
-                )}
+                <button
+                  className="btn-base btn-base-small"
+                  disabled={!i.borrowed}
+                  onClick={() => {
+                    setCurrentLendingPoolDetail(i)
+                    setRepayDialogOpen(true)
+                  }}
+                >
+                  Repay
+                </button>
               </div>
             )
           }}

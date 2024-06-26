@@ -1,9 +1,8 @@
 import './index.scss'
 
-// import { useNavigate } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import cx from 'classnames'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import useSmartAccount from '@/hooks/useSmartAccount'
@@ -13,8 +12,10 @@ export const INFINITY = '∞'
 
 export default function AccountInfo() {
   // const navigate = useNavigate()
-
   const {
+    healthStatus,
+    accountEquity,
+    healthFactorPercent,
     smartAccount,
     depositedVal,
     // depositedAssets,
@@ -22,11 +23,20 @@ export default function AccountInfo() {
     // debtAssets,
     maxCredit,
     availableCredit,
-    // usedCredit,
-    safetyRatio,
+    usedCredit,
+    // safetyRatio,
     accountAPY,
     accounts,
+    getInitData,
   } = useSmartAccount()
+
+  useEffect(() => {
+    console.log('healthStatus :>> ', healthStatus, healthFactorPercent)
+  }, [healthStatus, healthFactorPercent])
+
+  useEffect(() => {
+    getInitData()
+  }, [getInitData])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
@@ -44,12 +54,13 @@ export default function AccountInfo() {
 
       {!smartAccount ? (
         <div className="extrax-account-info-inner extrax-account-creator">
-          <div
-            className="extrax-account-create-button btn-base"
-            onClick={handleAddDeposit}
-          >
-            <p>Deposit to start earning / leveraging</p>
-            <span>(An On-chain smart account will be created)</span>
+          <div className="extrax-account-create-button">
+            <p className="btn-base" onClick={handleAddDeposit}>
+              Supply to Start
+            </p>
+            <span className="text-sm-2" style={{ marginTop: 8 }}>
+              to start earning / leveraging (An On-chain smart account will be created)
+            </span>
           </div>
         </div>
       ) : (
@@ -73,14 +84,14 @@ export default function AccountInfo() {
           </div>
           <div className="extrax-account-info-detail">
             <div className="extrax-account-info-detail-item extrax-account-info-deposited">
-              <b>Deposited</b>
+              <b>Net Worth</b>
               <em className="text-highlight">
-                {!depositedVal ? '--' : `$${toPrecision(depositedVal)}`}
+                {!accountEquity ? '--' : `$${toPrecision(Number(accountEquity))}`}
               </em>
               <button className="btn-add" onClick={handleAddDeposit}></button>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-credit">
-              <Tooltip title="Available Credit / Max Credit">
+              <Tooltip title="Used Credit / Max Credit">
                 <b className="flex ai-ct gap-6">
                   Leverage Credit
                   <i className="iconfont icon-hint"></i>
@@ -89,7 +100,9 @@ export default function AccountInfo() {
               <em className="text-highlight">
                 {!depositedVal
                   ? '--'
-                  : `$${toPrecision(availableCredit)} / $${toPrecision(maxCredit)}`}
+                  : `$${toPrecision(Number(usedCredit))} / $${toPrecision(
+                      Number(maxCredit),
+                    )}`}
               </em>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-safety">
@@ -106,18 +119,18 @@ export default function AccountInfo() {
                 }
               >
                 <b className="flex ai-ct gap-6">
-                  Safety Factor
+                  Health Factor
                   <i className="iconfont icon-hint"></i>
                 </b>
               </Tooltip>
               <em
                 className={cx('', {
-                  'farm-buffer-safe': safetyRatio < 0.8,
-                  'farm-buffer-warn': safetyRatio > 0.8,
-                  'farm-buffer-danger': safetyRatio > 0.9,
+                  'farm-buffer-safe': healthFactorPercent < 80,
+                  'farm-buffer-warn': healthFactorPercent > 80,
+                  'farm-buffer-danger': healthFactorPercent > 90,
                 })}
               >
-                {!depositedVal ? '--' : toPrecision(safetyRatio * 100) + '%'}
+                {!depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%'}
               </em>
             </div>
           </div>

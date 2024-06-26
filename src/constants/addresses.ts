@@ -12,10 +12,10 @@ export const CONTRACT_ADDRESSES = {
     AddressRegistry: '0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D',
 
     // The Following Addresses are registried in AddressRegistry contract
-    accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',
-    accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
+    accountFactory: '0x066003814B920356dB0b364104aeEf377fcD405c',
+    // accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
     healthManager: '0x9099a2dC1FE0b801A7eb890C0137F2099B7d4dB6',
-    lendingPool: '0xb72A7F71E0c3Ec96d99888eAF49fc4A6b79FB536',
+    lendingPool: '0xEdbF0DcBf7Ce7ba2178cfF50cbC0c008fA679216',
   },
   [SupportedChainId.OPTIMISM_LOCAL_TEST]: {
     v2: '0xA128Eb2dD8bF17a2D4Fc2aC583fa330b79bA3CB4',
@@ -28,10 +28,10 @@ export const CONTRACT_ADDRESSES = {
     AddressRegistry: '0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D',
 
     // The Following Addresses are registried in AddressRegistry contract
-    accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',
-    accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
+    accountFactory: '0x066003814B920356dB0b364104aeEf377fcD405c',
+    // accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
     healthManager: '0x9099a2dC1FE0b801A7eb890C0137F2099B7d4dB6',
-    lendingPool: '0xb72A7F71E0c3Ec96d99888eAF49fc4A6b79FB536',
+    lendingPool: '0xEdbF0DcBf7Ce7ba2178cfF50cbC0c008fA679216',
   },
   [SupportedChainId.BASE]: {
     v2: '0xf9cFB8a62f50e10AdDE5Aa888B44cF01C5957055',
@@ -44,9 +44,9 @@ export const CONTRACT_ADDRESSES = {
     AddressRegistry: '0x6Fee695ADaE85701bEC2A4F3ae677344b0ef4e6D',
 
     // The Following Addresses are registried in AddressRegistry contract
-    accountFactory: '0x6cD0e947024F90Fd70B84bF4d558B74a253f7c4c',
-    accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
+    accountFactory: '0x066003814B920356dB0b364104aeEf377fcD405c',
+    // accountSingleton: '0x3b57BEdF69284A1ba15E17175c4b34d656400c0C',
     healthManager: '0x9099a2dC1FE0b801A7eb890C0137F2099B7d4dB6',
-    lendingPool: '0xb72A7F71E0c3Ec96d99888eAF49fc4A6b79FB536',
+    lendingPool: '0xEdbF0DcBf7Ce7ba2178cfF50cbC0c008fA679216',
   },
 } as const

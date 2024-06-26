@@ -16,7 +16,7 @@ export default function useLendContract() {
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const lendList = useMemo(() => {
-    return lendingList.map((item) => ({
+    return lendingList.map((item: any) => ({
       ...item,
       deposited: 10,
       borrowed: 2,
@@ -81,10 +81,10 @@ export default function useLendContract() {
     console.log('getPositionStatus :>> ', res)
   }, [readContract, account])
 
-  useEffect(() => {
-    // getPoolStatus()
-    // getPositionStatus()
-  }, [getPoolStatus, getPositionStatus])
+  // useEffect(() => {
+  //   // getPoolStatus()
+  //   // getPositionStatus()
+  // }, [getPoolStatus, getPositionStatus])
 
   const depositAndStake = useCallback(
     (reserveId: string, amount: string) => {

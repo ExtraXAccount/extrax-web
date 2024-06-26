@@ -2,19 +2,24 @@
 // import { useSearchParams } from 'react-router-dom'
 // import { useDeferredValue, useEffect, useMemo } from 'react'
 // import { useDebounce } from 'use-debounce'
+import { Account, Chain, PublicClient, Transport, WalletClient } from 'viem'
 import { useAccount, useBlockNumber, usePublicClient, useWalletClient } from 'wagmi'
+
+import { defaultChainId } from '@/constants'
 
 // import useDebouncedMemo from '@/hooks/useDebouncedMemo'
 
 export default function useWagmi() {
   const {
     address: account,
-    chain: { id: chainId } = {},
+    chain: { id: chainId } = { id: defaultChainId },
     connector: activeConnector,
     isConnected: isActive,
   } = useAccount()
-  const publicClient = usePublicClient()
-  const { data: walletClient } = useWalletClient()
+  const publicClient = usePublicClient() as PublicClient
+  const { data: walletClient } = useWalletClient() as {
+    data: WalletClient
+  }
   const { data: blockNumber } = useBlockNumber()
   // const [searchParams] = useSearchParams()
 

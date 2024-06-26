@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Address } from 'viem'
+import { useCallback, useMemo } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
-import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
-import useSmartAccount from '@/hooks/useSmartAccount'
+import { useLendingManager } from '@/hooks/useSDK'
+// import useSmartAccount from '@/hooks/useSmartAccount'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
+import { useAccountStore, useLendStore } from '@/store'
+import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
 
 // export interface
@@ -13,16 +14,11 @@ type LendPoolConfig = keyof (typeof LendingConfig)[chainId]
 
 export default function useLendingList() {
   const lendingMng = useLendingManager()
-  const accountMng = useAccountManager()
-  const [lendPools, setLendPools] = useState([])
-  const [isFetching, setIsFetching] = useState(false)
+  const { lendPools, positions, isFetching, updateLendPools, updateIsFetching } =
+    useLendStore()
+  const { balances } = useAccountStore()
 
-  const [balances, setBalances] = useState([] as bigint[])
   const { chainId } = useWagmiCtx()
-  const {
-    smartAccount,
-    // accounts,
-  } = useSmartAccount()
 
   const chainLendingConfig = useMemo(() => {
     return Object.values<(typeof LendingConfig)[chainId][LendPoolConfig]>(
@@ -31,63 +27,62 @@ export default function useLendingList() {
   }, [chainId])
 
   const fetchLendPools = useCallback(async () => {
-    setIsFetching(true)
+    updateIsFetching(true)
     try {
       const res = await lendingMng.multicallPoolsStatus(
         chainLendingConfig.map((item) => item.reserveId),
       )
-      setLendPools(res)
+      console.log('multicallPoolsStatus :>> ', res)
+      updateLendPools(res)
     } finally {
-      setIsFetching(false)
+      updateIsFetching(false)
     }
-  }, [chainLendingConfig, lendingMng])
-
-  const fetchBalances = useCallback(
-    async (safeAccounts: Address[]) => {
-      if (!safeAccounts?.[0]) {
-        return []
-      }
-      const tokens = chainLendingConfig.reduce(
-        (arr, item) =>
-          arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
-        [],
-      )
-      console.log('fetchBalances :>> ', tokens)
-      const [...res] = await accountMng.getBalances(safeAccounts, tokens)
-      // return balances
-      setBalances(res)
-    },
-    [chainLendingConfig, accountMng],
-  )
-
-  useEffect(() => {
-    fetchLendPools()
-  }, [fetchLendPools])
-
-  useEffect(() => {
-    fetchBalances([smartAccount])
-  }, [smartAccount, fetchBalances])
+  }, [chainLendingConfig, lendingMng, updateIsFetching, updateLendPools])
 
   const formattedLendPools = useMemo(() => {
     return lendPools.map((pool, index) => {
       const config = chainLendingConfig[index]
+      const position = positions.find(
+        (item) =>
+          item.reserveId === config.reserveId && item.marketId === config.marketId,
+      )
       return {
         ...config,
         ...pool,
-        apr: stringToDecimals(pool.currentBorrowRate.toString(), 18),
-        borrowApr: stringToDecimals(pool.currentBorrowRate.toString(), 18),
+        apr: stringToDecimals(pool.currentBorrowingRate.toString(), 18),
+        borrowApr: stringToDecimals(pool.currentBorrowingRate.toString(), 18),
         tokenSymbol: config.name,
         poolKey: config.name,
-        totalSupply: stringToDecimals(
+        totalSupply: stringToDecimals(pool.totalLiquidity.toString(), config.decimals),
+        supplyCap: stringToDecimals(pool.config.supplyCap.toString(), 74),
+        totalBorrowed: stringToDecimals(pool.totalDebts.toString(), config.decimals),
+        borrowCap: stringToDecimals(pool.config.borrowCap.toString(), 74),
+        availableLiquidity: stringToDecimals(
           pool.availableLiquidity.toString(),
           config.decimals,
         ),
+        utilization: div(
+          pool.totalDebts.toString(),
+          pool.totalLiquidity.toString(),
+        ).toNumber(),
         balance: stringToDecimals(balances[index * 3]?.toString(), config.decimals),
-        deposited: stringToDecimals(balances[index * 3 + 1]?.toString(), config.decimals),
-        borrowed: stringToDecimals(balances[index * 3 + 2]?.toString(), config.decimals),
+        deposited: position
+          ? stringToDecimals(position.liquidity?.toString(), config.decimals)
+          : 0,
+        borrowed: position
+          ? stringToDecimals(position.debt?.toString(), config.decimals)
+          : 0,
+        depositedBal: stringToDecimals(
+          balances[index * 3 + 1]?.toString(),
+          config.decimals,
+        ),
+        borrowedBal: stringToDecimals(
+          balances[index * 3 + 2]?.toString(),
+          config.decimals,
+        ),
       }
     })
-  }, [balances, chainLendingConfig, lendPools])
+  }, [balances, positions, chainLendingConfig, lendPools])
 
   return {
     formattedLendPools,

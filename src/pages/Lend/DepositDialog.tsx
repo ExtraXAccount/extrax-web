@@ -23,7 +23,7 @@ export default function DepositDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { accounts, getAccountInfo: updateAccountInfo } = useSmartAccount()
+  const { accounts, updateAfterAction } = useSmartAccount()
   const { getPrice } = usePrices()
   const [useNativeETH, setUseNativeETH] = useState(true)
   const [value, setValue] = useState('')
@@ -70,14 +70,14 @@ export default function DepositDialog({
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )
 
-      updateAccountInfo()
+      updateAfterAction(newAccounts[0])
       fetchLendPools()
       onClose()
     } finally {
       setLoading({ writing: false, desc: '' })
     }
   }, [
-    updateAccountInfo,
+    updateAfterAction,
     fetchLendPools,
     accounts,
     accountMng,

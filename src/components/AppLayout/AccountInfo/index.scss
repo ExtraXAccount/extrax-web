@@ -1,10 +1,11 @@
 .extrax-account-info {
-  position: sticky;
-  top: calc(var(--nav-height) - 1px);
-  left: 0;
+  // position: sticky;
+  // top: calc(var(--nav-height) - 1px);
+  // left: 0;
   width: 100%;
   z-index: 200;
-  padding: 16px 0 6px 0;
+  // padding: 16px 0 6px 0;
+  // padding: 10px 40px 0;
   // background: var(--root-bg);
   // border-bottom: 1px solid var(--nav-border-color);
 
@@ -21,7 +22,8 @@
   // }
 
   &-inner {
-    max-width: 800px;
+    // max-width: 800px;
+    width: 100%;
     padding: 10px;
     margin: 0 auto;
     // width: 100%;
@@ -32,10 +34,10 @@
     
     &.extrax-account-creator {
       padding: 4px 10px;
-      height: 50px;
+      // height: 50px;
       .extrax-account-create-button {
-        width: 400px;
-        height: 42px;
+        // width: 400px;
+        // height: 42px;
         margin: auto;
         padding: 4px 20px;
         // border-radius: 12px;
@@ -45,7 +47,7 @@
         align-items: center;
         justify-content: space-around;
         text-align: center;
-        cursor: pointer;
+        // cursor: pointer;
       }
     }
 

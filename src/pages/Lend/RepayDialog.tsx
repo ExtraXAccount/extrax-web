@@ -22,7 +22,7 @@ export default function RepayDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { smartAccount } = useSmartAccount()
+  const { smartAccount, updateAfterAction } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -45,10 +45,12 @@ export default function RepayDialog({
     try {
       const res = await lendMng.repay(
         smartAccount,
+        currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )
       console.log('repay res :>> ', res)
+      updateAfterAction(smartAccount)
       fetchLendPools()
       onClose()
       return res
@@ -58,9 +60,11 @@ export default function RepayDialog({
   }, [
     smartAccount,
     lendMng,
+    currentLendingPoolDetail?.marketId,
     currentLendingPoolDetail?.reserveId,
     currentLendingPoolDetail?.decimals,
     value,
+    updateAfterAction,
     fetchLendPools,
     onClose,
   ])

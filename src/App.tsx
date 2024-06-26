@@ -7,7 +7,8 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import RainbowContextApp from '@/components/RainbowKit'
 
 import AppLayout from './components/AppLayout'
-import Intent from './pages/Intent'
+// import FigmaLend from './pages/FigmaLend'
+// import Intent from './pages/Intent'
 import Lend from './pages/Lend'
 import LeveragedApps from './pages/LeveragedApps'
 import Spark from './pages/LeveragedApps/Spark'
@@ -28,7 +29,8 @@ function App() {
               <Route path="velodromev2" element={<Velodrome />}></Route>
             </Route>
             <Route path="lend" element={<Lend />}></Route>
-            <Route path="positions" element={<Positions />}></Route>
+            {/* <Route path="lend" element={<FigmaLend />}></Route> */}
+            <Route path="portfolio" element={<Positions />}></Route>
             {/* <Route path="intent" element={<Intent />}></Route> */}
             <Route path="*" element={<Navigate to="/lend" replace />} />
           </Route>

@@ -1,0 +1,48 @@
+.component291Property1Tag0,
+.component291Property1Tag0 * {
+  box-sizing: border-box;
+}
+.component291Property1Tag0 {
+  background: #ffffff;
+  border-radius: 8px 8px 0px 0px;
+  border-style: solid;
+  border-color: var(--stroke, #c9c9cb);
+  border-width: 0.5px 0.5px 0px 0.5px;
+  padding: 0px 32px 0px 32px;
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  position: relative;
+}
+.frame482201 {
+  border-width: 0px 0px 2px 0px;
+  border-style: solid;
+  border-image: var(
+    --exx,
+    linear-gradient(251.41deg, rgba(122, 135, 255, 1) 0%, rgba(87, 91, 190, 1) 100%)
+  );
+  border-image-slice: 1;
+  padding: 8px 0px 8px 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.mainMarket {
+  color: var(--card-title, rgba(0, 0, 0, 0.9));
+  text-align: center;
+  font-family: 'Figtree-SemiBold', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -1,8 +1,14 @@
 import { BigNumber as EthersBN } from '@ethersproject/bignumber'
 import BigNumber from 'bignumber.js'
 
-export function bi2bn(bi: bigint) {
-  return BigNumber(bi.toString())
+import { stringToDecimalStr, toBNString } from './math/bn'
+
+export function bi2decimalStr(bi: bigint, decimals = 18) {
+  return stringToDecimalStr(bi.toString(), decimals)
+}
+
+export function num2bn(num: string | number, decimals = 18) {
+  return BigInt(toBNString(num, decimals))
 }
 
 export function bn2bi(bn: BigNumber | EthersBN) {

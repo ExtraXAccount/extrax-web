@@ -4,11 +4,9 @@ import { useCallback, useEffect, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
-import { SupportedChainId } from '@/constants/chains'
 import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
-import { HealthManagerConfig } from '@/sdk/lending/health-manager-config'
 import { nameChecker } from '@/utils'
 import { toPrecision } from '@/utils/math'
 
@@ -25,7 +23,7 @@ export default function BorrowDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { smartAccount } = useSmartAccount()
+  const { smartAccount, updateAfterAction } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -43,17 +41,27 @@ export default function BorrowDialog({
     try {
       const res = await lendMng.borrow(
         smartAccount,
+        currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
-        HealthManagerConfig[SupportedChainId.OPTIMISM].debts['USDC.e_DEBT'].debtId,
+        // HealthManagerConfig[SupportedChainId.OPTIMISM].debts['USDC.e_DEBT'].debtId,
       )
+      updateAfterAction(smartAccount)
       fetchLendPools()
       onClose()
       return res
     } finally {
       setLoading(false)
     }
-  }, [smartAccount, currentLendingPoolDetail, lendMng, value, fetchLendPools, onClose])
+  }, [
+    smartAccount,
+    currentLendingPoolDetail,
+    lendMng,
+    value,
+    updateAfterAction,
+    fetchLendPools,
+    onClose,
+  ])
 
   useEffect(() => {
     reset()
@@ -72,6 +80,7 @@ export default function BorrowDialog({
             (currentLendingPoolDetail?.deposited - currentLendingPoolDetail?.borrowed) *
             maxBorrowedRatio
           }
+          allowInputOverflow
           // ethBalance={ethBalance}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}

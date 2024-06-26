@@ -1,0 +1,23 @@
+.rewards,
+.rewards * {
+  box-sizing: border-box;
+}
+.rewards {
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+.div {
+  color: #000000;
+  text-align: left;
+  font-family: 'Figtree-Medium', sans-serif;
+  font-size: 14px;
+  line-height: 16px;
+  font-weight: 500;
+  position: absolute;
+  left: calc(50% - 7px);
+  top: calc(50% - 8px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

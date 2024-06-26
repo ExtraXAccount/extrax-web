@@ -21,7 +21,7 @@ export default function WithdrawDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { smartAccount } = useSmartAccount()
+  const { smartAccount, updateAfterAction } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -42,17 +42,27 @@ export default function WithdrawDialog({
     try {
       const res = await lendMng.withdraw(
         smartAccount,
+        currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )
       console.log('withdraw res :>> ', res)
+      updateAfterAction(smartAccount)
       fetchLendPools()
       onClose()
       return res
     } finally {
       setLoading(false)
     }
-  }, [smartAccount, currentLendingPoolDetail, lendMng, value, fetchLendPools, onClose])
+  }, [
+    smartAccount,
+    currentLendingPoolDetail,
+    lendMng,
+    value,
+    updateAfterAction,
+    fetchLendPools,
+    onClose,
+  ])
 
   useEffect(() => {
     reset()

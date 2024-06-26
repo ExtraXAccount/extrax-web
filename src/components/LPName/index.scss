@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   >.coin{
+    width: 24px;
+    height: 24px;
     &:first-child{
       margin-right: -5px;
       position: relative;
@@ -17,8 +19,8 @@
       font-size: 14px;
       margin-left: 6px;
     }
-    font-size: 15px;
-    margin-left: 10px;
+    font-size: 14px;
+    margin-left: 8px;
     &.bold{
       font-weight: bold;
       line-height: 1.5;
@@ -26,9 +28,9 @@
   }
 
   &-new{
-    font-size: 20px;
+    font-size: 16px;
     font-style: normal;
-    transform: translate(0, -5px);
+    // transform: translate(0, -5px);
   }
 
   &-tag{
@@ -42,5 +44,44 @@
     margin-left: 4px;
     color: #fff;
     background-color: var(--antd-primary);
+  }
+
+  &-lend{
+    >.coin{
+      width: 32px;
+      height: 32px;
+
+      &.points-style{
+        pointer-events: none;
+        position: relative;
+        &::after{
+          content: '';
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          width: 70px;
+          height: 70px;
+          transform: translate(-50%, -50%);
+          background-image: url('./images/ring_light.png');
+          background-position: center;
+          background-size: contain;
+        }
+      }
+    }
+    >p{
+      margin-left: 16px;
+    }
+  }
+}
+
+body.dark{
+  .lpname-lend{
+    >.coin{
+      &.points-style{
+        &::after{
+          background-image: url('./images/ring_dark.png');
+        }
+      }
+    }
   }
 }

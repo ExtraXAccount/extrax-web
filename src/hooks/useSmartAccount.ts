@@ -1,15 +1,22 @@
 import { sumBy } from 'lodash'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
+import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
-// import { useWagmiCtx } from '@/components/WagmiContext'
-import useCredit from '@/hooks/useCredit'
+// import useCredit from '@/hooks/useCredit'
 // import useDebt from '@/hooks/useDebt'
 // import useDeposited from '@/hooks/useDeposited'
 import usePrices from '@/hooks/usePrices'
-import { useAccountManager } from '@/hooks/useSDK'
+import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { useAppSelector } from '@/state'
-import { aprToApy } from '@/utils/math'
+import { useAccountStore, useLendStore } from '@/store'
+import { bi2decimalStr } from '@/utils/bigInt'
+import { aprToApy, toPrecision } from '@/utils/math'
+import { minus } from '@/utils/math/bigNumber'
+
+type ChainId = keyof typeof LendingConfig
+type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
 
 export const INFINITY = '∞'
 
@@ -26,118 +33,205 @@ export interface AccountInfo {
 
 export default function useSmartAccount() {
   const { prices } = usePrices()
-  // const { depositedVal, depositedAssets } = useDeposited()
-  // const { debtVal, debtAssets } = useDebt()
-  const { maxCredit, availableCredit, usedCredit } = useCredit()
+  // const { maxCredit, availableCredit, usedCredit } = useCredit()
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
   // const { account = '', smartAccount } = useWagmiCtx()
   const positions = useAppSelector((state) => state.position.userPositions)
 
   const { chainId } = useWagmiCtx()
+  const {
+    accounts,
+    // accountInfo,
+    updateAccounts,
+    updateAccountInfo,
+    updateBalances,
+    // updatePositions,
+    updateSupportedAssets,
+    updateSupportedDebts,
+  } = useAccountStore()
 
-  const [accountInfo, setAccountInfo] = useState({} as AccountInfo)
-  const [accounts, setAccounts] = useState([])
-  const [supportedAssets, setSupportedAssets] = useState([])
-  const [supportedDebts, setSupportedDebts] = useState([])
-
-  // const {getAccount, getCollateralAndDebtValue} = useAccountContract()
-  const accountMng = useAccountManager()
-
-  const getAccountInfo = useCallback(async () => {
-    if (!accounts[0]) {
-      return
-    }
-    // const balances = await accountMng.getBalances(accounts, [
-    // LendingConfig[chainId]["USDC.e"].underlyingTokenAddress,
-    // LendingConfig[chainId]["OP"].underlyingTokenAddress,
-    // LendingConfig[chainId]["WETH"].underlyingTokenAddress,
-
-    // LendingConfig[chainId]["USDC.e"].eToken,
-    // LendingConfig[chainId]["OP"].eToken,
-    // LendingConfig[chainId]["WETH"].eToken,
-
-    // LendingConfig[chainId]["USDC.e"].debtToken,
-    // LendingConfig[chainId]["OP"].debtToken,
-    // LendingConfig[chainId]["WETH"].debtToken,
-    // ]);
-    const { account, collateral, collateralDeciamls, debt, debtDecimals } =
-      await accountMng.getCollateralAndDebtValue(accounts[0])
-
-    setAccountInfo({
-      balances: [],
-      account,
-      collateral,
-      collateralDeciamls,
-      debt,
-      debtDecimals,
-      depositedVal: Number(
-        (collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString(),
-      ),
-      debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
-    })
-  }, [accounts, accountMng])
-
-  const depositedVal = accountInfo.depositedVal
+  const { healthStatus, updatePositions, updateHealthStatus } = useLendStore()
   // console.log('accountInfo :>> ', accountInfo);
-  const debtVal = accountInfo.debtVal
 
-  useEffect(() => {
-    accountMng.getAccounts().then((res) => {
-      setAccounts(res)
+  const accountMng = useAccountManager()
+  const lendingMng = useLendingManager()
+
+  const chainLendingConfig = useMemo(() => {
+    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
+      LendingConfig[chainId] || {},
+    )
+  }, [chainId])
+
+  const getAccountInfo = useCallback(
+    async (acc) => {
+      console.log('getAccountInfo :>> ', acc)
+      if (!acc) {
+        return
+      }
+      const { account, collateral, collateralDeciamls, debt, debtDecimals } =
+        await accountMng.getCollateralAndDebtValue(acc)
+
+      updateAccountInfo({
+        balances: [],
+        account,
+        collateral,
+        collateralDeciamls,
+        debt,
+        debtDecimals,
+        depositedVal: Number(
+          (collateral > 0n
+            ? collateral / BigInt(10 ** collateralDeciamls)
+            : 0n
+          ).toString(),
+        ),
+        debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
+      })
+    },
+    [accountMng, updateAccountInfo],
+  )
+
+  const fetchBalances = useCallback(
+    async (acc) => {
+      if (!acc) {
+        return []
+      }
+      const tokens = chainLendingConfig.reduce(
+        (arr: any, item) =>
+          arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
+        [],
+      )
+      // console.log('fetchBalances :>> ', { acc, tokens })
+      const [...res] = await accountMng.getBalances([acc], tokens)
+      updateBalances(res)
+    },
+    [chainLendingConfig, accountMng, updateBalances],
+  )
+  // const fetchUserHealthStatus = useCallback(
+  //   async (acc) => {
+  //     const healthStatus = await lendingMng.getUserHealthStatus(acc)
+  //     updateHealthStatus(healthStatus)
+  //   },
+  //   [lendingMng, updateHealthStatus],
+  // )
+
+  const fetchUserLending = useCallback(
+    async (acc) => {
+      const [healthStatus, positions] = await Promise.all([
+        lendingMng.getUserHealthStatus(acc),
+        lendingMng.getUserPositions(acc),
+      ])
+      updateHealthStatus({
+        ...healthStatus,
+        formatted: {
+          collateralValueUsd: bi2decimalStr(
+            healthStatus.collateralValue.value,
+            healthStatus.collateralValue.decimals,
+          ),
+          debtValueUsd: bi2decimalStr(
+            healthStatus.debtValue.value,
+            healthStatus.debtValue.decimals,
+          ),
+          healthFactor: bi2decimalStr(healthStatus.healthFactor),
+          liquidationThreshold: bi2decimalStr(
+            healthStatus.liquidationThreshold.value,
+            healthStatus.liquidationThreshold.decimals,
+          ),
+          ltv: bi2decimalStr(healthStatus.ltv.value, healthStatus.ltv.decimals),
+        },
+      })
+      updatePositions(positions)
+    },
+    [lendingMng, updateHealthStatus, updatePositions],
+  )
+
+  const getInitData = useCallback(async () => {
+    accountMng.getAccounts().then((accounts) => {
+      updateAccounts(accounts)
+      // getAccountInfo(accounts?.[0])
+      fetchBalances(accounts?.[0])
+      fetchUserLending(accounts?.[0])
     })
 
     accountMng.getSupportedAssets().then((res) => {
-      setSupportedAssets(res)
+      updateSupportedAssets(res)
     })
 
     accountMng.getSupportedDebts().then((res) => {
-      setSupportedDebts(res)
+      updateSupportedDebts(res)
     })
-  }, [accountMng])
+  }, [
+    accountMng,
+    fetchBalances,
+    fetchUserLending,
+    // getAccountInfo,
+    updateAccounts,
+    updateSupportedAssets,
+    updateSupportedDebts,
+  ])
 
-  useEffect(() => {
-    getAccountInfo()
-  }, [getAccountInfo])
+  const updateAfterAction = useCallback(
+    async (account: Address) => {
+      // getAccountInfo(account)
+      fetchBalances(account)
+      fetchUserLending(account)
+    },
+    [fetchBalances, fetchUserLending],
+  )
 
-  const safetyRatio = useMemo(() => {
-    if (!depositedVal) {
-      return 0
-    }
-    // return toPrecision((depositedVal / (depositedVal + debtVal)) * 100) + '%'
-    return debtVal / (depositedVal + debtVal)
-  }, [debtVal, depositedVal])
+  const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
+  const debtVal = Number(healthStatus?.formatted?.debtValueUsd) || 0
+
+  // const safetyRatio = useMemo(() => {
+  //   if (!depositedVal) {
+  //     return 0
+  //   }
+  //   // return toPrecision((depositedVal / (depositedVal + debtVal)) * 100) + '%'
+  //   return debtVal / (depositedVal + debtVal)
+  // }, [debtVal, depositedVal])
 
   const accountAPY = useMemo(() => {
     const totalApy =
       (sumBy(
         lendingList,
-        (item) =>
+        (item: any) =>
           (item.SavingsDAI || 0) * 0.05 +
           aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
           item.borrowingRate * item.borrowed * prices[item.tokenSymbol],
       ) +
-        sumBy(positions, (item) => item.apr * item.totalPositionValue)) /
+        sumBy(positions, (item: any) => item.apr * item.totalPositionValue)) /
       depositedVal
 
     return totalApy
   }, [depositedVal, lendingList, positions, prices])
 
   return {
+    healthStatus,
+    accountEquity: minus(
+      healthStatus.formatted?.collateralValueUsd,
+      healthStatus.formatted?.debtValueUsd,
+    ).toString(),
+    healthFactorPercent: Number(healthStatus.formatted?.healthFactor),
     accounts,
     // smartAccount: depositedVal ? smartAccount : '',
     smartAccount: accounts[0],
     depositedVal,
+    getInitData,
+    updateAfterAction,
     getAccountInfo,
     // depositedAssets,
     debtVal,
     // debtAssets,
-    maxCredit,
-    availableCredit,
-    usedCredit,
-    safetyRatio,
+    // maxCredit,
+    maxCredit: healthStatus.formatted?.collateralValueUsd,
+    availableCredit: minus(
+      healthStatus.formatted?.collateralValueUsd,
+      healthStatus.formatted?.debtValueUsd,
+    ).toString(),
+    usedCredit: healthStatus.formatted?.debtValueUsd,
+    // safetyRatio,
     accountAPY,
-    supportedAssets,
-    supportedDebts,
+    // supportedAssets,
+    // supportedDebts,
     lendingList,
   }
 }

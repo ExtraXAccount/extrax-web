@@ -1,10 +1,11 @@
 :root {
   --root-bg: #f0f0f0;
-  --body-bg: #f0f0f0;
+  --body-bg: #F9F9FA;
   --modal-bg: rgba(255,255,255);
   //color
   --text-color: #001E58;
   --text-color-weak: #001e5873;
+  --text-color-weak: #666;
   --text-color-weaker: #001e5833;
   --primary-color: #0f0f4a;
   // --primary-color: #1586FF;
@@ -38,9 +39,11 @@
   --btn-max-bg: rgba(51, 51, 51, .1);
   --btn-max-bg-hover: rgba(51, 51, 51, .2);
   // box
-  --box-radius: 8px;
-  --box-shadow: none;
+  --box-radius: 16px;
+  // --box-shadow: none;
   // 0px 4px 10px 0px rgba(36,158,255,0.1);
+  --box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.04);
+  --box-border: 0.5px solid var(--stroke, #C9C9CB);
   --box-bg: #fff;
   --box-list-bg: #fff;
   --box-bg-hover: #e8e8e8;
@@ -83,6 +86,32 @@
 
   // table
   --table-head-bg: #F3F2F8;
+
+
+  /* Colors */
+  --60percent-black: rgba(0, 0, 0, 0.60);
+  --stroke: #c9c9cb;
+  --text-gry-60percent-b: #666666;
+  --card-stroke: #dfe0e4;
+  --card-title: rgba(0, 0, 0, 0.90);
+  --text-black: #000000;
+  --switch-back: rgba(44, 52, 95, 0.08);
+  --30percent-black: rgba(0, 0, 0, 0.30);
+  --linar-green: linear-gradient(180deg, rgba(52, 200, 90, 0.48) 0%,rgba(52, 200, 90, 0.00) 91.78488254547119%);
+  --uni: linear-gradient(90deg, rgba(255, 218, 246, 1.00) 0%,rgba(255, 255, 255, 1.00) 100%);
+  --blue-deep: radial-gradient(closest-side, rgba(81, 66, 241, 1.00) 0%,rgba(29, 29, 41, 1.00) 100%);
+  --spark: linear-gradient(90deg, rgba(255, 213, 163, 1.00) 0%,rgba(255, 255, 255, 1.00) 100%);
+  --exx: linear-gradient(251.41deg, rgba(122, 135, 255, 1.00) 0%,rgba(87, 91, 190, 1.00) 100%);
+  --gree: #38ad3d;
+  --lader: conic-gradient(from 180deg at 50% 50%, rgba(193, 192, 233, 1.00) 13.930995762348175%,rgba(216, 244, 235, 1.00) 24.33984726667404%,rgba(241, 241, 232, 1.00) 41.36728048324585%,rgba(246, 193, 224, 1.00) 50.171589851379395%,rgba(201, 163, 238, 1.00) 58.4506630897522%,rgba(182, 208, 249, 1.00) 69.80394721031189%,rgba(236, 237, 234, 1.00) 81.34248852729797%,rgba(251, 224, 223, 1.00) 93.84396076202393%,rgba(184, 209, 249, 1.00) 96.82513475418091%,rgba(235, 196, 230, 1.00) 100%);
+  --lader-w: conic-gradient(from 180deg at 50% 50%, rgba(255, 103, 236, 1.00) 6.720903515815735%,rgba(122, 121, 157, 1.00) 17.363008856773376%,rgba(121, 165, 151, 1.00) 24.33984726667404%,rgba(255, 255, 255, 1.00) 38.58892321586609%,rgba(213, 102, 167, 1.00) 53.67226004600525%,rgba(168, 97, 238, 1.00) 65.80466032028198%,rgba(115, 163, 237, 1.00) 74.15475845336914%,rgba(255, 255, 255, 1.00) 83.55498909950256%,rgba(251, 224, 223, 1.00) 89.88914489746094%,rgba(119, 169, 248, 1.00) 92.99005270004272%);
+  --green-tag: linear-gradient(251.41deg, rgba(114, 220, 87, 1.00) 0%,rgba(81, 144, 51, 1.00) 100%);
+  --blue-tag: linear-gradient(251.41deg, rgba(87, 184, 255, 1.00) 0%,rgba(51, 131, 131, 1.00) 100%);
+  --extra-card-account: linear-gradient(92.24deg, rgba(255, 255, 255, 0.70) 0%,rgba(255, 255, 255, 0.00) 100%), linear-gradient(to left, #d7d7d7, #d7d7d7);
+
+  /* Fonts */
+  /* Effects */
+  --button-box-shadow:  0px 4px 10px 0px rgba(0, 0, 0, 0.08);
 }
 
 :root.dark {

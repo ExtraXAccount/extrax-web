@@ -1,0 +1,26 @@
+.component236Property1Component235,
+.component236Property1Component235 * {
+  box-sizing: border-box;
+}
+.component236Property1Component235 {
+  padding: 12px 0px 12px 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  width: 162px;
+  position: relative;
+}
+.extraFiFarmLend {
+  color: var(--card-title, rgba(0, 0, 0, 0.9));
+  text-align: left;
+  font-family: 'Figtree-Medium', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

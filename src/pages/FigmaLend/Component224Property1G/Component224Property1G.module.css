@@ -1,0 +1,50 @@
+.component224Property1G,
+.component224Property1G * {
+  box-sizing: border-box;
+}
+.component224Property1G {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+.frame481945 {
+  background: var(--gree, #38ad3d);
+  border-radius: 3px;
+  padding: 1.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 7.5px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.c {
+  color: var(--white, #ffffff);
+  text-align: center;
+  font-family: 'Figtree-SemiBold', sans-serif;
+  font-size: 10.5px;
+  line-height: 9px;
+  font-weight: 600;
+  position: relative;
+  width: 9px;
+  height: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.conservative {
+  color: var(--green, #44c549);
+  text-align: left;
+  font-family: 'Figtree-SemiBold', sans-serif;
+  font-size: 10px;
+  line-height: 12px;
+  font-weight: 600;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

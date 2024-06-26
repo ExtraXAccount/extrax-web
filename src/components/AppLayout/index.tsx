@@ -14,23 +14,20 @@ import { useAppDispatch } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
 import { setPrices } from '@/state/price/reducer'
 
-import AccountInfo from './AccountInfo'
+// import AccountInfo from './AccountInfo'
 
 const navList = [
   {
-    name: 'Leveraged Apps',
-    icon: 'shovel',
+    name: 'Leverage Apps',
     link: '/leveragedapps/uniswapv3',
   },
   {
-    name: 'Lend',
-    icon: 'lending',
+    name: 'Borrow / Lend',
     link: '/lend',
   },
   {
-    name: 'My Positions',
-    // icon: 'lock',
-    link: '/positions',
+    name: 'Portfolio',
+    link: '/portfolio',
   },
 ]
 
@@ -45,7 +42,11 @@ export default function AppLayout() {
     dispatch(setLendingStatus(lendingData))
 
     const getPrices = async () => {
-      const priceMap = {}
+      const priceMap = {
+        'USDC.e': 1,
+        USDC: 1,
+        USDT: 1,
+      }
       try {
         const result = await getCoingeckoPriceByIds(lendingData.map((i) => i.cgId))
 
@@ -103,7 +104,8 @@ export default function AppLayout() {
         </div>
       </div>
 
-      <AccountInfo />
+      {/* <AccountInfo /> */}
+
       <div className={classNames('page-content')}>
         <div className="page-content-inner">
           <Outlet />

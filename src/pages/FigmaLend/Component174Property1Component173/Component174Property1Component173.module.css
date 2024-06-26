@@ -1,0 +1,26 @@
+.component174Property1Component173,
+.component174Property1Component173 * {
+  box-sizing: border-box;
+}
+.component174Property1Component173 {
+  padding: 12px 0px 12px 0px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  width: 109px;
+  position: relative;
+}
+.leverageApps {
+  color: var(--card-title, rgba(0, 0, 0, 0.9));
+  text-align: left;
+  font-family: 'Figtree-Medium', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

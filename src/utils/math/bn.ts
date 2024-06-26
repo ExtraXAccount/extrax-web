@@ -10,6 +10,12 @@ export function toBNString(base: number | string, decimals = 18) {
     .replace(/\..*$/, '')
 }
 
+export function stringToDecimalStr(numStr: string, decimals = 18) {
+  return BigNumber(numStr)
+    .div(new BigNumber(`1e+${decimals}`))
+    .toString()
+}
+
 export function stringToDecimals(numStr: string, decimals = 18) {
   return BigNumber(numStr)
     .div(new BigNumber(`1e+${decimals}`))

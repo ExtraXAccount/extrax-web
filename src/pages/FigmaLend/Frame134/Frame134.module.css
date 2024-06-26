@@ -1,0 +1,96 @@
+.frame134,
+.frame134 * {
+  box-sizing: border-box;
+}
+.frame134 {
+  background: var(--glass-white, rgba(255, 255, 255, 0.6));
+  border-style: solid;
+  border-color: var(--card-stroke, #dfe0e4);
+  border-width: 0px 0px 0.5px 0px;
+  padding: 0px 48px 0px 48px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+.frame481853 {
+  display: flex;
+  flex-direction: row;
+  gap: 64px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.group481713 {
+  flex-shrink: 0;
+  width: 88.29px;
+  height: 24px;
+  position: relative;
+  overflow: visible;
+}
+.frame481799 {
+  display: flex;
+  flex-direction: row;
+  gap: 64px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.frame481803 {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: center;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.component179Instance {
+  align-self: stretch !important;
+  flex-shrink: 0 !important;
+}
+.component180Instance {
+  align-self: stretch !important;
+  flex-shrink: 0 !important;
+  width: unset !important;
+}
+.component237Instance {
+  align-self: stretch !important;
+  flex-shrink: 0 !important;
+  width: unset !important;
+}
+.component182Instance {
+  align-self: stretch !important;
+  flex-shrink: 0 !important;
+  width: 64px !important;
+}
+.component236Instance {
+  align-self: stretch !important;
+  flex-shrink: 0 !important;
+}
+.frame481802 {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-shrink: 0;
+  position: relative;
+}
+.component173Instance {
+  flex-shrink: 0 !important;
+}
+.component200Instance {
+  flex-shrink: 0 !important;
+}
+.component201Instance {
+  flex-shrink: 0 !important;
+}

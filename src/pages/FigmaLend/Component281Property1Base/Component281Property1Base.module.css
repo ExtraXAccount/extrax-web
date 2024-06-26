@@ -1,0 +1,19 @@
+.component281Property1Base,
+.component281Property1Base * {
+  box-sizing: border-box;
+}
+.component281Property1Base {
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+.image102 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  bottom: 0%;
+  top: 0%;
+  object-fit: cover;
+}
