@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
-import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import { useLendingManager } from '@/hooks/useSDK'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { useAccountStore, useLendStore } from '@/store'
@@ -14,9 +14,9 @@ type LendPoolConfig = keyof (typeof LendingConfig)[chainId]
 
 export default function useLendingList() {
   const lendingMng = useLendingManager()
-  const accountMng = useAccountManager()
+  // const accountMng = useAccountManager()
   const { lendPools, isFetching, updateLendPools, updateIsFetching } = useLendStore()
-  const { balances, updateBalances } = useAccountStore()
+  const { balances } = useAccountStore()
 
   // const [balances, setBalances] = useState([] as bigint[])
   const { chainId } = useWagmiCtx()
@@ -39,24 +39,6 @@ export default function useLendingList() {
       updateIsFetching(false)
     }
   }, [chainLendingConfig, lendingMng])
-
-  const fetchBalances = useCallback(
-    async (safeAccounts: Address[]) => {
-      if (!safeAccounts?.[0]) {
-        return []
-      }
-      const tokens = chainLendingConfig.reduce(
-        (arr: any, item) =>
-          arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
-        [],
-      )
-      console.log('fetchBalances :>> ', tokens)
-      const [...res] = await accountMng.getBalances(safeAccounts, tokens)
-      // return balances
-      updateBalances(res)
-    },
-    [chainLendingConfig, accountMng],
-  )
 
   const formattedLendPools = useMemo(() => {
     return lendPools.map((pool, index) => {
@@ -82,7 +64,6 @@ export default function useLendingList() {
   return {
     formattedLendPools,
     fetchLendPools,
-    fetchBalances,
     isFetching,
   }
 }

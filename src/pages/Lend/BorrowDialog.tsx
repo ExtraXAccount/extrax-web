@@ -43,9 +43,10 @@ export default function BorrowDialog({
     try {
       const res = await lendMng.borrow(
         smartAccount,
+        currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
-        HealthManagerConfig[SupportedChainId.OPTIMISM].debts['USDC.e_DEBT'].debtId,
+        // HealthManagerConfig[SupportedChainId.OPTIMISM].debts['USDC.e_DEBT'].debtId,
       )
       fetchLendPools()
       onClose()
@@ -72,6 +73,7 @@ export default function BorrowDialog({
             (currentLendingPoolDetail?.deposited - currentLendingPoolDetail?.borrowed) *
             maxBorrowedRatio
           }
+          allowInputOverflow
           // ethBalance={ethBalance}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}

@@ -3,26 +3,15 @@ import './lendingList.scss'
 
 import { useEffect } from 'react'
 
-import useSmartAccount from '@/hooks/useSmartAccount'
-
+// import useSmartAccount from '@/hooks/useSmartAccount'
 import LendingTable from './LendingTable'
 import useLendingList from './useLendingList'
 
 export default function Lend() {
-  const {
-    smartAccount,
-    // accounts,
-  } = useSmartAccount()
-  const { fetchLendPools, fetchBalances } = useLendingList()
+  const { fetchLendPools } = useLendingList()
   useEffect(() => {
     fetchLendPools()
   }, [fetchLendPools])
-  // }, [])
-
-  useEffect(() => {
-    fetchBalances([smartAccount])
-    // }, [smartAccount, fetchBalances])
-  }, [smartAccount])
 
   return (
     <div className="page-app page-lending">

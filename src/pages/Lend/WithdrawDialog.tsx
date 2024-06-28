@@ -42,6 +42,7 @@ export default function WithdrawDialog({
     try {
       const res = await lendMng.withdraw(
         smartAccount,
+        currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )

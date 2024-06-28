@@ -33,8 +33,8 @@ export default function LendingTable() {
 
   const {
     formattedLendPools,
-    fetchLendPools,
-    isFetching: isFetchingLendingList,
+    // fetchLendPools,
+    // isFetching: isFetchingLendingList,
   } = useLendingList()
 
   useEffect(() => {
@@ -277,6 +277,15 @@ export default function LendingTable() {
                 >
                   Deposit
                 </button>
+                <button
+                  className="btn-base btn-base-small"
+                  onClick={() => {
+                    setCurrentLendingPoolDetail(i)
+                    setBorrowDialogOpen(true)
+                  }}
+                >
+                  Borrow
+                </button>
                 {!!i.deposited && (
                   <>
                     <button
@@ -287,16 +296,6 @@ export default function LendingTable() {
                       }}
                     >
                       Withdraw
-                    </button>
-
-                    <button
-                      className="btn-base btn-base-small"
-                      onClick={() => {
-                        setCurrentLendingPoolDetail(i)
-                        setBorrowDialogOpen(true)
-                      }}
-                    >
-                      Borrow
                     </button>
                   </>
                 )}

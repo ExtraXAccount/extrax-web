@@ -25,13 +25,10 @@ export default function AccountInfo() {
     accountAPY,
     accounts,
     getInitData,
-    getAccountInfo,
   } = useSmartAccount()
 
   useEffect(() => {
-    getInitData().then(() => {
-      getAccountInfo()
-    })
+    getInitData()
   }, [])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)

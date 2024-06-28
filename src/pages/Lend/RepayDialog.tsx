@@ -45,6 +45,7 @@ export default function RepayDialog({
     try {
       const res = await lendMng.repay(
         smartAccount,
+        currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
       )

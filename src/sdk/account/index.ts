@@ -78,6 +78,12 @@ export class AccountManager {
   }
 
   public async getAccounts() {
+    const [...accounts] = await this.factoryContract().read.accounts([this.account])
+    console.log('accounts :>> ', accounts)
+    return accounts
+  }
+
+  public async getAccountsCreatedEvent() {
     const currentBlock = await (this.publicClient as PublicClient).getBlockNumber()
     // console.log('currentBlock :>> ', currentBlock);
     const evts = await this.factoryContract().getEvents.AccountCreated(
@@ -90,7 +96,6 @@ export class AccountManager {
         toBlock: currentBlock,
       },
     )
-
     console.log('getAccount evts :>> ', evts)
     const accounts = evts.map((evt) => evt.args.account!)
     console.log('accounts :>> ', accounts)
@@ -175,201 +180,9 @@ export class AccountManager {
       },
     })
 
+    console.log('balanceChecker :>> ', { accounts, tokens })
     const balances = await balanceChecker.read.balances([accounts, tokens])
     console.log('balanceChecker.balances :>> ', balances)
     return balances
   }
 }
-
-// export default function useAccountContract() {
-//   const { account, blockNumber, chainId, publicClient, walletClient } = useWagmiCtx()
-//   const [writeLoading, setWriteLoading] = useState(false)
-
-//   const lendingList = useAppSelector((state) => state.lending.poolStatus)
-
-//   const lendList = useMemo(() => {
-//     return lendingList
-//   }, [lendingList])
-
-//   const totalSavingsDAI = useMemo(() => {
-//     return lendList.find((item) => item.tokenSymbol === 'DAI')?.SavingsDAI || 0
-//   }, [lendList])
-
-//   const healthManagerContract = useMemo(() => {
-//     return getContract({
-//       address: CONTRACT_ADDRESSES[chainId]?.healthManager as `0x${string}`,
-//       abi: HealthManagerABI,
-//       client: {
-//         public: publicClient as Client,
-//         wallet: walletClient as Client,
-//       }
-//     })
-//   }, [])
-
-//   const readContract = useCallback(
-//     async (functionName: string, args?: any, options = {}) => {
-//       try {
-//         const res = await publicClient.readContract({
-//           address: CONTRACT_ADDRESSES[chainId]?.healthManager as `0x${string}`,
-//           abi: HealthManagerABI,
-//           functionName,
-//           args,
-//           ...options,
-//         })
-//         console.log('readContract :>> ', res)
-//         return res
-//       } catch (err) {
-//         console.warn('readContract err: ', err)
-//       }
-//     },
-//     [chainId, publicClient]
-//   )
-
-//   const readFactoryContract = useCallback(
-//     async (functionName: string, args?: any, options = {}) => {
-//       try {
-//         const res = await publicClient.readContract({
-//           address: CONTRACT_ADDRESSES[chainId]?.accountFactory as `0x${string}`,
-//           abi: ExtraXAccountFactory,
-//           functionName,
-//           args,
-//           ...options,
-//         })
-//         console.log('readContract :>> ', res)
-//         return res
-//       } catch (err) {
-//         console.warn('readContract err: ', err)
-//       }
-//     },
-//     [chainId, publicClient]
-//   )
-
-//   const writeContract = useCallback(
-//     async (functionName: string, args, options = {}) => {
-//       try {
-//         setWriteLoading(true)
-//         const res = await walletClient.writeContract({
-//           chain: walletClient.chain,
-//           account,
-//           address: CONTRACT_ADDRESSES[chainId]?.lend,
-//           abi: HealthManagerABI,
-//           functionName,
-//           args,
-//           ...options,
-//         })
-//         return res
-//       } catch (err) {
-//         console.warn('writeContract err: ', err)
-//       } finally {
-//         setWriteLoading(false)
-//       }
-//     },
-//     [walletClient, account, chainId]
-//   )
-
-//   const writeFactoryContract = useCallback(
-//     async (functionName: string, args, options = {}) => {
-//       try {
-//         setWriteLoading(true)
-//         const res = await walletClient.writeContract({
-//           chain: walletClient.chain,
-//           account,
-//           address: CONTRACT_ADDRESSES[chainId]?.accountFactory,
-//           abi: ExtraXAccountFactory,
-//           functionName,
-//           args,
-//           ...options,
-//         })
-//         return res
-//       } catch (err) {
-//         console.warn('writeContract err: ', err)
-//       } finally {
-//         setWriteLoading(false)
-//       }
-//     },
-//     [walletClient, account, chainId]
-//   )
-
-//   const getCollateralAndDebtValue = useCallback(async (address: string) => {
-//     const res = await healthManagerContract.read.getCollateralAndDebtValue([address])
-//     const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
-//     console.log('getCollateralAndDebtValue :>> ', {address, collateral, collateralDeciamls, debt, debtDecimals})
-//     return res
-//   }, [readContract])
-
-//   const getAccount = useCallback(async () => {
-//     const evts: any = await publicClient.getContractEvents({
-//       address: CONTRACT_ADDRESSES[chainId]?.accountFactory,
-//       abi: ExtraXAccountFactory,
-//       eventName: 'ExtraAccountCreation',
-//       args: {
-//         user: account,
-//         saltNonce: ExtraXAccountDefaultNonce
-//       },
-//       // fromBlock: 16330000n,
-//       // toBlock: '16330050n'
-//     })
-
-//     console.log('getAccount evts :>> ', evts);
-//     const accounts = evts.map(evt => evt.args.proxy)
-//     // const accounts = evts.forEach((evt) => {
-//     //   return {
-//     //     user: evt.args[0],
-//     //     saltNonce: "0x" + evt.args[1].toString(16),
-//     //     account: evt.args[2],
-//     //   };
-//     // });
-//     console.log('accounts :>> ', accounts);
-//     return accounts
-//   }, [account, blockNumber, readFactoryContract])
-
-//   const createAccount = useCallback(async () => {
-//     console.log('createAccount start :>> ', 'createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce]);
-//     const res = await writeFactoryContract('createProxyWithNonce', ['0x200', ExtraXAccountDefaultNonce])
-//     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
-//     console.log('createAccount res :>> ', res);
-//     const account = await getAccount()
-//     console.log('createAccount :>> ', account)
-//     return account
-//   }, [getAccount, writeFactoryContract])
-
-//   const getPositionStatus = useCallback(async () => {
-//     const poolIds = ['2', '26', '1', '4']
-//     const res = await readContract('getPositionStatus', [poolIds, account])
-//     console.log('getPositionStatus :>> ', res)
-//   }, [readContract, account])
-
-//   // useEffect(() => {
-//   //   getCollateralAndDebtValue()
-//   //   // getPositionStatus()
-//   // }, [getCollateralAndDebtValue])
-
-//   const depositAndStake = useCallback(
-//     (reserveId: string, amount: string) => {
-//       console.log('depositAndStake :>> ', [reserveId, amount, account, 1234])
-//       return writeContract('depositAndStake', [reserveId, amount, account, 1234])
-//     },
-//     [writeContract, account]
-//   )
-
-//   const unStakeAndWithdraw = useCallback(
-//     (reserveId: string, amount: string, receiveNativeETH = true) => {
-//       console.log('unStakeAndWithdraw :>> ', [reserveId, amount, account, receiveNativeETH])
-//       return writeContract('unStakeAndWithdraw', [reserveId, amount, account, receiveNativeETH])
-//     },
-//     [writeContract, account]
-//   )
-
-//   return {
-//     lendList,
-//     getCollateralAndDebtValue,
-//     getAccount,
-//     createAccount,
-//     readContract,
-//     writeContract,
-//     depositAndStake,
-//     unStakeAndWithdraw,
-//     writeLoading,
-//     totalSavingsDAI,
-//   }
-// }

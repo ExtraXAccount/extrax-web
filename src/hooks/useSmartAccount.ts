@@ -1,16 +1,20 @@
 import { sumBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Address } from 'viem'
 
-// import { useWagmiCtx } from '@/components/WagmiContext'
-// import { useWagmiCtx } from '@/components/WagmiContext'
+import { useWagmiCtx } from '@/components/WagmiContext'
 import useCredit from '@/hooks/useCredit'
 // import useDebt from '@/hooks/useDebt'
 // import useDeposited from '@/hooks/useDeposited'
 import usePrices from '@/hooks/usePrices'
-import { useAccountManager } from '@/hooks/useSDK'
+import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { useAppSelector } from '@/state'
 import { useAccountStore } from '@/store'
 import { aprToApy } from '@/utils/math'
+
+type ChainId = keyof typeof LendingConfig
+type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
 
 export const INFINITY = '∞'
 
@@ -32,12 +36,13 @@ export default function useSmartAccount() {
   // const { account = '', smartAccount } = useWagmiCtx()
   const positions = useAppSelector((state) => state.position.userPositions)
 
-  // const { chainId } = useWagmiCtx()
+  const { chainId } = useWagmiCtx()
   const {
     accounts,
     accountInfo,
-    updateAccountInfo,
     updateAccounts,
+    updateAccountInfo,
+    updateBalances,
     updateSupportedAssets,
     updateSupportedDebts,
   } = useAccountStore()
@@ -45,31 +50,65 @@ export default function useSmartAccount() {
   // console.log('accountInfo :>> ', accountInfo);
 
   const accountMng = useAccountManager()
+  const lendingMng = useLendingManager()
 
-  const getAccountInfo = useCallback(async () => {
-    if (!accounts[0]) {
-      return
-    }
-    const { account, collateral, collateralDeciamls, debt, debtDecimals } =
-      await accountMng.getCollateralAndDebtValue(accounts[0])
+  const chainLendingConfig = useMemo(() => {
+    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
+      LendingConfig[chainId] || {},
+    )
+  }, [chainId])
 
-    updateAccountInfo({
-      balances: [],
-      account,
-      collateral,
-      collateralDeciamls,
-      debt,
-      debtDecimals,
-      depositedVal: Number(
-        (collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString(),
-      ),
-      debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
-    })
-  }, [accounts, accountMng])
+  const getAccountInfo = useCallback(
+    async (acc) => {
+      console.log('getAccountInfo :>> ', acc)
+      if (!acc) {
+        return
+      }
+      const { account, collateral, collateralDeciamls, debt, debtDecimals } =
+        await accountMng.getCollateralAndDebtValue(acc)
+
+      updateAccountInfo({
+        balances: [],
+        account,
+        collateral,
+        collateralDeciamls,
+        debt,
+        debtDecimals,
+        depositedVal: Number(
+          (collateral > 0n
+            ? collateral / BigInt(10 ** collateralDeciamls)
+            : 0n
+          ).toString(),
+        ),
+        debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
+      })
+    },
+    [accountMng],
+  )
+
+  const fetchBalances = useCallback(
+    async (acc) => {
+      if (!acc) {
+        return []
+      }
+      const tokens = chainLendingConfig.reduce(
+        (arr: any, item) =>
+          arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
+        [],
+      )
+      // console.log('fetchBalances :>> ', { acc, tokens })
+      const [...res] = await accountMng.getBalances([acc], tokens)
+      updateBalances(res)
+    },
+    [chainLendingConfig, accountMng],
+  )
 
   const getInitData = useCallback(async () => {
     accountMng.getAccounts().then((accounts) => {
       updateAccounts(accounts)
+      getAccountInfo(accounts?.[0])
+      fetchBalances(accounts?.[0])
+      fetchUserLending(accounts?.[0])
     })
 
     accountMng.getSupportedAssets().then((res) => {
@@ -80,6 +119,13 @@ export default function useSmartAccount() {
       updateSupportedDebts(res)
     })
   }, [accountMng])
+
+  const fetchUserLending = useCallback(
+    (acc) => {
+      lendingMng.getUserLendStatus(acc)
+    },
+    [lendingMng],
+  )
 
   const depositedVal = accountInfo?.depositedVal || 0
   const debtVal = accountInfo?.debtVal || 0

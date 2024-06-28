@@ -81,10 +81,10 @@ export default function useLendContract() {
     console.log('getPositionStatus :>> ', res)
   }, [readContract, account])
 
-  useEffect(() => {
-    // getPoolStatus()
-    // getPositionStatus()
-  }, [getPoolStatus, getPositionStatus])
+  // useEffect(() => {
+  //   // getPoolStatus()
+  //   // getPositionStatus()
+  // }, [getPoolStatus, getPositionStatus])
 
   const depositAndStake = useCallback(
     (reserveId: string, amount: string) => {
