@@ -3,8 +3,9 @@ import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
-import useSmartAccount from '@/hooks/useSmartAccount'
+// import useSmartAccount from '@/hooks/useSmartAccount'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
+import { useAccountStore, useLendStore } from '@/store'
 import { stringToDecimals } from '@/utils/math/bn'
 
 // export interface
@@ -14,15 +15,11 @@ type LendPoolConfig = keyof (typeof LendingConfig)[chainId]
 export default function useLendingList() {
   const lendingMng = useLendingManager()
   const accountMng = useAccountManager()
-  const [lendPools, setLendPools] = useState([])
-  const [isFetching, setIsFetching] = useState(false)
+  const { lendPools, isFetching, updateLendPools, updateIsFetching } = useLendStore()
+  const { balances, updateBalances } = useAccountStore()
 
-  const [balances, setBalances] = useState([] as bigint[])
+  // const [balances, setBalances] = useState([] as bigint[])
   const { chainId } = useWagmiCtx()
-  const {
-    smartAccount,
-    // accounts,
-  } = useSmartAccount()
 
   const chainLendingConfig = useMemo(() => {
     return Object.values<(typeof LendingConfig)[chainId][LendPoolConfig]>(
@@ -31,15 +28,15 @@ export default function useLendingList() {
   }, [chainId])
 
   const fetchLendPools = useCallback(async () => {
-    setIsFetching(true)
+    updateIsFetching(true)
     try {
       const res = await lendingMng.multicallPoolsStatus(
         chainLendingConfig.map((item) => item.reserveId),
       )
-      console.log('multicallPoolsStatus :>> ', res);
-      setLendPools(res)
+      console.log('multicallPoolsStatus :>> ', res)
+      updateLendPools(res)
     } finally {
-      setIsFetching(false)
+      updateIsFetching(false)
     }
   }, [chainLendingConfig, lendingMng])
 
@@ -49,25 +46,17 @@ export default function useLendingList() {
         return []
       }
       const tokens = chainLendingConfig.reduce(
-        (arr, item) =>
+        (arr: any, item) =>
           arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
         [],
       )
       console.log('fetchBalances :>> ', tokens)
       const [...res] = await accountMng.getBalances(safeAccounts, tokens)
       // return balances
-      setBalances(res)
+      updateBalances(res)
     },
     [chainLendingConfig, accountMng],
   )
-
-  useEffect(() => {
-    fetchLendPools()
-  }, [fetchLendPools])
-
-  useEffect(() => {
-    fetchBalances([smartAccount])
-  }, [smartAccount, fetchBalances])
 
   const formattedLendPools = useMemo(() => {
     return lendPools.map((pool, index) => {
@@ -93,6 +82,7 @@ export default function useLendingList() {
   return {
     formattedLendPools,
     fetchLendPools,
+    fetchBalances,
     isFetching,
   }
 }

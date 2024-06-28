@@ -1,7 +1,7 @@
 import { sumBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { useWagmiCtx } from '@/components/WagmiContext'
+// import { useWagmiCtx } from '@/components/WagmiContext'
 // import { useWagmiCtx } from '@/components/WagmiContext'
 import useCredit from '@/hooks/useCredit'
 // import useDebt from '@/hooks/useDebt'
@@ -9,6 +9,7 @@ import useCredit from '@/hooks/useCredit'
 import usePrices from '@/hooks/usePrices'
 import { useAccountManager } from '@/hooks/useSDK'
 import { useAppSelector } from '@/state'
+import { useAccountStore } from '@/store'
 import { aprToApy } from '@/utils/math'
 
 export const INFINITY = '∞'
@@ -26,44 +27,33 @@ export interface AccountInfo {
 
 export default function useSmartAccount() {
   const { prices } = usePrices()
-  // const { depositedVal, depositedAssets } = useDeposited()
-  // const { debtVal, debtAssets } = useDebt()
   const { maxCredit, availableCredit, usedCredit } = useCredit()
   const lendingList = useAppSelector((state) => state.lending.poolStatus)
   // const { account = '', smartAccount } = useWagmiCtx()
   const positions = useAppSelector((state) => state.position.userPositions)
 
-  const { chainId } = useWagmiCtx()
+  // const { chainId } = useWagmiCtx()
+  const {
+    accounts,
+    accountInfo,
+    updateAccountInfo,
+    updateAccounts,
+    updateSupportedAssets,
+    updateSupportedDebts,
+  } = useAccountStore()
 
-  const [accountInfo, setAccountInfo] = useState({} as AccountInfo)
-  const [accounts, setAccounts] = useState([])
-  const [supportedAssets, setSupportedAssets] = useState([])
-  const [supportedDebts, setSupportedDebts] = useState([])
+  // console.log('accountInfo :>> ', accountInfo);
 
-  // const {getAccount, getCollateralAndDebtValue} = useAccountContract()
   const accountMng = useAccountManager()
 
   const getAccountInfo = useCallback(async () => {
     if (!accounts[0]) {
       return
     }
-    // const balances = await accountMng.getBalances(accounts, [
-    // LendingConfig[chainId]["USDC.e"].underlyingTokenAddress,
-    // LendingConfig[chainId]["OP"].underlyingTokenAddress,
-    // LendingConfig[chainId]["WETH"].underlyingTokenAddress,
-
-    // LendingConfig[chainId]["USDC.e"].eToken,
-    // LendingConfig[chainId]["OP"].eToken,
-    // LendingConfig[chainId]["WETH"].eToken,
-
-    // LendingConfig[chainId]["USDC.e"].debtToken,
-    // LendingConfig[chainId]["OP"].debtToken,
-    // LendingConfig[chainId]["WETH"].debtToken,
-    // ]);
     const { account, collateral, collateralDeciamls, debt, debtDecimals } =
       await accountMng.getCollateralAndDebtValue(accounts[0])
 
-    setAccountInfo({
+    updateAccountInfo({
       balances: [],
       account,
       collateral,
@@ -77,27 +67,22 @@ export default function useSmartAccount() {
     })
   }, [accounts, accountMng])
 
-  const depositedVal = accountInfo.depositedVal
-  // console.log('accountInfo :>> ', accountInfo);
-  const debtVal = accountInfo.debtVal
-
-  useEffect(() => {
-    accountMng.getAccounts().then((res) => {
-      setAccounts(res)
+  const getInitData = useCallback(async () => {
+    accountMng.getAccounts().then((accounts) => {
+      updateAccounts(accounts)
     })
 
     accountMng.getSupportedAssets().then((res) => {
-      setSupportedAssets(res)
+      updateSupportedAssets(res)
     })
 
     accountMng.getSupportedDebts().then((res) => {
-      setSupportedDebts(res)
+      updateSupportedDebts(res)
     })
   }, [accountMng])
 
-  useEffect(() => {
-    getAccountInfo()
-  }, [getAccountInfo])
+  const depositedVal = accountInfo?.depositedVal || 0
+  const debtVal = accountInfo?.debtVal || 0
 
   const safetyRatio = useMemo(() => {
     if (!depositedVal) {
@@ -111,12 +96,12 @@ export default function useSmartAccount() {
     const totalApy =
       (sumBy(
         lendingList,
-        (item) =>
+        (item: any) =>
           (item.SavingsDAI || 0) * 0.05 +
           aprToApy(item.apr) * item.deposited * prices[item.tokenSymbol] -
           item.borrowingRate * item.borrowed * prices[item.tokenSymbol],
       ) +
-        sumBy(positions, (item) => item.apr * item.totalPositionValue)) /
+        sumBy(positions, (item: any) => item.apr * item.totalPositionValue)) /
       depositedVal
 
     return totalApy
@@ -127,6 +112,7 @@ export default function useSmartAccount() {
     // smartAccount: depositedVal ? smartAccount : '',
     smartAccount: accounts[0],
     depositedVal,
+    getInitData,
     getAccountInfo,
     // depositedAssets,
     debtVal,
@@ -136,8 +122,8 @@ export default function useSmartAccount() {
     usedCredit,
     safetyRatio,
     accountAPY,
-    supportedAssets,
-    supportedDebts,
+    // supportedAssets,
+    // supportedDebts,
     lendingList,
   }
 }

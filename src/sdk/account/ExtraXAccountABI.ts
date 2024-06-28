@@ -1,273 +1,273 @@
 export const ExtraXAccountABI = [
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "protocolTag",
-        "type": "uint256"
+        indexed: false,
+        internalType: 'uint256',
+        name: 'protocolTag',
+        type: 'uint256',
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "userTag",
-        "type": "uint256"
-      }
+        indexed: false,
+        internalType: 'uint256',
+        name: 'userTag',
+        type: 'uint256',
+      },
     ],
-    "name": "AccountInitialized",
-    "type": "event"
+    name: 'AccountInitialized',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
-      }
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
     ],
-    "name": "AccountOwnerSet",
-    "type": "event"
+    name: 'AccountOwnerSet',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "delegate",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'delegate',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "guard",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'guard',
+        type: 'address',
+      },
     ],
-    "name": "DelegateGuardInit",
-    "type": "event"
+    name: 'DelegateGuardInit',
+    type: 'event',
   },
   {
-    "anonymous": false,
-    "inputs": [
+    anonymous: false,
+    inputs: [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "guardManager",
-        "type": "address"
+        indexed: true,
+        internalType: 'address',
+        name: 'guardManager',
+        type: 'address',
       },
       {
-        "indexed": false,
-        "internalType": "address",
-        "name": "implementiation",
-        "type": "address"
-      }
+        indexed: false,
+        internalType: 'address',
+        name: 'implementiation',
+        type: 'address',
+      },
     ],
-    "name": "DelegateGuardManagerInit",
-    "type": "event"
+    name: 'DelegateGuardManagerInit',
+    type: 'event',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "components": [
+        components: [
           {
-            "internalType": "address",
-            "name": "to",
-            "type": "address"
+            internalType: 'address',
+            name: 'to',
+            type: 'address',
           },
           {
-            "internalType": "uint256",
-            "name": "value",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'value',
+            type: 'uint256',
           },
           {
-            "internalType": "bytes",
-            "name": "data",
-            "type": "bytes"
+            internalType: 'bytes',
+            name: 'data',
+            type: 'bytes',
           },
           {
-            "internalType": "uint8",
-            "name": "operation",
-            "type": "uint8"
+            internalType: 'uint8',
+            name: 'operation',
+            type: 'uint8',
           },
           {
-            "internalType": "bytes",
-            "name": "extra",
-            "type": "bytes"
-          }
+            internalType: 'bytes',
+            name: 'extra',
+            type: 'bytes',
+          },
         ],
-        "internalType": "struct IExtraXAccount.ExecTransactionParams",
-        "name": "params",
-        "type": "tuple"
-      }
+        internalType: 'struct IExtraXAccount.ExecTransactionParams',
+        name: 'params',
+        type: 'tuple',
+      },
     ],
-    "name": "execTransaction",
-    "outputs": [
+    name: 'execTransaction',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "success",
-        "type": "bool"
-      }
+        internalType: 'bool',
+        name: 'success',
+        type: 'bool',
+      },
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "fields",
-    "outputs": [
+    inputs: [],
+    name: 'fields',
+    outputs: [
       {
-        "internalType": "bool",
-        "name": "initialized",
-        "type": "bool"
+        internalType: 'bool',
+        name: 'initialized',
+        type: 'bool',
       },
       {
-        "internalType": "address",
-        "name": "factory",
-        "type": "address"
+        internalType: 'address',
+        name: 'factory',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "owner",
-        "type": "address"
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "delegateGuardManager",
-        "type": "address"
+        internalType: 'address',
+        name: 'delegateGuardManager',
+        type: 'address',
       },
       {
-        "internalType": "uint256",
-        "name": "protoclTag",
-        "type": "uint256"
+        internalType: 'uint256',
+        name: 'protoclTag',
+        type: 'uint256',
       },
       {
-        "internalType": "uint256",
-        "name": "userTag",
-        "type": "uint256"
-      }
+        internalType: 'uint256',
+        name: 'userTag',
+        type: 'uint256',
+      },
     ],
-    "stateMutability": "view",
-    "type": "function"
+    stateMutability: 'view',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "delegate",
-        "type": "address"
+        internalType: 'address',
+        name: 'delegate',
+        type: 'address',
       },
       {
-        "internalType": "address",
-        "name": "guard",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'guard',
+        type: 'address',
+      },
     ],
-    "name": "initDelegateGuard",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'initDelegateGuard',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [],
-    "name": "initDelegateGuardManager",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    inputs: [],
+    name: 'initDelegateGuardManager',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "components": [
+        components: [
           {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
+            internalType: 'address',
+            name: 'owner',
+            type: 'address',
           },
           {
-            "internalType": "uint256",
-            "name": "protoclTag",
-            "type": "uint256"
+            internalType: 'uint256',
+            name: 'protoclTag',
+            type: 'uint256',
           },
           {
-            "internalType": "uint256",
-            "name": "userTag",
-            "type": "uint256"
-          }
+            internalType: 'uint256',
+            name: 'userTag',
+            type: 'uint256',
+          },
         ],
-        "internalType": "struct IExtraXAccount.AccountInitParams",
-        "name": "params",
-        "type": "tuple"
-      }
+        internalType: 'struct IExtraXAccount.AccountInitParams',
+        name: 'params',
+        type: 'tuple',
+      },
     ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    name: 'initialize',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "bytes[]",
-        "name": "data",
-        "type": "bytes[]"
-      }
+        internalType: 'bytes[]',
+        name: 'data',
+        type: 'bytes[]',
+      },
     ],
-    "name": "multicall",
-    "outputs": [
+    name: 'multicall',
+    outputs: [
       {
-        "internalType": "bytes[]",
-        "name": "results",
-        "type": "bytes[]"
-      }
+        internalType: 'bytes[]',
+        name: 'results',
+        type: 'bytes[]',
+      },
     ],
-    "stateMutability": "nonpayable",
-    "type": "function"
+    stateMutability: 'nonpayable',
+    type: 'function',
   },
   {
-    "inputs": [
+    inputs: [
       {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
-    "name": "setAccountOwner",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  }
+    name: 'setAccountOwner',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ] as const

@@ -1,9 +1,8 @@
 import './index.scss'
 
-// import { useNavigate } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import cx from 'classnames'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import useSmartAccount from '@/hooks/useSmartAccount'
@@ -13,7 +12,6 @@ export const INFINITY = '∞'
 
 export default function AccountInfo() {
   // const navigate = useNavigate()
-
   const {
     smartAccount,
     depositedVal,
@@ -26,7 +24,15 @@ export default function AccountInfo() {
     safetyRatio,
     accountAPY,
     accounts,
+    getInitData,
+    getAccountInfo,
   } = useSmartAccount()
+
+  useEffect(() => {
+    getInitData().then(() => {
+      getAccountInfo()
+    })
+  }, [])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 

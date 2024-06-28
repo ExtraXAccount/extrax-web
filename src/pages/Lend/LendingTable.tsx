@@ -267,7 +267,7 @@ export default function LendingTable() {
                   className="btn-base btn-base-small"
                   onClick={() => {
                     if (!account) {
-                      openConnectModal()
+                      openConnectModal?.()
                       return
                     }
                     console.log('Deposit :>> ', i)

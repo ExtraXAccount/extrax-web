@@ -1,4 +1,4 @@
-import { Client, erc20Abi, getContract, PublicClient, WalletClient } from 'viem'
+import { Client, erc20Abi, getContract, Hex, PublicClient, WalletClient } from 'viem'
 
 import { defaultChainId } from '@/constants'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
@@ -92,14 +92,7 @@ export class AccountManager {
     )
 
     console.log('getAccount evts :>> ', evts)
-    const accounts = evts.map((evt) => evt.args.account)
-    // const accounts = evts.forEach((evt) => {
-    //   return {
-    //     user: evt.args[0],
-    //     saltNonce: "0x" + evt.args[1].toString(16),
-    //     account: evt.args[2],
-    //   };
-    // });
+    const accounts = evts.map((evt) => evt.args.account!)
     console.log('accounts :>> ', accounts)
     return accounts
   }
@@ -183,7 +176,7 @@ export class AccountManager {
     })
 
     const balances = await balanceChecker.read.balances([accounts, tokens])
-    // console.log('balanceChecker.balances :>> ', balances);
+    console.log('balanceChecker.balances :>> ', balances)
     return balances
   }
 }

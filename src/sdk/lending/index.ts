@@ -1,10 +1,12 @@
 import {
   Client,
+  encodeAbiParameters,
   encodeFunctionData,
   encodePacked,
   erc20Abi,
   getContract,
   Hex,
+  parseAbiParameters,
   PublicClient,
   toBytes,
   WalletClient,
@@ -211,6 +213,8 @@ export class LendingManager {
       to: CONTRACT_ADDRESSES[chainId || this.chainId]?.healthManager,
       data: funcData,
       value: 0n,
+      operation: 0, // 0x1 delegateCall, 0x0 call
+      extra: '0x' as Hex,
     }
     return metaTx
   }
@@ -229,6 +233,8 @@ export class LendingManager {
       to: tokenAddress,
       data: funcData,
       value: 0n,
+      operation: 0, // 0x1 delegateCall, 0x0 call
+      extra: '0x' as Hex,
     }
     return metaTx
   }
@@ -247,26 +253,40 @@ export class LendingManager {
       to: tokenAddress,
       data: funcData,
       value: 0n,
+      operation: 0, // 0x1 delegateCall, 0x0 call
+      extra: '0x' as Hex,
     }
     return metaTx
   }
 
   public async buildDepositToLendingTx(
+    marketId: bigint,
     reserveId: bigint,
     amount: bigint,
     nativeETH?: boolean,
     chainId?: SupportedChainId,
   ) {
+    // const params = ethers.AbiCoder.defaultAbiCoder().encode(
+    //   ['uint256', 'uint256', 'uint256'],
+    //   [marketId, reserveId, amount],
+    // )
+    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, uint256'), [
+      marketId,
+      reserveId,
+      amount,
+    ])
+
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'deposit',
-      // args: [reserveId, amount],
-      args: ['0x123'],
+      args: [params],
     })
     const metaTx = {
       to: CONTRACT_ADDRESSES[chainId || this.chainId]?.lendingPool,
       data: funcData,
       value: nativeETH ? amount : 0n,
+      operation: 0, // 0x1 delegateCall, 0x0 call
+      extra: '0x' as Hex,
     }
     return metaTx
   }
@@ -314,6 +334,39 @@ export class LendingManager {
     return res
   }
 
+  public async multicall(
+    safeAccount: Address,
+    transactions: {
+      to: Address
+      value: bigint
+      data: Address
+      operation: number // 0x1 delegateCall, 0x0 call
+      extra: Hex
+    }[],
+  ) {
+    const encodedData: Hex[] = []
+    for (const tx of transactions) {
+      // console.log(tx)
+      encodedData.push(
+        encodeFunctionData({
+          abi: ExtraXAccountABI,
+          functionName: 'execTransaction',
+          args: [tx],
+        }),
+      )
+    }
+
+    const res = this.getExtraXAccountContract(safeAccount).write.multicall(
+      [encodedData],
+      {
+        chain: this.walletClient.chain,
+        account: this.account,
+      },
+    )
+
+    return res
+  }
+
   public async depositToLending(
     safeAccount: Address,
     reserveId: bigint,
@@ -344,7 +397,13 @@ export class LendingManager {
       await this.approve(safeAccount, lendConfig.underlyingTokenAddress, amount)
     }
 
-    const transactions: { to: Hex; data: Hex; value: bigint }[] = []
+    const transactions: {
+      to: Address
+      value: bigint
+      data: Address
+      operation: number // 0x1 delegateCall, 0x0 call
+      extra: Hex
+    }[] = []
 
     console.log(
       'assetId :>> ',
@@ -355,7 +414,6 @@ export class LendingManager {
         HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId,
       ),
     )
-
     transactions.push(
       await this.buildSetAsCollateralTx(
         HealthManagerConfig[this.chainId].assets[`${token}_ETOKEN_ASSET`].assetId,
@@ -379,6 +437,7 @@ export class LendingManager {
 
     transactions.push(
       await this.buildDepositToLendingTx(
+        LendingConfig[this.chainId][token].marketId,
         LendingConfig[this.chainId][token].reserveId,
         amount,
       ),
@@ -388,7 +447,8 @@ export class LendingManager {
       safeAccount,
       transactions,
     })
-    const hash = await this.multiSend(safeAccount, transactions)
+    // const hash = await this.multiSend(safeAccount, transactions)
+    const hash = await this.multicall(safeAccount, transactions)
     const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
       hash,
     })
