@@ -77,12 +77,28 @@ export class AccountManager {
     })
   }
 
+  public async createAccount() {
+    const userAccountTag = Math.floor(new Date().getTime() / 1000)
+    console.log('createAccount start :>> ', protocolTag, userAccountTag)
+    const res = await this.factoryContract().write.createAccount(
+      [protocolTag, BigInt(userAccountTag), '0x'],
+      {
+        chain: this.walletClient.chain,
+        account: this.account,
+      },
+    )
+    // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
+    console.log('createAccount res :>> ', res)
+    const accounts = await this.getAccounts()
+    console.log('createAccount :>> ', accounts)
+    return accounts
+  }
+
   public async getAccounts() {
     const [...accounts] = await this.factoryContract().read.accounts([this.account])
     console.log('accounts :>> ', accounts)
     return accounts
   }
-
   public async getAccountsCreatedEvent() {
     const currentBlock = await (this.publicClient as PublicClient).getBlockNumber()
     // console.log('currentBlock :>> ', currentBlock);
@@ -99,23 +115,6 @@ export class AccountManager {
     console.log('getAccount evts :>> ', evts)
     const accounts = evts.map((evt) => evt.args.account!)
     console.log('accounts :>> ', accounts)
-    return accounts
-  }
-
-  public async createAccount() {
-    const userAccountTag = Math.floor(new Date().getTime() / 1000)
-    console.log('createAccount start :>> ', protocolTag, userAccountTag)
-    const res = await this.factoryContract().write.createAccount(
-      [protocolTag, BigInt(userAccountTag), '0x'],
-      {
-        chain: this.walletClient.chain,
-        account: this.account,
-      },
-    )
-    // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
-    console.log('createAccount res :>> ', res)
-    const accounts = await this.getAccounts()
-    console.log('createAccount :>> ', accounts)
     return accounts
   }
 

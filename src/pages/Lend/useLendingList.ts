@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { useLendingManager } from '@/hooks/useSDK'
@@ -16,7 +15,7 @@ export default function useLendingList() {
   const lendingMng = useLendingManager()
   // const accountMng = useAccountManager()
   const { lendPools, isFetching, updateLendPools, updateIsFetching } = useLendStore()
-  const { balances } = useAccountStore()
+  const { balances, positions } = useAccountStore()
 
   // const [balances, setBalances] = useState([] as bigint[])
   const { chainId } = useWagmiCtx()
@@ -38,11 +37,15 @@ export default function useLendingList() {
     } finally {
       updateIsFetching(false)
     }
-  }, [chainLendingConfig, lendingMng])
+  }, [chainLendingConfig, lendingMng, updateIsFetching, updateLendPools])
 
   const formattedLendPools = useMemo(() => {
     return lendPools.map((pool, index) => {
       const config = chainLendingConfig[index]
+      const position = positions.find(
+        (item) =>
+          item.reserveId === config.reserveId && item.marketId === config.marketId,
+      )
       return {
         ...config,
         ...pool,
@@ -55,11 +58,23 @@ export default function useLendingList() {
           config.decimals,
         ),
         balance: stringToDecimals(balances[index * 3]?.toString(), config.decimals),
-        deposited: stringToDecimals(balances[index * 3 + 1]?.toString(), config.decimals),
-        borrowed: stringToDecimals(balances[index * 3 + 2]?.toString(), config.decimals),
+        deposited: position
+          ? stringToDecimals(position.liquidity?.toString(), config.decimals)
+          : 0,
+        borrowed: position
+          ? stringToDecimals(position.debt?.toString(), config.decimals)
+          : 0,
+        depositedBal: stringToDecimals(
+          balances[index * 3 + 1]?.toString(),
+          config.decimals,
+        ),
+        borrowedBal: stringToDecimals(
+          balances[index * 3 + 2]?.toString(),
+          config.decimals,
+        ),
       }
     })
-  }, [balances, chainLendingConfig, lendPools])
+  }, [balances, positions, chainLendingConfig, lendPools])
 
   return {
     formattedLendPools,

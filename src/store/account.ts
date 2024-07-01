@@ -15,6 +15,7 @@ export interface AccountInfo {
 export interface AccountState {
   accounts: Hex[]
   balances: bigint[]
+  positions: any[]
   accountInfo?: AccountInfo
   supportedAssets: any[]
   supportedDebts: any[]
@@ -23,6 +24,7 @@ export interface AccountState {
 export interface AccountAction {
   updateAccounts: (accounts: AccountState['accounts']) => void
   updateBalances: (balances: AccountState['balances']) => void
+  updatePositions: (balances: AccountState['positions']) => void
   updateAccountInfo: (accountInfo: AccountState['accountInfo']) => void
   updateSupportedAssets: (supportedAssets: AccountState['supportedAssets']) => void
   updateSupportedDebts: (supportedDebts: AccountState['supportedDebts']) => void
@@ -31,6 +33,7 @@ export interface AccountAction {
 export const useAccountStore = create<AccountState & AccountAction>((set) => ({
   accounts: [],
   balances: [],
+  positions: [],
   accountInfo: undefined,
   supportedAssets: [],
   supportedDebts: [],
@@ -43,6 +46,7 @@ export const useAccountStore = create<AccountState & AccountAction>((set) => ({
     })),
   updateAccounts: (accounts) => set(() => ({ accounts: accounts })),
   updateBalances: (balances) => set(() => ({ balances: balances })),
+  updatePositions: (positions) => set(() => ({ positions: positions })),
   updateAccountInfo: (accountInfo) => set(() => ({ accountInfo: accountInfo })),
   updateSupportedAssets: (supportedAssets) =>
     set(() => ({ supportedAssets: supportedAssets })),

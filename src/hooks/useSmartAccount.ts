@@ -1,6 +1,5 @@
 import { sumBy } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useCredit from '@/hooks/useCredit'
@@ -10,7 +9,7 @@ import usePrices from '@/hooks/usePrices'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { useAppSelector } from '@/state'
-import { useAccountStore } from '@/store'
+import { useAccountStore, useLendStore } from '@/store'
 import { aprToApy } from '@/utils/math'
 
 type ChainId = keyof typeof LendingConfig
@@ -43,10 +42,12 @@ export default function useSmartAccount() {
     updateAccounts,
     updateAccountInfo,
     updateBalances,
+    // updatePositions,
     updateSupportedAssets,
     updateSupportedDebts,
   } = useAccountStore()
 
+  const { updatePositions, updateHealthStatus } = useLendStore()
   // console.log('accountInfo :>> ', accountInfo);
 
   const accountMng = useAccountManager()
@@ -83,7 +84,7 @@ export default function useSmartAccount() {
         debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
       })
     },
-    [accountMng],
+    [accountMng, updateAccountInfo],
   )
 
   const fetchBalances = useCallback(
@@ -100,7 +101,19 @@ export default function useSmartAccount() {
       const [...res] = await accountMng.getBalances([acc], tokens)
       updateBalances(res)
     },
-    [chainLendingConfig, accountMng],
+    [chainLendingConfig, accountMng, updateBalances],
+  )
+
+  const fetchUserLending = useCallback(
+    async (acc) => {
+      const [healthStatus, positions] = await Promise.all([
+        lendingMng.getUserHealthStatus(acc),
+        lendingMng.getUserPositions(acc),
+      ])
+      updateHealthStatus(healthStatus)
+      updatePositions(positions)
+    },
+    [lendingMng, updateHealthStatus, updatePositions],
   )
 
   const getInitData = useCallback(async () => {
@@ -118,14 +131,15 @@ export default function useSmartAccount() {
     accountMng.getSupportedDebts().then((res) => {
       updateSupportedDebts(res)
     })
-  }, [accountMng])
-
-  const fetchUserLending = useCallback(
-    (acc) => {
-      lendingMng.getUserLendStatus(acc)
-    },
-    [lendingMng],
-  )
+  }, [
+    accountMng,
+    fetchBalances,
+    fetchUserLending,
+    getAccountInfo,
+    updateAccounts,
+    updateSupportedAssets,
+    updateSupportedDebts,
+  ])
 
   const depositedVal = accountInfo?.depositedVal || 0
   const debtVal = accountInfo?.debtVal || 0

@@ -159,13 +159,24 @@ export class LendingManager {
     // return results.map((item) => item.result)
   }
 
-  public async getUserLendStatus(account: Address) {
+  public async getUserHealthStatus(account: Address) {
+    // Health status, including DEBT, LTV, LIQUIDATE_VALUE
+    const healthStatus =
+      await this.getExtraXLendingContract().read.calculateUserHealthData([
+        defaultMarketId,
+        account,
+      ])
+
+    console.log('healthStatus :>> ', healthStatus)
+    return healthStatus
+  }
+
+  public async getUserPositions(account: Address) {
     const reserves = await this.getExtraXLendingContract().read.getActiveReservesOf([
       defaultMarketId,
       account,
     ])
-    console.log('getUserLendStatus:', reserves)
-
+    // console.log('getUserLendStatus:', reserves)
     const positions = await Promise.all(
       reserves.map((reserveId) => {
         return this.getExtraXLendingContract().read.getPosition([
@@ -175,16 +186,8 @@ export class LendingManager {
         ])
       }),
     )
-    console.log('positions :>> ', positions)
-
-    // Health status, including DEBT, LTV, LIQUIDATE_VALUE
-    const healthStatus =
-      await this.getExtraXLendingContract().read.calculateUserHealthData([
-        defaultMarketId,
-        account,
-      ])
-
-    console.log('healthStatus :>> ', healthStatus)
+    console.log('getUserPositions :>> ', positions)
+    return positions
   }
 
   public async requireAllowance(

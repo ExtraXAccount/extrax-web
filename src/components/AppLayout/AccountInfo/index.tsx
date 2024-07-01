@@ -29,7 +29,7 @@ export default function AccountInfo() {
 
   useEffect(() => {
     getInitData()
-  }, [])
+  }, [getInitData])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
