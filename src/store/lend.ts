@@ -1,8 +1,47 @@
 import { create } from 'zustand'
 
+interface IInterestRateConfig {
+  borrowingRateA: number
+  borrowingRateB: number
+  maxBorrowingRate: number
+  utilizationA: number
+  utilizationB: number
+}
+
+interface ILendPoolConfig {
+  paused: boolean
+  frozen: boolean
+  borrowEnabled: boolean
+  collateralEnabled: boolean
+  LTV: number
+  liquidationThreshold: number
+  liquidationBonus: number
+  borrowCap: bigint
+  colddownTime: bigint
+  liquidationProtocolFee: number
+  reserveProtocoalFee: number
+  supplyCap: bigint
+}
+
 export interface LendState {
   healthStatus: any
-  lendPools: any[]
+  lendPools: {
+    marketId: bigint
+    reserveId: bigint
+    availableLiquidity: bigint
+    totalLiquidity: bigint
+    totalDebts: bigint
+    borrowingIndex: bigint
+    exchangeRate: bigint
+    lastUpdateTimestamp: number
+    currentBorrowingRate: bigint
+    underlyingAsset: string
+    eTokenAddress: string
+    debtTokenAddress: string
+    feeReceiver: string
+    interestRateConfig: IInterestRateConfig
+    config: ILendPoolConfig
+  }[]
   positions: any[]
   isFetching: boolean
 }

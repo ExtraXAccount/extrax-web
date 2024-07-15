@@ -84,7 +84,7 @@ export default function LendingTable() {
         sortDirections={['descend', 'ascend']}
         dataSource={formattedLendPools}
         pagination={false}
-        rowKey={(i) => i.poolKey}
+        rowKey={(i: (typeof formattedLendPools)[0]) => i.poolKey}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
