@@ -2,7 +2,7 @@ import './index.scss'
 
 import { useCallback } from 'react'
 
-import useLendContract from '@/sdk/lend'
+import useLendContract from '@/sdk/lend-deprecated'
 import { useAppDispatch, useAppSelector } from '@/state'
 import { setShowDSL } from '@/state/dsl/reducer'
 

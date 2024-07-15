@@ -398,7 +398,7 @@ export default function LendingTable() {
           render={(i) => {
             return (
               <div className="flex ai-ct lending-table-actions">
-                <button
+                {/* <button
                   className="btn-base btn-base-small"
                   onClick={() => {
                     if (!account) {
@@ -420,7 +420,7 @@ export default function LendingTable() {
                   }}
                 >
                   Borrow
-                </button>
+                </button> */}
                 <button
                   className="btn-base btn-base-small"
                   disabled={!i.deposited}

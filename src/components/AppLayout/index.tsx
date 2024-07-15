@@ -8,7 +8,7 @@ import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
-import lendingData from '@/sdk/lend/mock.json'
+import lendingData from '@/sdk/lend-deprecated/mock.json'
 import { getCoingeckoPriceByIds } from '@/sdk/utils/coingecko'
 import { useAppDispatch } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
