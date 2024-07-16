@@ -3,14 +3,57 @@
     min-height: calc(100vh - 300px);
     padding: 0;
   }
-}
 
-.position-amount-wrap{
-  padding: 6px;
-  width: max-content;
-  background-color: #eee;
-  border-radius: 8px;
-  .token-amount{
-    font-size: 12px;
+  &-box{
+    padding: 24px;
+  }
+
+  &-wrap{
+    border: .5px solid var(--nav-border-color);
+    overflow: hidden;
+    .ant-table-wrapper{
+      .ant-table{
+        padding: 0 !important;
+        .ant-table-thead > tr > th{
+          background: transparent !important;
+        }
+      }
+    }
+
+    &-title{
+      background-color: #F2F2F7;
+      padding: 16px;
+      justify-content: space-between;
+
+      >h4{
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 16px;
+        >i{
+          width: 8px;
+          height: 24px;
+          border-radius: 4px;
+          background-color: #38AD3D;
+        }
+      }
+
+      &-danger{
+        >h4{
+          >i{
+            background-color: #F13F3F;
+          }
+        }
+      }
+    }
+
+    &-safe{
+      border-radius: 16px 16px 0 0;
+      border-bottom: 0;
+    }
+
+    &-danger{
+      border-radius: 0 0 16px 16px;
+    }
   }
 }

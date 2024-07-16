@@ -1,20 +1,19 @@
 import { Table } from 'antd'
-
-import { TokenAmount } from '@/components/Amount'
 import LPName from '@/components/LPName'
-import { useAppSelector } from '@/state'
-import { remain2Decimal, toPrecision } from '@/utils/math'
+import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+import { toDecimals } from '@/sdk/utils/token'
 const { Column } = Table
 
-export default function UniPositionTable() {
-  const positions = useAppSelector((state) => state.position.userPositions)
+export default function UniPositionTable(props: {
+  positions: any[]
+}) {
   return (
     <div>
       <Table
         sortDirections={['descend', 'ascend']}
-        dataSource={positions || []}
+        dataSource={props.positions || []}
         pagination={false}
-        rowKey={(item, index) => `${item.poolKey}-${index + 1}`}
+        rowKey={(item, index) => `${item.marketId}-${item.reserveId}`}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
@@ -39,65 +38,77 @@ export default function UniPositionTable() {
               <>
                 <div className="lending-list-title-wrap">
                   <LPName
-                    token0={i.token0}
-                    token1={i.token1}
-                    title={`${i.token0}-${i.token1}`}
+                    token0={i.pool.tokenSymbol}
+                    title={`${i.pool.tokenSymbol}`}
                   />
                 </div>
-                <div>Uniswap V3</div>
               </>
             )
           }}
         />
         <Column
-          title="Position"
+          title="Value"
           dataIndex=""
-          key="position"
+          key="value"
           render={(i) => {
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  ${toPrecision(i.totalPositionValue)}
-                </div>
-                <div className="position-amount-wrap">
-                  <TokenAmount symbol={i.token0} amount={i.token0Amount} />
-                  <TokenAmount symbol={i.token1} amount={i.token1Amount} />
+                  ${toPrecision(i.value)}
                 </div>
               </>
             )
           }}
         />
         <Column
-          title="Debt"
+          title="Size"
           dataIndex=""
-          key="debt"
+          key="size"
           render={(i) => {
+            const debtSize = toDecimals(i.debt, i.pool.decimals)
+            const liquiditySize = toDecimals(i.debt, i.pool.decimals)
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  ${remain2Decimal(i.totalPositionValue)}
-                </div>
-                <div className="position-amount-wrap">
-                  <TokenAmount symbol={i.token0} amount={i.token0Debt} />
-                  <TokenAmount symbol={i.token1} amount={i.token1Debt} />
+                  {remain2Decimal(i.type === 'debt' ? debtSize : liquiditySize)}
                 </div>
               </>
             )
           }}
         />
         <Column
-          title="Earning"
+          title="Price"
           dataIndex=""
-          key="earning"
+          key="price"
           render={(i) => {
             return (
               <>
-                <p>Farmed: $0</p>
-                <p>
-                  Daily: {toPrecision((i.apr * 100) / 365)}% ($
-                  {toPrecision((i.apr / 365) * i.totalPositionValue)})
-                </p>
-                <p>APR: {toPrecision(i.apr * 100)}%</p>
+                <p>${remain2Decimal(i.price)}</p>
+              </>
+            )
+          }}
+        />
+        <Column
+          title="Liquidation Price"
+          dataIndex=""
+          key="Liquidation"
+          render={(i) => {
+            return (
+              <>
+                <p>{i.type === 'debt' ? '' : 'N/A'}</p>
+              </>
+            )
+          }}
+        />
+        <Column
+          title="APR"
+          dataIndex=""
+          key="apr"
+          render={(i) => {
+            return (
+              <>
+                {i.type === 'debt' && <p>{toPrecision(aprToApy100(i.pool.borrowApr * 100))}%</p>}
+                {i.type !== 'debt' && <p>{toPrecision(aprToApy100(i.pool.apr * 100))}%</p>}
               </>
             )
           }}
@@ -109,8 +120,8 @@ export default function UniPositionTable() {
           render={(i) => {
             return (
               <div className="flex ai-ct lending-table-actions">
-                <button className="btn-base btn-base-small">Add</button>
-                <button className="btn-base btn-base-small">Close</button>
+                {i.type !== 'debt' && <button className="btn-base btn-base-small">Withdraw</button>}
+                {i.type === 'debt' && <button className="btn-base btn-base-small">Repay</button>}
               </div>
             )
           }}

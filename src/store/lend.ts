@@ -42,7 +42,13 @@ export interface LendState {
     interestRateConfig: IInterestRateConfig
     config: ILendPoolConfig
   }[]
-  positions: any[]
+  positions: {
+    account: string
+    debt: bigint
+    liquidity: bigint
+    marketId: bigint
+    reserveId: bigint
+  }[]
   isFetching: boolean
 }
 

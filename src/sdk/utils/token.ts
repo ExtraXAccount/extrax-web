@@ -23,7 +23,7 @@ export function isStable(chainId: SupportedChainId, address: string) {
   return false
 }
 
-export function toDecimals(bn: BN, decimals = 18) {
+export function toDecimals(bn: BN | bigint, decimals = 18) {
   if (!bn) {
     return 0
   }
