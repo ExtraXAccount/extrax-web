@@ -10,6 +10,7 @@ import AppLayout from './components/AppLayout'
 // import FigmaLend from './pages/FigmaLend'
 // import Intent from './pages/Intent'
 import Lend from './pages/Lend'
+import DepositModal from './pages/Lend/DepositModal'
 import LeveragedApps from './pages/LeveragedApps'
 import Spark from './pages/LeveragedApps/Spark'
 import UniV3LYF from './pages/LeveragedApps/UniV3LYF'
@@ -29,6 +30,7 @@ function App() {
               <Route path="velodromev2" element={<Velodrome />}></Route>
             </Route>
             <Route path="lend" element={<Lend />}></Route>
+            <Route path="lend/deposit" element={<DepositModal />}></Route>
             {/* <Route path="lend" element={<FigmaLend />}></Route> */}
             <Route path="portfolio" element={<Positions />}></Route>
             {/* <Route path="intent" element={<Intent />}></Route> */}

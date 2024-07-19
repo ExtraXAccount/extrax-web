@@ -1,4 +1,4 @@
-import styles from './CoinProperty1UsdCoinUsdc.module.css'
+import './CoinProperty1UsdCoinUsdc.css'
 
 export interface ICoinProperty1UsdCoinUsdcProps {
   property1?: 'bitcoin-btc' | 'ethereum-eth' | 'usd-coin-usdc'
@@ -10,15 +10,16 @@ export const CoinProperty1UsdCoinUsdc = ({
   className,
   ...props
 }: ICoinProperty1UsdCoinUsdcProps): JSX.Element => {
-  const variantsClassName = styles['property-1-' + property1]
+  const variantsClassName = 'property-1-' + property1
 
   return (
     <div
-      className={
-        styles.coinProperty1UsdCoinUsdc + ' ' + className + ' ' + variantsClassName
-      }
+      className={'coin-property-1-usd-coin-usdc ' + className + ' ' + variantsClassName}
     >
-      <img className={styles.usdCoinUsdc} src="/usd-coin-usdc0.svg" />
+      <img
+        className="coin-property-1-usd-coin-usdc__usd-coin-usdc"
+        src="/modal/usd-coin-usdc0.svg"
+      />
     </div>
   )
 }

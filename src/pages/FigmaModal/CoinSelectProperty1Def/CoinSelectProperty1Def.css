@@ -1,0 +1,17 @@
+.coin-select-property-1-def,
+.coin-select-property-1-def * {
+  box-sizing: border-box;
+}
+.coin-select-property-1-def {
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  overflow: visible;
+}

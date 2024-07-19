@@ -1,0 +1,49 @@
+.component-289-property-1-oracle-price,
+.component-289-property-1-oracle-price * {
+  box-sizing: border-box;
+}
+.component-289-property-1-oracle-price {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 80px;
+  position: relative;
+}
+.component-289-property-1-oracle-price__frame-482135 {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.component-289-property-1-oracle-price__oracle-price {
+  color: var(--text-gry-60percent-b, #666666);
+  text-align: left;
+  font-family: 'Figtree-Medium', sans-serif;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.component-289-property-1-oracle-price__oracle-instance {
+  flex-shrink: 0 !important;
+}
+.component-289-property-1-oracle-price___1-00 {
+  color: var(--text-black, #000000);
+  text-align: center;
+  font-family: 'Figtree-Medium', sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

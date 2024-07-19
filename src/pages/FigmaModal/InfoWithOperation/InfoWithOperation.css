@@ -1,0 +1,75 @@
+.info-with-operation,
+.info-with-operation * {
+  box-sizing: border-box;
+}
+.info-with-operation {
+  background: #ffffff;
+  border-radius: 16px;
+  border-style: solid;
+  border-color: var(--stroke, #c9c9cb);
+  border-width: 0.5px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+.info-with-operation__frame-1279 {
+  background: var(--title-back, #f2f2f7);
+  border-style: solid;
+  border-color: var(--stroke, #c9c9cb);
+  border-width: 0px 0px 0.5px 0px;
+  padding: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.info-with-operation__usdc-pool-details {
+  color: var(--text-black, #000000);
+  text-align: center;
+  font-family: 'Figtree-SemiBold', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.info-with-operation__frame {
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  overflow: visible;
+}
+.info-with-operation__frame-482114 {
+  display: flex;
+  flex-direction: row;
+  gap: 0px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  align-self: stretch;
+  flex-shrink: 0;
+  position: relative;
+}
+.info-with-operation__info-to-list-instance {
+  flex: 1 !important;
+}
+.info-with-operation__supply-windows-instance {
+  flex-shrink: 0 !important;
+  width: 488px !important;
+}

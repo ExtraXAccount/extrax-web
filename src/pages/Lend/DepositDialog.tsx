@@ -96,7 +96,8 @@ export default function DepositDialog({
     <Dialog
       open={!!open && !!currentLendingPoolDetail}
       onClose={onClose}
-      title={`Deposit ${nameChecker(currentLendingPoolDetail?.tokenSymbol)}`}
+      // title={`Deposit ${nameChecker(currentLendingPoolDetail?.tokenSymbol)}`}
+      title={`${nameChecker(currentLendingPoolDetail?.tokenSymbol)} Pool Details`}
     >
       <div>
         <AmountInput

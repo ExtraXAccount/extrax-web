@@ -1,12 +1,11 @@
 import { Table } from 'antd'
+
 import LPName from '@/components/LPName'
-import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 import { toDecimals } from '@/sdk/utils/token'
+import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
 
-export default function UniPositionTable(props: {
-  positions: any[]
-}) {
+export default function UniPositionTable(props: { positions: any[] }) {
   return (
     <div>
       <Table
@@ -37,10 +36,7 @@ export default function UniPositionTable(props: {
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  <LPName
-                    token0={i.pool.tokenSymbol}
-                    title={`${i.pool.tokenSymbol}`}
-                  />
+                  <LPName token0={i.pool.tokenSymbol} title={`${i.pool.tokenSymbol}`} />
                 </div>
               </>
             )
@@ -53,9 +49,7 @@ export default function UniPositionTable(props: {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">
-                  ${toPrecision(i.value)}
-                </div>
+                <div className="lending-list-title-wrap">${toPrecision(i.value)}</div>
               </>
             )
           }}
@@ -107,8 +101,12 @@ export default function UniPositionTable(props: {
           render={(i) => {
             return (
               <>
-                {i.type === 'debt' && <p>{toPrecision(aprToApy100(i.pool.borrowApr * 100))}%</p>}
-                {i.type !== 'debt' && <p>{toPrecision(aprToApy100(i.pool.apr * 100))}%</p>}
+                {i.type === 'debt' && (
+                  <p>{toPrecision(aprToApy100(i.pool.borrowApr * 100))}%</p>
+                )}
+                {i.type !== 'debt' && (
+                  <p>{toPrecision(aprToApy100(i.pool.apr * 100))}%</p>
+                )}
               </>
             )
           }}
@@ -120,8 +118,12 @@ export default function UniPositionTable(props: {
           render={(i) => {
             return (
               <div className="flex ai-ct lending-table-actions">
-                {i.type !== 'debt' && <button className="btn-base btn-base-small">Withdraw</button>}
-                {i.type === 'debt' && <button className="btn-base btn-base-small">Repay</button>}
+                {i.type !== 'debt' && (
+                  <button className="btn-base btn-base-small">Withdraw</button>
+                )}
+                {i.type === 'debt' && (
+                  <button className="btn-base btn-base-small">Repay</button>
+                )}
               </div>
             )
           }}

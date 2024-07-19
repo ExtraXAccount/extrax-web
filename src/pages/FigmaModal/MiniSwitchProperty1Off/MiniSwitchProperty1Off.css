@@ -1,0 +1,11 @@
+.mini-switch-property-1-off,
+.mini-switch-property-1-off * {
+  box-sizing: border-box;
+}
+.mini-switch-property-1-off {
+  flex-shrink: 0;
+  width: 26px;
+  height: 16px;
+  position: relative;
+  overflow: visible;
+}
