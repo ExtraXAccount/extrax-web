@@ -27,16 +27,16 @@ export default function AccountInfo() {
     // safetyRatio,
     accountAPY,
     accounts,
-    getInitData,
+    // getInitData,
   } = useSmartAccount()
 
   useEffect(() => {
     console.log('healthStatus :>> ', healthStatus, healthFactorPercent)
   }, [healthStatus, healthFactorPercent])
 
-  useEffect(() => {
-    getInitData()
-  }, [getInitData])
+  // useEffect(() => {
+  //   getInitData()
+  // }, [getInitData])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 

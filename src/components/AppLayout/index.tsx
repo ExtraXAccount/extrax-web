@@ -8,6 +8,8 @@ import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import useLendingList from '@/pages/Lend/useLendingList'
 import lendingData from '@/sdk/lend-deprecated/mock.json'
 import { getCoingeckoPriceByIds } from '@/sdk/utils/coingecko'
 import { useAppDispatch } from '@/state'
@@ -37,6 +39,17 @@ export default function AppLayout() {
   // const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const dispatch = useAppDispatch()
+
+  const { fetchLendPools } = useLendingList()
+  const { getInitData: getInitSmartAccountData } = useSmartAccount()
+
+  useEffect(() => {
+    getInitSmartAccountData()
+  }, [getInitSmartAccountData])
+
+  useEffect(() => {
+    fetchLendPools()
+  }, [fetchLendPools])
 
   useEffect(() => {
     dispatch(setLendingStatus(lendingData))

@@ -2,6 +2,7 @@ import './InfoWithOperation.css'
 
 import { InfoToListProperty1Info } from '../InfoToListProperty1Info/InfoToListProperty1Info'
 import { SupplyWindows } from '../SupplyWindows/SupplyWindows'
+import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface IInfoWithOperationProps {
   className?: string
@@ -11,10 +12,14 @@ export const InfoWithOperation = ({
   className,
   ...props
 }: IInfoWithOperationProps): JSX.Element => {
+  const poolInfo = useLendPoolInfo()
+
   return (
     <div className={'info-with-operation ' + className}>
       <div className="info-with-operation__frame-1279">
-        <div className="info-with-operation__usdc-pool-details">USDC Pool Details </div>
+        <div className="info-with-operation__usdc-pool-details">
+          {poolInfo?.tokenSymbol?.toUpperCase()} Pool Details{' '}
+        </div>
         <img className="info-with-operation__frame" src="/modal/frame0.svg" />
       </div>
       <div className="info-with-operation__frame-482114">
