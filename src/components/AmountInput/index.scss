@@ -1,11 +1,16 @@
 .amount-input{
-  padding: 12px 0;
+  padding: 16px 0;
   &-nopadding{
     padding: 0;
   }
   &-number{
+    border-radius: 8px;
+    border: .5px solid var(--border-color);
+    &-sub{
+      padding: 8px 12px;
+    }
     &-wrap{
-      margin: 10px 0;
+      border-bottom: .5px solid var(--border-color);
     }
     &-token{
       display: flex;
@@ -22,7 +27,7 @@
       }
     }
     &-max{
-      font-size: 14px;
+      font-size: 12px;
       // margin-bottom: 10px;
       // text-align: right;
       span {
@@ -68,16 +73,9 @@
     }
 
     &-max-button{
-      padding: 4px 12px;
-      border-radius: 18px;
-      background-color: rgba(#333, .1);
-      background-color: var(--btn-max-bg);
+      font-size: 12px;
+      padding: 2px 6px;
       cursor: pointer;
-      transition: .3s background-color ease-in-out;
-      &:hover{
-        background-color: rgba(#333, .2);
-        background-color: var(--btn-max-bg-hover);
-      }
     }
   }
 
@@ -91,13 +89,13 @@
     padding: 9px 12px !important;
     // background-color: rgba(20, 24, 35, 0.4) !important;
     border-color: transparent;
-    background-color: rgba(#7185AF, .1);
+    outline: 0 !important;
+    box-shadow: none !important;
     &:hover{
       border-color: transparent !important;
     }
 
     .ant-input{
-      text-align: right;
       font-size: 18px;
       background-color: transparent;
       // color: #1586FF;

@@ -8,9 +8,11 @@ import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { nameChecker } from '@/utils'
-import { toPrecision } from '@/utils/math'
+import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
 import useLendingList from './useLendingList'
+import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
+import DialogAccountInfo from './DialogComponents/DialogAccountInfo'
 
 export default function WithdrawDialog({
   open,
@@ -21,7 +23,7 @@ export default function WithdrawDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { smartAccount, updateAfterAction } = useSmartAccount()
+  const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -84,31 +86,29 @@ export default function WithdrawDialog({
           token={currentLendingPoolDetail?.tokenSymbol}
           decimals={currentLendingPoolDetail?.tokenDecimals}
           value={value}
+          price={getPrice(currentLendingPoolDetail?.tokenSymbol)}
           onChange={(val) => setValue(val)}
         />
       </div>
-      <ul className="summary-list">
-        <li>
-          <p>Value:</p>
-          <b className="text-highlight">
-            $
-            {toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
-          </b>
-        </li>
-        {/* <li>
-          <p>Current APY:</p>
-          <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%</b>
-        </li>
-        <li>
-          <p>Updated APY:</p>
-          <b className="text-highlight">{formatFloatNumber(nextApy)}%</b>
-        </li> */}
-      </ul>
+      <DialogApyDisplay list={
+        [
+          {
+            title: 'APY',
+            content: `${remain2Decimal(aprToApy100(currentLendingPoolDetail?.apr * 100))}%`
+          },
+          {
+            title: 'Health Factor',
+            content: !depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%'
+          }
+        ]
+      }/>
+      <div className='dialog-divider'></div>
+      <DialogAccountInfo reserveId={currentLendingPoolDetail?.reserveId} />
       <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading}
           disabled={!Number(value)}
-          className={classNames('btn-base flex1', {
+          className={classNames('btn-base btn-base-primary btn-base-large flex1', {
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
           onClick={() => {

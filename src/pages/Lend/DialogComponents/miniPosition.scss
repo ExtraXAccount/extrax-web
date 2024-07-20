@@ -1,0 +1,22 @@
+.mini-positions{
+  .ant-table{
+    padding: 0 !important;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+  }
+
+  &-item{
+    &-sign{
+      width: 4px;
+      height: 20px;
+      border-radius: 4px;
+      background-color: #38AD3D;
+    }
+
+    &-debt{
+      .mini-positions-item-sign{
+        background-color: #F13F3F;
+      }
+    }
+  }
+}

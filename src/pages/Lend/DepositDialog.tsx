@@ -109,6 +109,7 @@ export default function DepositDialog({
           token={currentLendingPoolDetail?.tokenSymbol}
           decimals={currentLendingPoolDetail?.tokenDecimals}
           value={value}
+          price={getPrice(currentLendingPoolDetail?.tokenSymbol)}
           onChange={(val) => setValue(val)}
         />
       </div>
@@ -135,7 +136,7 @@ export default function DepositDialog({
         <Button
           loading={loading.writing}
           disabled={!Number(value)}
-          className={classNames('btn-base flex1', {
+          className={classNames('btn-base btn-base-primary btn-base-large flex1', {
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
           onClick={deposit}

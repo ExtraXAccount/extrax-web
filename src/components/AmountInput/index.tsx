@@ -1,11 +1,11 @@
 import './index.scss'
 
-import { Dropdown, Input } from 'antd/es'
+import { Dropdown, Input, Slider } from 'antd/es'
 import cx from 'classnames'
 import { useMemo, useState } from 'react'
 
 import { nameChecker } from '@/utils'
-import { toPrecision } from '@/utils/math'
+import { remain2Decimal, toPrecision } from '@/utils/math'
 import { div, isGt, mul } from '@/utils/math/bigNumber'
 
 import { specialNameChecker } from '../LPName'
@@ -27,6 +27,7 @@ export interface IAmountInputProps {
   allowInputOverflow?: boolean
   useNativeETH?: boolean
   onUseNativeETH?: (useNativeEth: boolean) => any
+  price?: number
 }
 
 const NativeETH = 'ETH'
@@ -48,6 +49,7 @@ export default function AmountInput(props: IAmountInputProps) {
     allowInputOverflow = false,
     useNativeETH = true,
     onUseNativeETH,
+    price
   } = props
   // console.log('token :>> ', { useNativeETH, token })
   const [selectedToken, setSelectedToken] = useState(
@@ -127,14 +129,53 @@ export default function AmountInput(props: IAmountInputProps) {
       })}
     >
       <section className="amount-input-number">
-        <div className="flex jc-sb ai-ct">
-          <div className="amount-input-number-max">
-            {maxText}:{' '}
-            <span onClick={() => onChange(String(max))}>
-              {toPrecision(Number(max), 5)}
-            </span>
+        <div className="amount-input-number-wrap">
+          <Input
+            suffix={suffix}
+            className="amount-input-input"
+            min={min}
+            max={max}
+            value={value}
+            onChange={(e) => {
+              const r = e.target.value.trim().replace(/[^\d^.]+/g, '')
+              if (!allowInputOverflow && isGt(r, max)) {
+                onChange(String(max))
+              } else {
+                onChange(r)
+              }
+            }}
+            placeholder="0.00"
+          />
+        </div>
+        <div className="amount-input-number-sub flex jc-sb ai-ct">
+            <div className='amount-input-number-totalvalue text-sm-2'>
+              {!!price && <>${remain2Decimal(price * Number(value))}</>}
+            </div>
+          <div className='flex ai-ct'>
+            {sliderMax !== undefined && (
+              <div className="amount-input-number-max text-sm-2">
+                {sliderMaxText}:
+                <span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
+              </div>
+            )}
+            {
+              !sliderMax && 
+              <div className="amount-input-number-max text-sm-2">
+                {maxText}:{' '}
+                <span onClick={() => onChange(String(max))}>
+                  {toPrecision(Number(max), 5)}
+                </span>
+              </div>
+            }
+            <div
+              className="amount-input-number-max-button"
+              onClick={() => onChange(String(parsedSliderMax))}
+            >
+              Max
+            </div>
           </div>
-          <ul className="amount-input-percent-list flex ai-ct">
+ 
+          {/* <ul className="amount-input-percent-list flex ai-ct">
             {[0.25, 0.5, 0.75, 1].map((percent) => (
               <li
                 key={percent}
@@ -153,54 +194,16 @@ export default function AmountInput(props: IAmountInputProps) {
                 {percent * 100}%
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
-        <div className="amount-input-number-wrap">
-          <Input
-            prefix={
-              <div
-                className="amount-input-number-max-button"
-                onClick={() => onChange(String(parsedSliderMax))}
-              >
-                max
-              </div>
-            }
-            // suffix={
-            //   <div className="amount-input-number-token">
-            //     <i className={`coin coin-${specialNameChecker(token)}`} />
-            //     <p>{nameChecker(token)}</p>
-            //   </div>
-            // }
-            suffix={suffix}
-            className="amount-input-input"
-            min={min}
-            max={max}
-            value={value}
-            onChange={(e) => {
-              const r = e.target.value.trim().replace(/[^\d^.]+/g, '')
-              if (!allowInputOverflow && isGt(r, max)) {
-                onChange(String(max))
-              } else {
-                onChange(r)
-              }
-            }}
-            placeholder="0.00"
-          />
-        </div>
-        {sliderMax !== undefined && (
-          <div className="amount-input-number-max">
-            {sliderMaxText}:
-            <span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
-          </div>
-        )}
       </section>
-      {/* <section className="amount-input-slider">
+      <section className="amount-input-slider">
         <Slider
           marks={{
             0: '0%',
-            25: '25%',
+            // 25: '25%',
             50: '50%',
-            75: '75%',
+            // 75: '75%',
             100: '100%',
           }}
           step={1}
@@ -221,7 +224,7 @@ export default function AmountInput(props: IAmountInputProps) {
           min={0}
           max={100}
         />
-      </section> */}
+      </section>
     </div>
   )
 }

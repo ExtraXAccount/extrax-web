@@ -216,6 +216,11 @@ input {
     // height: 2.4em;
   }
 
+  &.btn-base-large{
+    font-size: 16px;
+    height: 44px;
+  }
+
   @media screen and (max-width: 720px) {
     padding: 0 1em;
     height: 2.4em;
@@ -238,6 +243,8 @@ input {
 
   &-primary {
     border-radius: 8px;
+    color: #fff;
+    background: linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%);
   }
 
   &-secondary{

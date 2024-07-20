@@ -105,20 +105,19 @@ body.dark{
 }
 
 .summary-list{
-  font-size: 14px;
-  background-color: var(--weakest-color);
-  border-radius: var(--box-radius);
+  font-size: 12px;
+  line-height: 1.5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px;
   >li{
+    color: var(--text-color-weak);
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    // align-items: center;
-    line-height: 40px;
-    >p{
-      padding-left: 16px;
-    }
     >b{
-      padding-right: 16px;
-      font-weight: bold;
+      font-weight: normal;
     }
   }
   @media screen and (max-width: 720px) {

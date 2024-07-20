@@ -23,6 +23,14 @@ interface ILendPoolConfig {
   supplyCap: bigint
 }
 
+export interface ILendPosition {
+  account: string
+  debt: bigint
+  liquidity: bigint
+  marketId: bigint
+  reserveId: bigint
+}
+
 export interface LendState {
   healthStatus: any
   lendPools: {
@@ -42,14 +50,10 @@ export interface LendState {
     interestRateConfig: IInterestRateConfig
     config: ILendPoolConfig
   }[]
-  positions: {
-    account: string
-    debt: bigint
-    liquidity: bigint
-    marketId: bigint
-    reserveId: bigint
-  }[]
+  positions: ILendPosition[]
   isFetching: boolean
+  currentPosition: ILendPosition | undefined
+  currentDialogShow: 'repay' | 'borrow' | 'withdraw' | 'deposit' | null
 }
 
 export interface LendAction {
@@ -57,6 +61,8 @@ export interface LendAction {
   updateLendPools: (lendPools: LendState['lendPools']) => void
   updatePositions: (balances: LendState['positions']) => void
   updateIsFetching: (isFetching: LendState['isFetching']) => void
+  updateCurrentPosition: (currentPosition: LendState['currentPosition']) => void
+  updateDialogShow: (currentDialogShow: LendState['currentDialogShow']) => void
 }
 
 export const useLendStore = create<LendState & LendAction>((set) => ({
@@ -64,8 +70,12 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
   lendPools: [],
   positions: [],
   isFetching: false,
+  currentPosition: undefined,
+  currentDialogShow: null,
   updateHealthStatus: (healthStatus) => set(() => ({ healthStatus: healthStatus })),
   updateLendPools: (lendPools) => set(() => ({ lendPools: lendPools })),
   updatePositions: (positions) => set(() => ({ positions: positions })),
   updateIsFetching: (isFetching) => set(() => ({ isFetching: isFetching })),
+  updateCurrentPosition: (currentPosition) => set(() => ({ currentPosition: currentPosition })),
+  updateDialogShow: (currentDialogShow) => set(() => ({ currentDialogShow: currentDialogShow })),
 }))

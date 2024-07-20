@@ -1,0 +1,24 @@
+.dialog-apy-display{
+  border-radius: 8px;
+  border: .5px solid var(--border-color);
+  &-item{
+    padding: 12px 8px;
+    flex: 1;
+    text-align: center;
+    border-right: .5px solid var(--border-color);
+
+    &:last-child{
+      border-right: 0;
+    }
+
+    &-title{
+      line-height: 18px;
+      margin-bottom: 4px;
+    }
+
+    &-content{
+      font-size: 14px;
+      line-height: 24px;
+    }
+  }
+}

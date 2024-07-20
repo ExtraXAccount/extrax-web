@@ -6,7 +6,7 @@ import useLendingList from '@/pages/Lend/useLendingList'
 import { toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
 
-export default function useFormatPositions() {
+export default function useFormatPositions(reserveId?: bigint) {
   const { formattedLendPools } = useLendingList()
   const { positions } = useLendStore()
   const { getPrice } = usePrices()
@@ -27,17 +27,25 @@ export default function useFormatPositions() {
       return {
         ...item,
         pool: targetPool,
+        ...targetPool,
         type,
         price: targetPool ? getPrice(targetPool?.tokenSymbol) : 0,
         value: 0,
       }
     })
 
+    const filtered = formatted.filter(item => {
+      if (reserveId) {
+        return reserveId === item.reserveId
+      }
+      return true
+    })
+
     type FormattedPositions = typeof formatted
     const assetPositions: FormattedPositions = []
     const debtPositions: FormattedPositions = []
 
-    formatted.forEach((item) => {
+    filtered.forEach((item) => {
       if (item.debt > 0) {
         debtPositions.push({
           ...item,
@@ -55,13 +63,13 @@ export default function useFormatPositions() {
     })
 
     return {
-      formattedPositions: formatted,
+      formattedPositions: filtered,
       assetPositions,
       debtPositions,
       totalAssetValue: sumBy(assetPositions, 'value'),
       totalDebtValue: sumBy(debtPositions, 'value'),
     }
-  }, [formattedLendPools, positions, getPrice])
+  }, [formattedLendPools, positions, getPrice, reserveId])
 
   return {
     positions: formattedPositions,

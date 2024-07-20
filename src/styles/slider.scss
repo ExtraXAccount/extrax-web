@@ -1,0 +1,36 @@
+.ant-slider{
+  &.ant-slider-horizontal{
+    .ant-slider-rail,
+    .ant-slider-track {
+      border-radius: 7px;
+      height: 14px;
+    }
+    .ant-slider-track{
+      background: linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%);
+    }
+    .ant-slider-step{
+      height: 14px;
+      top: 4px;
+      .ant-slider-dot{
+        display: none;
+      }
+    }
+    .ant-slider-handle{
+      width: 14px;
+      height: 14px;
+      inset-block-start: 4px;
+      &::after{
+        width: 14px;
+        height: 14px;
+        box-shadow: 0 0 0 1px var(--border-color);
+      }
+      &:focus::after{
+        box-shadow: 0 0 0 1px var(--border-color);
+      }
+    }
+    .ant-slider-mark{
+      top: 20px;
+      font-size: 12px;
+    }
+  }
+}

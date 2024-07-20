@@ -1,31 +1,25 @@
 import { Table } from 'antd'
-
-import LPName from '@/components/LPName'
-import { toDecimals } from '@/sdk/utils/token'
+import './miniPosition.scss'
+import Column from 'antd/es/table/Column'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
-const { Column } = Table
+import { toDecimals } from '@/sdk/utils/token'
+import LPName from '@/components/LPName'
 
-export default function UniPositionTable(props: { positions: any[] }) {
+export default function MiniPosition(props: {
+  positions: any[]
+}) {
   return (
-    <div>
+    <div className='mini-positions'>
       <Table
         sortDirections={['descend', 'ascend']}
         dataSource={props.positions || []}
         pagination={false}
         rowKey={(item, index) => `${item.marketId}-${item.reserveId}`}
         locale={{
-          emptyText: (
-            <div className="ant-empty ant-empty-normal">
-              <div
-                className="ant-empty-description"
-                style={{
-                  margin: '20px 0',
-                }}
-              >
-                No Active Pools
-              </div>
-            </div>
-          ),
+          emptyText: '',
+        }}
+        rowClassName={(item) => {
+          return `mini-positions-item-${item.type}`
         }}
       >
         <Column
@@ -35,7 +29,8 @@ export default function UniPositionTable(props: { positions: any[] }) {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">
+                <div className="lending-list-title-wrap flex gap-4">
+                  <i className='mini-positions-item-sign'></i>
                   <LPName token0={i.pool.tokenSymbol} title={`${i.pool.tokenSymbol}`} />
                 </div>
               </>
@@ -71,33 +66,9 @@ export default function UniPositionTable(props: { positions: any[] }) {
           }}
         />
         <Column
-          title="Price"
+          title="APY"
           dataIndex=""
-          key="price"
-          render={(i) => {
-            return (
-              <>
-                <p>${remain2Decimal(i.price)}</p>
-              </>
-            )
-          }}
-        />
-        <Column
-          title="Liquidation Price"
-          dataIndex=""
-          key="Liquidation"
-          render={(i) => {
-            return (
-              <>
-                <p>{i.type === 'debt' ? '' : 'N/A'}</p>
-              </>
-            )
-          }}
-        />
-        <Column
-          title="APR"
-          dataIndex=""
-          key="apr"
+          key="apy"
           render={(i) => {
             return (
               <>
@@ -108,23 +79,6 @@ export default function UniPositionTable(props: { positions: any[] }) {
                   <p>{toPrecision(aprToApy100(i.pool.apr * 100))}%</p>
                 )}
               </>
-            )
-          }}
-        />
-        <Column
-          title="Actions"
-          dataIndex=""
-          key="action"
-          render={(i) => {
-            return (
-              <div className="flex ai-ct lending-table-actions">
-                {i.type !== 'debt' && (
-                  <button className="btn-base btn-base-small">Withdraw</button>
-                )}
-                {i.type === 'debt' && (
-                  <button className="btn-base btn-base-small">Repay</button>
-                )}
-              </div>
             )
           }}
         />

@@ -425,6 +425,7 @@ export default function LendingTable() {
                   className="btn-base btn-base-small"
                   disabled={!i.deposited}
                   onClick={() => {
+                    console.log(i)
                     setCurrentLendingPoolDetail(i)
                     setWithdrawDialogOpen(true)
                   }}

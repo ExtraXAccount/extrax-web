@@ -87,6 +87,7 @@ export default function BorrowDialog({
           token={currentLendingPoolDetail?.tokenSymbol}
           decimals={currentLendingPoolDetail?.tokenDecimals}
           value={value}
+          price={getPrice(currentLendingPoolDetail?.tokenSymbol)}
           onChange={(val) => setValue(val)}
         />
       </div>
@@ -111,7 +112,7 @@ export default function BorrowDialog({
         <Button
           loading={loading}
           disabled={!Number(value)}
-          className={classNames('btn-base flex1', {
+          className={classNames('btn-base btn-base-primary btn-base-large flex1', {
             // 'btn-disable': !Number(value) || isApproveActive,
           })}
           onClick={() => {
