@@ -24,6 +24,7 @@ import PercentCircle from './PercentCircle'
 import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
 import WithdrawDialog from './WithdrawDialog'
+import { useLendStore } from '@/store'
 
 const { Column } = Table
 
@@ -32,6 +33,7 @@ export default function LendingTable() {
   const { openConnectModal } = useConnectModal()
   const { account } = useWagmiCtx()
   const { isMobile } = useDeviceDetect()
+  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } = useLendStore()
 
   const {
     formattedLendPools,
@@ -43,12 +45,7 @@ export default function LendingTable() {
     console.log('formattedLendPools :>> ', formattedLendPools)
   }, [formattedLendPools])
 
-  const [depositDialogOpen, setDepositDialogOpen] = useState(false)
   const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
-
-  const [withdrawDialogOpen, setWithdrawDialogOpen] = useState(false)
-  const [repayDialogOpen, setRepayDialogOpen] = useState(false)
-  const [borrowDialogOpen, setBorrowDialogOpen] = useState(false)
 
   // useEffect(() => {
   //   mng.multicallPoolsStatus([1n, 2n, 3n])
@@ -57,28 +54,27 @@ export default function LendingTable() {
   return (
     <>
       <DepositDialog
-        open={depositDialogOpen}
-        currentLendingPoolDetail={currentLendingPoolDetail}
-        onClose={() => setDepositDialogOpen(false)}
+        open={currentDialogShow === 'deposit'}
+        currentLendingPoolDetail={currentPosition}
+        onClose={() => updateDialogShow(null)}
       ></DepositDialog>
 
       <WithdrawDialog
-        open={withdrawDialogOpen}
-        currentLendingPoolDetail={currentLendingPoolDetail}
-        onClose={() => setWithdrawDialogOpen(false)}
+        open={currentDialogShow === 'withdraw'}
+        currentLendingPoolDetail={currentPosition}
+        onClose={() => updateDialogShow(null)}
       ></WithdrawDialog>
+      <RepayDialog
+        open={currentDialogShow === 'repay'}
+        currentLendingPoolDetail={currentPosition}
+        onClose={() => updateDialogShow(null)}
+      ></RepayDialog>
 
       <BorrowDialog
-        open={borrowDialogOpen}
-        currentLendingPoolDetail={currentLendingPoolDetail}
-        onClose={() => setBorrowDialogOpen(false)}
+        open={currentDialogShow === 'borrow'}
+        currentLendingPoolDetail={currentPosition}
+        onClose={() => updateDialogShow(null)}
       ></BorrowDialog>
-
-      <RepayDialog
-        open={repayDialogOpen}
-        currentLendingPoolDetail={currentLendingPoolDetail}
-        onClose={() => setRepayDialogOpen(false)}
-      ></RepayDialog>
 
       <Table
         sortDirections={['descend', 'ascend']}
@@ -305,8 +301,8 @@ export default function LendingTable() {
                         return
                       }
                       console.log('Deposit :>> ', i)
-                      setCurrentLendingPoolDetail(i)
-                      setDepositDialogOpen(true)
+                      updateCurrentPosition(i)
+                      updateDialogShow('deposit')
                     }}
                   >
                     Deposit
@@ -337,8 +333,8 @@ export default function LendingTable() {
                   <button
                     className="btn-base btn-base-small"
                     onClick={() => {
-                      setCurrentLendingPoolDetail(i)
-                      setBorrowDialogOpen(true)
+                      updateCurrentPosition(i)
+                      updateDialogShow('borrow')
                     }}
                   >
                     Borrow
@@ -426,8 +422,8 @@ export default function LendingTable() {
                   disabled={!i.deposited}
                   onClick={() => {
                     console.log(i)
-                    setCurrentLendingPoolDetail(i)
-                    setWithdrawDialogOpen(true)
+                    updateCurrentPosition(i)
+                    updateDialogShow('withdraw')
                   }}
                 >
                   Withdraw
@@ -437,8 +433,8 @@ export default function LendingTable() {
                   className="btn-base btn-base-small"
                   disabled={!i.borrowed}
                   onClick={() => {
-                    setCurrentLendingPoolDetail(i)
-                    setRepayDialogOpen(true)
+                    updateCurrentPosition(i)
+                    updateDialogShow('repay')
                   }}
                 >
                   Repay
