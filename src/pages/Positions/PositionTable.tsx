@@ -2,8 +2,8 @@ import { Table } from 'antd'
 
 import LPName from '@/components/LPName'
 import { toDecimals } from '@/sdk/utils/token'
-import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 import { useLendStore } from '@/store'
+import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
 
 export default function PositionTable(props: { positions: any[] }) {
@@ -121,17 +121,27 @@ export default function PositionTable(props: { positions: any[] }) {
             return (
               <div className="flex ai-ct lending-table-actions">
                 {i.type !== 'debt' && (
-                  <button className="btn-base btn-base-small" onClick={() => {
-                    console.log(i)
-                    updateCurrentPosition(i)
-                    updateDialogShow('withdraw')
-                  }}>Withdraw</button>
+                  <button
+                    className="btn-base btn-base-small"
+                    onClick={() => {
+                      console.log(i)
+                      updateCurrentPosition(i)
+                      updateDialogShow('withdraw')
+                    }}
+                  >
+                    Withdraw
+                  </button>
                 )}
                 {i.type === 'debt' && (
-                  <button className="btn-base btn-base-small" onClick={() => {
-                    updateCurrentPosition(i)
-                    updateDialogShow('repay')
-                  }}>Repay</button>
+                  <button
+                    className="btn-base btn-base-small"
+                    onClick={() => {
+                      updateCurrentPosition(i)
+                      updateDialogShow('repay')
+                    }}
+                  >
+                    Repay
+                  </button>
                 )}
               </div>
             )

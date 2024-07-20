@@ -1,6 +1,7 @@
+import { Address } from 'viem'
 import { create } from 'zustand'
 
-interface IInterestRateConfig {
+export interface IInterestRateConfig {
   borrowingRateA: number
   borrowingRateB: number
   maxBorrowingRate: number
@@ -8,7 +9,7 @@ interface IInterestRateConfig {
   utilizationB: number
 }
 
-interface ILendPoolConfig {
+export interface ILendPoolConfig {
   paused: boolean
   frozen: boolean
   borrowEnabled: boolean
@@ -23,8 +24,45 @@ interface ILendPoolConfig {
   supplyCap: bigint
 }
 
+export interface IFormattedLendPool {
+  apr: number
+  borrowApr: number
+  tokenSymbol: string
+  poolKey: string
+  totalSupply: number
+  supplyCap: number
+  totalBorrowed: number
+  borrowCap: number
+  availableLiquidity: number
+  utilization: number
+  balance: number
+  deposited: number
+  borrowed: number
+  depositedBal: number
+  borrowedBal: number
+  marketId: bigint
+  reserveId: bigint
+  totalLiquidity: bigint
+  totalDebts: bigint
+  borrowingIndex: bigint
+  exchangeRate: bigint
+  lastUpdateTimestamp: number
+  currentBorrowingRate: bigint
+  underlyingAsset: string
+  eTokenAddress: string
+  debtTokenAddress: string
+  feeReceiver: string
+  interestRateConfig: IInterestRateConfig
+  config: ILendPoolConfig
+  name: string
+  underlyingTokenAddress: Address
+  eToken: Address
+  debtToken: Address
+  decimals: number
+}
+
 export interface ILendPosition {
-  account: string
+  // account: string
   debt: bigint
   liquidity: bigint
   marketId: bigint
@@ -76,6 +114,8 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
   updateLendPools: (lendPools) => set(() => ({ lendPools: lendPools })),
   updatePositions: (positions) => set(() => ({ positions: positions })),
   updateIsFetching: (isFetching) => set(() => ({ isFetching: isFetching })),
-  updateCurrentPosition: (currentPosition) => set(() => ({ currentPosition: currentPosition })),
-  updateDialogShow: (currentDialogShow) => set(() => ({ currentDialogShow: currentDialogShow })),
+  updateCurrentPosition: (currentPosition) =>
+    set(() => ({ currentPosition: currentPosition })),
+  updateDialogShow: (currentDialogShow) =>
+    set(() => ({ currentDialogShow: currentDialogShow })),
 }))

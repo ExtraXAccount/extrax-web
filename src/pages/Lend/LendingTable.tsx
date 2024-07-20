@@ -1,12 +1,17 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd/es'
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useSwitchChain } from 'wagmi'
 
 import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
+import { SupportedChainId } from '@/constants/chains'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
 import { formatSymbol } from '@/sdk/utils/token'
+import { useLendStore } from '@/store'
+import { IFormattedLendPool } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import {
   addComma,
@@ -21,25 +26,28 @@ import { div } from '@/utils/math/bigNumber'
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
 import PercentCircle from './PercentCircle'
-import RepayDialog from './RepayDialog'
+// import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
-import WithdrawDialog from './WithdrawDialog'
-import { useLendStore } from '@/store'
+// import WithdrawDialog from './WithdrawDialog'
 
 const { Column } = Table
 
 export default function LendingTable() {
   const { getPrice } = usePrices()
+  const { account, chainId } = useWagmiCtx()
   const { openConnectModal } = useConnectModal()
-  const { account } = useWagmiCtx()
+  const { switchChain } = useSwitchChain()
   const { isMobile } = useDeviceDetect()
-  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } = useLendStore()
+  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } =
+    useLendStore()
 
   const {
     formattedLendPools,
     // fetchLendPools,
     // isFetching: isFetchingLendingList,
   } = useLendingList()
+
+  const [activeChain, setActiveChain] = useState(chainId)
 
   useEffect(() => {
     console.log('formattedLendPools :>> ', formattedLendPools)
@@ -59,7 +67,7 @@ export default function LendingTable() {
         onClose={() => updateDialogShow(null)}
       ></DepositDialog>
 
-      <WithdrawDialog
+      {/* <WithdrawDialog
         open={currentDialogShow === 'withdraw'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
@@ -68,7 +76,7 @@ export default function LendingTable() {
         open={currentDialogShow === 'repay'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
-      ></RepayDialog>
+      ></RepayDialog> */}
 
       <BorrowDialog
         open={currentDialogShow === 'borrow'}
@@ -80,7 +88,7 @@ export default function LendingTable() {
         sortDirections={['descend', 'ascend']}
         dataSource={formattedLendPools}
         pagination={false}
-        rowKey={(i: (typeof formattedLendPools)[0]) => i.poolKey}
+        rowKey={(i: IFormattedLendPool) => i.poolKey}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
@@ -100,7 +108,7 @@ export default function LendingTable() {
           title="Pool"
           dataIndex=""
           key="poolKey"
-          render={(pool) => {
+          render={(pool: IFormattedLendPool) => {
             return (
               <>
                 <div className="lending-list-title-wrap">
@@ -121,7 +129,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.value - b.value
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             const amount = i.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
@@ -171,7 +179,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.value - b.value
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             const amount = i.totalBorrowed
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
@@ -223,7 +231,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.value - b.value
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             const amount = i.availableLiquidity
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
@@ -247,7 +255,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.value - b.value
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             return (
               <>
                 {isMobile && <div className="text-bold-small">Utilization</div>}
@@ -265,7 +273,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.value - b.value
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             return (
               <>
                 {isMobile && <div className="text-bold-small">LTV</div>}
@@ -284,7 +292,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.apr - b.apr
           }}
-          render={(i) => {
+          render={(pool: IFormattedLendPool) => {
             return (
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
@@ -292,21 +300,41 @@ export default function LendingTable() {
                   className="farm-buffer-safe flex ai-ct gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
-                  +{toPrecision(aprToApy100(i.apr * 100))}%
-                  <button
+                  +{toPrecision(aprToApy100(pool.apr * 100))}%
+                  <Link
+                    to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                    onClick={(e) => {
+                      if (!account) {
+                        e.preventDefault()
+                        openConnectModal?.()
+                      }
+                      if (!(chainId in SupportedChainId)) {
+                        e.preventDefault()
+                        switchChain?.({ chainId: SupportedChainId.OPTIMISM })
+                      }
+                      if (activeChain !== chainId) {
+                        e.preventDefault()
+                        switchChain?.({ chainId: activeChain })
+                        return
+                      }
+                    }}
+                  >
+                    <button className="btn-base btn-base-small">Deposit</button>
+                  </Link>
+                  {/* <button
                     className="btn-base btn-base-small"
                     onClick={() => {
                       if (!account) {
                         openConnectModal?.()
                         return
                       }
-                      console.log('Deposit :>> ', i)
-                      updateCurrentPosition(i)
+                      console.log('Deposit :>> ', pool)
+                      updateCurrentPosition(pool)
                       updateDialogShow('deposit')
                     }}
                   >
                     Deposit
-                  </button>
+                  </button> */}
                 </div>
               </>
             )
@@ -322,7 +350,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.borrowApr - b.borrowApr
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             return (
               <>
                 <div
@@ -333,7 +361,7 @@ export default function LendingTable() {
                   <button
                     className="btn-base btn-base-small"
                     onClick={() => {
-                      updateCurrentPosition(i)
+                      updateCurrentPosition(i as any)
                       updateDialogShow('borrow')
                     }}
                   >
@@ -345,14 +373,14 @@ export default function LendingTable() {
           }}
         />
 
-        <Column
+        {/* <Column
           title="Deposited"
           dataIndex=""
           key="deposited"
           sorter={(a: any, b: any) => {
             return a.deposited - b.deposited
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             return (
               <>
                 <div>{toPrecision(i.deposited)}</div>
@@ -373,7 +401,7 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.borrowed - b.borrowed
           }}
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             return (
               <>
                 <div>{toPrecision(i.borrowed)}</div>
@@ -386,37 +414,14 @@ export default function LendingTable() {
               </>
             )
           }}
-        />
-        <Column
+        /> */}
+        {/* <Column
           title="Actions"
           dataIndex=""
           key="action"
-          render={(i) => {
+          render={(i: IFormattedLendPool) => {
             return (
               <div className="flex ai-ct lending-table-actions">
-                {/* <button
-                  className="btn-base btn-base-small"
-                  onClick={() => {
-                    if (!account) {
-                      openConnectModal?.()
-                      return
-                    }
-                    console.log('Deposit :>> ', i)
-                    setCurrentLendingPoolDetail(i)
-                    setDepositDialogOpen(true)
-                  }}
-                >
-                  Deposit
-                </button>
-                <button
-                  className="btn-base btn-base-small"
-                  onClick={() => {
-                    setCurrentLendingPoolDetail(i)
-                    setBorrowDialogOpen(true)
-                  }}
-                >
-                  Borrow
-                </button> */}
                 <button
                   className="btn-base btn-base-small"
                   disabled={!i.deposited}
@@ -442,7 +447,7 @@ export default function LendingTable() {
               </div>
             )
           }}
-        />
+        /> */}
       </Table>
     </>
   )

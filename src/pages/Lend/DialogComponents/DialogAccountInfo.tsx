@@ -1,14 +1,15 @@
-import { Collapse, CollapseProps } from 'antd/es'
 import './dialogAccountInfo.scss'
+
+import { Collapse, CollapseProps } from 'antd/es'
+
 import useFormatPositions from '@/pages/Positions/hooks/useFormatPositions'
+
 import MiniPosition from './MiniPosition'
 
-export default function DialogAccountInfo(
-  props: {
-    valueChange?: number
-    reserveId?: bigint
-  }
-) {
+export default function DialogAccountInfo(props: {
+  valueChange?: number
+  reserveId?: bigint
+}) {
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } =
     useFormatPositions(props.reserveId)
   console.log(props.reserveId)
@@ -16,33 +17,23 @@ export default function DialogAccountInfo(
     <ul className="summary-list">
       <li>
         <p>Borrowing Power:</p>
-        <b className="text-highlight">
-          $3,331
-        </b>
+        <b className="text-highlight">$3,331</b>
       </li>
       <li>
         <p>Portfolio APY:</p>
-        <b className="text-highlight">
-          $3,331
-        </b>
+        <b className="text-highlight">$3,331</b>
       </li>
       <li>
         <p>Account Leverage:</p>
-        <b className="text-highlight">
-          $3,331
-        </b>
+        <b className="text-highlight">$3,331</b>
       </li>
       <li>
         <p>Net Worth:</p>
-        <b className="text-highlight">
-          $3,331
-        </b>
+        <b className="text-highlight">$3,331</b>
       </li>
       <li>
         <p>Debt Ratio:</p>
-        <b className="text-highlight">
-          $3,331
-        </b>
+        <b className="text-highlight">$3,331</b>
       </li>
     </ul>
   )
@@ -60,10 +51,10 @@ export default function DialogAccountInfo(
       label: 'Account Balances',
       children: <MiniPosition positions={assetPositions.concat(debtPositions)} />,
     },
-  ];
+  ]
   return (
-    <div className='dialog-accountinfo'>
-      <Collapse items={items}/>
+    <div className="dialog-accountinfo">
+      <Collapse items={items} />
     </div>
   )
 }

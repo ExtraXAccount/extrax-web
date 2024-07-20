@@ -1,15 +1,15 @@
-import { Table } from 'antd'
 import './miniPosition.scss'
-import Column from 'antd/es/table/Column'
-import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
-import { toDecimals } from '@/sdk/utils/token'
-import LPName from '@/components/LPName'
 
-export default function MiniPosition(props: {
-  positions: any[]
-}) {
+import { Table } from 'antd'
+import Column from 'antd/es/table/Column'
+
+import LPName from '@/components/LPName'
+import { toDecimals } from '@/sdk/utils/token'
+import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+
+export default function MiniPosition(props: { positions: any[] }) {
   return (
-    <div className='mini-positions'>
+    <div className="mini-positions">
       <Table
         sortDirections={['descend', 'ascend']}
         dataSource={props.positions || []}
@@ -30,7 +30,7 @@ export default function MiniPosition(props: {
             return (
               <>
                 <div className="lending-list-title-wrap flex gap-4">
-                  <i className='mini-positions-item-sign'></i>
+                  <i className="mini-positions-item-sign"></i>
                   <LPName token0={i.pool.tokenSymbol} title={`${i.pool.tokenSymbol}`} />
                 </div>
               </>

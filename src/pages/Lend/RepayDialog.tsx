@@ -11,9 +11,9 @@ import useSmartAccount from '@/hooks/useSmartAccount'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
-import useLendingList from './useLendingList'
-import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
 import DialogAccountInfo from './DialogComponents/DialogAccountInfo'
+import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
+import useLendingList from './useLendingList'
 
 export default function RepayDialog({
   open,
@@ -24,7 +24,8 @@ export default function RepayDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal} = useSmartAccount()
+  const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
+    useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -102,19 +103,21 @@ export default function RepayDialog({
           }}
         />
       </div>
-      <DialogApyDisplay list={
-        [
+      <DialogApyDisplay
+        list={[
           {
             title: 'APY',
-            content: `${remain2Decimal(aprToApy100(currentLendingPoolDetail?.apr * 100))}%`
+            content: `${remain2Decimal(
+              aprToApy100(currentLendingPoolDetail?.apr * 100),
+            )}%`,
           },
           {
             title: 'Health Factor',
-            content: !depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%'
-          }
-        ]
-      }/>
-      <div className='dialog-divider'></div>
+            content: !depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%',
+          },
+        ]}
+      />
+      <div className="dialog-divider"></div>
       <DialogAccountInfo reserveId={currentLendingPoolDetail?.reserveId} />
       <div className="dialog-btns flex jc-sb">
         <Button

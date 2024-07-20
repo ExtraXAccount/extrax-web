@@ -5,6 +5,7 @@ import { useLendingManager } from '@/hooks/useSDK'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { useAccountStore, useLendStore } from '@/store'
+import { IFormattedLendPool } from '@/store/lend'
 import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
 
@@ -39,7 +40,7 @@ export default function useLendingList() {
     }
   }, [chainLendingConfig, lendingMng, updateIsFetching, updateLendPools])
 
-  const formattedLendPools = useMemo(() => {
+  const formattedLendPools: IFormattedLendPool[] = useMemo(() => {
     return lendPools.map((pool, index) => {
       const config = chainLendingConfig[index]
       const position = positions.find(

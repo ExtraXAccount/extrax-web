@@ -1,13 +1,14 @@
 import './index.scss'
 
+import { useState } from 'react'
+
+import { useLendStore } from '@/store'
 import { remain2Decimal } from '@/utils/math'
 
+import RepayDialog from '../Lend/RepayDialog'
+import WithdrawDialog from '../Lend/WithdrawDialog'
 import useFormatPositions from './hooks/useFormatPositions'
 import PositionTable from './PositionTable'
-import WithdrawDialog from '../Lend/WithdrawDialog'
-import RepayDialog from '../Lend/RepayDialog'
-import { useState } from 'react'
-import { useLendStore } from '@/store'
 
 export default function Positions() {
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } =
@@ -25,7 +26,7 @@ export default function Positions() {
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
       ></RepayDialog>
-  
+
       <div className="box">
         <h3 className="page-app-title">Main Market Balance</h3>
         <div className="page-positions-box">

@@ -34,7 +34,7 @@ export default function useFormatPositions(reserveId?: bigint) {
       }
     })
 
-    const filtered = formatted.filter(item => {
+    const filtered = formatted.filter((item) => {
       if (reserveId) {
         return reserveId === item.reserveId
       }

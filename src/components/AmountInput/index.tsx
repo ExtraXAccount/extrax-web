@@ -49,7 +49,7 @@ export default function AmountInput(props: IAmountInputProps) {
     allowInputOverflow = false,
     useNativeETH = true,
     onUseNativeETH,
-    price
+    price,
   } = props
   // console.log('token :>> ', { useNativeETH, token })
   const [selectedToken, setSelectedToken] = useState(
@@ -148,25 +148,24 @@ export default function AmountInput(props: IAmountInputProps) {
           />
         </div>
         <div className="amount-input-number-sub flex jc-sb ai-ct">
-            <div className='amount-input-number-totalvalue text-sm-2'>
-              {!!price && <>${remain2Decimal(price * Number(value))}</>}
-            </div>
-          <div className='flex ai-ct'>
+          <div className="amount-input-number-totalvalue text-sm-2">
+            {!!price && <>${remain2Decimal(price * Number(value))}</>}
+          </div>
+          <div className="flex ai-ct">
             {sliderMax !== undefined && (
               <div className="amount-input-number-max text-sm-2">
                 {sliderMaxText}:
                 <span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
               </div>
             )}
-            {
-              !sliderMax && 
+            {!sliderMax && (
               <div className="amount-input-number-max text-sm-2">
                 {maxText}:{' '}
                 <span onClick={() => onChange(String(max))}>
                   {toPrecision(Number(max), 5)}
                 </span>
               </div>
-            }
+            )}
             <div
               className="amount-input-number-max-button"
               onClick={() => onChange(String(parsedSliderMax))}
@@ -174,7 +173,7 @@ export default function AmountInput(props: IAmountInputProps) {
               Max
             </div>
           </div>
- 
+
           {/* <ul className="amount-input-percent-list flex ai-ct">
             {[0.25, 0.5, 0.75, 1].map((percent) => (
               <li
@@ -217,7 +216,7 @@ export default function AmountInput(props: IAmountInputProps) {
               onChange(
                 mul(div(val, 100).toString(), parsedSliderMax)
                   .toFixed(decimals)
-                  .replace(/\.?0+$/, '')
+                  .replace(/\.?0+$/, ''),
               )
             }
           }}
