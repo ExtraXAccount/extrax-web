@@ -126,9 +126,9 @@ export default function LendingTable() {
           dataIndex=""
           key="totalSupply"
           showSorterTooltip={false}
-          sorter={(a: any, b: any) => {
-            return a.value - b.value
-          }}
+          // sorter={(a: any, b: any) => {
+          //   return a.value - b.value
+          // }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
@@ -183,9 +183,9 @@ export default function LendingTable() {
           dataIndex=""
           key="totalBorrowed"
           showSorterTooltip={false}
-          sorter={(a: any, b: any) => {
-            return a.value - b.value
-          }}
+          // sorter={(a: any, b: any) => {
+          //   return a.value - b.value
+          // }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.totalBorrowed
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
@@ -243,9 +243,9 @@ export default function LendingTable() {
           dataIndex=""
           key="availableLiquidity"
           showSorterTooltip={false}
-          sorter={(a: any, b: any) => {
-            return a.value - b.value
-          }}
+          // sorter={(a: any, b: any) => {
+          //   return a.value - b.value
+          // }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.availableLiquidity
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
@@ -267,9 +267,9 @@ export default function LendingTable() {
           dataIndex=""
           key="utilization"
           showSorterTooltip={false}
-          sorter={(a: any, b: any) => {
-            return a.value - b.value
-          }}
+          // sorter={(a: any, b: any) => {
+          //   return a.formatted.utilization - b.formatted.utilization
+          // }}
           render={(i: IFormattedLendPool) => {
             return (
               <>
@@ -285,9 +285,9 @@ export default function LendingTable() {
           dataIndex=""
           key="ltv"
           showSorterTooltip={false}
-          sorter={(a: any, b: any) => {
-            return a.value - b.value
-          }}
+          // sorter={(a: any, b: any) => {
+          //   return a.value - b.value
+          // }}
           render={(i: IFormattedLendPool) => {
             return (
               <>
@@ -305,7 +305,7 @@ export default function LendingTable() {
           width={160}
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
-            return a.apr - b.apr
+            return a.formatted.apr - b.formatted.apr
           }}
           render={(pool: IFormattedLendPool) => {
             return (
@@ -363,7 +363,7 @@ export default function LendingTable() {
           key="borrowingRate"
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
-            return a.borrowApr - b.borrowApr
+            return a.formatted.borrowApr - b.formatted.borrowApr
           }}
           render={(i: IFormattedLendPool) => {
             return (

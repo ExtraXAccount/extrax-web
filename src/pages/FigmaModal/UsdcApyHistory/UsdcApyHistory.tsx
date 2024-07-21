@@ -1,7 +1,12 @@
 import './UsdcApyHistory.css'
 
+import { Skeleton } from 'antd'
+
+import { aprToApy, toPrecision } from '@/utils/math'
+
 import { TagProperty1Default } from '../TagProperty1Default/TagProperty1Default'
 import { TagProperty1Selected } from '../TagProperty1Selected/TagProperty1Selected'
+import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface IUsdcApyHistoryProps {
   className?: string
@@ -11,6 +16,8 @@ export const UsdcApyHistory = ({
   className,
   ...props
 }: IUsdcApyHistoryProps): JSX.Element => {
+  const lendPoolInfo = useLendPoolInfo()
+
   return (
     <div className={'usdc-apy-history ' + className}>
       <div className="usdc-apy-history__usdc-apy-history2">USDC APY History </div>
@@ -18,7 +25,14 @@ export const UsdcApyHistory = ({
         <div className="usdc-apy-history__frame-482007">
           <div className="usdc-apy-history__frame-482019">
             <div className="usdc-apy-history__apy-14-d-avg">APY (14D AVG) </div>
-            <div className="usdc-apy-history___7835">7835% </div>
+            <div className="usdc-apy-history___7835">
+              {' '}
+              {!lendPoolInfo ? (
+                <Skeleton.Button active size="small" block={false} />
+              ) : (
+                <>{toPrecision(aprToApy(lendPoolInfo?.formatted.apr || 0) * 100)}%</>
+              )}
+            </div>
           </div>
           <div className="usdc-apy-history__frame-482005">
             <TagProperty1Selected className="usdc-apy-history__tag-instance"></TagProperty1Selected>

@@ -24,7 +24,7 @@ export const Component289Property1OraclePrice = ({
         <div className="component-289-property-1-oracle-price__oracle-price">
           Oracle price{' '}
         </div>
-        <OracleProperty1OracleD className="component-289-property-1-oracle-price__oracle-instance"></OracleProperty1OracleD>
+        {/* <OracleProperty1OracleD className="component-289-property-1-oracle-price__oracle-instance"></OracleProperty1OracleD> */}
       </div>
       <div className="component-289-property-1-oracle-price___1-00">$1.00 </div>
     </div>

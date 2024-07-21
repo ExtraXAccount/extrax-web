@@ -1,5 +1,7 @@
 import './CoinMain.css'
 
+import { Skeleton } from 'antd'
+
 import Loading from '@/components/Loading'
 import usePrices from '@/hooks/usePrices'
 import { formatFloatNumber, toPrecision } from '@/utils/math'
@@ -14,12 +16,8 @@ export interface ICoinMainProps {
 }
 
 export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
-  const poolInfo = useLendPoolInfo()
+  const lendPoolInfo = useLendPoolInfo()
   const { getPrice } = usePrices()
-
-  if (!poolInfo) {
-    return null
-  }
 
   return (
     <div className={'coin-main ' + className}>
@@ -31,7 +29,13 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
           ></CoinProperty1UsdCoinUsdc>
         </div>
         <div className="coin-main__frame-171">
-          <div className="coin-main__usd-coin">{poolInfo.tokenSymbol.toUpperCase()} </div>
+          <div className="coin-main__usd-coin">
+            {!lendPoolInfo ? (
+              <Skeleton.Button active size="small" block={false} />
+            ) : (
+              <>{lendPoolInfo.tokenSymbol.toUpperCase()}</>
+            )}
+          </div>
           <div className="coin-main__frame-482097">
             {/* <div className="coin-main__usdc">{token?.toUpperCase()} </div> */}
             <div className="coin-main__component-229">
@@ -44,16 +48,26 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
         <div className="coin-main__frame-482081">
           <div className="coin-main__reserve-size">Reserve Size </div>
           <div className="coin-main___37-94-m">
-            $
-            {formatFloatNumber(
-              poolInfo.formatted.totalSupply * getPrice(poolInfo.tokenSymbol),
-            )}{' '}
+            {!lendPoolInfo ? (
+              <Skeleton.Button active size="small" block={false} />
+            ) : (
+              <>
+                $
+                {formatFloatNumber(
+                  lendPoolInfo.formatted.totalSupply * getPrice(lendPoolInfo.tokenSymbol),
+                )}
+              </>
+            )}
           </div>
         </div>
         <div className="coin-main__frame-482083">
           <div className="coin-main__utilization-rate">Utilization Rate </div>
           <div className="coin-main___88-82">
-            {toPrecision(poolInfo.formatted.utilization * 100)}%{' '}
+            {!lendPoolInfo ? (
+              <Skeleton.Button active size="small" block={false} />
+            ) : (
+              <>{toPrecision(lendPoolInfo.formatted.utilization * 100)}%</>
+            )}
           </div>
         </div>
         <Component289Property1OraclePrice className="coin-main__component-289-instance"></Component289Property1OraclePrice>

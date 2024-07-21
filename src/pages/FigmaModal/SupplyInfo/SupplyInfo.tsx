@@ -1,12 +1,19 @@
 import './SupplyInfo.css'
 
+import { Skeleton } from 'antd'
+
+import { formatNumberByUnit, toPrecision } from '@/utils/math'
+
 import { Component287Property1ExInfo } from '../Component287Property1ExInfo/Component287Property1ExInfo'
+import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface ISupplyInfoProps {
   className?: string
 }
 
 export const SupplyInfo = ({ className, ...props }: ISupplyInfoProps): JSX.Element => {
+  const lendPoolInfo = useLendPoolInfo()
+
   return (
     <div className={'supply-info ' + className}>
       <div className="supply-info__supply-info2">Supply Info </div>
@@ -15,10 +22,27 @@ export const SupplyInfo = ({ className, ...props }: ISupplyInfoProps): JSX.Eleme
           <div className="supply-info__maximum-amount-to-supply">
             Maximum Amount to Supply:{' '}
           </div>
-          <div className="supply-info___30-00-m">30.00M </div>
+          <div className="supply-info___30-00-m">
+            {!lendPoolInfo ? (
+              <Skeleton.Button active size="small" block={false} />
+            ) : (
+              <>{formatNumberByUnit(lendPoolInfo?.formatted.supplyCap || 0)} </>
+            )}
+          </div>
         </div>
         <div className="supply-info__frame-482075">
-          <div className="supply-info__frame-481894"></div>
+          <div
+            className="supply-info__frame-481894"
+            style={{
+              width: !lendPoolInfo
+                ? 0
+                : `${
+                    ((lendPoolInfo.formatted.totalSupply || 0) /
+                      lendPoolInfo.formatted.supplyCap) *
+                    100
+                  }%`,
+            }}
+          ></div>
           <div className="supply-info__frame-481895"></div>
         </div>
         <div className="supply-info__frame-482132">
@@ -27,20 +51,62 @@ export const SupplyInfo = ({ className, ...props }: ISupplyInfoProps): JSX.Eleme
               <div className="supply-info__ellipse-307"></div>
               <div className="supply-info__total-supplied">total supplied: </div>
               <div className="supply-info__frame-482079">
-                <div className="supply-info___6-14-m">6.14M </div>
+                <div className="supply-info___6-14-m">
+                  {!lendPoolInfo ? (
+                    <Skeleton.Button active size="small" block={false} />
+                  ) : (
+                    <>{formatNumberByUnit(lendPoolInfo?.formatted.totalSupply || 0)} </>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="supply-info___18-7">18.7 % </div>
+            <div className="supply-info___18-7">
+              {!lendPoolInfo ? (
+                <Skeleton.Button active size="small" block={false} />
+              ) : (
+                <>
+                  {toPrecision(
+                    ((lendPoolInfo.formatted.totalSupply || 0) /
+                      lendPoolInfo.formatted.supplyCap) *
+                      100,
+                  )}
+                  %{' '}
+                </>
+              )}
+            </div>
           </div>
           <div className="supply-info__frame-4820792">
             <div className="supply-info__frame-482073">
               <div className="supply-info__ellipse-3072"></div>
               <div className="supply-info__available">available: </div>
               <div className="supply-info__frame-482079">
-                <div className="supply-info___30-28-m">30.28M </div>
+                <div className="supply-info___30-28-m">
+                  {!lendPoolInfo ? (
+                    <Skeleton.Button active size="small" block={false} />
+                  ) : (
+                    <>
+                      {formatNumberByUnit(
+                        lendPoolInfo?.formatted.availableLiquidity || 0,
+                      )}{' '}
+                    </>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="supply-info___81-3">81.3 % </div>
+            <div className="supply-info___81-3">
+              {!lendPoolInfo ? (
+                <Skeleton.Button active size="small" block={false} />
+              ) : (
+                <>
+                  {toPrecision(
+                    ((lendPoolInfo.formatted.availableLiquidity || 0) /
+                      lendPoolInfo.formatted.totalSupply) *
+                      100,
+                  )}
+                  %{' '}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>

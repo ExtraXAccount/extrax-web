@@ -1,5 +1,11 @@
 import './InterestRateModel.css'
 
+import { Skeleton } from 'antd'
+
+import { toPrecision } from '@/utils/math'
+
+import useLendPoolInfo from '../useLendPoolInfo'
+
 export interface IInterestRateModelProps {
   className?: string
 }
@@ -8,6 +14,8 @@ export const InterestRateModel = ({
   className,
   ...props
 }: IInterestRateModelProps): JSX.Element => {
+  const lendPoolInfo = useLendPoolInfo()
+
   return (
     <div className={'interest-rate-model ' + className}>
       <div className="interest-rate-model__borrowing-interest-rate-model">
@@ -17,7 +25,13 @@ export const InterestRateModel = ({
         <div className="interest-rate-model__frame-482018">
           <div className="interest-rate-model__frame-482019">
             <div className="interest-rate-model__utilization-rate">Utilization Rate </div>
-            <div className="interest-rate-model___1-26">1.26% </div>
+            <div className="interest-rate-model___1-26">
+              {!lendPoolInfo ? (
+                <Skeleton.Button active size="small" block={false} />
+              ) : (
+                <>{toPrecision(lendPoolInfo.formatted.utilization * 100)}%</>
+              )}
+            </div>
           </div>
           <div className="interest-rate-model__frame-482003">
             <div className="interest-rate-model__interest-rate-strategy">
