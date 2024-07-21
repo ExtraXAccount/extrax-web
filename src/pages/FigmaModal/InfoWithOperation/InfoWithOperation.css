@@ -30,6 +30,7 @@
   align-self: stretch;
   flex-shrink: 0;
   position: relative;
+  cursor: pointer;
 }
 .info-with-operation__usdc-pool-details {
   color: var(--text-black, #000000);

@@ -25,21 +25,25 @@ export interface ILendPoolConfig {
 }
 
 export interface IFormattedLendPool {
-  apr: number
-  borrowApr: number
+  formatted: {
+    exchangeRate: number
+    apr: number
+    borrowApr: number
+    totalSupply: number
+    supplyCap: number
+    totalBorrowed: number
+    borrowCap: number
+    availableLiquidity: number
+    utilization: number
+    balance: number
+    deposited: number
+    borrowed: number
+    depositedBal: number
+    borrowedBal: number
+  }
+  name: string
   tokenSymbol: string
   poolKey: string
-  totalSupply: number
-  supplyCap: number
-  totalBorrowed: number
-  borrowCap: number
-  availableLiquidity: number
-  utilization: number
-  balance: number
-  deposited: number
-  borrowed: number
-  depositedBal: number
-  borrowedBal: number
   marketId: bigint
   reserveId: bigint
   totalLiquidity: bigint
@@ -54,15 +58,14 @@ export interface IFormattedLendPool {
   feeReceiver: string
   interestRateConfig: IInterestRateConfig
   config: ILendPoolConfig
-  name: string
   underlyingTokenAddress: Address
   eToken: Address
   debtToken: Address
   decimals: number
 }
 
-export interface ILendPosition {
-  // account: string
+export interface ILendPosition extends IFormattedLendPool {
+  account?: string
   debt: bigint
   liquidity: bigint
   marketId: bigint

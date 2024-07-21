@@ -8,6 +8,7 @@ import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
+import { ILendPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
@@ -22,7 +23,7 @@ export default function RepayDialog({
 }: {
   open: boolean
   onClose: any
-  currentLendingPoolDetail: any
+  currentLendingPoolDetail?: ILendPosition
 }) {
   const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
     useSmartAccount()
@@ -35,7 +36,7 @@ export default function RepayDialog({
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)
-  const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
+  const { balance } = useFetchBalance(currentLendingPoolDetail?.underlyingTokenAddress)
   const { balance: ethBalance } = useFetchEthBalance()
 
   function reset() {
@@ -44,13 +45,16 @@ export default function RepayDialog({
 
   const repay = useCallback(async () => {
     console.log('repay :>> ', smartAccount)
+    if (!currentLendingPoolDetail) {
+      return
+    }
     setLoading(true)
     try {
       const res = await lendMng.repay(
         smartAccount,
-        currentLendingPoolDetail?.marketId,
-        currentLendingPoolDetail?.reserveId,
-        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
+        currentLendingPoolDetail.marketId,
+        currentLendingPoolDetail.reserveId,
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail.decimals),
       )
       console.log('repay res :>> ', res)
       updateAfterAction(smartAccount)
@@ -62,10 +66,8 @@ export default function RepayDialog({
     }
   }, [
     smartAccount,
+    currentLendingPoolDetail,
     lendMng,
-    currentLendingPoolDetail?.marketId,
-    currentLendingPoolDetail?.reserveId,
-    currentLendingPoolDetail?.decimals,
     value,
     updateAfterAction,
     fetchLendPools,
@@ -76,27 +78,31 @@ export default function RepayDialog({
     reset()
   }, [currentLendingPoolDetail?.reserveId])
 
+  if (!currentLendingPoolDetail) {
+    return null
+  }
+
   return (
     <Dialog
       open={!!open && !!currentLendingPoolDetail}
       onClose={onClose}
-      title={`Repay ${nameChecker(currentLendingPoolDetail?.tokenSymbol)}`}
+      title={`Repay ${nameChecker(currentLendingPoolDetail.tokenSymbol)}`}
     >
       <div>
         <AmountInput
           sliderMaxText="Borrowed"
-          sliderMax={currentLendingPoolDetail?.borrowed}
+          sliderMax={currentLendingPoolDetail.formatted.borrowed}
           max={balance}
           ethBalance={ethBalance}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
-          token={currentLendingPoolDetail?.tokenSymbol}
-          decimals={currentLendingPoolDetail?.tokenDecimals}
+          token={currentLendingPoolDetail.tokenSymbol}
+          decimals={currentLendingPoolDetail.decimals}
           value={value}
-          price={getPrice(currentLendingPoolDetail?.tokenSymbol)}
+          price={getPrice(currentLendingPoolDetail.tokenSymbol)}
           onChange={(val) => {
-            if (Number(val) > currentLendingPoolDetail?.borrowed) {
-              setValue('' + currentLendingPoolDetail?.borrowed)
+            if (Number(val) > currentLendingPoolDetail.formatted.borrowed) {
+              setValue('' + currentLendingPoolDetail.formatted.borrowed)
             } else {
               setValue(val)
             }
@@ -108,17 +114,19 @@ export default function RepayDialog({
           {
             title: 'APY',
             content: `${remain2Decimal(
-              aprToApy100(currentLendingPoolDetail?.apr * 100),
+              aprToApy100(currentLendingPoolDetail.formatted.apr * 100),
             )}%`,
           },
           {
-            title: 'Health Factor',
-            content: !depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%',
+            title: 'Exchange Rate',
+            content: !currentLendingPoolDetail
+              ? '--'
+              : currentLendingPoolDetail.formatted.exchangeRate,
           },
         ]}
       />
       <div className="dialog-divider"></div>
-      <DialogAccountInfo reserveId={currentLendingPoolDetail?.reserveId} />
+      <DialogAccountInfo reserveId={currentLendingPoolDetail.reserveId} />
       <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading}

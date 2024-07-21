@@ -13,12 +13,12 @@ export interface ICoinMainProps {
   className?: string
 }
 
-export const CoinMain = ({ className, ...props }: ICoinMainProps): JSX.Element => {
+export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
   const poolInfo = useLendPoolInfo()
   const { getPrice } = usePrices()
 
   if (!poolInfo) {
-    return <div></div>
+    return null
   }
 
   return (
@@ -44,13 +44,16 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps): JSX.Element =
         <div className="coin-main__frame-482081">
           <div className="coin-main__reserve-size">Reserve Size </div>
           <div className="coin-main___37-94-m">
-            ${formatFloatNumber(poolInfo.totalSupply * getPrice(poolInfo.tokenSymbol))}{' '}
+            $
+            {formatFloatNumber(
+              poolInfo.formatted.totalSupply * getPrice(poolInfo.tokenSymbol),
+            )}{' '}
           </div>
         </div>
         <div className="coin-main__frame-482083">
           <div className="coin-main__utilization-rate">Utilization Rate </div>
           <div className="coin-main___88-82">
-            {toPrecision(poolInfo.utilization * 100)}%{' '}
+            {toPrecision(poolInfo.formatted.utilization * 100)}%{' '}
           </div>
         </div>
         <Component289Property1OraclePrice className="coin-main__component-289-instance"></Component289Property1OraclePrice>

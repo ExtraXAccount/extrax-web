@@ -7,6 +7,7 @@ import Dialog from '@/components/Dialog'
 import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
+import { ILendPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
@@ -21,7 +22,7 @@ export default function WithdrawDialog({
 }: {
   open: boolean
   onClose: any
-  currentLendingPoolDetail: any
+  currentLendingPoolDetail?: ILendPosition
 }) {
   const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
     useSmartAccount()
@@ -39,15 +40,19 @@ export default function WithdrawDialog({
     setValue('')
   }
 
+  console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
   const withdraw = useCallback(async () => {
     console.log('withdraw :>> ', smartAccount, currentLendingPoolDetail)
+    if (!currentLendingPoolDetail) {
+      return
+    }
     setLoading(true)
     try {
       const res = await lendMng.withdraw(
         smartAccount,
-        currentLendingPoolDetail?.marketId,
-        currentLendingPoolDetail?.reserveId,
-        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
+        currentLendingPoolDetail.marketId,
+        currentLendingPoolDetail.reserveId,
+        BigInt(Number(value) * 10 ** currentLendingPoolDetail.decimals),
       )
       console.log('withdraw res :>> ', res)
       updateAfterAction(smartAccount)
@@ -71,23 +76,29 @@ export default function WithdrawDialog({
     reset()
   }, [currentLendingPoolDetail?.reserveId])
 
+  if (!currentLendingPoolDetail) {
+    return null
+  }
+
   return (
     <Dialog
       open={!!open && !!currentLendingPoolDetail}
       onClose={onClose}
-      title={`Withdraw ${nameChecker(currentLendingPoolDetail?.tokenSymbol)}`}
+      title={`Withdraw ${nameChecker(currentLendingPoolDetail.tokenSymbol)}`}
     >
       <div>
         <AmountInput
           maxText="Deposited"
-          max={currentLendingPoolDetail?.deposited - currentLendingPoolDetail?.borrowed}
-          // ethBalance={ethBalance}
+          max={
+            currentLendingPoolDetail.formatted.deposited -
+            currentLendingPoolDetail.formatted.borrowed
+          }
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
-          token={currentLendingPoolDetail?.tokenSymbol}
-          decimals={currentLendingPoolDetail?.tokenDecimals}
+          token={currentLendingPoolDetail.tokenSymbol}
+          decimals={currentLendingPoolDetail.decimals}
           value={value}
-          price={getPrice(currentLendingPoolDetail?.tokenSymbol)}
+          price={getPrice(currentLendingPoolDetail.tokenSymbol)}
           onChange={(val) => setValue(val)}
         />
       </div>
@@ -96,17 +107,19 @@ export default function WithdrawDialog({
           {
             title: 'APY',
             content: `${remain2Decimal(
-              aprToApy100(currentLendingPoolDetail?.apr * 100),
+              aprToApy100(currentLendingPoolDetail.formatted.apr * 100),
             )}%`,
           },
           {
-            title: 'Health Factor',
-            content: !depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%',
+            title: 'Exchange Rate',
+            content: !currentLendingPoolDetail
+              ? '--'
+              : currentLendingPoolDetail.formatted.exchangeRate,
           },
         ]}
       />
       <div className="dialog-divider"></div>
-      <DialogAccountInfo reserveId={currentLendingPoolDetail?.reserveId} />
+      <DialogAccountInfo reserveId={currentLendingPoolDetail.reserveId} />
       <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading}

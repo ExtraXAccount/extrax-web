@@ -53,7 +53,7 @@ export default function LendingTable() {
     console.log('formattedLendPools :>> ', formattedLendPools)
   }, [formattedLendPools])
 
-  const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
+  // const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
 
   // useEffect(() => {
   //   mng.multicallPoolsStatus([1n, 2n, 3n])
@@ -130,7 +130,7 @@ export default function LendingTable() {
             return a.value - b.value
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = i.totalSupply
+            const amount = i.formatted.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <>
@@ -146,10 +146,17 @@ export default function LendingTable() {
                   <Tooltip
                     title={
                       <div className="flex flex-column">
-                        <div>Supply Cap: {addComma(toPrecision(i.supplyCap))}</div>
-                        <div>Supply Used: {addComma(toPrecision(i.totalSupply))}</div>
                         <div>
-                          Remaining: {addComma(toPrecision(i.supplyCap - i.totalSupply))}
+                          Supply Cap: {addComma(toPrecision(i.formatted.supplyCap))}
+                        </div>
+                        <div>
+                          Supply Used: {addComma(toPrecision(i.formatted.totalSupply))}
+                        </div>
+                        <div>
+                          Remaining:{' '}
+                          {addComma(
+                            toPrecision(i.formatted.supplyCap - i.formatted.totalSupply),
+                          )}
                         </div>
                       </div>
                     }
@@ -158,8 +165,8 @@ export default function LendingTable() {
                       <PercentCircle
                         radix={10}
                         percent={div(
-                          i.totalSupply.toString(),
-                          i.supplyCap.toString(),
+                          i.formatted.totalSupply.toString(),
+                          i.formatted.supplyCap.toString(),
                         ).toNumber()}
                         strokeWidth={3}
                         strokeColor={'#38AD3D'}
@@ -180,7 +187,7 @@ export default function LendingTable() {
             return a.value - b.value
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = i.totalBorrowed
+            const amount = i.formatted.totalBorrowed
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <>
@@ -196,11 +203,19 @@ export default function LendingTable() {
                   <Tooltip
                     title={
                       <div className="flex flex-column">
-                        <div>Borrow Cap: {addComma(toPrecision(i.borrowCap))}</div>
-                        <div>Borrow Used: {addComma(toPrecision(i.totalBorrowed))}</div>
+                        <div>
+                          Borrow Cap: {addComma(toPrecision(i.formatted.borrowCap))}
+                        </div>
+                        <div>
+                          Borrow Used: {addComma(toPrecision(i.formatted.totalBorrowed))}
+                        </div>
                         <div>
                           Remaining:{' '}
-                          {addComma(toPrecision(i.borrowCap - i.totalBorrowed))}
+                          {addComma(
+                            toPrecision(
+                              i.formatted.borrowCap - i.formatted.totalBorrowed,
+                            ),
+                          )}
                         </div>
                       </div>
                     }
@@ -209,8 +224,8 @@ export default function LendingTable() {
                       <PercentCircle
                         radix={10}
                         percent={div(
-                          i.totalBorrowed.toString(),
-                          i.borrowCap.toString(),
+                          i.formatted.totalBorrowed.toString(),
+                          i.formatted.borrowCap.toString(),
                         ).toNumber()}
                         strokeWidth={3}
                         strokeColor={'#EC6F14'}
@@ -232,7 +247,7 @@ export default function LendingTable() {
             return a.value - b.value
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = i.availableLiquidity
+            const amount = i.formatted.availableLiquidity
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <>
@@ -259,7 +274,7 @@ export default function LendingTable() {
             return (
               <>
                 {isMobile && <div className="text-bold-small">Utilization</div>}
-                <div>{toPrecision(i.utilization * 100)}%</div>
+                <div>{toPrecision(i.formatted.utilization * 100)}%</div>
               </>
             )
           }}
@@ -300,7 +315,7 @@ export default function LendingTable() {
                   className="farm-buffer-safe flex ai-ct gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
-                  +{toPrecision(aprToApy100(pool.apr * 100))}%
+                  +{toPrecision(aprToApy100(pool.formatted.apr * 100))}%
                   <Link
                     to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                     onClick={(e) => {
@@ -357,7 +372,7 @@ export default function LendingTable() {
                   className="farm-buffer-danger flex ai-ct gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
-                  -{toPrecision(i.borrowApr * 100)}%
+                  -{toPrecision(i.formatted.borrowApr * 100)}%
                   <button
                     className="btn-base btn-base-small"
                     onClick={() => {

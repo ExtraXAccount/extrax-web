@@ -245,6 +245,13 @@ input {
     border-radius: 8px;
     color: #fff;
     background: linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%);
+    &:active,
+    &:hover {
+      color: #fff !important;
+      background: linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%) !important;
+      border-color: #C9C9CB !important;
+      filter: brightness(1.2);
+    }
   }
 
   &-secondary{

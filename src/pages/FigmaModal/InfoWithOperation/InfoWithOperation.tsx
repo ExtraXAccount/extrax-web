@@ -1,5 +1,7 @@
 import './InfoWithOperation.css'
 
+import { useLocation, useNavigate } from 'react-router-dom'
+
 import { InfoToListProperty1Info } from '../InfoToListProperty1Info/InfoToListProperty1Info'
 import { SupplyWindows } from '../SupplyWindows/SupplyWindows'
 import useLendPoolInfo from '../useLendPoolInfo'
@@ -13,6 +15,8 @@ export const InfoWithOperation = ({
   ...props
 }: IInfoWithOperationProps): JSX.Element => {
   const poolInfo = useLendPoolInfo()
+  const location = useLocation()
+  const navigate = useNavigate()
 
   return (
     <div className={'info-with-operation ' + className}>
@@ -20,7 +24,17 @@ export const InfoWithOperation = ({
         <div className="info-with-operation__usdc-pool-details">
           {poolInfo?.tokenSymbol?.toUpperCase()} Pool Details{' '}
         </div>
-        <img className="info-with-operation__frame" src="/modal/frame0.svg" />
+        <img
+          className="info-with-operation__frame"
+          src="/modal/frame0.svg"
+          onClick={() => {
+            if (location.key !== 'default') {
+              navigate(-1)
+            } else {
+              navigate('/lend')
+            }
+          }}
+        />
       </div>
       <div className="info-with-operation__frame-482114">
         <InfoToListProperty1Info className="info-with-operation__info-to-list-instance"></InfoToListProperty1Info>

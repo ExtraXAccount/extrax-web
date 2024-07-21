@@ -1,21 +1,85 @@
 import './SupplyWindows.css'
 
+import { Button } from 'antd/es'
+import classNames from 'classnames'
+import { useCallback, useEffect, useState } from 'react'
+
+import AmountInput from '@/components/AmountInput'
+import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
+import usePrices from '@/hooks/usePrices'
+import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import useLendingList from '@/pages/Lend/useLendingList'
+import { aprToApy, toPrecision } from '@/utils/math'
+
 import { AccountBalancesSupplyProperty1BalancesDetail } from '../AccountBalancesSupplyProperty1BalancesDetail/AccountBalancesSupplyProperty1BalancesDetail'
 import { AccountInfoProperty1CompositionD } from '../AccountInfoProperty1CompositionD/AccountInfoProperty1CompositionD'
 import { CoinProperty1UsdCoinUsdc } from '../CoinProperty1UsdCoinUsdc/CoinProperty1UsdCoinUsdc'
-import { InputProperty1Default } from '../InputProperty1Default/InputProperty1Default'
 import { MainProperty1Default } from '../MainProperty1Default/MainProperty1Default'
-import { Property1 } from '../Property1/Property1'
 import { SelcetionProperty11 } from '../SelcetionProperty11/SelcetionProperty11'
+import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface ISupplyWindowsProps {
   className?: string
 }
 
-export const SupplyWindows = ({
-  className,
-  ...props
-}: ISupplyWindowsProps): JSX.Element => {
+export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
+  const { prices, getPrice } = usePrices()
+  const { accounts, updateAfterAction } = useSmartAccount()
+
+  const [useNativeETH, setUseNativeETH] = useState(true)
+  const [loading, setLoading] = useState({ writing: false, desc: '' })
+  const [value, setValue] = useState('')
+  const lendPoolInfo = useLendPoolInfo()
+
+  const { fetchLendPools } = useLendingList()
+  const accountMng = useAccountManager()
+  const lendMng = useLendingManager()
+  const { balance } = useFetchBalance(lendPoolInfo?.underlyingTokenAddress)
+  const { balance: ethBalance } = useFetchEthBalance()
+
+  const deposit = useCallback(async () => {
+    if (!lendPoolInfo) {
+      return
+    }
+    console.log('depositToLending :>> ', accounts)
+    let newAccounts = [...accounts]
+    try {
+      if (!accounts.length) {
+        setLoading({ writing: true, desc: 'Creating smart account' })
+        newAccounts = await accountMng.createAccount()
+      }
+      setLoading({ writing: true, desc: 'Depositing' })
+      await lendMng.depositToLending(
+        newAccounts[0],
+        lendPoolInfo.reserveId,
+        BigInt(Number(value) * 10 ** lendPoolInfo.decimals),
+      )
+
+      updateAfterAction(newAccounts[0])
+      fetchLendPools()
+      // onClose()
+    } finally {
+      setLoading({ writing: false, desc: '' })
+    }
+  }, [
+    accountMng,
+    accounts,
+    fetchLendPools,
+    lendMng,
+    lendPoolInfo,
+    updateAfterAction,
+    value,
+  ])
+
+  useEffect(() => {
+    console.log('lendPoolInfo :>> ', lendPoolInfo)
+  }, [lendPoolInfo])
+
+  if (!lendPoolInfo) {
+    return null
+  }
+
   return (
     <div className={'supply-windows ' + className}>
       <div className="supply-windows__frame-482102">
@@ -36,24 +100,39 @@ export const SupplyWindows = ({
       </div>
       <div className="supply-windows__frame-482088">
         <div className="supply-windows__frame-481806">
-          <InputProperty1Default className="supply-windows__input-instance"></InputProperty1Default>
-          <Property1 className="supply-windows__instance"></Property1>
+          <AmountInput
+            noPadding
+            maxText="Available"
+            max={balance}
+            ethBalance={ethBalance}
+            useNativeETH={useNativeETH}
+            onUseNativeETH={setUseNativeETH}
+            token={lendPoolInfo.tokenSymbol}
+            decimals={lendPoolInfo.decimals}
+            value={value}
+            price={getPrice(lendPoolInfo.tokenSymbol)}
+            onChange={(val) => setValue(val)}
+          />
           <div className="supply-windows__frame-482084">
             <div className="supply-windows__frame-4820842">
               <div className="supply-windows__supply-apy">Supply APY </div>
               <div className="supply-windows__frame-482223">
-                <div className="supply-windows___6-73">6.73% </div>
-                <div className="supply-windows__frame-482224">
+                <div className="supply-windows___6-73">
+                  {toPrecision(aprToApy(lendPoolInfo.formatted.apr * 100))}%{' '}
+                </div>
+                {/* <div className="supply-windows__frame-482224">
                   <div className="supply-windows___3-2">🎉 +3.2% </div>
                 </div>
                 <div className="supply-windows__frame-482225">
                   <div className="supply-windows___3-2">❤️‍🔥 +3.2% </div>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="supply-windows__frame-481709">
-              <div className="supply-windows__health-factor">Health Factor </div>
-              <div className="supply-windows___1-21">1.21 </div>
+              <div className="supply-windows__health-factor">Exchange Rate </div>
+              <div className="supply-windows___1-21">
+                {lendPoolInfo.formatted.exchangeRate}{' '}
+              </div>
             </div>
           </div>
           <SelcetionProperty11
@@ -68,7 +147,22 @@ export const SupplyWindows = ({
               <AccountBalancesSupplyProperty1BalancesDetail className="supply-windows__account-balances-supply-instance"></AccountBalancesSupplyProperty1BalancesDetail>
             </div>
           </div>
-          <MainProperty1Default className="supply-windows__main-instance"></MainProperty1Default>
+          <Button
+            loading={loading.writing}
+            disabled={!Number(value)}
+            className={classNames('btn-base btn-base-primary btn-base-large flex1', {
+              // 'btn-disable': !Number(value) || isApproveActive,
+            })}
+            style={{
+              width: '100%',
+            }}
+            onClick={() => {
+              deposit()
+            }}
+          >
+            {loading.writing ? loading.desc : 'Confirm'}
+          </Button>
+          {/* <MainProperty1Default className="supply-windows__main-instance"></MainProperty1Default> */}
         </div>
       </div>
     </div>

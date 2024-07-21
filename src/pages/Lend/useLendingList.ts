@@ -50,39 +50,42 @@ export default function useLendingList() {
       return {
         ...config,
         ...pool,
-        apr:
-          stringToDecimals(pool.currentBorrowingRate.toString(), 18) *
-          div(pool.totalDebts.toString(), pool.totalLiquidity.toString()).toNumber(),
-        borrowApr: stringToDecimals(pool.currentBorrowingRate.toString(), 18),
         tokenSymbol: config.name,
         poolKey: config.name,
-        totalSupply: stringToDecimals(pool.totalLiquidity.toString(), config.decimals),
-        supplyCap: stringToDecimals(pool.config.supplyCap.toString(), 74),
-        totalBorrowed: stringToDecimals(pool.totalDebts.toString(), config.decimals),
-        borrowCap: stringToDecimals(pool.config.borrowCap.toString(), 74),
-        availableLiquidity: stringToDecimals(
-          pool.availableLiquidity.toString(),
-          config.decimals,
-        ),
-        utilization: div(
-          pool.totalDebts.toString(),
-          pool.totalLiquidity.toString(),
-        ).toNumber(),
-        balance: stringToDecimals(balances[index * 3]?.toString(), config.decimals),
-        deposited: position
-          ? stringToDecimals(position.liquidity?.toString(), config.decimals)
-          : 0,
-        borrowed: position
-          ? stringToDecimals(position.debt?.toString(), config.decimals)
-          : 0,
-        depositedBal: stringToDecimals(
-          balances[index * 3 + 1]?.toString(),
-          config.decimals,
-        ),
-        borrowedBal: stringToDecimals(
-          balances[index * 3 + 2]?.toString(),
-          config.decimals,
-        ),
+        formatted: {
+          apr:
+            stringToDecimals(pool.currentBorrowingRate.toString(), 18) *
+            div(pool.totalDebts.toString(), pool.totalLiquidity.toString()).toNumber(),
+          borrowApr: stringToDecimals(pool.currentBorrowingRate.toString(), 18),
+          totalSupply: stringToDecimals(pool.totalLiquidity.toString(), config.decimals),
+          supplyCap: stringToDecimals(pool.config.supplyCap.toString(), 74),
+          totalBorrowed: stringToDecimals(pool.totalDebts.toString(), config.decimals),
+          borrowCap: stringToDecimals(pool.config.borrowCap.toString(), 74),
+          availableLiquidity: stringToDecimals(
+            pool.availableLiquidity.toString(),
+            config.decimals,
+          ),
+          utilization: div(
+            pool.totalDebts.toString(),
+            pool.totalLiquidity.toString(),
+          ).toNumber(),
+          exchangeRate: stringToDecimals(pool.exchangeRate.toString()),
+          balance: stringToDecimals(balances[index * 3]?.toString(), config.decimals),
+          deposited: position
+            ? stringToDecimals(position.liquidity?.toString(), config.decimals)
+            : 0,
+          borrowed: position
+            ? stringToDecimals(position.debt?.toString(), config.decimals)
+            : 0,
+          depositedBal: stringToDecimals(
+            balances[index * 3 + 1]?.toString(),
+            config.decimals,
+          ),
+          borrowedBal: stringToDecimals(
+            balances[index * 3 + 2]?.toString(),
+            config.decimals,
+          ),
+        },
       }
     })
   }, [balances, positions, chainLendingConfig, lendPools])

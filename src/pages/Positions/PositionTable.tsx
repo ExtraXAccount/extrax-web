@@ -104,10 +104,10 @@ export default function PositionTable(props: { positions: any[] }) {
             return (
               <>
                 {i.type === 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.borrowApr * 100))}%</p>
+                  <p>{toPrecision(aprToApy100(i.pool.formatted.borrowApr))}%</p>
                 )}
                 {i.type !== 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.apr * 100))}%</p>
+                  <p>{toPrecision(aprToApy100(i.pool.formatted.apr))}%</p>
                 )}
               </>
             )

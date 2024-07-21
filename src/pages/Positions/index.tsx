@@ -1,7 +1,5 @@
 import './index.scss'
 
-import { useState } from 'react'
-
 import { useLendStore } from '@/store'
 import { remain2Decimal } from '@/utils/math'
 
@@ -13,6 +11,8 @@ import PositionTable from './PositionTable'
 export default function Positions() {
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } =
     useFormatPositions()
+
+  console.log('useFormatPositions :>> ', { assetPositions, debtPositions })
   const { currentPosition, currentDialogShow, updateDialogShow } = useLendStore()
   return (
     <div className="page-app page-positions">

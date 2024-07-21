@@ -26,7 +26,7 @@ export function useFetchEthBalance(chainId?: number) {
 }
 
 export default function useFetchBalance(
-  token: string,
+  token?: string,
   chainId?: number,
   replaceWethWithEth = false,
 ) {
@@ -37,7 +37,7 @@ export default function useFetchBalance(
     address: account,
     // token: token as `0x${string}`,
     token:
-      replaceWethWithEth && isWETH(chainId || connectedChainId, token)
+      replaceWethWithEth && isWETH(chainId || connectedChainId, token || '')
         ? undefined
         : (token as `0x${string}`),
     // ...options,
