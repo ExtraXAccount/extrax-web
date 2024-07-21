@@ -2,6 +2,7 @@ import './UsdcApyHistory.css'
 
 import { Skeleton } from 'antd'
 
+import usePrices from '@/hooks/usePrices'
 import { aprToApy, toPrecision } from '@/utils/math'
 
 import { TagProperty1Default } from '../TagProperty1Default/TagProperty1Default'
@@ -17,10 +18,13 @@ export const UsdcApyHistory = ({
   ...props
 }: IUsdcApyHistoryProps): JSX.Element => {
   const lendPoolInfo = useLendPoolInfo()
+  const { prices, getPrice } = usePrices()
 
   return (
     <div className={'usdc-apy-history ' + className}>
-      <div className="usdc-apy-history__usdc-apy-history2">USDC APY History </div>
+      <div className="usdc-apy-history__usdc-apy-history2">
+        {lendPoolInfo?.tokenSymbol} APY History{' '}
+      </div>
       <div className="usdc-apy-history__frame-482026">
         <div className="usdc-apy-history__frame-482007">
           <div className="usdc-apy-history__frame-482019">
@@ -72,13 +76,17 @@ export const UsdcApyHistory = ({
               <div className="usdc-apy-history___302">302% </div>
             </div>
             <div className="usdc-apy-history__frame-482012">
-              <div className="usdc-apy-history__usdc-price">USDC price: </div>
-              <div className="usdc-apy-history___1">$1 </div>
+              <div className="usdc-apy-history__usdc-price">
+                {lendPoolInfo?.tokenSymbol} price:{' '}
+              </div>
+              <div className="usdc-apy-history___1">
+                ${getPrice(lendPoolInfo?.tokenSymbol || '')}{' '}
+              </div>
             </div>
-            <div className="usdc-apy-history__frame-482011">
+            {/* <div className="usdc-apy-history__frame-482011">
               <div className="usdc-apy-history__velo-price">VELO price: </div>
               <div className="usdc-apy-history___0-1581">$0.1581 </div>
-            </div>
+            </div> */}
           </div>
           <div className="usdc-apy-history__group-481685">
             <div className="usdc-apy-history__frame-482008">

@@ -1,5 +1,5 @@
 import cx from 'classnames'
-import { useMemo } from 'react'
+import { CSSProperties, useMemo } from 'react'
 
 import { SupportedChainId } from '@/sdk/constants/chains'
 import { getTokenConfigByAddress } from '@/sdk/constants/token'
@@ -12,10 +12,11 @@ interface TokenIconProps {
   chainId?: SupportedChainId
   address?: string
   className?: string
+  style?: CSSProperties
 }
 
 export default function TokenIcon(props: TokenIconProps) {
-  const { symbol, chainId, address, className } = props
+  const { symbol, chainId, address, className, style } = props
   const { chainId: currentChainId } = useWagmiCtx()
   const realChainId = chainId || currentChainId
 
@@ -35,6 +36,7 @@ export default function TokenIcon(props: TokenIconProps) {
         `coin-chain-${realChainId}`,
         className,
       )}
+      style={style}
     ></i>
   )
 }

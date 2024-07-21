@@ -7,7 +7,6 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import RainbowContextApp from '@/components/RainbowKit'
 
 import AppLayout from './components/AppLayout'
-// import FigmaLend from './pages/FigmaLend'
 // import Intent from './pages/Intent'
 import Lend from './pages/Lend'
 import LendModal from './pages/Lend/LendModal'

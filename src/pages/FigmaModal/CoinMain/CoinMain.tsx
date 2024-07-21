@@ -2,11 +2,10 @@ import './CoinMain.css'
 
 import { Skeleton } from 'antd'
 
-import Loading from '@/components/Loading'
+import TokenIcon from '@/components/TokenIcon'
 import usePrices from '@/hooks/usePrices'
 import { formatFloatNumber, toPrecision } from '@/utils/math'
 
-import { CoinProperty1UsdCoinUsdc } from '../CoinProperty1UsdCoinUsdc/CoinProperty1UsdCoinUsdc'
 import { CoinSelectProperty1Def } from '../CoinSelectProperty1Def/CoinSelectProperty1Def'
 import { Component289Property1OraclePrice } from '../Component289Property1OraclePrice/Component289Property1OraclePrice'
 import useLendPoolInfo from '../useLendPoolInfo'
@@ -23,10 +22,10 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
     <div className={'coin-main ' + className}>
       <div className="coin-main__frame-482117">
         <div className="coin-main__group-9">
-          <CoinProperty1UsdCoinUsdc
-            property1="usd-coin-usdc"
-            className="coin-main__coin-instance"
-          ></CoinProperty1UsdCoinUsdc>
+          <TokenIcon
+            symbol={lendPoolInfo?.tokenSymbol}
+            style={{ width: '100%', height: '100%' }}
+          />
         </div>
         <div className="coin-main__frame-171">
           <div className="coin-main__usd-coin">
