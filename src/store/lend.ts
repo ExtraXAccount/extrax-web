@@ -24,7 +24,25 @@ export interface ILendPoolConfig {
   supplyCap: bigint
 }
 
-export interface IFormattedLendPool {
+export interface ILendPoolInfo {
+  marketId: bigint
+  reserveId: bigint
+  availableLiquidity: bigint
+  totalLiquidity: bigint
+  totalDebts: bigint
+  borrowingIndex: bigint
+  exchangeRate: bigint
+  lastUpdateTimestamp: number
+  currentBorrowingRate: bigint
+  underlyingAsset: Address
+  eTokenAddress: Address
+  debtTokenAddress: Address
+  feeReceiver: Address
+  interestRateConfig: IInterestRateConfig
+  config: ILendPoolConfig
+}
+
+export interface IFormattedLendPool extends ILendPoolInfo {
   formatted: {
     exchangeRate: number
     apr: number
@@ -44,56 +62,33 @@ export interface IFormattedLendPool {
   name: string
   tokenSymbol: string
   poolKey: string
-  marketId: bigint
-  reserveId: bigint
-  totalLiquidity: bigint
-  totalDebts: bigint
-  borrowingIndex: bigint
-  exchangeRate: bigint
-  lastUpdateTimestamp: number
-  currentBorrowingRate: bigint
-  underlyingAsset: string
-  eTokenAddress: string
-  debtTokenAddress: string
-  feeReceiver: string
-  interestRateConfig: IInterestRateConfig
-  config: ILendPoolConfig
   underlyingTokenAddress: Address
   eToken: Address
   debtToken: Address
   decimals: number
 }
 
-export interface ILendPosition extends IFormattedLendPool {
-  account?: string
+export interface ILendPosition {
+  account: Address
   debt: bigint
   liquidity: bigint
   marketId: bigint
   reserveId: bigint
 }
 
+export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
+  type: string
+  price: number
+  value: number
+  pool?: IFormattedLendPool
+}
+
 export interface LendState {
   healthStatus: any
-  lendPools: {
-    marketId: bigint
-    reserveId: bigint
-    availableLiquidity: bigint
-    totalLiquidity: bigint
-    totalDebts: bigint
-    borrowingIndex: bigint
-    exchangeRate: bigint
-    lastUpdateTimestamp: number
-    currentBorrowingRate: bigint
-    underlyingAsset: string
-    eTokenAddress: string
-    debtTokenAddress: string
-    feeReceiver: string
-    interestRateConfig: IInterestRateConfig
-    config: ILendPoolConfig
-  }[]
+  lendPools: ILendPoolInfo[]
   positions: ILendPosition[]
   isFetching: boolean
-  currentPosition: ILendPosition | undefined
+  currentPosition: IFormattedPosition | undefined
   currentDialogShow: 'repay' | 'borrow' | 'withdraw' | 'deposit' | null
 }
 

@@ -7,7 +7,7 @@ import Dialog from '@/components/Dialog'
 import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
-import { ILendPosition } from '@/store/lend'
+import { IFormattedPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
@@ -22,7 +22,7 @@ export default function WithdrawDialog({
 }: {
   open: boolean
   onClose: any
-  currentLendingPoolDetail?: ILendPosition
+  currentLendingPoolDetail?: IFormattedPosition
 }) {
   const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
     useSmartAccount()

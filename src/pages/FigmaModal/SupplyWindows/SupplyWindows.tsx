@@ -34,7 +34,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const { fetchLendPools } = useLendingList()
   const accountMng = useAccountManager()
   const lendMng = useLendingManager()
-  const { balance } = useFetchBalance(lendPoolInfo?.underlyingTokenAddress)
+  const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
   const { balance: ethBalance } = useFetchEthBalance()
 
   const deposit = useCallback(async () => {

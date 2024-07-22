@@ -365,23 +365,43 @@ export default function LendingTable() {
           sorter={(a: any, b: any) => {
             return a.formatted.borrowApr - b.formatted.borrowApr
           }}
-          render={(i: IFormattedLendPool) => {
+          render={(pool: IFormattedLendPool) => {
             return (
               <>
                 <div
                   className="farm-buffer-danger flex ai-ct gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
-                  -{toPrecision(i.formatted.borrowApr * 100)}%
-                  <button
-                    className="btn-base btn-base-small"
-                    onClick={() => {
-                      updateCurrentPosition(i as any)
-                      updateDialogShow('borrow')
+                  -{toPrecision(pool.formatted.borrowApr * 100)}%
+                  <Link
+                    to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}/borrow`}
+                    onClick={(e) => {
+                      if (!account) {
+                        e.preventDefault()
+                        openConnectModal?.()
+                      }
+                      if (!(chainId in SupportedChainId)) {
+                        e.preventDefault()
+                        switchChain?.({ chainId: SupportedChainId.OPTIMISM })
+                      }
+                      if (activeChain !== chainId) {
+                        e.preventDefault()
+                        switchChain?.({ chainId: activeChain })
+                        return
+                      }
                     }}
                   >
+                    <button className="btn-base btn-base-small">Borrow</button>
+                  </Link>
+                  {/* <button
+                    className="btn-base btn-base-small"
+                    // onClick={() => {
+                    //   updateCurrentPosition(i)
+                    //   updateDialogShow('borrow')
+                    // }}
+                  >
                     Borrow
-                  </button>
+                  </button> */}
                 </div>
               </>
             )

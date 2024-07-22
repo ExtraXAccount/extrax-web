@@ -8,7 +8,7 @@ import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
-import { ILendPosition } from '@/store/lend'
+import { IFormattedPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
@@ -23,7 +23,7 @@ export default function RepayDialog({
 }: {
   open: boolean
   onClose: any
-  currentLendingPoolDetail?: ILendPosition
+  currentLendingPoolDetail?: IFormattedPosition
 }) {
   const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
     useSmartAccount()
@@ -36,7 +36,7 @@ export default function RepayDialog({
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)
-  const { balance } = useFetchBalance(currentLendingPoolDetail?.underlyingTokenAddress)
+  const { balance } = useFetchBalance(currentLendingPoolDetail?.underlyingAsset)
   const { balance: ethBalance } = useFetchEthBalance()
 
   function reset() {
