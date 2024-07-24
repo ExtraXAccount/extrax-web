@@ -132,11 +132,14 @@ export default function useSmartAccount() {
             healthStatus.debtValue.decimals,
           ),
           healthFactor: bi2decimalStr(healthStatus.healthFactor),
-          liquidationThreshold: bi2decimalStr(
+          liquidationThresholdPercent: bi2decimalStr(
             healthStatus.liquidationThreshold.value,
-            healthStatus.liquidationThreshold.decimals,
+            healthStatus.liquidationThreshold.decimals + 1,
           ),
-          ltv: bi2decimalStr(healthStatus.ltv.value, healthStatus.ltv.decimals),
+          ltvPercent: bi2decimalStr(
+            healthStatus.ltv.value,
+            healthStatus.ltv.decimals + 2,
+          ),
         },
       })
       updatePositions(positions)
@@ -181,14 +184,6 @@ export default function useSmartAccount() {
   const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
   const debtVal = Number(healthStatus?.formatted?.debtValueUsd) || 0
 
-  // const safetyRatio = useMemo(() => {
-  //   if (!depositedVal) {
-  //     return 0
-  //   }
-  //   // return toPrecision((depositedVal / (depositedVal + debtVal)) * 100) + '%'
-  //   return debtVal / (depositedVal + debtVal)
-  // }, [debtVal, depositedVal])
-
   const accountAPY = useMemo(() => {
     const totalApy =
       (sumBy(
@@ -228,7 +223,6 @@ export default function useSmartAccount() {
       healthStatus.formatted?.debtValueUsd,
     ).toString(),
     usedCredit: healthStatus.formatted?.debtValueUsd,
-    // safetyRatio,
     accountAPY,
     // supportedAssets,
     // supportedDebts,

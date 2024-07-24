@@ -61,4 +61,5 @@ module.exports = {
       },
     ],
   },
+  ignorePatterns: ['node_modules', 'build', 'node_modules/*'],
 }

@@ -408,7 +408,7 @@ export default function LendingTable() {
           }}
         />
 
-        {/* <Column
+        <Column
           title="Deposited"
           dataIndex=""
           key="deposited"
@@ -418,11 +418,11 @@ export default function LendingTable() {
           render={(i: IFormattedLendPool) => {
             return (
               <>
-                <div>{toPrecision(i.deposited)}</div>
+                <div>{toPrecision(i.formatted.deposited)}</div>
                 <div className="text-sm-2">
                   $
                   {formatNumberByUnit(
-                    toPrecisionNum(i.deposited * getPrice(i.tokenSymbol)),
+                    toPrecisionNum(i.formatted.deposited * getPrice(i.tokenSymbol)),
                   )}
                 </div>
               </>
@@ -439,17 +439,17 @@ export default function LendingTable() {
           render={(i: IFormattedLendPool) => {
             return (
               <>
-                <div>{toPrecision(i.borrowed)}</div>
+                <div>{toPrecision(i.formatted.borrowed)}</div>
                 <div className="text-sm-2">
                   $
                   {formatNumberByUnit(
-                    toPrecisionNum(i.borrowed * getPrice(i.tokenSymbol)),
+                    toPrecisionNum(i.formatted.borrowed * getPrice(i.tokenSymbol)),
                   )}
                 </div>
               </>
             )
           }}
-        /> */}
+        />
         {/* <Column
           title="Actions"
           dataIndex=""
