@@ -72,5 +72,6 @@
 }
 .info-with-operation__supply-windows-instance {
   flex-shrink: 0 !important;
-  width: 488px !important;
+  /* width: 488px !important; */
+  width: 520px;
 }

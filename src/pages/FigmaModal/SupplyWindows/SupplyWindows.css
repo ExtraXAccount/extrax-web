@@ -4,6 +4,7 @@
 }
 .supply-windows {
   padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -63,51 +64,25 @@
   align-items: center;
   justify-content: flex-start;
 }
-.supply-windows__frame-482107 {
+.supply-windows__mode-selector {
   display: flex;
-  flex-direction: row;
   gap: 4px;
-  align-items: flex-end;
-  justify-content: flex-start;
+  align-items: center;
   flex-shrink: 0;
-  position: relative;
-}
-.supply-windows__supply {
-  color: var(--card-title, rgba(0, 0, 0, 0.9));
-  text-align: left;
-  font-family: 'Figtree-SemiBold', sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.supply-windows__div {
-  color: var(--card-title, rgba(0, 0, 0, 0.9));
-  text-align: left;
-  font-family: 'Figtree-SemiBold', sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.supply-windows__borrow {
   color: var(--switch-text-unselect, #848383);
-  text-align: left;
   font-family: 'Figtree-SemiBold', sans-serif;
   font-size: 16px;
   line-height: 24px;
-  font-weight: 600;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  user-select: none;
+  .supply-windows__mode {
+    cursor: pointer;
+  }
+  .supply-windows__mode-active {
+    color: var(--card-title, rgba(0, 0, 0, 0.9));
+    font-weight: bold;
+  }
 }
+
 .supply-windows__frame-482088 {
   background: var(--background, #f9f9fa);
   border-radius: 16px;
@@ -147,6 +122,7 @@
   width: 408px !important;
 }
 .supply-windows__frame-482084 {
+  width: 100%;
   background: #ffffff;
   border-radius: 8px;
   border-style: solid;
@@ -158,8 +134,6 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 408px;
-  position: relative;
 }
 .supply-windows__frame-4820842 {
   border-style: solid;
@@ -345,4 +319,50 @@
   align-self: stretch !important;
   flex-shrink: 0 !important;
   width: unset !important;
+}
+
+
+.leverage-mode-setting-wrapper {
+  width: 100%;
+  border-radius: 8px;
+  border: 0.5px solid var(--stroke, #C9C9CB);
+  background: #FFF;
+  .leverage-mode-setting-form {
+    padding: 8px 12px;
+    border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+    color: var(--text-gry-60-b, #666);
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .leverage-mode-setting-hint {
+    height: 34px;
+    padding-left: 12px;
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 4px;
+    color: var(--switch-text-unselect, #848383);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+}
+
+.borrow-risk-hint {
+  border-radius: 8px;
+  border: 0.5px solid var(--stroke, #C9C9CB);
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+
+  color: var(--card-title, rgba(0, 0, 0, 0.90));
+  font-size: 12px;
+  line-height: 24px;
+  font-weight: 300;
+}
+
+.warn-hint {
+  display: block;
+  width: 24px;
+  height: 24px;
+  background: url(./imgs//warn.png) center/contain no-repeat;
 }

@@ -1,11 +1,13 @@
 import './SupplyWindows.css'
 
-import { Button } from 'antd/es'
+import { Button, Switch, Tooltip } from 'antd/es'
 import classNames from 'classnames'
 import { useCallback, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import AmountInput from '@/components/AmountInput'
 import TokenIcon from '@/components/TokenIcon'
+import { useWagmiCtx } from '@/components/WagmiContext'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
@@ -23,9 +25,13 @@ export interface ISupplyWindowsProps {
 }
 
 export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
-  const { prices, getPrice } = usePrices()
-  const { accounts, updateAfterAction } = useSmartAccount()
+  const { getPrice } = usePrices()
+  const { smartAccount, accounts, updateAfterAction } = useSmartAccount()
+  const { account } = useWagmiCtx()
+  const { state } = useLocation()
 
+  const [isBorrowMode, setIsBorrowMode] = useState(!!state?.isBorrowMode)
+  const [leverageMode, setLeverageMode] = useState(false)
   const [useNativeETH, setUseNativeETH] = useState(true)
   const [loading, setLoading] = useState({ writing: false, desc: '' })
   const [value, setValue] = useState('')
@@ -37,7 +43,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
   const { balance: ethBalance } = useFetchEthBalance()
 
-  const deposit = useCallback(async () => {
+  const handleDeposit = useCallback(async () => {
     if (!lendPoolInfo) {
       return
     }
@@ -48,7 +54,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
         setLoading({ writing: true, desc: 'Creating smart account' })
         newAccounts = await accountMng.createAccount()
       }
-      setLoading({ writing: true, desc: 'Depositing' })
+      setLoading({ writing: true, desc: 'Supplying' })
       await lendMng.depositToLending(
         newAccounts[0],
         lendPoolInfo.reserveId,
@@ -70,6 +76,35 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
     updateAfterAction,
     value,
   ])
+
+  const handleBorrow = useCallback(async () => {
+    if (!lendPoolInfo) {
+      return
+    }
+    try {
+      setLoading({ writing: true, desc: 'Borrowing' })
+      const res = await lendMng.borrow(
+        smartAccount,
+        lendPoolInfo.marketId,
+        lendPoolInfo.reserveId,
+        BigInt(Number(value) * 10 ** lendPoolInfo.decimals),
+      )
+
+      updateAfterAction(smartAccount)
+      fetchLendPools()
+      // onClose()
+    } finally {
+      setLoading({ writing: false, desc: '' })
+    }
+  }, [smartAccount, fetchLendPools, lendMng, lendPoolInfo, updateAfterAction, value])
+
+  const handleSubmit = useCallback(() => {
+    if (isBorrowMode) {
+      handleBorrow()
+    } else {
+      handleDeposit()
+    }
+  }, [handleBorrow, handleDeposit, isBorrowMode])
 
   useEffect(() => {
     console.log('lendPoolInfo :>> ', lendPoolInfo)
@@ -93,17 +128,63 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
             Supply {lendPoolInfo.tokenSymbol}{' '}
           </div>
         </div>
-        <div className="supply-windows__frame-482107">
-          <div className="supply-windows__supply">Supply </div>
-          <div className="supply-windows__div">/ </div>
-          <div className="supply-windows__borrow">Borrow </div>
+        <div className="supply-windows__mode-selector">
+          <div
+            className={classNames('supply-windows__mode', {
+              'supply-windows__mode-active': !isBorrowMode,
+            })}
+            onClick={() => setIsBorrowMode(false)}
+          >
+            Supply
+          </div>{' '}
+          /{' '}
+          <div
+            className={classNames('supply-windows__mode', {
+              'supply-windows__mode-active': isBorrowMode,
+            })}
+            onClick={() => setIsBorrowMode(true)}
+          >
+            Borrow
+          </div>
         </div>
       </div>
       <div className="supply-windows__frame-482088">
         <div className="supply-windows__frame-481806">
+          {isBorrowMode && (
+            <div className="leverage-mode-setting-wrapper">
+              <div className="leverage-mode-setting-form flex ai-ct jc-sb">
+                <span>Leverage Mode</span>
+                <Switch
+                  checked={leverageMode}
+                  size="small"
+                  onChange={setLeverageMode}
+                ></Switch>
+              </div>
+              <div className="leverage-mode-setting-hint">
+                <i className="iconfont icon-hint"></i>
+                {leverageMode ? (
+                  <span>
+                    Leverage mode off. Asset to borrow will directly go to your{' '}
+                    <Tooltip title={account}>
+                      <b>Wallet</b>
+                    </Tooltip>
+                    .
+                  </span>
+                ) : (
+                  <span>
+                    Leverage mode on. Asset to borrow will retain go to your{' '}
+                    <Tooltip title={smartAccount}>
+                      <b>Main Account</b>
+                    </Tooltip>
+                    .
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
           <AmountInput
             noPadding
-            maxText="Available"
+            maxText={`${isBorrowMode ? 'Borrowing ' : ''}Available`}
             max={balance}
             ethBalance={ethBalance}
             useNativeETH={useNativeETH}
@@ -116,10 +197,19 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
           />
           <div className="supply-windows__frame-482084">
             <div className="supply-windows__frame-4820842">
-              <div className="supply-windows__supply-apy">Supply APY </div>
+              <div className="supply-windows__supply-apy">
+                {isBorrowMode ? 'Borrow' : 'Supply'} APY{' '}
+              </div>
               <div className="supply-windows__frame-482223">
                 <div className="supply-windows___6-73">
-                  {toPrecision(aprToApy(lendPoolInfo.formatted.apr * 100))}%{' '}
+                  {toPrecision(
+                    aprToApy(
+                      (isBorrowMode
+                        ? lendPoolInfo.formatted.borrowApr
+                        : lendPoolInfo.formatted.apr) * 100,
+                    ),
+                  )}
+                  %{' '}
                 </div>
                 {/* <div className="supply-windows__frame-482224">
                   <div className="supply-windows___3-2">🎉 +3.2% </div>
@@ -136,10 +226,22 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
               </div>
             </div>
           </div>
-          <SelcetionProperty11
-            property1="1"
-            className="supply-windows__selcetion-instance"
-          ></SelcetionProperty11>
+          {isBorrowMode ? (
+            leverageMode && (
+              <div className="borrow-risk-hint">
+                <i className="warn-hint"></i>
+                <span>
+                  Borrowing this amount will reduce your health factor and increase risk
+                  of liquidation.
+                </span>
+              </div>
+            )
+          ) : (
+            <SelcetionProperty11
+              property1="1"
+              className="supply-windows__selcetion-instance"
+            ></SelcetionProperty11>
+          )}
         </div>
         <div className="supply-windows__deposit-info">
           <div className="supply-windows__frame-481805">
@@ -157,11 +259,9 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
             style={{
               width: '100%',
             }}
-            onClick={() => {
-              deposit()
-            }}
+            onClick={handleSubmit}
           >
-            {loading.writing ? loading.desc : 'Confirm'}
+            {loading.writing ? loading.desc : isBorrowMode ? 'Borrow' : 'Supply'}
           </Button>
           {/* <MainProperty1Default className="supply-windows__main-instance"></MainProperty1Default> */}
         </div>

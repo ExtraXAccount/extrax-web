@@ -1,7 +1,7 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd/es'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSwitchChain } from 'wagmi'
 
 import LPName from '@/components/LPName'
@@ -33,6 +33,8 @@ import useLendingList from './useLendingList'
 const { Column } = Table
 
 export default function LendingTable() {
+  const navigate = useNavigate()
+
   const { getPrice } = usePrices()
   const { account, chainId } = useWagmiCtx()
   const { openConnectModal } = useConnectModal()
@@ -89,6 +91,15 @@ export default function LendingTable() {
         dataSource={formattedLendPools}
         pagination={false}
         rowKey={(i: IFormattedLendPool) => i.poolKey}
+        onRow={(record: IFormattedLendPool) => {
+          return {
+            onClick: () => {
+              navigate(
+                `/lend/${record.marketId.toString()}/${record.reserveId.toString()}`,
+              )
+            },
+          }
+        }}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
@@ -332,6 +343,7 @@ export default function LendingTable() {
                         switchChain?.({ chainId: activeChain })
                         return
                       }
+                      e.stopPropagation()
                     }}
                   >
                     <button className="btn-base btn-base-small">Deposit</button>
@@ -374,7 +386,8 @@ export default function LendingTable() {
                 >
                   -{toPrecision(pool.formatted.borrowApr * 100)}%
                   <Link
-                    to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}/borrow`}
+                    to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                    state={{ isBorrowMode: true }}
                     onClick={(e) => {
                       if (!account) {
                         e.preventDefault()
@@ -389,6 +402,7 @@ export default function LendingTable() {
                         switchChain?.({ chainId: activeChain })
                         return
                       }
+                      e.stopPropagation()
                     }}
                   >
                     <button className="btn-base btn-base-small">Borrow</button>

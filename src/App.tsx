@@ -30,10 +30,6 @@ function App() {
             </Route>
             <Route path="lend" element={<Lend />}></Route>
             <Route path="lend/:marketId/:reserveId" element={<LendModal />}></Route>
-            <Route
-              path="lend/:marketId/:reserveId/borrow"
-              element={<LendModal />}
-            ></Route>
             {/* <Route path="lend" element={<FigmaLend />}></Route> */}
             <Route path="portfolio" element={<Positions />}></Route>
             {/* <Route path="intent" element={<Intent />}></Route> */}
