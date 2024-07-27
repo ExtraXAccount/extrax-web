@@ -16,7 +16,7 @@ export default function AccountInfo() {
     healthStatus,
     accountEquity,
     healthFactorPercent,
-    smartAccount,
+    currentAccount,
     depositedVal,
     // depositedAssets,
     // debtVal,
@@ -25,7 +25,7 @@ export default function AccountInfo() {
     availableCredit,
     usedCredit,
     // safetyRatio,
-    accountAPY,
+    accountApy,
     accounts,
     // getInitData,
   } = useSmartAccount()
@@ -52,7 +52,7 @@ export default function AccountInfo() {
         onClose={() => setDepositDialogOpen(false)}
       ></AccountDepositDialog>
 
-      {!smartAccount ? (
+      {!currentAccount ? (
         <div className="extrax-account-info-inner extrax-account-creator">
           <div className="extrax-account-create-button">
             <p className="btn-base" onClick={handleAddDeposit}>
@@ -69,16 +69,16 @@ export default function AccountInfo() {
             <p className="extrax-account-info-main-account">
               <b>Main Account: </b>
               <em>
-                {!smartAccount
+                {!currentAccount
                   ? '--'
-                  : `${smartAccount.slice(0, 6)}...${smartAccount.slice(-4)}`}
+                  : `${currentAccount.slice(0, 6)}...${currentAccount.slice(-4)}`}
               </em>
             </p>
             <p className="extrax-account-info-main-splitter"> | </p>
             <p className="extrax-account-info-main-apy">
               <b>Portfolio APY: </b>
               <em className="text-highlight">
-                {!depositedVal ? '--' : toPrecision(accountAPY * 100) + '%'}
+                {!depositedVal ? '--' : toPrecision(accountApy * 100) + '%'}
               </em>
             </p>
           </div>
