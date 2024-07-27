@@ -3,6 +3,7 @@ import { erc20Abi, getContract, PublicClient, WalletClient } from 'viem'
 import { defaultChainId } from '@/constants'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 import { SupportedChainId } from '@/constants/chains'
+import { ISupportedAssets } from '@/store/account'
 import { Address } from '@/types'
 
 import { BalanceCheckerABI } from './BalanceCheckerABI'
@@ -123,11 +124,10 @@ export class AccountManager {
   // }
 
   public async getSupportedAssets() {
-    const nextAssetId: any = await this.healthManagerContract().read.nextAssetId()
-    // console.log('getSupportedAssets :>> ', nextAssetId)
-    const result = [] as any[]
+    const nextAssetId = await this.healthManagerContract().read.nextAssetId()
+    const result = [] as ISupportedAssets[]
     for (let i = 1n; i < nextAssetId; i++) {
-      const res: any = await this.healthManagerContract().read.assets([i])
+      const res = await this.healthManagerContract().read.assets([i])
       const [assetType, underlyingTokensCalculator, data] = res
       result.push({
         assetId: i,
@@ -136,16 +136,16 @@ export class AccountManager {
         data,
       })
     }
-    console.log('getSupportedAssets :>> ', result)
+    // console.log('getSupportedAssets :>> ', result)
     return result
   }
 
   public async getSupportedDebts() {
-    const nextDebtId: any = await this.healthManagerContract().read.nextDebtId()
+    const nextDebtId = await this.healthManagerContract().read.nextDebtId()
     // console.log('getSupportedDebts :>> ', nextDebtId)
-    const result = [] as any[]
+    const result = [] as ISupportedAssets[]
     for (let i = 1n; i < nextDebtId; i++) {
-      const res: any = await this.healthManagerContract().read.debts([i])
+      const res = await this.healthManagerContract().read.debts([i])
       const [assetType, underlyingTokensCalculator, data] = res
       result.push({
         assetId: i,
@@ -154,7 +154,7 @@ export class AccountManager {
         data,
       })
     }
-    console.log('getSupportedDebts :>> ', result)
+    // console.log('getSupportedDebts :>> ', result)
     return result
   }
 

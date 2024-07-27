@@ -57,7 +57,6 @@ export default function useSmartAccount() {
         await accountMng.getCollateralAndDebtValue(acc)
 
       updateAccountInfo({
-        balances: [],
         account,
         collateral,
         collateralDeciamls,

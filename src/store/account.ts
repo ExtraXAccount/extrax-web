@@ -3,7 +3,6 @@ import { create } from 'zustand'
 
 export interface AccountInfo {
   account: Address
-  balances: any
   collateral: bigint
   collateralDeciamls: number
   debt: bigint
@@ -39,6 +38,13 @@ export interface IHealthStatus {
   }
 }
 
+export interface ISupportedAssets {
+  assetId: bigint
+  assetType: number
+  underlyingTokensCalculator: Hex
+  data: Hex
+}
+
 export interface ILendPosition {
   account: Address
   debt: bigint
@@ -54,8 +60,8 @@ export interface AccountState {
   balances: bigint[]
   positions: ILendPosition[]
   accountInfo?: AccountInfo
-  supportedAssets: any[]
-  supportedDebts: any[]
+  supportedAssets: ISupportedAssets[]
+  supportedDebts: ISupportedAssets[]
 }
 
 export interface AccountAction {
