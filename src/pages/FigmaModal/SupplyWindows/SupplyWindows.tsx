@@ -2,7 +2,7 @@ import './SupplyWindows.css'
 
 import { Button, Switch, Tooltip } from 'antd/es'
 import classNames from 'classnames'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import AmountInput from '@/components/AmountInput'
@@ -14,6 +14,7 @@ import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
 import { aprToApy, toPrecision } from '@/utils/math'
+import { div } from '@/utils/math/bigNumber'
 
 import { AccountBalancesSupplyProperty1BalancesDetail } from '../AccountBalancesSupplyProperty1BalancesDetail/AccountBalancesSupplyProperty1BalancesDetail'
 import { AccountInfoProperty1CompositionD } from '../AccountInfoProperty1CompositionD/AccountInfoProperty1CompositionD'
@@ -26,7 +27,8 @@ export interface ISupplyWindowsProps {
 
 export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const { getPrice } = usePrices()
-  const { smartAccount, accounts, updateAfterAction } = useSmartAccount()
+  const { currentAccount, availableCredit, accounts, updateAfterAction } =
+    useSmartAccount()
   const { account } = useWagmiCtx()
   const { state } = useLocation()
 
@@ -42,6 +44,13 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const lendMng = useLendingManager()
   const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
   const { balance: ethBalance } = useFetchEthBalance()
+
+  const maxBorrowAmount = useMemo(() => {
+    if (!lendPoolInfo?.tokenSymbol || !getPrice(lendPoolInfo?.tokenSymbol)) {
+      return 0
+    }
+    return div(availableCredit, getPrice(lendPoolInfo?.tokenSymbol)).toString()
+  }, [availableCredit, getPrice, lendPoolInfo?.tokenSymbol])
 
   const handleDeposit = useCallback(async () => {
     if (!lendPoolInfo) {
@@ -84,19 +93,19 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
     try {
       setLoading({ writing: true, desc: 'Borrowing' })
       const res = await lendMng.borrow(
-        smartAccount,
+        currentAccount,
         lendPoolInfo.marketId,
         lendPoolInfo.reserveId,
         BigInt(Number(value) * 10 ** lendPoolInfo.decimals),
       )
 
-      updateAfterAction(smartAccount)
+      updateAfterAction(currentAccount)
       fetchLendPools()
       // onClose()
     } finally {
       setLoading({ writing: false, desc: '' })
     }
-  }, [smartAccount, fetchLendPools, lendMng, lendPoolInfo, updateAfterAction, value])
+  }, [currentAccount, fetchLendPools, lendMng, lendPoolInfo, updateAfterAction, value])
 
   const handleSubmit = useCallback(() => {
     if (isBorrowMode) {
@@ -173,7 +182,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
                 ) : (
                   <span>
                     Leverage mode on. Asset to borrow will retain go to your{' '}
-                    <Tooltip title={smartAccount}>
+                    <Tooltip title={currentAccount}>
                       <b>Main Account</b>
                     </Tooltip>
                     .
@@ -185,7 +194,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
           <AmountInput
             noPadding
             maxText={`${isBorrowMode ? 'Borrowing ' : ''}Available`}
-            max={balance}
+            max={isBorrowMode ? maxBorrowAmount : balance}
             ethBalance={ethBalance}
             useNativeETH={useNativeETH}
             onUseNativeETH={setUseNativeETH}

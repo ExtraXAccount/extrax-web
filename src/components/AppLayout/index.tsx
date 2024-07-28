@@ -1,7 +1,6 @@
 import './index.scss'
 
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-// import { Dropdown, MenuProps } from 'antd'
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
@@ -16,8 +15,6 @@ import { useAppDispatch } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
 import { setPrices } from '@/state/price/reducer'
 
-// import AccountInfo from './AccountInfo'
-
 const navList = [
   {
     name: 'Leverage Apps',
@@ -31,12 +28,16 @@ const navList = [
     name: 'Portfolio',
     link: '/portfolio',
   },
+  {
+    name: 'ExtraFi (Farm / Lend)',
+    isExternal: true,
+    link: 'https://app.extrafi.io',
+  },
 ]
 
 export default function AppLayout() {
   const [searchParams] = useSearchParams()
   const { isMobile } = useDeviceDetect()
-  // const lendingList = useAppSelector((state) => state.lending.poolStatus)
 
   const dispatch = useAppDispatch()
 
@@ -89,11 +90,10 @@ export default function AppLayout() {
       <div className="top-bar">
         <div className="nav-logo-top">
           <i className="nav-logo-image"></i>
-          {/* <i className="nav-logo-tag">Extra-X</i> */}
         </div>
         <div className="nav-menu">
           {navList.map((i) => {
-            return (
+            return !i.isExternal ? (
               <NavLink
                 to={i.link + '?' + searchParams.toString()}
                 className="nav-menu-item"
@@ -101,6 +101,17 @@ export default function AppLayout() {
               >
                 <p>{i.name}</p>
               </NavLink>
+            ) : (
+              <a
+                key={i.name}
+                href={i.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={classNames('nav-menu-item', {})}
+              >
+                {i.name}
+                <i className="iconfont icon-external-link" style={{ marginLeft: 2 }}></i>
+              </a>
             )
           })}
         </div>
@@ -116,8 +127,6 @@ export default function AppLayout() {
           {/* <DarkMode /> */}
         </div>
       </div>
-
-      {/* <AccountInfo /> */}
 
       <div className={classNames('page-content')}>
         <div className="page-content-inner">

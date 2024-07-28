@@ -23,7 +23,7 @@ export default function BorrowDialog({
   onClose: any
   currentLendingPoolDetail: any
 }) {
-  const { smartAccount, updateAfterAction } = useSmartAccount()
+  const { currentAccount, updateAfterAction } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -36,17 +36,17 @@ export default function BorrowDialog({
     setValue('')
   }
   const borrow = useCallback(async () => {
-    console.log('borrow :>> ', smartAccount, currentLendingPoolDetail)
+    console.log('borrow :>> ', currentAccount, currentLendingPoolDetail)
     setLoading(true)
     try {
       const res = await lendMng.borrow(
-        smartAccount,
+        currentAccount,
         currentLendingPoolDetail?.marketId,
         currentLendingPoolDetail?.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
         // HealthManagerConfig[SupportedChainId.OPTIMISM].debts['USDC.e_DEBT'].debtId,
       )
-      updateAfterAction(smartAccount)
+      updateAfterAction(currentAccount)
       fetchLendPools()
       onClose()
       return res
@@ -54,7 +54,7 @@ export default function BorrowDialog({
       setLoading(false)
     }
   }, [
-    smartAccount,
+    currentAccount,
     currentLendingPoolDetail,
     lendMng,
     value,

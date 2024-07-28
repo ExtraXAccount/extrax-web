@@ -86,7 +86,6 @@ export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
 }
 
 export interface LendState {
-  // healthStatus: IHealthStatus
   lendPools: ILendPoolInfo[]
   positions: ILendPosition[]
   isFetching: boolean
@@ -95,7 +94,6 @@ export interface LendState {
 }
 
 export interface LendAction {
-  // updateHealthStatus: (healthStatus: LendState['healthStatus']) => void
   updateLendPools: (lendPools: LendState['lendPools']) => void
   updatePositions: (balances: LendState['positions']) => void
   updateIsFetching: (isFetching: LendState['isFetching']) => void
@@ -104,14 +102,12 @@ export interface LendAction {
 }
 
 export const useLendStore = create<LendState & LendAction>((set) => ({
-  // healthStatus: {} as IHealthStatus,
   lendPools: [],
   positions: [],
   isFetching: false,
   currentPosition: undefined,
   currentDialogShow: null,
 
-  // updateHealthStatus: (healthStatus) => set(() => ({ healthStatus: healthStatus })),
   updateLendPools: (lendPools) => set(() => ({ lendPools: lendPools })),
   updatePositions: (positions) => set(() => ({ positions: positions })),
   updateIsFetching: (isFetching) => set(() => ({ isFetching: isFetching })),

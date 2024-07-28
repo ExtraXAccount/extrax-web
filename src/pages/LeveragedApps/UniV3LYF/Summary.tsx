@@ -40,7 +40,7 @@ export default function Summary(props: ISummaryProps) {
   }, [prices, summary.amount0Borrow, summary.amount1Borrow, token0.symbol])
 
   const {
-    // smartAccount,
+    // currentAccount,
     depositedVal,
     // depositedAssets,
     debtVal,

@@ -93,7 +93,7 @@ export default function AccountInfo() {
             <div className="extrax-account-info-detail-item extrax-account-info-credit">
               <Tooltip title="Used Credit / Max Credit">
                 <b className="flex ai-ct gap-6">
-                  Leverage Credit
+                  Borrowing Power
                   <i className="iconfont icon-hint"></i>
                 </b>
               </Tooltip>

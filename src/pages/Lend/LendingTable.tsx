@@ -137,9 +137,12 @@ export default function LendingTable() {
           dataIndex=""
           key="totalSupply"
           showSorterTooltip={false}
-          // sorter={(a: any, b: any) => {
-          //   return a.value - b.value
-          // }}
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
+            return (
+              a.formatted.totalSupply * getPrice(a.tokenSymbol) -
+              b.formatted.totalSupply * getPrice(b.tokenSymbol)
+            )
+          }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
@@ -194,9 +197,12 @@ export default function LendingTable() {
           dataIndex=""
           key="totalBorrowed"
           showSorterTooltip={false}
-          // sorter={(a: any, b: any) => {
-          //   return a.value - b.value
-          // }}
+          sorter={(a: any, b: any) => {
+            return (
+              a.formatted.totalBorrowed * getPrice(a.tokenSymbol) -
+              b.formatted.totalBorrowed * getPrice(b.tokenSymbol)
+            )
+          }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.totalBorrowed
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
@@ -250,13 +256,16 @@ export default function LendingTable() {
         />
 
         <Column
-          title="Available Liquidity"
+          title="Liquidity"
           dataIndex=""
           key="availableLiquidity"
           showSorterTooltip={false}
-          // sorter={(a: any, b: any) => {
-          //   return a.value - b.value
-          // }}
+          sorter={(a: any, b: any) => {
+            return (
+              a.formatted.availableLiquidity * getPrice(a.tokenSymbol) -
+              b.formatted.availableLiquidity * getPrice(b.tokenSymbol)
+            )
+          }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.availableLiquidity
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
@@ -407,15 +416,6 @@ export default function LendingTable() {
                   >
                     <button className="btn-base btn-base-small">Borrow</button>
                   </Link>
-                  {/* <button
-                    className="btn-base btn-base-small"
-                    // onClick={() => {
-                    //   updateCurrentPosition(i)
-                    //   updateDialogShow('borrow')
-                    // }}
-                  >
-                    Borrow
-                  </button> */}
                 </div>
               </>
             )

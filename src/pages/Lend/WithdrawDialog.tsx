@@ -24,7 +24,7 @@ export default function WithdrawDialog({
   onClose: any
   currentLendingPoolDetail?: IFormattedPosition
 }) {
-  const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
+  const { currentAccount, updateAfterAction, healthFactorPercent, depositedVal } =
     useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
@@ -42,20 +42,20 @@ export default function WithdrawDialog({
 
   console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
   const withdraw = useCallback(async () => {
-    console.log('withdraw :>> ', smartAccount, currentLendingPoolDetail)
+    console.log('withdraw :>> ', currentAccount, currentLendingPoolDetail)
     if (!currentLendingPoolDetail) {
       return
     }
     setLoading(true)
     try {
       const res = await lendMng.withdraw(
-        smartAccount,
+        currentAccount,
         currentLendingPoolDetail.marketId,
         currentLendingPoolDetail.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail.decimals),
       )
       console.log('withdraw res :>> ', res)
-      updateAfterAction(smartAccount)
+      updateAfterAction(currentAccount)
       fetchLendPools()
       onClose()
       return res
@@ -63,7 +63,7 @@ export default function WithdrawDialog({
       setLoading(false)
     }
   }, [
-    smartAccount,
+    currentAccount,
     currentLendingPoolDetail,
     lendMng,
     value,

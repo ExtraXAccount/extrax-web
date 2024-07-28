@@ -25,7 +25,7 @@ export default function RepayDialog({
   onClose: any
   currentLendingPoolDetail?: IFormattedPosition
 }) {
-  const { smartAccount, updateAfterAction, healthFactorPercent, depositedVal } =
+  const { currentAccount, updateAfterAction, healthFactorPercent, depositedVal } =
     useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
@@ -44,20 +44,20 @@ export default function RepayDialog({
   }
 
   const repay = useCallback(async () => {
-    console.log('repay :>> ', smartAccount)
+    console.log('repay :>> ', currentAccount)
     if (!currentLendingPoolDetail) {
       return
     }
     setLoading(true)
     try {
       const res = await lendMng.repay(
-        smartAccount,
+        currentAccount,
         currentLendingPoolDetail.marketId,
         currentLendingPoolDetail.reserveId,
         BigInt(Number(value) * 10 ** currentLendingPoolDetail.decimals),
       )
       console.log('repay res :>> ', res)
-      updateAfterAction(smartAccount)
+      updateAfterAction(currentAccount)
       fetchLendPools()
       onClose()
       return res
@@ -65,7 +65,7 @@ export default function RepayDialog({
       setLoading(false)
     }
   }, [
-    smartAccount,
+    currentAccount,
     currentLendingPoolDetail,
     lendMng,
     value,
