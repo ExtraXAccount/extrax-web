@@ -87,6 +87,7 @@ export default function LendingTable() {
       ></BorrowDialog>
 
       <Table
+        className="lend-list-table"
         sortDirections={['descend', 'ascend']}
         dataSource={formattedLendPools}
         pagination={false}

@@ -27,21 +27,29 @@
     }
 
     &-asset {
+      color: #38AD3D;
+      .lpname {
+        color: #000;
+      }
       .asset-type-tag {
         color: #38AD3D;
         border-color: #38AD3D;
-        background: rgba(22, 199, 132, 0.10);
+        background: rgba(#38AD3D, 0.10);
       }
     }
 
     &-debt{
+      color: #F13F3F;
+      .lpname {
+        color: #000;
+      }
       .mini-positions-item-sign{
         background-color: #F13F3F;
       }
       .asset-type-tag {
         color: #F13F3F;
         border-color: #F13F3F;
-        background: rgba(199, 69, 22, 0.102);
+        background: rgba(#F13F3F, 0.10);
       }
     }
   }

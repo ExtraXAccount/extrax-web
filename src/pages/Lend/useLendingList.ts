@@ -65,10 +65,10 @@ export default function useLendingList() {
           borrowApy: aprToApy(borrowApr) || 0,
           totalSupply:
             stringToDecimals(pool.totalLiquidity.toString(), config.decimals) || 0,
-          supplyCap: stringToDecimals(pool.config.supplyCap.toString(), 74) || 0,
+          supplyCap: stringToDecimals(pool.config.supplyCap.toString(), 68) || 0,
           totalBorrowed:
             stringToDecimals(pool.totalDebts.toString(), config.decimals) || 0,
-          borrowCap: stringToDecimals(pool.config.borrowCap.toString(), 74) || 0,
+          borrowCap: stringToDecimals(pool.config.borrowCap.toString(), 68) || 0,
           availableLiquidity:
             stringToDecimals(pool.availableLiquidity.toString(), config.decimals) || 0,
           utilization:

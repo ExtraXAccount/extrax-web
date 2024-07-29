@@ -284,9 +284,9 @@
 .supply-windows__frame-481805 {
   background: #ffffff;
   border-radius: 8px;
-  border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
-  border-width: 0.5px;
+  /* border-style: solid; */
+  /* border-color: var(--stroke, #c9c9cb); */
+  /* border-width: 0.5px; */
   display: flex;
   flex-direction: row;
   gap: 0px;

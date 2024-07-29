@@ -17,8 +17,6 @@ import useLendingList from '@/pages/Lend/useLendingList'
 import { aprToApy, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
-// import { AccountBalancesSupplyProperty1BalancesDetail } from '../AccountBalancesSupplyProperty1BalancesDetail/AccountBalancesSupplyProperty1BalancesDetail'
-// import { AccountInfoProperty1CompositionD } from '../AccountInfoProperty1CompositionD/AccountInfoProperty1CompositionD'
 import { SelcetionProperty11 } from '../SelcetionProperty11/SelcetionProperty11'
 import useLendPoolInfo from '../useLendPoolInfo'
 
@@ -236,7 +234,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
             noPadding
             maxText={`${isBorrowMode ? 'Borrowing ' : ''}Available`}
             max={isBorrowMode ? maxBorrowAmount : balance}
-            ethBalance={ethBalance}
+            ethBalance={isBorrowMode ? maxBorrowAmount : ethBalance}
             useNativeETH={useNativeETH}
             onUseNativeETH={setUseNativeETH}
             token={lendPoolInfo.tokenSymbol}
@@ -294,16 +292,10 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
           )}
         </div>
         <div className="supply-windows__deposit-info">
-          <div className="supply-windows__frame-481805">
-            <div className="supply-windows__component-101">
-              <DialogAccountInfo
-                reserveId={lendPoolInfo.reserveId}
-                updatedSummary={updatedSummary}
-              />
-              {/* <AccountInfoProperty1CompositionD className="supply-windows__account-info-instance"></AccountInfoProperty1CompositionD> */}
-              {/* <AccountBalancesSupplyProperty1BalancesDetail className="supply-windows__account-balances-supply-instance"></AccountBalancesSupplyProperty1BalancesDetail> */}
-            </div>
-          </div>
+          <DialogAccountInfo
+            reserveId={lendPoolInfo.reserveId}
+            updatedSummary={updatedSummary}
+          />
           <Button
             loading={loading.writing}
             disabled={!Number(value)}

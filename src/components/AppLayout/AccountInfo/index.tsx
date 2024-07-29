@@ -104,18 +104,7 @@ export default function AccountInfo() {
               </em>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-safety">
-              <Tooltip
-                overlayInnerStyle={{ width: 400 }}
-                title={
-                  <div>
-                    <p>Safety Factor = Debts&apos; Value / Positions&apos; Value</p>
-                    <p>
-                      The account will be liquidated when the Safety Factor is above{' '}
-                      <span className="">90%</span>
-                    </p>
-                  </div>
-                }
-              >
+              <Tooltip overlayInnerStyle={{ width: 400 }} title={''}>
                 <b className="flex ai-ct gap-6">
                   Health Factor
                   <i className="iconfont icon-hint"></i>

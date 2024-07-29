@@ -20,11 +20,16 @@
   // }
 }
 
+.lend-list-table {
+  .ant-table-row {
+    cursor: pointer;
+  }
+}
+
 .ant-table-row {
   margin-bottom: 12px;
   // border-radius: 10px;
   box-shadow: var(--box-shadow);
-  cursor: pointer;
 }
 
 .mobile{

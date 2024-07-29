@@ -10,7 +10,7 @@ import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
 const positionTypeTagMap = {
   asset: 'LENT',
-  debt: 'BORROWED',
+  debt: 'DEBT',
 }
 export default function MiniPosition(props: { positions: any[] }) {
   const { getPrice } = usePrices()
@@ -87,7 +87,7 @@ export default function MiniPosition(props: { positions: any[] }) {
             return (
               <>
                 {i.type === 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.formatted.borrowApr * 100))}%</p>
+                  <p>-{toPrecision(aprToApy100(i.formatted.borrowApr * 100))}%</p>
                 )}
                 {i.type !== 'debt' && (
                   <p>{toPrecision(aprToApy100(i.formatted.apr * 100))}%</p>

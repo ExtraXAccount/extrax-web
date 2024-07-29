@@ -47,7 +47,7 @@ export default function DialogAccountInfo({
     }
   }, [accountApy, debtVal, leverage, netWorth, updatedSummary, usedCredit])
 
-  console.log(reserveId, { assetPositions, debtPositions })
+  // console.log(reserveId, { assetPositions, debtPositions })
   const info = (
     <ul className="summary-list">
       <li>
@@ -93,8 +93,6 @@ export default function DialogAccountInfo({
     </ul>
   )
 
-  console.log(assetPositions, debtPositions)
-
   const items: CollapseProps['items'] = [
     {
       key: 'Account Info',
@@ -109,7 +107,7 @@ export default function DialogAccountInfo({
   ]
   return (
     <div className="dialog-accountinfo">
-      <Collapse items={items} />
+      <Collapse items={items} defaultActiveKey={['Account Info', 'Account Balances']} />
     </div>
   )
 }
