@@ -48,7 +48,7 @@ export default function Summary(props: ISummaryProps) {
     // maxCredit,
     availableCredit,
     // usedCredit,
-    healthFactorPercent: prevSafetyFactor,
+    healthFactor: prevSafetyFactor,
     accountApy,
   } = useSmartAccount()
 

@@ -219,7 +219,7 @@ export default function useSmartAccount() {
     depositedVal,
     debtVal,
     netWorth,
-    healthFactorPercent: Number(healthStatus.formatted?.healthFactor),
+    healthFactor: Number(healthStatus.formatted?.healthFactor) || 0,
     maxCredit: healthStatus.formatted?.ltv,
     availableCredit: minus(
       healthStatus.formatted?.ltv,

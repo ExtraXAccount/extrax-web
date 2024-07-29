@@ -25,8 +25,15 @@ export default function RepayDialog({
   onClose: any
   currentLendingPoolDetail?: IFormattedPosition
 }) {
-  const { usedCredit, netWorth, debtVal, accountApy, currentAccount, updateAfterAction } =
-    useSmartAccount()
+  const {
+    healthFactor,
+    usedCredit,
+    netWorth,
+    debtVal,
+    accountApy,
+    currentAccount,
+    updateAfterAction,
+  } = useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
 
@@ -136,10 +143,8 @@ export default function RepayDialog({
             )}%`,
           },
           {
-            title: 'Exchange Rate',
-            content: !currentLendingPoolDetail
-              ? '--'
-              : currentLendingPoolDetail.formatted.exchangeRate,
+            title: 'Health Factor',
+            content: !currentLendingPoolDetail ? '--' : toPrecision(healthFactor),
           },
         ]}
       />

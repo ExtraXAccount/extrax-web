@@ -29,6 +29,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const {
     usedCredit,
     leverage,
+    healthFactor,
     netWorth,
     debtVal,
     accountApy,
@@ -246,6 +247,7 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
           <div className="supply-windows__frame-482084">
             <div className="supply-windows__frame-4820842">
               <div className="supply-windows__supply-apy">
+                {/* TODO: calculate afterwards APY */}
                 {isBorrowMode ? 'Borrow' : 'Supply'} APY{' '}
               </div>
               <div className="supply-windows__frame-482223">
@@ -268,10 +270,8 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
               </div>
             </div>
             <div className="supply-windows__frame-481709">
-              <div className="supply-windows__health-factor">Exchange Rate </div>
-              <div className="supply-windows___1-21">
-                {lendPoolInfo.formatted.exchangeRate}{' '}
-              </div>
+              <div className="supply-windows__health-factor">Health Factor</div>
+              <div className="supply-windows___1-21">{toPrecision(healthFactor)}</div>
             </div>
           </div>
           {isBorrowMode ? (

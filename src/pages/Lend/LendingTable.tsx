@@ -323,7 +323,7 @@ export default function LendingTable() {
           title="Supply APY"
           dataIndex=""
           key="apr"
-          width={160}
+          width={150}
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
             return a.formatted.apr - b.formatted.apr
@@ -333,7 +333,7 @@ export default function LendingTable() {
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
                 <div
-                  className="farm-buffer-safe flex ai-ct gap-10"
+                  className="farm-buffer-safe flex ai-ct jc-sb gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
                   +{toPrecision(aprToApy100(pool.formatted.apr * 100))}%
@@ -381,7 +381,7 @@ export default function LendingTable() {
         <Column
           title="Borrow APR"
           dataIndex=""
-          width={160}
+          width={150}
           key="borrowingRate"
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
@@ -391,7 +391,7 @@ export default function LendingTable() {
             return (
               <>
                 <div
-                  className="farm-buffer-danger flex ai-ct gap-10"
+                  className="farm-buffer-danger flex ai-ct jc-sb gap-10"
                   style={{ fontWeight: 'bold' }}
                 >
                   -{toPrecision(pool.formatted.borrowApr * 100)}%

@@ -13,7 +13,7 @@ export default function AccountInfo() {
   const {
     healthStatus,
     netWorth,
-    healthFactorPercent,
+    healthFactor,
     currentAccount,
     depositedVal,
     // depositedAssets,
@@ -29,8 +29,8 @@ export default function AccountInfo() {
   } = useSmartAccount()
 
   useEffect(() => {
-    console.log('healthStatus :>> ', healthStatus, healthFactorPercent)
-  }, [healthStatus, healthFactorPercent])
+    console.log('healthStatus :>> ', healthStatus, healthFactor)
+  }, [healthStatus, healthFactor])
 
   // useEffect(() => {
   //   getInitData()
@@ -104,7 +104,12 @@ export default function AccountInfo() {
               </em>
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-safety">
-              <Tooltip overlayInnerStyle={{ width: 400 }} title={''}>
+              <Tooltip
+                overlayInnerStyle={{ width: 400 }}
+                title={
+                  'Health Factor = LiquidationThreshold of Borrowing Value / Current Borrowed Value'
+                }
+              >
                 <b className="flex ai-ct gap-6">
                   Health Factor
                   <i className="iconfont icon-hint"></i>
@@ -112,12 +117,12 @@ export default function AccountInfo() {
               </Tooltip>
               <em
                 className={cx('', {
-                  'farm-buffer-safe': healthFactorPercent < 80,
-                  'farm-buffer-warn': healthFactorPercent > 80,
-                  'farm-buffer-danger': healthFactorPercent > 90,
+                  'farm-buffer-safe': healthFactor < 80,
+                  'farm-buffer-warn': healthFactor > 80,
+                  'farm-buffer-danger': healthFactor > 90,
                 })}
               >
-                {!depositedVal ? '--' : toPrecision(healthFactorPercent, 2) + '%'}
+                {!depositedVal ? '--' : toPrecision(healthFactor)}
               </em>
             </div>
           </div>

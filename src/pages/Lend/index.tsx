@@ -20,7 +20,7 @@ export default function Lend() {
         <AccountInfo />
       </div>
       <div className="box lending-list-box">
-        <h3 className="page-app-title">Lending Assets</h3>
+        <h3 className="page-app-title">Main Market</h3>
 
         <LendingTable />
       </div>
