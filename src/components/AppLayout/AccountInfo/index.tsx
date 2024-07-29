@@ -8,13 +8,11 @@ import AccountDepositDialog from '@/components/AccountDepositDialog'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { toPrecision } from '@/utils/math'
 
-export const INFINITY = '∞'
-
 export default function AccountInfo() {
   // const navigate = useNavigate()
   const {
     healthStatus,
-    accountEquity,
+    netWorth,
     healthFactorPercent,
     currentAccount,
     depositedVal,
@@ -22,7 +20,7 @@ export default function AccountInfo() {
     // debtVal,
     // debtAssets,
     maxCredit,
-    availableCredit,
+    // availableCredit,
     usedCredit,
     // safetyRatio,
     accountApy,
@@ -86,7 +84,7 @@ export default function AccountInfo() {
             <div className="extrax-account-info-detail-item extrax-account-info-deposited">
               <b>Net Worth</b>
               <em className="text-highlight">
-                {!accountEquity ? '--' : `$${toPrecision(Number(accountEquity))}`}
+                {!netWorth ? '--' : `$${toPrecision(netWorth)}`}
               </em>
               <button className="btn-add" onClick={handleAddDeposit}></button>
             </div>

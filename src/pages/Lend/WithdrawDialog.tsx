@@ -1,6 +1,6 @@
 import { Button } from 'antd'
 import classNames from 'classnames'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
@@ -24,7 +24,7 @@ export default function WithdrawDialog({
   onClose: any
   currentLendingPoolDetail?: IFormattedPosition
 }) {
-  const { currentAccount, updateAfterAction, healthFactorPercent, depositedVal } =
+  const { usedCredit, netWorth, debtVal, accountApy, currentAccount, updateAfterAction } =
     useSmartAccount()
   const lendMng = useLendingManager()
   const { fetchLendPools } = useLendingList()
@@ -35,6 +35,24 @@ export default function WithdrawDialog({
   // const [balance, setBalance] = useState('')
   const [value, setValue] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const tokenPrice = useMemo(() => {
+    if (!currentLendingPoolDetail?.tokenSymbol) {
+      return 0
+    }
+    return getPrice(currentLendingPoolDetail?.tokenSymbol) || 0
+  }, [getPrice, currentLendingPoolDetail?.tokenSymbol])
+
+  const updatedSummary = useMemo(() => {
+    const tokenValueChange = Number(value) * tokenPrice || 0
+    return {
+      usedCredit: usedCredit,
+      netWorth: netWorth - tokenValueChange,
+      debtVal: debtVal,
+      // TODO: APY UPDATED
+      accountApy,
+    }
+  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value])
 
   function reset() {
     setValue('')
@@ -119,7 +137,10 @@ export default function WithdrawDialog({
         ]}
       />
       <div className="dialog-divider"></div>
-      <DialogAccountInfo reserveId={currentLendingPoolDetail.reserveId} />
+      <DialogAccountInfo
+        reserveId={currentLendingPoolDetail.reserveId}
+        updatedSummary={updatedSummary}
+      />
       <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading}

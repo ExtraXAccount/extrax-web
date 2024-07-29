@@ -72,6 +72,15 @@ export default function AppLayout() {
         })
         dispatch(setPrices(priceMap))
       } catch (err) {
+        dispatch(
+          setPrices({
+            'USDC.e': 1,
+            USDC: 1,
+            USDT: 1,
+            OP: 2,
+            WETH: 3000,
+          }),
+        )
         console.warn(err)
       }
     }

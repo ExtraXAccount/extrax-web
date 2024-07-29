@@ -208,6 +208,10 @@ export function toPrecisionNum(num: number, precision = 3) {
   return Number(toPrecision(num, precision)) || 0
 }
 
+export function formatNumDisplay(num: number, precision = 3) {
+  return toPrecision(num, precision).toLocaleString()
+}
+
 export function parsePrice(price: number | string, isStable = false) {
   return isStable ? toPrecisionNum(Number(price), 6) : toPrecisionNum(Number(price), 3)
 }

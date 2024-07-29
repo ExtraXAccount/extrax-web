@@ -9,12 +9,10 @@ import useLendingList from '@/pages/Lend/useLendingList'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { useAccountStore, useLendStore } from '@/store'
 import { bi2decimalStr } from '@/utils/bigInt'
-import { minus } from '@/utils/math/bigNumber'
+import { div, minus, plus } from '@/utils/math/bigNumber'
 
 type ChainId = keyof typeof LendingConfig
 type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
-
-export const INFINITY = '∞'
 
 export default function useSmartAccount() {
   const { prices, getPrice } = usePrices()
@@ -37,6 +35,57 @@ export default function useSmartAccount() {
   const { updatePositions } = useLendStore()
   const { formattedLendPools } = useLendingList()
   // console.log('accountInfo :>> ', accountInfo);
+
+  const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
+    const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
+    const debtVal = Number(healthStatus?.formatted?.debtValueUsd) || 0
+    const netWorth = minus(
+      healthStatus.formatted?.collateralValueUsd,
+      healthStatus.formatted?.debtValueUsd,
+    ).toNumber()
+    const leverage = !netWorth ? 0 : div(depositedVal, netWorth).toString()
+    return {
+      depositedVal,
+      debtVal,
+      leverage: Number(leverage) || 0,
+      netWorth,
+    }
+  }, [healthStatus?.formatted?.collateralValueUsd, healthStatus?.formatted?.debtValueUsd])
+
+  const { accountApr, accountApy } = useMemo(() => {
+    // console.log('accountApr formattedLendPools :>> ', depositedVal, formattedLendPools)
+    if (!depositedVal) {
+      return {
+        accountApr: 0,
+        accountApy: 0,
+      }
+    }
+
+    const totalApr =
+      sumBy(
+        formattedLendPools,
+        (item) =>
+          item.formatted.apr * item.formatted.deposited * getPrice(item.tokenSymbol) -
+            item.formatted.borrowApr *
+              item.formatted.borrowed *
+              getPrice(item.tokenSymbol) || 0,
+      ) / depositedVal
+
+    const totalApy =
+      sumBy(
+        formattedLendPools,
+        (item) =>
+          item.formatted.apy * item.formatted.deposited * getPrice(item.tokenSymbol) -
+            item.formatted.borrowApy *
+              item.formatted.borrowed *
+              getPrice(item.tokenSymbol) || 0,
+      ) / depositedVal
+
+    return {
+      accountApr: totalApr,
+      accountApy: totalApy,
+    }
+  }, [depositedVal, formattedLendPools, getPrice])
 
   const accountMng = useAccountManager()
   const lendingMng = useLendingManager()
@@ -162,65 +211,26 @@ export default function useSmartAccount() {
     [fetchBalances, fetchUserLending],
   )
 
-  const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
-  const debtVal = Number(healthStatus?.formatted?.debtValueUsd) || 0
-
-  const { accountApr, accountApy } = useMemo(() => {
-    // console.log('accountApr formattedLendPools :>> ', depositedVal, formattedLendPools)
-    if (!depositedVal) {
-      return {
-        accountApr: 0,
-        accountApy: 0,
-      }
-    }
-
-    const totalApr =
-      sumBy(
-        formattedLendPools,
-        (item) =>
-          item.formatted.apr * item.formatted.deposited * getPrice(item.tokenSymbol) -
-            item.formatted.borrowApr *
-              item.formatted.borrowed *
-              getPrice(item.tokenSymbol) || 0,
-      ) / depositedVal
-
-    const totalApy =
-      sumBy(
-        formattedLendPools,
-        (item) =>
-          item.formatted.apy * item.formatted.deposited * getPrice(item.tokenSymbol) -
-            item.formatted.borrowApy *
-              item.formatted.borrowed *
-              getPrice(item.tokenSymbol) || 0,
-      ) / depositedVal
-
-    return {
-      accountApr: totalApr,
-      accountApy: totalApy,
-    }
-  }, [depositedVal, formattedLendPools, getPrice])
-
   return {
-    healthStatus,
-    accountEquity: minus(
-      healthStatus.formatted?.collateralValueUsd,
-      healthStatus.formatted?.debtValueUsd,
-    ).toString(),
-    healthFactorPercent: Number(healthStatus.formatted?.healthFactor),
     accounts,
     currentAccount: currentAccount || accounts?.[0],
+    healthStatus,
+    leverage,
     depositedVal,
-    getInitData,
-    updateAfterAction,
-    getAccountInfo,
     debtVal,
+    netWorth,
+    healthFactorPercent: Number(healthStatus.formatted?.healthFactor),
     maxCredit: healthStatus.formatted?.ltv,
     availableCredit: minus(
       healthStatus.formatted?.ltv,
       healthStatus.formatted?.debtValueUsd,
     ).toString(),
-    usedCredit: healthStatus.formatted?.debtValueUsd,
+    usedCredit: Number(healthStatus.formatted?.debtValueUsd) || 0,
     accountApr,
     accountApy,
+
+    getInitData,
+    updateAfterAction,
+    getAccountInfo,
   }
 }

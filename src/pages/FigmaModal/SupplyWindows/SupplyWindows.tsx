@@ -12,12 +12,13 @@ import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
+import DialogAccountInfo from '@/pages/Lend/DialogComponents/DialogAccountInfo'
 import useLendingList from '@/pages/Lend/useLendingList'
 import { aprToApy, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
-import { AccountBalancesSupplyProperty1BalancesDetail } from '../AccountBalancesSupplyProperty1BalancesDetail/AccountBalancesSupplyProperty1BalancesDetail'
-import { AccountInfoProperty1CompositionD } from '../AccountInfoProperty1CompositionD/AccountInfoProperty1CompositionD'
+// import { AccountBalancesSupplyProperty1BalancesDetail } from '../AccountBalancesSupplyProperty1BalancesDetail/AccountBalancesSupplyProperty1BalancesDetail'
+// import { AccountInfoProperty1CompositionD } from '../AccountInfoProperty1CompositionD/AccountInfoProperty1CompositionD'
 import { SelcetionProperty11 } from '../SelcetionProperty11/SelcetionProperty11'
 import useLendPoolInfo from '../useLendPoolInfo'
 
@@ -27,8 +28,17 @@ export interface ISupplyWindowsProps {
 
 export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const { getPrice } = usePrices()
-  const { currentAccount, availableCredit, accounts, updateAfterAction } =
-    useSmartAccount()
+  const {
+    usedCredit,
+    leverage,
+    netWorth,
+    debtVal,
+    accountApy,
+    currentAccount,
+    availableCredit,
+    accounts,
+    updateAfterAction,
+  } = useSmartAccount()
   const { account } = useWagmiCtx()
   const { state } = useLocation()
 
@@ -45,12 +55,43 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
   const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
   const { balance: ethBalance } = useFetchEthBalance()
 
-  const maxBorrowAmount = useMemo(() => {
-    if (!lendPoolInfo?.tokenSymbol || !getPrice(lendPoolInfo?.tokenSymbol)) {
+  const tokenPrice = useMemo(() => {
+    if (!lendPoolInfo?.tokenSymbol) {
       return 0
     }
-    return div(availableCredit, getPrice(lendPoolInfo?.tokenSymbol)).toString()
-  }, [availableCredit, getPrice, lendPoolInfo?.tokenSymbol])
+    return getPrice(lendPoolInfo?.tokenSymbol) || 0
+  }, [getPrice, lendPoolInfo?.tokenSymbol])
+
+  const maxBorrowAmount = useMemo(() => {
+    if (!lendPoolInfo?.tokenSymbol || !tokenPrice) {
+      return 0
+    }
+    return div(availableCredit, tokenPrice).toString()
+  }, [availableCredit, lendPoolInfo?.tokenSymbol, tokenPrice])
+
+  const updatedSummary = useMemo(() => {
+    const tokenValueChange = Number(value) * tokenPrice || 0
+    return {
+      usedCredit: !isBorrowMode ? usedCredit : usedCredit + tokenValueChange,
+      netWorth: !isBorrowMode
+        ? netWorth + tokenValueChange
+        : leverageMode
+        ? netWorth - tokenValueChange
+        : netWorth,
+      debtVal: !isBorrowMode ? debtVal : debtVal + tokenValueChange,
+      // TODO: APY UPDATED
+      accountApy,
+    }
+  }, [
+    accountApy,
+    debtVal,
+    isBorrowMode,
+    leverageMode,
+    netWorth,
+    tokenPrice,
+    usedCredit,
+    value,
+  ])
 
   const handleDeposit = useCallback(async () => {
     if (!lendPoolInfo) {
@@ -255,8 +296,12 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
         <div className="supply-windows__deposit-info">
           <div className="supply-windows__frame-481805">
             <div className="supply-windows__component-101">
-              <AccountInfoProperty1CompositionD className="supply-windows__account-info-instance"></AccountInfoProperty1CompositionD>
-              <AccountBalancesSupplyProperty1BalancesDetail className="supply-windows__account-balances-supply-instance"></AccountBalancesSupplyProperty1BalancesDetail>
+              <DialogAccountInfo
+                reserveId={lendPoolInfo.reserveId}
+                updatedSummary={updatedSummary}
+              />
+              {/* <AccountInfoProperty1CompositionD className="supply-windows__account-info-instance"></AccountInfoProperty1CompositionD> */}
+              {/* <AccountBalancesSupplyProperty1BalancesDetail className="supply-windows__account-balances-supply-instance"></AccountBalancesSupplyProperty1BalancesDetail> */}
             </div>
           </div>
           <Button

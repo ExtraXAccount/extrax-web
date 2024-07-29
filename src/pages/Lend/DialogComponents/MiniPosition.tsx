@@ -4,17 +4,24 @@ import { Table } from 'antd'
 import Column from 'antd/es/table/Column'
 
 import LPName from '@/components/LPName'
+import usePrices from '@/hooks/usePrices'
 import { toDecimals } from '@/sdk/utils/token'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
+const positionTypeTagMap = {
+  asset: 'LENT',
+  debt: 'BORROWED',
+}
 export default function MiniPosition(props: { positions: any[] }) {
+  const { getPrice } = usePrices()
+
   return (
     <div className="mini-positions">
       <Table
         sortDirections={['descend', 'ascend']}
         dataSource={props.positions || []}
         pagination={false}
-        rowKey={(item, index) => `${item.marketId}-${item.reserveId}`}
+        rowKey={(item) => `${item.marketId}-${item.reserveId}-${item.type}`}
         locale={{
           emptyText: '',
         }}
@@ -23,7 +30,7 @@ export default function MiniPosition(props: { positions: any[] }) {
         }}
       >
         <Column
-          title="Pool"
+          title="Asset"
           dataIndex=""
           key="poolKey"
           render={(i) => {
@@ -32,6 +39,9 @@ export default function MiniPosition(props: { positions: any[] }) {
                 <div className="lending-list-title-wrap flex gap-4">
                   <i className="mini-positions-item-sign"></i>
                   <LPName token0={i.pool.tokenSymbol} title={`${i.pool.tokenSymbol}`} />
+                  <span className="asset-type-tag">
+                    {positionTypeTagMap[i.type] || ''}
+                  </span>
                 </div>
               </>
             )
@@ -42,9 +52,13 @@ export default function MiniPosition(props: { positions: any[] }) {
           dataIndex=""
           key="value"
           render={(i) => {
+            const amount =
+              i.type === 'debt' ? i.formatted.borrowed : i.formatted.deposited
             return (
               <>
-                <div className="lending-list-title-wrap">${toPrecision(i.value)}</div>
+                <div className="lending-list-title-wrap">
+                  ${toPrecision(i.price * amount)}
+                </div>
               </>
             )
           }}
@@ -54,12 +68,12 @@ export default function MiniPosition(props: { positions: any[] }) {
           dataIndex=""
           key="size"
           render={(i) => {
-            const debtSize = toDecimals(i.debt, i.pool.decimals)
-            const liquiditySize = toDecimals(i.debt, i.pool.decimals)
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  {remain2Decimal(i.type === 'debt' ? debtSize : liquiditySize)}
+                  {remain2Decimal(
+                    i.type === 'debt' ? i.formatted.borrowed : i.formatted.deposited,
+                  )}
                 </div>
               </>
             )
@@ -73,10 +87,10 @@ export default function MiniPosition(props: { positions: any[] }) {
             return (
               <>
                 {i.type === 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.borrowApr * 100))}%</p>
+                  <p>{toPrecision(aprToApy100(i.formatted.borrowApr * 100))}%</p>
                 )}
                 {i.type !== 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.apr * 100))}%</p>
+                  <p>{toPrecision(aprToApy100(i.formatted.apr * 100))}%</p>
                 )}
               </>
             )

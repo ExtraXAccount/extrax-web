@@ -30,7 +30,7 @@ export default function Summary(props: ISummaryProps) {
   } = props
 
   const { prices } = usePrices()
-  const lendingList = useAppSelector((state) => state.lending.poolStatus)
+  const lendingList: any[] = useAppSelector((state) => state.lending.poolStatus)
 
   const positionTotalVal = useMemo(() => {
     return (
@@ -48,8 +48,8 @@ export default function Summary(props: ISummaryProps) {
     // maxCredit,
     availableCredit,
     // usedCredit,
-    safetyRatio: prevSafetyFactor,
-    accountAPY,
+    healthFactorPercent: prevSafetyFactor,
+    accountApy,
   } = useSmartAccount()
 
   const { lendList } = useLendContract()
@@ -194,9 +194,9 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Left Credit</p>
             <b>
-              <span className="item-pre">{toPrecision(availableCredit)} →</span>
+              <span className="item-pre">{toPrecision(Number(availableCredit))} →</span>
               <span className="text-highlight">
-                {toPrecision(availableCredit - positionTotalVal)}
+                {toPrecision(Number(availableCredit) - positionTotalVal)}
               </span>
             </b>
           </li>
@@ -226,7 +226,7 @@ export default function Summary(props: ISummaryProps) {
           <li>
             <p>Portfolio APY</p>
             <b>
-              <span className="item-pre">{addComma(accountAPY * 100)}% →</span>
+              <span className="item-pre">{addComma(accountApy * 100)}% →</span>
               <span className="text-highlight">{addComma(updatedAccountApy * 100)}%</span>
             </b>
           </li>
