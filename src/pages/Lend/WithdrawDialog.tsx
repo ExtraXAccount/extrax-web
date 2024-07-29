@@ -11,6 +11,7 @@ import { IFormattedPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 
+import useInfoChange from '../Positions/hooks/useInfoChange'
 import DialogAccountInfo from './DialogComponents/DialogAccountInfo'
 import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
 import useLendingList from './useLendingList'
@@ -68,6 +69,12 @@ export default function WithdrawDialog({
     liquidationThreshold,
     tokenValueChange,
   ])
+  const next = useInfoChange({
+    reserveId: currentLendingPoolDetail?.reserveId,
+    amount: -Number(value),
+    type: 'liquidity',
+    price: getPrice(currentLendingPoolDetail?.tokenSymbol || ''),
+  })
 
   const updatedSummary = useMemo(() => {
     const tokenValueChange = Number(value) * tokenPrice || 0
@@ -75,10 +82,9 @@ export default function WithdrawDialog({
       usedCredit: usedCredit,
       netWorth: netWorth - tokenValueChange,
       debtVal: debtVal,
-      // TODO: APY UPDATED
-      accountApy,
+      accountApy: next.accountApy,
     }
-  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value])
+  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
 
   function reset() {
     setValue('')
