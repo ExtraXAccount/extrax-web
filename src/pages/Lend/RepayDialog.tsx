@@ -79,7 +79,7 @@ export default function RepayDialog({
       debtVal: debtVal - tokenValueChange,
       accountApy: next.accountApy,
     }
-  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
+  }, [debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
 
   function reset() {
     setValue('')

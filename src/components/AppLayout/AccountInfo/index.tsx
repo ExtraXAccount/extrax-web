@@ -128,25 +128,25 @@ export default function AccountInfo() {
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-ltv">
               <b>LTV</b>
-              <em className="text-highlight">
+              <div className="">
                 {!netWorth ? (
                   '--'
                 ) : (
                   <div className="ltv-wrapper">
                     <p
-                      className="ltv-wrapper-item ltv-wrapper-current"
+                      className="ltv-wrapper-item ltv-wrapper-item-current"
                       style={{ width: `${LTV.current * 100}%` }}
                     >
                       <span>Current: {`${toPrecision(LTV.current * 100)}%`}</span>
                     </p>
                     <p
-                      className="ltv-wrapper-item ltv-wrapper-max"
+                      className="ltv-wrapper-item ltv-wrapper-item-max"
                       style={{ width: `${LTV.max * 100}%` }}
                     >
                       <span>Max: {`${toPrecision(LTV.max * 100)}%`}</span>
                     </p>
                     <p
-                      className="ltv-wrapper-item ltv-wrapper-liquidation"
+                      className="ltv-wrapper-item ltv-wrapper-item-liquidation"
                       style={{ width: `${LTV.liquidation * 100}%` }}
                     >
                       <span>
@@ -155,7 +155,7 @@ export default function AccountInfo() {
                     </p>
                   </div>
                 )}
-              </em>
+              </div>
             </div>
           </div>
         </div>
