@@ -4,10 +4,16 @@ import LPName from '@/components/LPName'
 import { toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+import useSmartAccount from '@/hooks/useSmartAccount'
 const { Column } = Table
 
 export default function PositionTable(props: { positions: any[] }) {
   const { updateCurrentPosition, updateDialogShow } = useLendStore()
+  const {
+    healthStatus,
+  } = useSmartAccount()
+
+  console.log(healthStatus)
   return (
     <div>
       <Table
@@ -89,9 +95,15 @@ export default function PositionTable(props: { positions: any[] }) {
           dataIndex=""
           key="Liquidation"
           render={(i) => {
+            // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 * 
             return (
               <>
-                <p>{i.type === 'debt' ? '' : 'N/A'}</p>
+                {i.type === 'debt' && (
+                  <p>N/A</p>
+                )}
+                {i.type !== 'debt' && (
+                  <p>N/A</p>
+                )}
               </>
             )
           }}
@@ -104,10 +116,10 @@ export default function PositionTable(props: { positions: any[] }) {
             return (
               <>
                 {i.type === 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.formatted.borrowApr))}%</p>
+                  <p>{toPrecision(aprToApy100(i.pool.formatted.borrowApr * 100))}%</p>
                 )}
                 {i.type !== 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.formatted.apr))}%</p>
+                  <p>{toPrecision(aprToApy100(i.pool.formatted.apr * 100))}%</p>
                 )}
               </>
             )

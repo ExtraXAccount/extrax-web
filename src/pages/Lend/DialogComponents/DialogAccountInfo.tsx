@@ -8,6 +8,7 @@ import useFormatPositions from '@/pages/Positions/hooks/useFormatPositions'
 import { formatNumDisplay, toPrecision } from '@/utils/math'
 
 import MiniPosition from './MiniPosition'
+import { remain2Decimal } from '@/utils/math'
 
 export default function DialogAccountInfo({
   reserveId,
@@ -19,7 +20,6 @@ export default function DialogAccountInfo({
     debtVal: number
     accountApy: number
   }
-  valueChange?: number
   reserveId?: bigint
 }) {
   const { usedCredit, leverage, netWorth, debtVal, accountApy } = useSmartAccount()

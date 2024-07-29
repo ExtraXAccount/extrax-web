@@ -15,6 +15,7 @@ import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 import DialogAccountInfo from './DialogComponents/DialogAccountInfo'
 import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
 import useLendingList from './useLendingList'
+import useInfoChange from '../Positions/hooks/useInfoChange'
 
 export default function RepayDialog({
   open,
@@ -67,6 +68,14 @@ export default function RepayDialog({
   function reset() {
     setValue('')
   }
+
+  const {pre, next} = useInfoChange({
+    reserveId: currentLendingPoolDetail?.reserveId,
+    amount: -Number(value),
+    type: 'debt',
+    price: getPrice(currentLendingPoolDetail?.tokenSymbol || '')
+  })
+
 
   const repay = useCallback(async () => {
     console.log('repay :>> ', currentAccount)

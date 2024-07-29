@@ -14,6 +14,7 @@ import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
 import DialogAccountInfo from './DialogComponents/DialogAccountInfo'
 import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
 import useLendingList from './useLendingList'
+import useInfoChange from '../Positions/hooks/useInfoChange'
 
 export default function WithdrawDialog({
   open,
@@ -64,6 +65,13 @@ export default function WithdrawDialog({
   function reset() {
     setValue('')
   }
+
+  const {pre, next} = useInfoChange({
+    reserveId: currentLendingPoolDetail?.reserveId,
+    amount: -Number(value),
+    type: 'liquidity',
+    price: getPrice(currentLendingPoolDetail?.tokenSymbol || '')
+  })
 
   console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
   const withdraw = useCallback(async () => {
