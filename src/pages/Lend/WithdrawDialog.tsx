@@ -26,6 +26,7 @@ export default function WithdrawDialog({
 }) {
   const {
     healthFactor,
+    liquidationThreshold,
     usedCredit,
     netWorth,
     debtVal,
@@ -49,6 +50,24 @@ export default function WithdrawDialog({
     }
     return getPrice(currentLendingPoolDetail?.tokenSymbol) || 0
   }, [getPrice, currentLendingPoolDetail?.tokenSymbol])
+
+  const tokenValueChange = useMemo(() => {
+    return Number(value) * tokenPrice || 0
+  }, [tokenPrice, value])
+
+  const updatedHealthFactor = useMemo(() => {
+    const reserveLiquidationThresholdConfig =
+      (currentLendingPoolDetail?.config.liquidationThreshold || 0) / 10000
+    const _liquidateThshold =
+      liquidationThreshold - tokenValueChange * reserveLiquidationThresholdConfig
+    const _borrowedValue = debtVal
+    return _liquidateThshold / _borrowedValue
+  }, [
+    debtVal,
+    currentLendingPoolDetail?.config.liquidationThreshold,
+    liquidationThreshold,
+    tokenValueChange,
+  ])
 
   const updatedSummary = useMemo(() => {
     const tokenValueChange = Number(value) * tokenPrice || 0
@@ -137,7 +156,7 @@ export default function WithdrawDialog({
           },
           {
             title: 'Health Factor',
-            content: !currentLendingPoolDetail ? '--' : toPrecision(healthFactor),
+            content: !currentLendingPoolDetail ? '--' : toPrecision(updatedHealthFactor),
           },
         ]}
       />

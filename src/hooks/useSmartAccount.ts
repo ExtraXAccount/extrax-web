@@ -211,6 +211,26 @@ export default function useSmartAccount() {
     [fetchBalances, fetchUserLending],
   )
 
+  const LTV = useMemo(() => {
+    if (!depositedVal) {
+      return {
+        current: 0,
+        max: 0,
+        liquidation: 0,
+      }
+    }
+    return {
+      current: debtVal / depositedVal,
+      max: Number(healthStatus.formatted?.ltv) / depositedVal,
+      liquidation: Number(healthStatus.formatted?.liquidationThreshold) / depositedVal,
+    }
+  }, [
+    debtVal,
+    depositedVal,
+    healthStatus.formatted?.liquidationThreshold,
+    healthStatus.formatted?.ltv,
+  ])
+
   return {
     accounts,
     currentAccount: currentAccount || accounts?.[0],
@@ -220,6 +240,8 @@ export default function useSmartAccount() {
     debtVal,
     netWorth,
     healthFactor: Number(healthStatus.formatted?.healthFactor) || 0,
+    liquidationThreshold: Number(healthStatus.formatted?.liquidationThreshold) || 0,
+    LTV,
     maxCredit: healthStatus.formatted?.ltv,
     availableCredit: minus(
       healthStatus.formatted?.ltv,

@@ -24,9 +24,10 @@ export interface ISupplyWindowsProps {
   className?: string
 }
 
-export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
+export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const { getPrice } = usePrices()
   const {
+    liquidationThreshold,
     usedCredit,
     leverage,
     healthFactor,
@@ -68,8 +69,27 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
     return div(availableCredit, tokenPrice).toString()
   }, [availableCredit, lendPoolInfo?.tokenSymbol, tokenPrice])
 
+  const tokenValueChange = useMemo(() => {
+    return Number(value) * tokenPrice || 0
+  }, [tokenPrice, value])
+
+  const updatedHealthFactor = useMemo(() => {
+    const reserveLiquidationThresholdConfig =
+      (lendPoolInfo?.config.liquidationThreshold || 0) / 10000
+    const _liquidateThshold = isBorrowMode
+      ? liquidationThreshold
+      : liquidationThreshold + tokenValueChange * reserveLiquidationThresholdConfig
+    const _borrowedValue = isBorrowMode ? debtVal + tokenValueChange : debtVal
+    return _liquidateThshold / _borrowedValue
+  }, [
+    debtVal,
+    isBorrowMode,
+    lendPoolInfo?.config.liquidationThreshold,
+    liquidationThreshold,
+    tokenValueChange,
+  ])
+
   const updatedSummary = useMemo(() => {
-    const tokenValueChange = Number(value) * tokenPrice || 0
     return {
       usedCredit: !isBorrowMode ? usedCredit : usedCredit + tokenValueChange,
       netWorth: !isBorrowMode
@@ -87,9 +107,8 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
     isBorrowMode,
     leverageMode,
     netWorth,
-    tokenPrice,
+    tokenValueChange,
     usedCredit,
-    value,
   ])
 
   const handleDeposit = useCallback(async () => {
@@ -271,7 +290,9 @@ export const SupplyWindows = ({ className, ...props }: ISupplyWindowsProps) => {
             </div>
             <div className="supply-windows__frame-481709">
               <div className="supply-windows__health-factor">Health Factor</div>
-              <div className="supply-windows___1-21">{toPrecision(healthFactor)}</div>
+              <div className="supply-windows___1-21">
+                {toPrecision(updatedHealthFactor)}
+              </div>
             </div>
           </div>
           {isBorrowMode ? (

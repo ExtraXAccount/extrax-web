@@ -107,7 +107,7 @@ export default function DialogAccountInfo({
   ]
   return (
     <div className="dialog-accountinfo">
-      <Collapse items={items} defaultActiveKey={['Account Info', 'Account Balances']} />
+      <Collapse items={items} defaultActiveKey={['Account Info']} />
     </div>
   )
 }

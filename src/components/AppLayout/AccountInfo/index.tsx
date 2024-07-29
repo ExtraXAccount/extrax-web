@@ -12,6 +12,7 @@ export default function AccountInfo() {
   // const navigate = useNavigate()
   const {
     healthStatus,
+    LTV,
     netWorth,
     healthFactor,
     currentAccount,
@@ -123,6 +124,37 @@ export default function AccountInfo() {
                 })}
               >
                 {!depositedVal ? '--' : toPrecision(healthFactor)}
+              </em>
+            </div>
+            <div className="extrax-account-info-detail-item extrax-account-info-ltv">
+              <b>LTV</b>
+              <em className="text-highlight">
+                {!netWorth ? (
+                  '--'
+                ) : (
+                  <div className="ltv-wrapper">
+                    <p
+                      className="ltv-wrapper-item ltv-wrapper-current"
+                      style={{ width: `${LTV.current * 100}%` }}
+                    >
+                      <span>Current: {`${toPrecision(LTV.current * 100)}%`}</span>
+                    </p>
+                    <p
+                      className="ltv-wrapper-item ltv-wrapper-max"
+                      style={{ width: `${LTV.max * 100}%` }}
+                    >
+                      <span>Max: {`${toPrecision(LTV.max * 100)}%`}</span>
+                    </p>
+                    <p
+                      className="ltv-wrapper-item ltv-wrapper-liquidation"
+                      style={{ width: `${LTV.liquidation * 100}%` }}
+                    >
+                      <span>
+                        Liquidation Threshold: {`${toPrecision(LTV.liquidation * 100)}%`}
+                      </span>
+                    </p>
+                  </div>
+                )}
               </em>
             </div>
           </div>

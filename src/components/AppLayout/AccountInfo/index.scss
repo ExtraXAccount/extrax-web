@@ -128,3 +128,40 @@
   }
 
 }
+
+.extrax-account-info-ltv {
+  height: 70px;
+  .ltv-wrapper {
+    position: relative;
+    margin-top: 20px;
+    width: 100%;
+    min-width: 200px;
+    height: 12px;
+    border-radius: 4px;
+    background: var(--slider-switch-back, rgba(120, 120, 128, 0.16));
+    .ltv-wrapper-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      span {
+        position: absolute;
+        right: 0;
+        bottom: -20px;
+      }
+    }
+    &-current {
+      background: var(--gree, #38AD3D);
+    }
+    &-max {
+      background: rgba(49, 202, 55, 0.50);
+    }
+    &-liquidation {
+      background: rgba(250, 190, 73, 0.50);
+      span {
+        bottom: auto;
+        top: -20px;
+      }
+    }
+  }
+}

@@ -27,6 +27,7 @@ export default function RepayDialog({
 }) {
   const {
     healthFactor,
+    liquidationThreshold,
     usedCredit,
     netWorth,
     debtVal,
@@ -52,6 +53,16 @@ export default function RepayDialog({
     }
     return getPrice(currentLendingPoolDetail?.tokenSymbol) || 0
   }, [getPrice, currentLendingPoolDetail?.tokenSymbol])
+
+  const tokenValueChange = useMemo(() => {
+    return Number(value) * tokenPrice || 0
+  }, [tokenPrice, value])
+
+  const updatedHealthFactor = useMemo(() => {
+    const _liquidateThshold = liquidationThreshold
+    const _borrowedValue = debtVal - tokenValueChange
+    return _liquidateThshold / _borrowedValue
+  }, [debtVal, liquidationThreshold, tokenValueChange])
 
   const updatedSummary = useMemo(() => {
     const tokenValueChange = Number(value) * tokenPrice || 0
@@ -144,7 +155,7 @@ export default function RepayDialog({
           },
           {
             title: 'Health Factor',
-            content: !currentLendingPoolDetail ? '--' : toPrecision(healthFactor),
+            content: !currentLendingPoolDetail ? '--' : toPrecision(updatedHealthFactor),
           },
         ]}
       />
