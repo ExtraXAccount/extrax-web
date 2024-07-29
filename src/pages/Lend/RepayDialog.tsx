@@ -54,28 +54,26 @@ export default function RepayDialog({
     return getPrice(currentLendingPoolDetail?.tokenSymbol) || 0
   }, [getPrice, currentLendingPoolDetail?.tokenSymbol])
 
-  const updatedSummary = useMemo(() => {
-    const tokenValueChange = Number(value) * tokenPrice || 0
-    return {
-      usedCredit: usedCredit,
-      netWorth: netWorth + tokenValueChange,
-      debtVal: debtVal - tokenValueChange,
-      // TODO: APY UPDATED
-      accountApy,
-    }
-  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value])
-
-  function reset() {
-    setValue('')
-  }
-
-  const {pre, next} = useInfoChange({
+  const next = useInfoChange({
     reserveId: currentLendingPoolDetail?.reserveId,
     amount: -Number(value),
     type: 'debt',
     price: getPrice(currentLendingPoolDetail?.tokenSymbol || '')
   })
 
+  const updatedSummary = useMemo(() => {
+    const tokenValueChange = Number(value) * tokenPrice || 0
+    return {
+      usedCredit: usedCredit,
+      netWorth: netWorth + tokenValueChange,
+      debtVal: debtVal - tokenValueChange,
+      accountApy: next.accountApy
+    }
+  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
+
+  function reset() {
+    setValue('')
+  }
 
   const repay = useCallback(async () => {
     console.log('repay :>> ', currentAccount)

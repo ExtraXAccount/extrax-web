@@ -51,27 +51,26 @@ export default function WithdrawDialog({
     return getPrice(currentLendingPoolDetail?.tokenSymbol) || 0
   }, [getPrice, currentLendingPoolDetail?.tokenSymbol])
 
+  const next = useInfoChange({
+    reserveId: currentLendingPoolDetail?.reserveId,
+    amount: -Number(value),
+    type: 'liquidity',
+    price: getPrice(currentLendingPoolDetail?.tokenSymbol || '')
+  })
+
   const updatedSummary = useMemo(() => {
     const tokenValueChange = Number(value) * tokenPrice || 0
     return {
       usedCredit: usedCredit,
       netWorth: netWorth - tokenValueChange,
       debtVal: debtVal,
-      // TODO: APY UPDATED
-      accountApy,
+      accountApy: next.accountApy
     }
-  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value])
+  }, [accountApy, debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
 
   function reset() {
     setValue('')
   }
-
-  const {pre, next} = useInfoChange({
-    reserveId: currentLendingPoolDetail?.reserveId,
-    amount: -Number(value),
-    type: 'liquidity',
-    price: getPrice(currentLendingPoolDetail?.tokenSymbol || '')
-  })
 
   console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
   const withdraw = useCallback(async () => {
