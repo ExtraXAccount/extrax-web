@@ -6,10 +6,11 @@ import { useCallback, useEffect, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import useSmartAccount from '@/hooks/useSmartAccount'
-import { toPrecision } from '@/utils/math'
+import PercentCircle from '@/pages/Lend/PercentCircle'
+import { toPrecision, toPrecisionNum } from '@/utils/math'
+import { div } from '@/utils/math/bigNumber'
 
 export default function AccountInfo() {
-  // const navigate = useNavigate()
   const {
     healthStatus,
     LTV,
@@ -17,25 +18,15 @@ export default function AccountInfo() {
     healthFactor,
     currentAccount,
     depositedVal,
-    // depositedAssets,
-    // debtVal,
-    // debtAssets,
     maxCredit,
-    // availableCredit,
     usedCredit,
-    // safetyRatio,
     accountApy,
     accounts,
-    // getInitData,
   } = useSmartAccount()
 
   useEffect(() => {
     console.log('healthStatus :>> ', healthStatus, healthFactor)
   }, [healthStatus, healthFactor])
-
-  // useEffect(() => {
-  //   getInitData()
-  // }, [getInitData])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
@@ -89,20 +80,31 @@ export default function AccountInfo() {
               </em>
               <button className="btn-add" onClick={handleAddDeposit}></button>
             </div>
-            <div className="extrax-account-info-detail-item extrax-account-info-credit">
-              <Tooltip title="Used Credit / Max Credit">
-                <b className="flex ai-ct gap-6">
-                  Borrowing Power
-                  <i className="iconfont icon-hint"></i>
-                </b>
-              </Tooltip>
-              <em className="text-highlight">
-                {!depositedVal
-                  ? '--'
-                  : `$${toPrecision(Number(usedCredit))} / $${toPrecision(
-                      Number(maxCredit),
-                    )}`}
-              </em>
+            <div className="extrax-account-info-detail-item extrax-account-info-credit flex jc-sb ai-ct">
+              <div>
+                <div>Borrowing Power</div>
+                <div
+                  className="flex ai-ct gap-10"
+                  style={{ margin: '10px 0', fontSize: 20 }}
+                >
+                  <em className="">
+                    {!depositedVal
+                      ? '--'
+                      : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
+                  </em>
+                  <span style={{ fontSize: 14 }}>
+                    {toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%
+                  </span>
+                </div>
+                <div>Debt Limit: ${toPrecision(Number(maxCredit))}</div>
+              </div>
+              <PercentCircle
+                radix={28}
+                percent={div(String(usedCredit), maxCredit).toNumber()}
+                strokeWidth={6}
+                strokeColor={'#5767BE'}
+                bgColor="#78788029"
+              />
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-safety">
               <Tooltip
@@ -128,34 +130,32 @@ export default function AccountInfo() {
             </div>
             <div className="extrax-account-info-detail-item extrax-account-info-ltv">
               <b>LTV</b>
-              <div className="">
-                {!netWorth ? (
-                  '--'
-                ) : (
-                  <div className="ltv-wrapper">
-                    <p
-                      className="ltv-wrapper-item ltv-wrapper-item-current"
-                      style={{ width: `${LTV.current * 100}%` }}
-                    >
-                      <span>Current: {`${toPrecision(LTV.current * 100)}%`}</span>
-                    </p>
-                    <p
-                      className="ltv-wrapper-item ltv-wrapper-item-max"
-                      style={{ width: `${LTV.max * 100}%` }}
-                    >
-                      <span>Max: {`${toPrecision(LTV.max * 100)}%`}</span>
-                    </p>
-                    <p
-                      className="ltv-wrapper-item ltv-wrapper-item-liquidation"
-                      style={{ width: `${LTV.liquidation * 100}%` }}
-                    >
-                      <span>
-                        Liquidation Threshold: {`${toPrecision(LTV.liquidation * 100)}%`}
-                      </span>
-                    </p>
-                  </div>
-                )}
-              </div>
+              {!netWorth ? (
+                '--'
+              ) : (
+                <div className="ltv-wrapper">
+                  <p
+                    className="ltv-wrapper-item ltv-wrapper-item-current"
+                    style={{ width: `${LTV.current * 100}%` }}
+                  >
+                    <span>Current: {`${toPrecision(LTV.current * 100)}%`}</span>
+                  </p>
+                  <p
+                    className="ltv-wrapper-item ltv-wrapper-item-max"
+                    style={{ width: `${LTV.max * 100}%` }}
+                  >
+                    <span>Max: {`${toPrecision(LTV.max * 100)}%`}</span>
+                  </p>
+                  <p
+                    className="ltv-wrapper-item ltv-wrapper-item-liquidation"
+                    style={{ width: `${LTV.liquidation * 100}%` }}
+                  >
+                    <span>
+                      Liquidation Threshold: {`${toPrecision(LTV.liquidation * 100)}%`}
+                    </span>
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
