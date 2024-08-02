@@ -183,7 +183,7 @@ export default function LendingTable() {
                           i.formatted.totalSupply.toString(),
                           i.formatted.supplyCap.toString(),
                         ).toNumber()}
-                        strokeWidth={3}
+                        strokeWidth={2.5}
                         strokeColor={'#38AD3D'}
                       />
                     </div>
@@ -245,7 +245,7 @@ export default function LendingTable() {
                           i.formatted.totalBorrowed.toString(),
                           i.formatted.borrowCap.toString(),
                         ).toNumber()}
-                        strokeWidth={3}
+                        strokeWidth={2.5}
                         strokeColor={'#EC6F14'}
                       />
                     </>
@@ -332,11 +332,10 @@ export default function LendingTable() {
             return (
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
-                <div
-                  className="farm-buffer-safe flex ai-ct jc-sb gap-10"
-                  style={{ fontWeight: 'bold' }}
-                >
-                  +{toPrecision(aprToApy100(pool.formatted.apr * 100))}%
+                <div className="flex ai-ct jc-sb gap-10">
+                  <span className="text-apr color-safe">
+                    +{toPrecision(aprToApy100(pool.formatted.apr * 100))}%
+                  </span>
                   <Link
                     to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                     onClick={(e) => {
@@ -390,11 +389,10 @@ export default function LendingTable() {
           render={(pool: IFormattedLendPool) => {
             return (
               <>
-                <div
-                  className="farm-buffer-danger flex ai-ct jc-sb gap-10"
-                  style={{ fontWeight: 'bold' }}
-                >
-                  -{toPrecision(pool.formatted.borrowApr * 100)}%
+                <div className="flex ai-ct jc-sb gap-10">
+                  <span className="text-apr color-danger">
+                    -{toPrecision(pool.formatted.borrowApr * 100)}%
+                  </span>
                   <Link
                     to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                     state={{ isBorrowMode: true }}
