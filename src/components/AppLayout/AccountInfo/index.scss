@@ -62,18 +62,100 @@
       // justify-content: center;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      // gap: 10px;
       // margin-bottom: 10px;
-      padding: 16px;
       height: 56px;
       background: var(--title-back, #F2F2F7);
       // border-radius: 16px 16px 0 0;
       font-size: 14px;
       border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+      
+      > div {
+        height: 100%;
+        flex: 1 1 auto;
+        padding: 16px;
+        .extrax-account-info-market {
+          padding: 16px;
+          height: 100%;
+          border-right: 0.5px solid var(--stroke, #C9C9CB);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          span {
+            padding: 0px 8px;
+            border-radius: 4px;
+            background: var(--exx, linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%));
   
+            color: var(--white, #FFF);
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 26px; /* 171.429% */
+          }
+        }
+        &:first-child {
+          border-right: 0.5px solid var(--stroke, #C9C9CB);
+          width: 35%;
+          padding: 0;
+        }
+        .extrax-account-info-apr-lv {
+          // display: flex;
+          // gap: 20px;
+          em {
+            color: #5767BE;
+          }
+        }
+      }
+
       &-account{
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
         em{
-          font-weight: normal;
+          position: relative;
+          padding: 2px 8px;
+          border-radius: 4px;
+          border: 0.5px solid var(--stroke, #C9C9CB);
+          background: var(--white, #FFF);
+
+          color: var(--bgBlack, #000);
+          text-align: center;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 16px;
+          transition: all .15s;
+          .copy-hint {
+            display: none;
+            position: absolute;
+            right: 0px;
+            top: 0;
+            width: 100%;
+            // width: 80%;
+            height: 100%;
+            padding: 0px 8px;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            border-radius: 4px;
+            // border: 0.5px solid var(--stroke, #C9C9CB);
+            background: var(--white, #FFF);
+
+            color: var(--card-title, rgba(0, 0, 0, 0.90));
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 16px;
+            cursor: pointer;
+            .iconfont {
+              font-size: inherit;
+            }
+          }
+          &:hover {
+            color: var(--text-gry-60-b, #666);
+            .copy-hint {
+              display: flex;
+            }
+          }
         }
       }
     }
@@ -126,8 +208,8 @@
 
       .extrax-account-info-credit {
         // width: 300px;
-        flex: 1 1 auto;
-        gap: 10px;
+        flex: 1 1.5 auto;
+        gap: 20px;
         svg {
           // margin-left: 30px;
         }
@@ -157,10 +239,10 @@
 .extrax-account-info-health {
   width: 400px;
   // height: 70px;
-  flex: 3 1 auto;
+  flex: 2 1 auto;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   .extrax-account-info-health-factor {
     width: 120px;
     display: flex;

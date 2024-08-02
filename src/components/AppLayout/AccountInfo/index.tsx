@@ -1,8 +1,9 @@
 import './index.scss'
 
-import { Tooltip } from 'antd'
+// import { Tooltip } from 'antd'
 import cx from 'classnames'
 import { useCallback, useEffect, useState } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import useSmartAccount from '@/hooks/useSmartAccount'
@@ -26,6 +27,8 @@ export default function AccountInfo() {
     accounts,
   } = useSmartAccount()
 
+  const [copied, setCopied] = useState(false)
+
   useEffect(() => {
     console.log('healthStatus :>> ', healthStatus, healthFactor)
   }, [healthStatus, healthFactor])
@@ -35,6 +38,15 @@ export default function AccountInfo() {
   const handleAddDeposit = useCallback(() => {
     setDepositDialogOpen(true)
   }, [])
+
+  const onCopy = useCallback(() => {
+    if (!copied) {
+      setCopied(true)
+      setTimeout(() => {
+        setCopied(false)
+      }, 2000)
+    }
+  }, [copied])
 
   return (
     <div className="extrax-account-info">
@@ -58,12 +70,28 @@ export default function AccountInfo() {
       ) : (
         <div className="extrax-account-info-inner">
           <div className="extrax-account-info-main">
-            <div className="extrax-account-info-main-account">
-              <b>Main Account: </b>
-              <em>
-                {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)}
-              </em>
+            <div className="flex ai-ct">
+              <div className="extrax-account-info-market">
+                <span>Main Market</span>
+              </div>
+              <div className="extrax-account-info-main-account">
+                <span>Current Account: </span>
+                <em>
+                  {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)}
+                  <CopyToClipboard text={currentAccount} onCopy={onCopy}>
+                    <span
+                      className={cx('copy-hint', {
+                        'color-safe': copied,
+                      })}
+                    >
+                      <i className="iconfont icon-copy"></i>
+                      {copied ? 'Copied!' : 'Copy'}
+                    </span>
+                  </CopyToClipboard>
+                </em>
+              </div>
             </div>
+
             {/* <p className="extrax-account-info-main-splitter"> | </p>
             <p className="extrax-account-info-main-apy">
               <b>Portfolio APY: </b>
@@ -71,9 +99,32 @@ export default function AccountInfo() {
                 {!depositedVal ? '--' : toPrecision(accountApy * 100) + '%'}
               </em>
             </p> */}
-            <button className="btn-base" onClick={handleAddDeposit}>
-              Supply
-            </button>
+            <div className="flex ai-ct jc-sb">
+              <div className="extrax-account-info-apr-lv">
+                <span>Portfolio APR: </span>
+                <em
+                  className={cx('', {
+                    'color-safe': !!accountApy && accountApy > 0,
+                    'color-danger': !!accountApy && accountApy < 0,
+                  })}
+                >
+                  {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
+                </em>
+
+                <span style={{ marginLeft: 20 }}>Account Leverage: </span>
+                <em
+                  className={cx('', {
+                    // 'color-safe': !!accountApy && accountApy > 0,
+                    // 'color-danger': !!accountApy && accountApy < 0,
+                  })}
+                >
+                  {!leverage ? '--' : toPrecision(leverage) + 'x'}
+                </em>
+              </div>
+              <button className="btn-base" onClick={handleAddDeposit}>
+                Supply
+              </button>
+            </div>
           </div>
           <div className="extrax-account-info-detail">
             <div className="extrax-account-info-detail-item extrax-account-info-deposited">
@@ -171,7 +222,7 @@ export default function AccountInfo() {
               </div>
             </div>
 
-            <div className="extrax-account-info-detail-item extrax-account-info-apr">
+            {/* <div className="extrax-account-info-detail-item extrax-account-info-apr">
               <span>Portfolio APR</span>
               <em
                 className={cx('', {
@@ -185,15 +236,8 @@ export default function AccountInfo() {
 
             <div className="extrax-account-info-detail-item extrax-account-info-leverage">
               <span>Account Leverage</span>
-              <em
-                className={cx('', {
-                  // 'color-safe': !!accountApy && accountApy > 0,
-                  // 'color-danger': !!accountApy && accountApy < 0,
-                })}
-              >
-                {!leverage ? '--' : toPrecision(leverage)}
-              </em>
-            </div>
+              <em>{!leverage ? '--' : toPrecision(leverage)}</em>
+            </div> */}
           </div>
         </div>
       )}
