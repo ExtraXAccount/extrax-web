@@ -87,6 +87,18 @@ body.dark{
   }
 }
 
+.color {
+  &-safe{
+    color: var(--safe-color) !important;
+  }
+  &-warn{
+    color: var(--warn-color) !important;
+  }
+  &-danger{
+    color: var(--danger-color) !important;
+  }
+}
+
 .farm-buffer{
   &-safe{
     color: var(--safe-color);

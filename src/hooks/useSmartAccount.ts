@@ -247,7 +247,7 @@ export default function useSmartAccount() {
       healthStatus.formatted?.ltv,
       healthStatus.formatted?.debtValueUsd,
     ).toString(),
-    usedCredit: Number(healthStatus.formatted?.debtValueUsd) || 0,
+    usedCredit: debtVal,
     accountApr,
     accountApy,
 
