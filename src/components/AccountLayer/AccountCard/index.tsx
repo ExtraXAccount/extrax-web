@@ -1,5 +1,6 @@
-import { formatNumberByUnit } from '@/utils/math'
 import './index.scss'
+
+import { formatNumberByUnit } from '@/utils/math'
 
 export default function AccountCard(props: {
   address: string
@@ -8,9 +9,11 @@ export default function AccountCard(props: {
   netWorth: number
 }) {
   return (
-    <div className='account-card'>
-      <section className='account-card-address'>{props.address?.slice(0, 6)}....{props.address?.slice(-4)}</section>
-      <ul className='flex ai-ct account-card-list'>
+    <div className="account-card">
+      <section className="account-card-address">
+        {props.address?.slice(0, 6)}....{props.address?.slice(-4)}
+      </section>
+      <ul className="flex ai-ct account-card-list">
         <li>
           <p>Your Supply</p>
           <b>${formatNumberByUnit(props.supplyValue)}</b>

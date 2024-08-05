@@ -15,6 +15,7 @@ import { useAppDispatch } from '@/state'
 import { setLendingStatus } from '@/state/lending/reducer'
 import { setPrices } from '@/state/price/reducer'
 import { useAccountStore } from '@/store'
+
 import AccountLayer from '../AccountLayer'
 
 const navList = [
@@ -129,9 +130,14 @@ export default function AppLayout() {
           })}
         </div>
         <div className="nav-right flex ai-ct gap-4">
-          <button className='btn-base' onClick={() => {
-            updateAccountLayer(true)
-          }}>Main Account</button>
+          <button
+            className="btn-base"
+            onClick={() => {
+              updateAccountLayer(true)
+            }}
+          >
+            Main Account
+          </button>
           <ConnectButton
             accountStatus="address"
             // accountStatus={{

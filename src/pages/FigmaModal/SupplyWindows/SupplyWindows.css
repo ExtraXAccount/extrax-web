@@ -321,15 +321,14 @@
   width: unset !important;
 }
 
-
 .leverage-mode-setting-wrapper {
   width: 100%;
   border-radius: 8px;
-  border: 0.5px solid var(--stroke, #C9C9CB);
-  background: #FFF;
+  border: 0.5px solid var(--stroke, #c9c9cb);
+  background: #fff;
   .leverage-mode-setting-form {
     padding: 8px 12px;
-    border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+    border-bottom: 0.5px solid var(--stroke, #c9c9cb);
     color: var(--text-gry-60-b, #666);
     font-size: 12px;
     font-weight: bold;
@@ -349,12 +348,12 @@
 
 .borrow-risk-hint {
   border-radius: 8px;
-  border: 0.5px solid var(--stroke, #C9C9CB);
+  border: 0.5px solid var(--stroke, #c9c9cb);
   padding: 8px;
   display: flex;
   gap: 8px;
 
-  color: var(--card-title, rgba(0, 0, 0, 0.90));
+  color: var(--card-title, rgba(0, 0, 0, 0.9));
   font-size: 12px;
   line-height: 24px;
   font-weight: 300;

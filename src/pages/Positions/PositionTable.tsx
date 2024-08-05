@@ -1,17 +1,15 @@
 import { Table } from 'antd'
 
 import LPName from '@/components/LPName'
+import useSmartAccount from '@/hooks/useSmartAccount'
 import { toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
-import useSmartAccount from '@/hooks/useSmartAccount'
 const { Column } = Table
 
 export default function PositionTable(props: { positions: any[] }) {
   const { updateCurrentPosition, updateDialogShow } = useLendStore()
-  const {
-    healthStatus,
-  } = useSmartAccount()
+  const { healthStatus } = useSmartAccount()
 
   console.log(healthStatus)
   return (
@@ -95,15 +93,11 @@ export default function PositionTable(props: { positions: any[] }) {
           dataIndex=""
           key="Liquidation"
           render={(i) => {
-            // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 * 
+            // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 *
             return (
               <>
-                {i.type === 'debt' && (
-                  <p>N/A</p>
-                )}
-                {i.type !== 'debt' && (
-                  <p>N/A</p>
-                )}
+                {i.type === 'debt' && <p>N/A</p>}
+                {i.type !== 'debt' && <p>N/A</p>}
               </>
             )
           }}

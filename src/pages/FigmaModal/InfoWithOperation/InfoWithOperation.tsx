@@ -60,11 +60,12 @@ export const InfoWithOperation = ({
           className="info-with-operation__frame"
           src="/modal/frame0.svg"
           onClick={() => {
-            if (location.key !== 'default') {
-              navigate(-1)
-            } else {
-              navigate('/lend')
-            }
+            navigate('/lend')
+            // if (location.key !== 'default') {
+            //   navigate(-1)
+            // } else {
+            //   navigate('/lend')
+            // }
           }}
         />
       </div>

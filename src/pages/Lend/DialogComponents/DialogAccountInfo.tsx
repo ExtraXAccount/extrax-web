@@ -5,10 +5,9 @@ import { useMemo } from 'react'
 
 import useSmartAccount from '@/hooks/useSmartAccount'
 import useFormatPositions from '@/pages/Positions/hooks/useFormatPositions'
-import { formatNumDisplay, toPrecision } from '@/utils/math'
+import { formatNumDisplay, remain2Decimal, toPrecision } from '@/utils/math'
 
 import MiniPosition from './MiniPosition'
-import { remain2Decimal } from '@/utils/math'
 
 export default function DialogAccountInfo({
   reserveId,
