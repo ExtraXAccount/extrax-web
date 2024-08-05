@@ -30,7 +30,6 @@
   align-self: stretch;
   flex-shrink: 0;
   position: relative;
-  cursor: pointer;
 }
 .info-with-operation__usdc-pool-details {
   color: var(--text-black, #000000);
@@ -56,6 +55,7 @@
   height: 24px;
   position: relative;
   overflow: visible;
+  cursor: pointer;
 }
 .info-with-operation__frame-482114 {
   display: flex;
@@ -74,4 +74,64 @@
   flex-shrink: 0 !important;
   /* width: 488px !important; */
   width: 520px;
+}
+
+
+.asset-selector-wrapper {
+  width: 100%;
+  padding: 24px;
+  
+  h4 {
+    color: var(--text-black, var(--bgBlack, #000));
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px; /* 150% */
+  }
+  .asset-selector-list {
+    border: 0.5px solid var(--stroke, #C9C9CB);
+    border-radius: 8px;
+    margin-top: 16px;
+    overflow: hidden;
+    .asset-selector-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      cursor: pointer;
+      &:not(:last-child) {
+        border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+      }
+      &:hover {
+        background: #f9f9fa;
+      }
+
+      .lending-list-title-wrap {
+        width: 100px;
+        flex: 0 0 auto;
+      }
+
+      .asset-selector-item-borrow,
+      .asset-selector-item-price,
+      .asset-selector-item-available,
+      .asset-selector-item-supply {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        span {
+          color: var(--text-gry-60-b, #666);
+          font-size: 10px;
+          font-weight: 500;
+          line-height: 12px;
+        }
+        em {
+          color: var(--text-black, var(--bgBlack, #000));
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 24px;
+        }
+      }
+    }
+  }
 }

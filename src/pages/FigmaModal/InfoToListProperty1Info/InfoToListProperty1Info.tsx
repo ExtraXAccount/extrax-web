@@ -23,7 +23,7 @@ export const InfoToListProperty1Info = ({
     <div
       className={'info-to-list-property-1-info ' + className + ' ' + variantsClassName}
     >
-      <CoinMain className="info-to-list-property-1-info__coin-main-instance"></CoinMain>
+      {/* <CoinMain className="info-to-list-property-1-info__coin-main-instance"></CoinMain> */}
       <SupplyInfo className="info-to-list-property-1-info__supply-info-instance"></SupplyInfo>
       <BorrowInfo className="info-to-list-property-1-info__borrow-info-instance"></BorrowInfo>
       <UsdcApyHistory className="info-to-list-property-1-info__usdc-apy-history-instance"></UsdcApyHistory>

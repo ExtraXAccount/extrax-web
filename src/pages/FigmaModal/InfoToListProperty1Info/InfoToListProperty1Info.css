@@ -5,13 +5,15 @@
 .info-to-list-property-1-info {
   border-style: solid;
   border-color: var(--stroke, #c9c9cb);
-  border-width: 0px 0.5px 0px 0px;
+  border-width: 0px 0.5px 0.5px 0px;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   gap: 0px;
   align-items: center;
   justify-content: flex-start;
   position: relative;
+  min-height: 100%;
 }
 .info-to-list-property-1-info__coin-main-instance {
   align-self: stretch !important;

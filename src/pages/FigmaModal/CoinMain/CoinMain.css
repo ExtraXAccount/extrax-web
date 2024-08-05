@@ -126,7 +126,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   flex-shrink: 0;
-  width: 64px;
+  /* width: 64px; */
   position: relative;
 }
 .coin-main__reserve-size {
@@ -160,7 +160,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   flex-shrink: 0;
-  width: 72px;
+  /* width: 72px; */
   position: relative;
 }
 .coin-main__utilization-rate {
@@ -192,4 +192,17 @@
 }
 .coin-main__coin-select-instance {
   flex-shrink: 0 !important;
+}
+
+.iconfont.icon-menu {
+  font-size: 14px;
+  padding: .2em;
+  border-radius: .2em;
+  cursor: pointer;
+  display: block;
+  border: 0.5px solid transparent;
+  &:hover {
+    font-weight: bold;
+    border-color: #ccc;
+  }
 }

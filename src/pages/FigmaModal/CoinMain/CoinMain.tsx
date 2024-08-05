@@ -6,15 +6,14 @@ import TokenIcon from '@/components/TokenIcon'
 import usePrices from '@/hooks/usePrices'
 import { formatFloatNumber, toPrecision } from '@/utils/math'
 
-import { CoinSelectProperty1Def } from '../CoinSelectProperty1Def/CoinSelectProperty1Def'
-import { Component289Property1OraclePrice } from '../Component289Property1OraclePrice/Component289Property1OraclePrice'
 import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface ICoinMainProps {
   className?: string
+  toggleMenuOpen: () => void
 }
 
-export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
+export const CoinMain = ({ className, toggleMenuOpen }: ICoinMainProps) => {
   const lendPoolInfo = useLendPoolInfo()
   const { getPrice } = usePrices()
 
@@ -38,14 +37,14 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
           <div className="coin-main__frame-482097">
             {/* <div className="coin-main__usdc">{token?.toUpperCase()} </div> */}
             <div className="coin-main__component-229">
-              <div className="coin-main__isolated">Isolated </div>
+              <div className="coin-main__isolated">Isolated</div>
             </div>
           </div>
         </div>
       </div>
       <div className="coin-main__frame-482082">
         <div className="coin-main__frame-482081">
-          <div className="coin-main__reserve-size">Reserve Size </div>
+          <div className="coin-main__reserve-size">Reserve Size</div>
           <div className="coin-main___37-94-m">
             {!lendPoolInfo ? (
               <Skeleton.Button active size="small" block={false} />
@@ -60,7 +59,7 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
           </div>
         </div>
         <div className="coin-main__frame-482083">
-          <div className="coin-main__utilization-rate">Utilization Rate </div>
+          <div className="coin-main__utilization-rate">Utilization Rate</div>
           <div className="coin-main___88-82">
             {!lendPoolInfo ? (
               <Skeleton.Button active size="small" block={false} />
@@ -69,9 +68,22 @@ export const CoinMain = ({ className, ...props }: ICoinMainProps) => {
             )}
           </div>
         </div>
-        <Component289Property1OraclePrice className="coin-main__component-289-instance"></Component289Property1OraclePrice>
+
+        <div className="coin-main__frame-482083">
+          <div className="coin-main__utilization-rate">Oracle price</div>
+          <div className="coin-main___88-82">
+            {!lendPoolInfo ? (
+              <Skeleton.Button active size="small" block={false} />
+            ) : (
+              <>${toPrecision(getPrice(lendPoolInfo.tokenSymbol))}</>
+            )}
+          </div>
+        </div>
       </div>
-      <CoinSelectProperty1Def className="coin-main__coin-select-instance"></CoinSelectProperty1Def>
+      <i
+        className="coin-main__coin-select-instance iconfont icon-menu"
+        onClick={toggleMenuOpen}
+      ></i>
     </div>
   )
 }
