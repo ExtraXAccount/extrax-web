@@ -62,6 +62,7 @@ export interface AccountState {
   accountInfo?: AccountInfo
   supportedAssets: ISupportedAssets[]
   supportedDebts: ISupportedAssets[]
+  showAccountLayer: boolean
 }
 
 export interface AccountAction {
@@ -73,6 +74,7 @@ export interface AccountAction {
   updateAccountInfo: (accountInfo: AccountState['accountInfo']) => void
   updateSupportedAssets: (supportedAssets: AccountState['supportedAssets']) => void
   updateSupportedDebts: (supportedDebts: AccountState['supportedDebts']) => void
+  updateAccountLayer: (supportedDebts: AccountState['showAccountLayer']) => void
 }
 
 export const useAccountStore = create<AccountState & AccountAction>((set) => ({
@@ -84,6 +86,7 @@ export const useAccountStore = create<AccountState & AccountAction>((set) => ({
   accountInfo: undefined,
   supportedAssets: [],
   supportedDebts: [],
+  showAccountLayer: false,
 
   init: ({ accounts, supportedAssets, supportedDebts }) =>
     set(() => ({
@@ -101,4 +104,6 @@ export const useAccountStore = create<AccountState & AccountAction>((set) => ({
     set(() => ({ supportedAssets: supportedAssets })),
   updateSupportedDebts: (supportedDebts) =>
     set(() => ({ supportedDebts: supportedDebts })),
+  updateAccountLayer: (showAccountLayer) =>
+    set(() => ({ showAccountLayer: showAccountLayer })),
 }))

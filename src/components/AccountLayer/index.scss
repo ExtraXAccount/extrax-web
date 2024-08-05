@@ -1,0 +1,23 @@
+.account-layer{
+
+  &-item{
+    border-radius: 8px;
+    border: 0.5px solid var(--stroke, #C9C9CB);
+    &-title{
+      border-radius: 8px 8px 0 0;
+      font-size: 16px;
+      padding: 16px;
+      border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+      background: var(--title-back, #F2F2F7);
+    }
+
+    &-cardwrap{
+      padding: 24px;
+    }
+
+    &-history{
+      padding: 24px;
+      border-top: 0.5px solid var(--stroke, #C9C9CB);
+    }
+  }
+}

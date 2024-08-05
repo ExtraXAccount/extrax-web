@@ -1,0 +1,44 @@
+.account-txhistory{
+  border-radius: 8px;
+  border: 0.5px solid var(--stroke, #C9C9CB);
+  background: #FFF;
+
+  &-title{
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    // border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+  }
+
+  &-table{
+    display: table;
+    width: 100%;
+  }
+  &-th,
+  &-tr{
+    width: 100%;
+    display: table-row;
+    font-size: 12px;
+    line-height: 1.5;
+    >div{
+      padding: 19px 12px;
+      vertical-align: middle;
+      display: table-cell;
+      border-top: 0.5px solid var(--stroke, #C9C9CB);
+
+      .lpname{
+        .bold{
+          font-weight: normal;
+          font-size: 12px;
+        }
+      }
+
+      .icon-explorer{
+        display: block;
+        width: 16px;
+        height: 16px;
+        background: url('./icon.svg') center / contain no-repeat;
+      }
+    }
+  }
+}

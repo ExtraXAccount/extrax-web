@@ -1,0 +1,9 @@
+.ant-drawer .ant-drawer-header-title{
+  flex-direction: row-reverse !important;
+}
+
+.ant-drawer{
+  .ant-drawer-close{
+    border: 0.5px solid var(--stroke, #C9C9CB);
+  }
+}
