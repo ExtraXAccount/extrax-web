@@ -12,6 +12,8 @@
 /build
 build.zip
 build.tar
+/dist
+dist.zip
 aws_nu.pem
 
 # misc

@@ -4,7 +4,7 @@ import { InfoWithOperation } from '@/pages/FigmaModal/InfoWithOperation/InfoWith
 
 export default function DepositModal() {
   return (
-    <div className="InfoWithOperation-wrapper" style={{ padding: '0' }}>
+    <div className="page-app InfoWithOperation-wrapper">
       <InfoWithOperation className="InfoWithOperation"></InfoWithOperation>
     </div>
   )

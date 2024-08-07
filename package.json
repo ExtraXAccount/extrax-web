@@ -11,6 +11,11 @@
     "lint:fix": "eslint ./src --ext .jsx,.js,.ts,.tsx --quiet --fix --ignore-path ./.gitignore",
     "lint:format": "prettier  --loglevel warn --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\" ",
     "lint": "yarn lint:format && yarn lint:fix",
+    "login-beta": "ssh -i 'aws_nu.pem' ubuntu@ec2-13-250-158-206.ap-southeast-1.compute.amazonaws.com",
+    "login": "ssh -i 'aws_nu.pem' ubuntu@ec2-54-254-63-175.ap-southeast-1.compute.amazonaws.com",
+    "zip-dist": "npx rimraf dist.zip && zip -r dist.zip dist",
+    "scp-dist-beta": "scp -i 'aws_nu.pem' dist.zip ubuntu@ec2-13-250-158-206.ap-southeast-1.compute.amazonaws.com:~/project/extrax-beta/public/",
+    "send-dist-beta": "npm run build && npm run zip-dist && npm run scp-dist-beta",
     "type-check": "tsc"
   },
   "browserslist": {
