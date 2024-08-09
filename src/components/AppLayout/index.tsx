@@ -19,10 +19,10 @@ import { useAccountStore } from '@/store'
 import AccountLayer from '../AccountLayer'
 
 const navList = [
-  {
-    name: 'Leverage Apps',
-    link: '/leveragedapps/uniswapv3',
-  },
+  // {
+  //   name: 'Leverage Apps',
+  //   link: '/leveragedapps/uniswapv3',
+  // },
   {
     name: 'Borrow / Lend',
     link: '/lend',
