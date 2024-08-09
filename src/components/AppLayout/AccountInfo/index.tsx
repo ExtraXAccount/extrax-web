@@ -151,6 +151,7 @@ export default function AccountInfo() {
                 </span>
               </div>
               <div className="ltv-wrapper">
+                <span className="ltv-wrapper-label">LTV</span>
                 <p
                   className="ltv-wrapper-item ltv-wrapper-item-current"
                   style={{ width: `${LTV.current * 100}%` }}
@@ -167,9 +168,7 @@ export default function AccountInfo() {
                   className="ltv-wrapper-item ltv-wrapper-item-liquidation"
                   style={{ width: `${LTV.liquidation * 100}%` }}
                 >
-                  <span>
-                    Liquidation Threshold: {`${toPrecision(LTV.liquidation * 100)}%`}
-                  </span>
+                  <span>Liq: {`${toPrecision(LTV.liquidation * 100)}%`}</span>
                 </p>
               </div>
             </div>
