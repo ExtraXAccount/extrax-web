@@ -135,55 +135,7 @@ export default function AccountInfo() {
                 {formatNumberByUnit(debtVal)}
               </span>
             </div>
-            <div className="extrax-account-info-detail-item extrax-account-info-credit flex jc-sb ai-ct">
-              <div>
-                <span>Borrowing Power</span>
-                <div
-                  className="flex ai-ct gap-10"
-                  style={{ margin: '10px 0', fontSize: 20 }}
-                >
-                  <em className="">
-                    {!depositedVal
-                      ? '--'
-                      : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
-                  </em>
-                  <span className="tag-percent">
-                    {toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%
-                  </span>
-                </div>
-                <span>Debt Limit: ${toPrecision(Number(maxCredit))}</span>
-              </div>
-              <PercentCircle
-                radix={32}
-                percent={div(String(usedCredit), maxCredit).toNumber()}
-                strokeWidth={6}
-                strokeColor={'#5767BE'}
-                bgColor="#78788029"
-              />
-            </div>
-            {/* <div className="extrax-account-info-detail-item extrax-account-info-safety">
-              <Tooltip
-                overlayInnerStyle={{ width: 400 }}
-                title={
-                  'Health Factor = LiquidationThreshold of Borrowing Value / Current Borrowed Value'
-                }
-              >
-                <b className="flex ai-ct gap-6">
-                  Health Factor
-                  <i className="iconfont icon-hint"></i>
-                </b>
-              </Tooltip>
-              <span>Health Factor</span>
-              <em
-                className={cx('', {
-                  'farm-buffer-safe': healthFactor < 80,
-                  'farm-buffer-warn': healthFactor > 80,
-                  'farm-buffer-danger': healthFactor > 90,
-                })}
-              >
-                {!depositedVal ? '--' : toPrecision(healthFactor)}
-              </em>
-            </div> */}
+
             <div className="extrax-account-info-detail-item extrax-account-info-health">
               <div className="extrax-account-info-health-factor">
                 <span>Health Factor</span>
@@ -222,22 +174,32 @@ export default function AccountInfo() {
               </div>
             </div>
 
-            {/* <div className="extrax-account-info-detail-item extrax-account-info-apr">
-              <span>Portfolio APR</span>
-              <em
-                className={cx('', {
-                  'color-safe': !!accountApy && accountApy > 0,
-                  'color-danger': !!accountApy && accountApy < 0,
-                })}
-              >
-                {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
-              </em>
+            <div className="extrax-account-info-detail-item extrax-account-info-credit flex jc-sb ai-ct">
+              <div>
+                <span>Borrowing Power</span>
+                <div
+                  className="flex ai-ct gap-10"
+                  style={{ margin: '10px 0', fontSize: 20 }}
+                >
+                  <em className="">
+                    {!depositedVal
+                      ? '--'
+                      : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
+                  </em>
+                  <span className="tag-percent">
+                    {toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%
+                  </span>
+                </div>
+                <span>Debt Limit: ${toPrecision(Number(maxCredit))}</span>
+              </div>
+              <PercentCircle
+                radix={32}
+                percent={div(String(usedCredit), maxCredit).toNumber()}
+                strokeWidth={6}
+                strokeColor={'#5767BE'}
+                bgColor="#78788029"
+              />
             </div>
-
-            <div className="extrax-account-info-detail-item extrax-account-info-leverage">
-              <span>Account Leverage</span>
-              <em>{!leverage ? '--' : toPrecision(leverage)}</em>
-            </div> */}
           </div>
         </div>
       )}
