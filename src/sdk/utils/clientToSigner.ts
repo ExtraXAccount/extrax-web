@@ -4,9 +4,9 @@ import { PublicClient, Transport, WalletClient } from 'viem'
 export function clientToProvider(client: PublicClient | WalletClient) {
   const { chain, transport } = client
   const network = {
-    chainId: chain.id,
-    name: chain.name,
-    ensAddress: chain.contracts?.ensRegistry?.address,
+    chainId: chain?.id,
+    name: chain?.name,
+    ensAddress: chain?.contracts?.ensRegistry?.address,
   }
   if (transport.type === 'fallback') {
     const providers = (transport.transports as ReturnType<Transport>[]).map(
@@ -21,13 +21,13 @@ export function clientToProvider(client: PublicClient | WalletClient) {
 export function clientToSigner(client: PublicClient | WalletClient) {
   const { account, chain, transport } = client
   const network = {
-    chainId: chain.id,
-    name: chain.name,
-    ensAddress: chain.contracts?.ensRegistry?.address,
+    chainId: chain?.id,
+    name: chain?.name,
+    ensAddress: chain?.contracts?.ensRegistry?.address,
   }
   // const provider = new providers.Web3Provider(transport, network)
   // const signer = provider.getSigner(account.address)
   const provider = new BrowserProvider(transport as any, network)
-  const signer = new JsonRpcSigner(provider, account.address)
+  const signer = new JsonRpcSigner(provider, account?.address as string)
   return signer
 }
