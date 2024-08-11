@@ -29,6 +29,7 @@ import PercentCircle from './PercentCircle'
 // import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
 import CapHover from './HoverComponents/CapHover'
+import RewardsHover from './HoverComponents/RewardsHover'
 // import WithdrawDialog from './WithdrawDialog'
 
 const { Column } = Table
@@ -292,12 +293,21 @@ export default function LendingTable() {
             return a.formatted.apr - b.formatted.apr
           }}
           render={(pool: IFormattedLendPool) => {
+            const apy = aprToApy100(pool.formatted.apr * 100)
             return (
+              // for test
+              <RewardsHover baseApy={apy} rewards={[
+                {
+                  token: 'OP',
+                  weekAmount: 1000,
+                  apy: 0.0544
+                },
+              ]}>
               <>
                 {isMobile && <div className="text-bold-small">APY</div>}
                 <div className="flex ai-ct jc-sb gap-10">
                   <span className="text-apr color-safe">
-                    +{toPrecision(aprToApy100(pool.formatted.apr * 100))}%
+                    +{toPrecision(apy)}%
                   </span>
                   <Link
                     to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
@@ -336,6 +346,7 @@ export default function LendingTable() {
                   </button> */}
                 </div>
               </>
+              </RewardsHover>
             )
           }}
         />

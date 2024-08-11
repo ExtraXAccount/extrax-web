@@ -1,0 +1,47 @@
+.rewards-hover{
+  width: 240px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 0.5px solid var(--stroke, #C9C9CB);
+  background: #FFF;
+
+  &-title{
+    padding: 12px;
+    line-height: 1;
+    border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+    font-weight: bold;
+    text-transform: capitalize;
+  }
+
+  &-content{
+    padding: 12px;
+    &-list{
+      &-item{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+      }
+    }
+
+    &-apys{
+      border-radius: 8px;
+      border: 0.5px solid var(--stroke, #C9C9CB);
+      &-item{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+        &:last-child{
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &-footer{
+    padding: 12px;
+    border-top: 0.5px solid var(--stroke, #C9C9CB);
+  }
+}
