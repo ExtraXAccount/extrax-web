@@ -1,0 +1,64 @@
+.cap-hover{
+  width: 360px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 0.5px solid var(--stroke, #C9C9CB);
+  background: #FFF;
+  text-transform: capitalize;
+
+  --cap-main-color: #38AD3D;
+
+  &.cap-hover-borrow{
+    --cap-main-color: #EC6F14;
+  }
+
+  &-title{
+    padding: 12px;
+    line-height: 1;
+    justify-content: space-between;
+    border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+  }
+
+  &-circle{
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 8px;
+    background-color: rgba(120, 120, 128, 0.16);
+    &-main{
+      background-color: var(--cap-main-color);
+    }
+  }
+
+  &-content{
+    padding: 12px;
+    &-slide{
+      height: 12px;
+      border-radius: 4px;
+      background: var(--slider-switch-back, rgba(120, 120, 128, 0.16));
+
+      &-inner{
+        height: 12px;
+        background-color: var(--cap-main-color);
+        border-radius: 4px 0 0 4px;
+      }
+    }
+
+    &-text{
+      margin-top: 12px;
+      justify-content: space-between;
+    }
+  }
+}
+
+.no-outside.ant-popover{
+  .ant-popover-inner{
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
+  .ant-popover-arrow{
+    display: none;
+  }
+}

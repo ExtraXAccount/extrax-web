@@ -28,6 +28,7 @@ import DepositDialog from './DepositDialog'
 import PercentCircle from './PercentCircle'
 // import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
+import CapHover from './HoverComponents/CapHover'
 // import WithdrawDialog from './WithdrawDialog'
 
 const { Column } = Table
@@ -148,7 +149,8 @@ export default function LendingTable() {
             const amount = i.formatted.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
-              <>
+              <CapHover type='supply' max={i.formatted.supplyCap} current={i.formatted.totalSupply} price={getPrice(i.tokenSymbol)} >
+              <div>
                 {isMobile && <div className="text-bold-small">Total Supply</div>}
                 <div className="flex ai-ct gap-10">
                   <div>
@@ -158,38 +160,20 @@ export default function LendingTable() {
                     </div>
                     <div className="text-sm-2">${formatNumberByUnit(value)}</div>
                   </div>
-                  <Tooltip
-                    title={
-                      <div className="flex flex-column">
-                        <div>
-                          Supply Cap: {addComma(toPrecision(i.formatted.supplyCap))}
-                        </div>
-                        <div>
-                          Supply Used: {addComma(toPrecision(i.formatted.totalSupply))}
-                        </div>
-                        <div>
-                          Remaining:{' '}
-                          {addComma(
-                            toPrecision(i.formatted.supplyCap - i.formatted.totalSupply),
-                          )}
-                        </div>
-                      </div>
-                    }
-                  >
                     <div>
-                      <PercentCircle
-                        radix={10}
-                        percent={div(
-                          i.formatted.totalSupply.toString(),
-                          i.formatted.supplyCap.toString(),
-                        ).toNumber()}
-                        strokeWidth={2.5}
-                        strokeColor={'#38AD3D'}
-                      />
-                    </div>
-                  </Tooltip>
+                    <PercentCircle
+                      radix={10}
+                      percent={div(
+                        i.formatted.totalSupply.toString(),
+                        i.formatted.supplyCap.toString(),
+                      ).toNumber()}
+                      strokeWidth={2.5}
+                      strokeColor={'#38AD3D'}
+                    />
+                  </div>
                 </div>
-              </>
+              </div>
+              </CapHover>
             )
           }}
         />
@@ -208,7 +192,8 @@ export default function LendingTable() {
             const amount = i.formatted.totalBorrowed
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
-              <>
+              <CapHover type='borrow' max={i.formatted.borrowCap} current={i.formatted.totalBorrowed} price={getPrice(i.tokenSymbol)} >
+              <div>
                 {isMobile && <div className="text-bold-small">Total Supply</div>}
                 <div className="flex ai-ct gap-10">
                   <div>
@@ -218,40 +203,18 @@ export default function LendingTable() {
                     </div>
                     <div className="text-sm-2">${formatNumberByUnit(value)}</div>
                   </div>
-                  <Tooltip
-                    title={
-                      <div className="flex flex-column">
-                        <div>
-                          Borrow Cap: {addComma(toPrecision(i.formatted.borrowCap))}
-                        </div>
-                        <div>
-                          Borrow Used: {addComma(toPrecision(i.formatted.totalBorrowed))}
-                        </div>
-                        <div>
-                          Remaining:{' '}
-                          {addComma(
-                            toPrecision(
-                              i.formatted.borrowCap - i.formatted.totalBorrowed,
-                            ),
-                          )}
-                        </div>
-                      </div>
-                    }
-                  >
-                    <>
-                      <PercentCircle
-                        radix={10}
-                        percent={div(
-                          i.formatted.totalBorrowed.toString(),
-                          i.formatted.borrowCap.toString(),
-                        ).toNumber()}
-                        strokeWidth={2.5}
-                        strokeColor={'#EC6F14'}
-                      />
-                    </>
-                  </Tooltip>
+                  <PercentCircle
+                    radix={10}
+                    percent={div(
+                      i.formatted.totalBorrowed.toString(),
+                      i.formatted.borrowCap.toString(),
+                    ).toNumber()}
+                    strokeWidth={2.5}
+                    strokeColor={'#EC6F14'}
+                  />
                 </div>
-              </>
+              </div>
+              </CapHover>
             )
           }}
         />
