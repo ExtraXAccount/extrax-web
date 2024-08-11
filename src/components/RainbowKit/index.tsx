@@ -1,6 +1,6 @@
 import '@rainbow-me/rainbowkit/styles.css'
 
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
+import { RainbowKitProvider, darkTheme, lightTheme, Theme } from '@rainbow-me/rainbowkit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactNode } from 'react'
 // import { createConfig, WagmiConfig } from 'wagmi'
@@ -26,7 +26,6 @@ const RainbowContextApp = ({ children }: { children: ReactNode }) => {
             //   disclaimer: Disclaimer,
             // }}
             showRecentTransactions
-            // theme={theme.rainbow}
           >
             {children}
           </RainbowKitProvider>

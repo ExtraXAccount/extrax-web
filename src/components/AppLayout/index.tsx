@@ -17,6 +17,7 @@ import { setPrices } from '@/state/price/reducer'
 import { useAccountStore } from '@/store'
 
 import AccountLayer from '../AccountLayer'
+import CustomConnectButton from './ConnectButton'
 
 const navList = [
   // {
@@ -129,23 +130,18 @@ export default function AppLayout() {
             )
           })}
         </div>
-        <div className="nav-right flex ai-ct gap-4">
+        <div className="nav-right flex ai-ct gap-8">
           <button
-            className="btn-base"
+            className="nav-shine-button"
             onClick={() => {
               updateAccountLayer(true)
             }}
           >
-            Main Account
+            <div className="nav-shine-button-inner">
+              ✨ Try Smart Account ✨
+            </div>
           </button>
-          <ConnectButton
-            accountStatus="address"
-            // accountStatus={{
-            //   smallScreen: 'avatar',
-            //   largeScreen: 'full',
-            // }}
-            showBalance={false}
-          />
+          <CustomConnectButton />
           {/* <DarkMode /> */}
         </div>
       </div>

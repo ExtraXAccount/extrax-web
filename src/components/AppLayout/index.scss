@@ -206,3 +206,26 @@ $light-logo: '/logo.svg';
     }
   }
 }
+
+.nav-shine-button{
+  height: 32px;
+  padding: 1px;
+  border-radius: 6px;
+  background: conic-gradient(from 180deg at 50% 50%, rgba(193, 192, 233, 1) 50.15158474445343deg, rgba(216, 244, 235, 1) 87.62345016002655deg, rgba(241, 241, 232, 1) 148.92220973968506deg, rgba(246, 193, 224, 1) 180.61772346496582deg, rgba(201, 163, 238, 1) 210.4223871231079deg, rgba(182, 208, 249, 1) 251.2942099571228deg, rgba(236, 237, 234, 1) 292.8329586982727deg, rgba(251, 224, 223, 1) 337.83825874328613deg, rgba(184, 209, 249, 1) 348.57048511505127deg, rgba(235, 196, 230, 1) 360deg);
+  &-inner{
+    padding: 0 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    border-radius: 5px;
+    font-size: 12px;
+    background: #fff conic-gradient(from 180deg at 50% 50%, rgba(193, 192, 233, 0.20) 50.15158474445343deg, rgba(216, 244, 235, 0.20) 87.62345016002655deg, rgba(241, 241, 232, 0.20) 148.92220973968506deg, rgba(246, 193, 224, 0.20) 180.61772346496582deg, rgba(201, 163, 238, 0.20) 210.4223871231079deg, rgba(182, 208, 249, 0.20) 251.2942099571228deg, rgba(236, 237, 234, 0.20) 292.8329586982727deg, rgba(251, 224, 223, 0.20) 337.83825874328613deg, rgba(184, 209, 249, 0.20) 348.57048511505127deg, rgba(235, 196, 230, 0.20) 360deg);
+    transition: .3s ease-in-out;
+  }
+  &:hover{
+    .nav-shine-button-inner{
+      background-color: transparent;
+    }
+  }
+}
