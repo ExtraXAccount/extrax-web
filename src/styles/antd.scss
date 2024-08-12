@@ -1,6 +1,54 @@
 
 html {
-  .ant-table-wrapper {
+  .ant-dropdown {
+    .ant-dropdown-menu {
+      .ant-dropdown-menu-item {
+        color: var(--text-color);
+        &:hover {
+          background-color: rgba(#aaa, .1);
+        }
+      }
+    }
+  }
+
+  .ant-radio-group-solid
+  .ant-radio-button-wrapper-disabled{
+    background-color: var(--text-color-weaker);
+  }
+
+  .ant-table-content {
+    overflow-x: auto;
+  }
+  .ant-table{
+    color: var(--text-color) !important;
+    border-collapse: collapse;
+    // padding: 0 16px !important;
+  }
+  .ant-table-wrapper{
+    .ant-table-thead {
+      border: .5px solid #C9C9CB;
+      border-width: .5px 0;
+      >tr {
+        >td,
+        >th{
+          font-weight: normal;
+          color: var(--text-color) !important;
+          background-color: var(--table-head-bg) !important;
+          &:hover{
+            background-color:  var(--table-head-bg) !important;
+          }
+          &::before {
+            display: none;
+          }
+        }
+
+        >th{
+          padding: 6px 16px;
+          border-radius: 0;
+        }
+      }
+    }
+
     .ant-table-column-sorters {
       justify-content: flex-start;
       .ant-table-column-title {
@@ -13,15 +61,8 @@ html {
     }
   }
 
-  .ant-dropdown {
-    .ant-dropdown-menu {
-      .ant-dropdown-menu-item {
-        color: var(--text-color);
-        &:hover {
-          background-color: rgba(#aaa, .1);
-        }
-      }
-    }
+  .ant-table-tbody >tr >td.ant-table-cell-row-hover{
+    background-color:  var(--box-bg-hover) !important;
   }
 
   &.dark {
@@ -35,6 +76,24 @@ html {
       .ant-dropdown-menu {
         background: rgba(60, 64, 73, 1);
       }
+    }
+
+    .ant-table{
+      background: transparent !important;
+      // color: var(--text-color) !important;
+    }
+    .ant-table-wrapper td.ant-table-column-sort {
+      background-color: transparent;
+    }
+    .ant-table-wrapper .ant-table-tbody >tr.ant-table-row:hover>td {
+      background-color:  var(--box-bg-hover);
+    }
+    .ant-table-wrapper .ant-table-tbody>tr.ant-table-placeholder,
+    .ant-table-wrapper .ant-table-tbody>tr.ant-table-placeholder:hover>td {
+      background: transparent !important;
+    }
+    .ant-empty .ant-empty-description{
+      color: #fff;
     }
   }
 }

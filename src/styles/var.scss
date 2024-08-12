@@ -86,7 +86,7 @@
   --apr-block-color: rgba(0, 0, 0, .5);
 
   // table
-  --table-head-bg: #F3F2F8;
+  --table-head-bg: transparent; // #F3F2F8;
 
 
   /* Colors */
@@ -193,5 +193,5 @@
   --apr-block-color: #e2e2e2;
 
     // table
-    --table-head-bg: rgba(226, 226, 226, 0.20);
+    --table-head-bg: transparent; // rgba(226, 226, 226, 0.20);
 }
