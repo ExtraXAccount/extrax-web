@@ -1,0 +1,29 @@
+.custom-sort-icon-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 7px;
+  cursor: pointer;
+  margin-left: 6px;
+
+  .custom-sort-icon-up {
+    width: 7px;
+    height: 5px;
+    background: url(/public/sort_arrow_down.svg) center/contain no-repeat;
+    transform: translateX(-0.2px) rotate(180deg);
+    &-active {
+      background: url(/public/sort_arrow_up_fill.svg) center/contain no-repeat;
+      transform: rotate(0);
+    }
+  }
+  .custom-sort-icon-down {
+    width: 7px;
+    height: 5px;
+    background: url(/public/sort_arrow_down.svg) center/contain no-repeat;
+    transform: rotate(0);
+    &-active {
+      background: url(/public/sort_arrow_up_fill.svg) center/contain no-repeat;
+      transform: translateX(-0.2px) rotate(180deg);
+    }
+  }
+}

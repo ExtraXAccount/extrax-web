@@ -1,6 +1,6 @@
 import '@rainbow-me/rainbowkit/styles.css'
 
-import { RainbowKitProvider, darkTheme, lightTheme, Theme } from '@rainbow-me/rainbowkit'
+import { darkTheme, lightTheme, RainbowKitProvider, Theme } from '@rainbow-me/rainbowkit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactNode } from 'react'
 // import { createConfig, WagmiConfig } from 'wagmi'

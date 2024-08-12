@@ -137,9 +137,7 @@ export default function AppLayout() {
               updateAccountLayer(true)
             }}
           >
-            <div className="nav-shine-button-inner">
-              ✨ Try Smart Account ✨
-            </div>
+            <div className="nav-shine-button-inner">✨ Try Smart Account ✨</div>
           </button>
           <CustomConnectButton />
           {/* <DarkMode /> */}

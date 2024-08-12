@@ -1,5 +1,18 @@
 
 html {
+  .ant-table-wrapper {
+    .ant-table-column-sorters {
+      justify-content: flex-start;
+      .ant-table-column-title {
+        flex: 0 0 auto;
+        color: #666;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+      }
+    }
+  }
+
   .ant-dropdown {
     .ant-dropdown-menu {
       .ant-dropdown-menu-item {

@@ -1,9 +1,11 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd/es'
+import { icons } from 'antd/es/image/PreviewGroup'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSwitchChain } from 'wagmi'
 
+import CustomSortIcon from '@/components/CustomSortIcon'
 import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { SupportedChainId } from '@/constants/chains'
@@ -25,11 +27,11 @@ import { div } from '@/utils/math/bigNumber'
 
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
+import CapHover from './HoverComponents/CapHover'
+import RewardsHover from './HoverComponents/RewardsHover'
 import PercentCircle from './PercentCircle'
 // import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
-import CapHover from './HoverComponents/CapHover'
-import RewardsHover from './HoverComponents/RewardsHover'
 // import WithdrawDialog from './WithdrawDialog'
 
 const { Column } = Table
@@ -140,6 +142,7 @@ export default function LendingTable() {
           dataIndex=""
           key="totalSupply"
           showSorterTooltip={false}
+          sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
             return (
               a.formatted.totalSupply * getPrice(a.tokenSymbol) -
@@ -150,30 +153,35 @@ export default function LendingTable() {
             const amount = i.formatted.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
-              <CapHover type='supply' max={i.formatted.supplyCap} current={i.formatted.totalSupply} price={getPrice(i.tokenSymbol)} >
-              <div>
-                {isMobile && <div className="text-bold-small">Total Supply</div>}
-                <div className="flex ai-ct gap-10">
-                  <div>
+              <CapHover
+                type="supply"
+                max={i.formatted.supplyCap}
+                current={i.formatted.totalSupply}
+                price={getPrice(i.tokenSymbol)}
+              >
+                <div>
+                  {isMobile && <div className="text-bold-small">Total Supply</div>}
+                  <div className="flex ai-ct gap-10">
                     <div>
-                      {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
-                      {/* {nameChecker(i.tokenSymbol)} */}
+                      <div>
+                        {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
+                        {/* {nameChecker(i.tokenSymbol)} */}
+                      </div>
+                      <div className="text-sm-2">${formatNumberByUnit(value)}</div>
                     </div>
-                    <div className="text-sm-2">${formatNumberByUnit(value)}</div>
-                  </div>
                     <div>
-                    <PercentCircle
-                      radix={10}
-                      percent={div(
-                        i.formatted.totalSupply.toString(),
-                        i.formatted.supplyCap.toString(),
-                      ).toNumber()}
-                      strokeWidth={2.5}
-                      strokeColor={'#38AD3D'}
-                    />
+                      <PercentCircle
+                        radix={10}
+                        percent={div(
+                          i.formatted.totalSupply.toString(),
+                          i.formatted.supplyCap.toString(),
+                        ).toNumber()}
+                        strokeWidth={2.5}
+                        strokeColor={'#38AD3D'}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
               </CapHover>
             )
           }}
@@ -182,6 +190,7 @@ export default function LendingTable() {
           title="Total Borrowed"
           dataIndex=""
           key="totalBorrowed"
+          sortIcon={CustomSortIcon}
           showSorterTooltip={false}
           sorter={(a: any, b: any) => {
             return (
@@ -193,28 +202,33 @@ export default function LendingTable() {
             const amount = i.formatted.totalBorrowed
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
-              <CapHover type='borrow' max={i.formatted.borrowCap} current={i.formatted.totalBorrowed} price={getPrice(i.tokenSymbol)} >
-              <div>
-                {isMobile && <div className="text-bold-small">Total Supply</div>}
-                <div className="flex ai-ct gap-10">
-                  <div>
+              <CapHover
+                type="borrow"
+                max={i.formatted.borrowCap}
+                current={i.formatted.totalBorrowed}
+                price={getPrice(i.tokenSymbol)}
+              >
+                <div>
+                  {isMobile && <div className="text-bold-small">Total Supply</div>}
+                  <div className="flex ai-ct gap-10">
                     <div>
-                      {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
-                      {/* {nameChecker(i.tokenSymbol)} */}
+                      <div>
+                        {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
+                        {/* {nameChecker(i.tokenSymbol)} */}
+                      </div>
+                      <div className="text-sm-2">${formatNumberByUnit(value)}</div>
                     </div>
-                    <div className="text-sm-2">${formatNumberByUnit(value)}</div>
+                    <PercentCircle
+                      radix={10}
+                      percent={div(
+                        i.formatted.totalBorrowed.toString(),
+                        i.formatted.borrowCap.toString(),
+                      ).toNumber()}
+                      strokeWidth={2.5}
+                      strokeColor={'#EC6F14'}
+                    />
                   </div>
-                  <PercentCircle
-                    radix={10}
-                    percent={div(
-                      i.formatted.totalBorrowed.toString(),
-                      i.formatted.borrowCap.toString(),
-                    ).toNumber()}
-                    strokeWidth={2.5}
-                    strokeColor={'#EC6F14'}
-                  />
                 </div>
-              </div>
               </CapHover>
             )
           }}
@@ -225,6 +239,7 @@ export default function LendingTable() {
           dataIndex=""
           key="availableLiquidity"
           showSorterTooltip={false}
+          sortIcon={CustomSortIcon}
           sorter={(a: any, b: any) => {
             return (
               a.formatted.availableLiquidity * getPrice(a.tokenSymbol) -
@@ -289,48 +304,57 @@ export default function LendingTable() {
           key="apr"
           width={150}
           showSorterTooltip={false}
+          sortIcon={CustomSortIcon}
           sorter={(a: any, b: any) => {
             return a.formatted.apr - b.formatted.apr
           }}
+          // onCell={() => {
+          //   return {
+          //     onClick: (event) => {
+          //       event.stopPropagation()
+          //     },
+          //   }
+          // }}
           render={(pool: IFormattedLendPool) => {
             const apy = aprToApy100(pool.formatted.apr * 100)
             return (
               // for test
-              <RewardsHover baseApy={apy} rewards={[
-                {
-                  token: 'OP',
-                  weekAmount: 1000,
-                  apy: 0.0544
-                },
-              ]}>
-              <>
-                {isMobile && <div className="text-bold-small">APY</div>}
-                <div className="flex ai-ct jc-sb gap-10">
-                  <span className="text-apr color-safe">
-                    +{toPrecision(apy)}%
-                  </span>
-                  <Link
-                    to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
-                    onClick={(e) => {
-                      if (!account) {
-                        e.preventDefault()
-                        openConnectModal?.()
-                      }
-                      if (!(chainId in SupportedChainId)) {
-                        e.preventDefault()
-                        switchChain?.({ chainId: SupportedChainId.OPTIMISM })
-                      }
-                      if (activeChain !== chainId) {
-                        e.preventDefault()
-                        switchChain?.({ chainId: activeChain })
-                        return
-                      }
-                      e.stopPropagation()
-                    }}
-                  >
-                    <button className="btn-base btn-base-small">Deposit</button>
-                  </Link>
-                  {/* <button
+              <RewardsHover
+                baseApy={apy}
+                rewards={[
+                  {
+                    token: 'OP',
+                    weekAmount: 1000,
+                    apy: 0.0544,
+                  },
+                ]}
+              >
+                <>
+                  {isMobile && <div className="text-bold-small">APY</div>}
+                  <div className="flex ai-ct jc-sb gap-10">
+                    <span className="text-apr color-safe">+{toPrecision(apy)}%</span>
+                    <Link
+                      to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                      onClick={(e) => {
+                        if (!account) {
+                          e.preventDefault()
+                          openConnectModal?.()
+                        }
+                        if (!(chainId in SupportedChainId)) {
+                          e.preventDefault()
+                          switchChain?.({ chainId: SupportedChainId.OPTIMISM })
+                        }
+                        if (activeChain !== chainId) {
+                          e.preventDefault()
+                          switchChain?.({ chainId: activeChain })
+                          return
+                        }
+                        e.stopPropagation()
+                      }}
+                    >
+                      <button className="btn-base btn-base-small">Deposit</button>
+                    </Link>
+                    {/* <button
                     className="btn-base btn-base-small"
                     onClick={() => {
                       if (!account) {
@@ -344,8 +368,8 @@ export default function LendingTable() {
                   >
                     Deposit
                   </button> */}
-                </div>
-              </>
+                  </div>
+                </>
               </RewardsHover>
             )
           }}
@@ -357,6 +381,7 @@ export default function LendingTable() {
           width={150}
           key="borrowingRate"
           showSorterTooltip={false}
+          sortIcon={CustomSortIcon}
           sorter={(a: any, b: any) => {
             return a.formatted.borrowApr - b.formatted.borrowApr
           }}
@@ -395,7 +420,7 @@ export default function LendingTable() {
           }}
         />
 
-        <Column
+        {/* <Column
           title="Deposited"
           dataIndex=""
           key="deposited"
@@ -436,7 +461,7 @@ export default function LendingTable() {
               </>
             )
           }}
-        />
+        /> */}
         {/* <Column
           title="Actions"
           dataIndex=""
