@@ -1,5 +1,6 @@
 import './index.scss'
 
+import AccountInfo from '@/components/AppLayout/AccountInfo'
 import { useLendStore } from '@/store'
 import { remain2Decimal } from '@/utils/math'
 
@@ -26,7 +27,9 @@ export default function Positions() {
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
       ></RepayDialog>
-
+      <div className="box account-info-box">
+        <AccountInfo />
+      </div>
       <div className="box">
         <h3 className="page-app-title">Main Market Balance</h3>
         <div className="page-positions-box">
