@@ -1,6 +1,8 @@
+import { sumBy } from 'lodash'
 import { useCallback, useMemo } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
+import usePrices from '@/hooks/usePrices'
 import { useLendingManager } from '@/hooks/useSDK'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
@@ -9,8 +11,6 @@ import { IFormattedLendPool } from '@/store/lend'
 import { aprToApy } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
-import { sumBy } from 'lodash'
-import usePrices from '@/hooks/usePrices'
 
 // export interface
 type chainId = keyof typeof LendingConfig
@@ -98,7 +98,7 @@ export default function useLendingList() {
   const totalInfos = useMemo(() => {
     let totalSize = 0
     let totalBorrowed = 0
-    formattedLendPools.forEach(pool => {
+    formattedLendPools.forEach((pool) => {
       const tokenPrice = getPrice(pool.tokenSymbol)
       totalSize += pool.formatted.totalSupply * tokenPrice
       totalBorrowed += pool.formatted.totalBorrowed * tokenPrice
@@ -111,7 +111,7 @@ export default function useLendingList() {
       totalBorrowed,
       totalAvailable,
       globalUtilization,
-      maxOutflow: 5_000_000
+      maxOutflow: 5_000_000,
     }
   }, [formattedLendPools, getPrice])
 

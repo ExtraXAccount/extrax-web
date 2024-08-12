@@ -1,19 +1,18 @@
-import { formatNumberByUnit, remain2Decimal } from '@/utils/math'
 import './index.scss'
 
-export default function LendInfo(
-  props:{
-    totalSize: number
-    totalAvailable: number
-    totalBorrow: number
-    globalUtilization: number
-    maxOutflow: number
-  }
-) {
-  const { totalSize, totalAvailable, totalBorrow, globalUtilization, maxOutflow} = props
+import { formatNumberByUnit, remain2Decimal } from '@/utils/math'
+
+export default function LendInfo(props: {
+  totalSize: number
+  totalAvailable: number
+  totalBorrow: number
+  globalUtilization: number
+  maxOutflow: number
+}) {
+  const { totalSize, totalAvailable, totalBorrow, globalUtilization, maxOutflow } = props
   return (
-    <div className='lend-info'>
-      <ul className='lend-info-list'>
+    <div className="lend-info">
+      <ul className="lend-info-list">
         <li>
           <p>Total Market Size</p>
           <b>${formatNumberByUnit(totalSize)}</b>

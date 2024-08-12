@@ -2,9 +2,9 @@
   // .ant-table-wrapper {
   //   min-height: calc(100vh - 300px);
   // }
-  >.lending-list-box {
-    min-height: calc(100vh - 300px);
-  }
+  // >.lending-list-box {
+  //   min-height: calc(100vh - 300px);
+  // }
 }
 
 .page-lending-title {
@@ -23,18 +23,6 @@
 .lend-list-table {
   .ant-table-row {
     cursor: pointer;
-  }
-}
-
-.ant-table-row {
-  margin-bottom: 12px;
-  // border-radius: 10px;
-  box-shadow: var(--box-shadow);
-}
-
-.mobile{
-  .ant-table-row {
-    margin-bottom: 0;
   }
 }
 

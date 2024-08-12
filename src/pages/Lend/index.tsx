@@ -4,11 +4,11 @@ import './lendingList.scss'
 // import { useEffect } from 'react'
 import AccountInfo from '@/components/AppLayout/AccountInfo'
 
+import LendBanner from './LendBanner'
+import LendInfo from './LendInfo'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import LendingTable from './LendingTable'
 import MarketSwitch from './MarketSwitch'
-import LendBanner from './LendBanner'
-import LendInfo from './LendInfo'
 import useLendingList from './useLendingList'
 
 export default function Lend() {

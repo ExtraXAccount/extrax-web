@@ -118,6 +118,5 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
     set(() => ({ currentPosition: currentPosition })),
   updateDialogShow: (currentDialogShow) =>
     set(() => ({ currentDialogShow: currentDialogShow })),
-  updateEventShow: (showEvent) =>
-    set(() => ({ showEvent: showEvent })),
+  updateEventShow: (showEvent) => set(() => ({ showEvent: showEvent })),
 }))
