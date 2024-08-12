@@ -6,10 +6,13 @@ import AccountInfo from '@/components/AppLayout/AccountInfo'
 
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import LendingTable from './LendingTable'
-// import useLendingList from './useLendingList'
+import MarketSwitch from './MarketSwitch'
+import LendBanner from './LendBanner'
+import LendInfo from './LendInfo'
+import useLendingList from './useLendingList'
 
 export default function Lend() {
-  // const { fetchLendPools } = useLendingList()
+  const { totalInfos } = useLendingList()
   // useEffect(() => {
   //   fetchLendPools()
   // }, [fetchLendPools])
@@ -20,8 +23,15 @@ export default function Lend() {
         <AccountInfo />
       </div>
       <div className="box lending-list-box">
-        <h3 className="page-app-title">Main Market</h3>
-
+        <MarketSwitch />
+        <LendBanner />
+        <LendInfo
+          totalAvailable={totalInfos.totalAvailable}
+          totalBorrow={totalInfos.totalBorrowed}
+          totalSize={totalInfos.totalSize}
+          globalUtilization={totalInfos.globalUtilization}
+          maxOutflow={totalInfos.maxOutflow}
+        />
         <LendingTable />
       </div>
     </div>

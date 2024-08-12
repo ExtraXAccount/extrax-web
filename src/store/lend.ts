@@ -91,6 +91,7 @@ export interface LendState {
   isFetching: boolean
   currentPosition: IFormattedPosition | undefined
   currentDialogShow: 'repay' | 'borrow' | 'withdraw' | 'deposit' | null
+  showEvent: boolean
 }
 
 export interface LendAction {
@@ -99,6 +100,7 @@ export interface LendAction {
   updateIsFetching: (isFetching: LendState['isFetching']) => void
   updateCurrentPosition: (currentPosition: LendState['currentPosition']) => void
   updateDialogShow: (currentDialogShow: LendState['currentDialogShow']) => void
+  updateEventShow: (showEvent: LendState['showEvent']) => void
 }
 
 export const useLendStore = create<LendState & LendAction>((set) => ({
@@ -107,6 +109,7 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
   isFetching: false,
   currentPosition: undefined,
   currentDialogShow: null,
+  showEvent: true,
 
   updateLendPools: (lendPools) => set(() => ({ lendPools: lendPools })),
   updatePositions: (positions) => set(() => ({ positions: positions })),
@@ -115,4 +118,6 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
     set(() => ({ currentPosition: currentPosition })),
   updateDialogShow: (currentDialogShow) =>
     set(() => ({ currentDialogShow: currentDialogShow })),
+  updateEventShow: (showEvent) =>
+    set(() => ({ showEvent: showEvent })),
 }))

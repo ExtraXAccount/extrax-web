@@ -9,6 +9,8 @@ import { IFormattedLendPool } from '@/store/lend'
 import { aprToApy } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
+import { sumBy } from 'lodash'
+import usePrices from '@/hooks/usePrices'
 
 // export interface
 type chainId = keyof typeof LendingConfig
@@ -19,6 +21,7 @@ export default function useLendingList() {
   const { lendPools, positions, isFetching, updateLendPools, updateIsFetching } =
     useLendStore()
   const { balances } = useAccountStore()
+  const { getPrice } = usePrices()
 
   const { chainId } = useWagmiCtx()
 
@@ -92,8 +95,29 @@ export default function useLendingList() {
     })
   }, [balances, positions, chainLendingConfig, lendPools])
 
+  const totalInfos = useMemo(() => {
+    let totalSize = 0
+    let totalBorrowed = 0
+    formattedLendPools.forEach(pool => {
+      const tokenPrice = getPrice(pool.tokenSymbol)
+      totalSize += pool.formatted.totalSupply * tokenPrice
+      totalBorrowed += pool.formatted.totalBorrowed * tokenPrice
+    })
+    const totalAvailable = totalSize - totalBorrowed
+    const globalUtilization = totalBorrowed / totalSize
+
+    return {
+      totalSize,
+      totalBorrowed,
+      totalAvailable,
+      globalUtilization,
+      maxOutflow: 5_000_000
+    }
+  }, [formattedLendPools, getPrice])
+
   return {
     formattedLendPools,
+    totalInfos,
     fetchLendPools,
     isFetching,
   }
