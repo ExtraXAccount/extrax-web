@@ -90,7 +90,7 @@ export default function CustomConnectButton() {
                   >
                     <i className="connect-button-display-avatar">🦊</i>
                     {account.displayName}
-                    {account.displayBalance ? ` (${account.displayBalance})` : ''}
+                    {/* {account.displayBalance ? ` (${account.displayBalance})` : ''} */}
                     <div className="connect-button-display-settings">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

@@ -121,19 +121,27 @@ export default function AccountInfo() {
                   {!leverage ? '--' : toPrecision(leverage) + 'x'}
                 </em>
               </div>
-              <button className="btn-base" onClick={handleAddDeposit}>
+              <button
+                className="btn-base extrax-account-info-apr-supply-btn"
+                onClick={handleAddDeposit}
+              >
                 Supply
               </button>
             </div>
           </div>
           <div className="extrax-account-info-detail">
             <div className="extrax-account-info-detail-item extrax-account-info-deposited">
-              <span>Net Worth</span>
-              <em className="">${toPrecision(netWorth).toLocaleString()}</em>
-              <span>
-                Deposited: ${formatNumberByUnit(depositedVal)} | Borrowed: $
-                {formatNumberByUnit(debtVal)}
-              </span>
+              <section className="extrax-account-info-deposited-info">
+                <span>Net Worth</span>
+                <em className="">${toPrecision(netWorth).toLocaleString()}</em>
+                <span>
+                  Deposited: ${formatNumberByUnit(depositedVal)} | Borrowed: $
+                  {formatNumberByUnit(debtVal)}
+                </span>
+              </section>
+              <section className="extrax-account-info-deposited-graph">
+                <div className="extrax-account-info-deposited-graph-wrap"></div>
+              </section>
             </div>
 
             <div className="extrax-account-info-detail-item extrax-account-info-health">
@@ -152,24 +160,32 @@ export default function AccountInfo() {
               </div>
               <div className="ltv-wrapper">
                 <span className="ltv-wrapper-label">LTV</span>
-                <p
-                  className="ltv-wrapper-item ltv-wrapper-item-current"
-                  style={{ width: `${LTV.current * 100}%` }}
-                >
-                  <span>Current: {`${toPrecision(LTV.current * 100)}%`}</span>
-                </p>
-                <p
-                  className="ltv-wrapper-item ltv-wrapper-item-max"
-                  style={{ width: `${LTV.max * 100}%` }}
-                >
-                  <span>Max: {`${toPrecision(LTV.max * 100)}%`}</span>
-                </p>
-                <p
-                  className="ltv-wrapper-item ltv-wrapper-item-liquidation"
-                  style={{ width: `${LTV.liquidation * 100}%` }}
-                >
-                  <span>Liq: {`${toPrecision(LTV.liquidation * 100)}%`}</span>
-                </p>
+                {!(LTV.max === 0) && (
+                  <div className="ltv-wrapper-content">
+                    <p
+                      className="ltv-wrapper-item ltv-wrapper-item-current"
+                      style={{ width: `${LTV.current * 100}%` }}
+                    >
+                      <span>
+                        Current: <b>{`${toPrecision(LTV.current * 100)}%`}</b>
+                      </span>
+                    </p>
+                    <p
+                      className="ltv-wrapper-item ltv-wrapper-item-max"
+                      style={{ width: `${(LTV.max - LTV.current) * 100}%` }}
+                    >
+                      <span>MAX {`${toPrecision(LTV.max * 100)}%`}</span>
+                    </p>
+                    <p
+                      className="ltv-wrapper-item ltv-wrapper-item-liquidation"
+                      style={{
+                        width: `${(LTV.liquidation - LTV.max) * 100}%`,
+                      }}
+                    >
+                      <span>Liq: {`${toPrecision(LTV.liquidation * 100)}%`}</span>
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -185,9 +201,6 @@ export default function AccountInfo() {
                       ? '--'
                       : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
                   </em>
-                  <span className="tag-percent">
-                    {toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%
-                  </span>
                 </div>
                 <span>Debt Limit: ${toPrecision(Number(maxCredit))}</span>
               </div>
@@ -195,9 +208,26 @@ export default function AccountInfo() {
                 radix={32}
                 percent={div(String(usedCredit), maxCredit).toNumber()}
                 strokeWidth={6}
-                strokeColor={'#5767BE'}
+                strokeColor={'#7A87FF'}
                 bgColor="#78788029"
               />
+              <div className="extrax-account-info-credit-percent">
+                <div className="extrax-account-info-credit-percent-item used">
+                  <p>Used</p>
+                  <span>
+                    {toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%
+                  </span>
+                </div>
+                <div className="extrax-account-info-credit-percent-item available">
+                  <p>Available</p>
+                  <span>
+                    {toPrecision(
+                      (1 - div(String(usedCredit), maxCredit).toNumber()) * 100,
+                    )}
+                    %
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -3,6 +3,20 @@
     // min-height: calc(100vh - 300px);
     padding: 0;
   }
+
+  .extrax-account-info-main{
+    display: none;
+  }
+  .extrax-account-info-detail{
+    border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+  }
+
+  &-title{
+    font-size: 16px;
+    line-height: 1;
+    padding: 24px 0 0 24px;
+  }
+
   .account-info-box {
     min-height: auto;
   }

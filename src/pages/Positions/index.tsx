@@ -4,6 +4,7 @@ import AccountInfo from '@/components/AppLayout/AccountInfo'
 import { useLendStore } from '@/store'
 import { remain2Decimal } from '@/utils/math'
 
+import MarketSwitch from '../Lend/MarketSwitch'
 import RepayDialog from '../Lend/RepayDialog'
 import WithdrawDialog from '../Lend/WithdrawDialog'
 import useFormatPositions from './hooks/useFormatPositions'
@@ -27,11 +28,11 @@ export default function Positions() {
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
       ></RepayDialog>
-      <div className="box account-info-box">
-        <AccountInfo />
-      </div>
+      {/* <div className="box account-info-box"><AccountInfo /></div> */}
       <div className="box">
-        <h3 className="page-app-title">Main Market Balance</h3>
+        <MarketSwitch />
+        <AccountInfo />
+        <p className="page-positions-title">Main Market Balance</p>
         <div className="page-positions-box">
           <div className="page-positions-wrap page-positions-wrap-safe">
             <section className="page-positions-wrap-title page-positions-wrap-title-safe flex ai-ct">
