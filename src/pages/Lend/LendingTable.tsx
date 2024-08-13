@@ -11,7 +11,8 @@ import { useWagmiCtx } from '@/components/WagmiContext'
 import { SupportedChainId } from '@/constants/chains'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import usePrices from '@/hooks/usePrices'
-import { formatSymbol } from '@/sdk/utils/token'
+import { useAccountManager } from '@/hooks/useSDK'
+import { formatSymbol, toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
 import { nameChecker } from '@/utils'
@@ -44,6 +45,7 @@ export default function LendingTable() {
   const { openConnectModal } = useConnectModal()
   const { switchChain } = useSwitchChain()
   const { isMobile } = useDeviceDetect()
+  const accountManager = useAccountManager()
   const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } =
     useLendStore()
 
@@ -54,10 +56,26 @@ export default function LendingTable() {
   } = useLendingList()
 
   const [activeChain, setActiveChain] = useState(chainId)
+  const [balanceMap, setBalanceMap] = useState({})
 
   useEffect(() => {
     console.log('formattedLendPools :>> ', formattedLendPools)
-  }, [formattedLendPools])
+    // get Balances for list
+    if (account) {
+      accountManager
+        .getBalances(
+          [account],
+          formattedLendPools.map((i) => i.underlyingTokenAddress),
+        )
+        .then((r) => {
+          const balanceMap = {}
+          formattedLendPools.forEach((i, index) => {
+            balanceMap[i.underlyingTokenAddress] = toDecimals(r[index], i.decimals)
+          })
+          setBalanceMap(balanceMap)
+        })
+    }
+  }, [formattedLendPools, accountManager, account])
 
   // const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
 
@@ -131,7 +149,12 @@ export default function LendingTable() {
                   <LPName
                     token0={nameChecker(formatSymbol(pool.tokenSymbol))}
                     title={nameChecker(pool.tokenSymbol)}
-                  />
+                  >
+                    <div className="lending-list-title-wrap-balance text-sm-2">
+                      Wallet:{' '}
+                      {formatFloatNumber(balanceMap[pool.underlyingTokenAddress] || 0)}
+                    </div>
+                  </LPName>
                 </div>
               </>
             )
@@ -171,7 +194,7 @@ export default function LendingTable() {
                     </div>
                     <div>
                       <PercentCircle
-                        radix={10}
+                        radix={8}
                         percent={div(
                           i.formatted.totalSupply.toString(),
                           i.formatted.supplyCap.toString(),
@@ -219,7 +242,7 @@ export default function LendingTable() {
                       <div className="text-sm-2">${formatNumberByUnit(value)}</div>
                     </div>
                     <PercentCircle
-                      radix={10}
+                      radix={8}
                       percent={div(
                         i.formatted.totalBorrowed.toString(),
                         i.formatted.borrowCap.toString(),

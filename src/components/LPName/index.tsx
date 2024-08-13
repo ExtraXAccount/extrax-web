@@ -1,6 +1,7 @@
 import './index.scss'
 
 import classNames from 'classnames'
+import React from 'react'
 
 import { SupportedChainId } from '@/sdk/constants/chains'
 
@@ -25,40 +26,27 @@ export default function LPName(props: {
   token1?: string
   title?: string
   nobold?: boolean
-  isStable?: boolean
-  isMonitoring?: boolean
-  isNew?: React.ReactNode
   chainId?: SupportedChainId
   type?: 'farm' | 'lend'
-  hasPoints?: boolean
+  children?: React.ReactNode
 }) {
   const {
     token0,
     token1,
     title = token0 && token1 ? `${token0}-${token1}` : '',
     nobold = false,
-    isNew,
     chainId,
     type = 'farm',
-    hasPoints = false,
   } = props
   // if (!token0 || !token1) {
   //   return null
   // }
   return (
     <div className={classNames('lpname', `lpname-${type}`)}>
-      {token0 && (
-        <TokenIcon
-          symbol={token0}
-          chainId={chainId}
-          className={classNames({
-            'points-style': hasPoints,
-          })}
-        />
-      )}
+      {token0 && <TokenIcon symbol={token0} chainId={chainId} />}
       {token1 && <TokenIcon symbol={token1} chainId={chainId} />}
       <p className={nobold ? '' : 'bold'}>{title}</p>
-      {isNew && <i className="lpname-new">✨</i>}
+      {props.children}
     </div>
   )
 }

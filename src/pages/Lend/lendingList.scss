@@ -11,6 +11,28 @@
     display: flex;
     align-items: center;
     gap: 4px;
+
+    .lpname{
+      align-items: flex-start;
+      position: relative;
+      .coin{
+        width: 32px;
+        height: 32px;
+        margin-right: 0;
+      }
+      >p{
+        font-size: 16px;
+        line-height: 1;
+      }
+    }
+
+    &-balance{
+      white-space: nowrap;
+      font-size: 12px;
+      position: absolute;
+      bottom: -4px;
+      left: 40px;
+    }
   }
 
   &-title-tag{
@@ -70,4 +92,10 @@
 
 .lending-table-actions {
   gap: 10px;
+}
+
+.lending-list-box{
+  .ant-table-wrapper .ant-table-tbody>tr>td{
+    padding: 24px 16px !important;
+  }
 }
