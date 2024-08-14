@@ -11,7 +11,7 @@ export interface ISupplyInfoProps {
   className?: string
 }
 
-export const SupplyInfo = ({ className, ...props }: ISupplyInfoProps): JSX.Element => {
+export const SupplyInfo = ({ className }: ISupplyInfoProps): JSX.Element => {
   const lendPoolInfo = useLendPoolInfo()
 
   return (
@@ -112,9 +112,9 @@ export const SupplyInfo = ({ className, ...props }: ISupplyInfoProps): JSX.Eleme
       </div>
       <div className="supply-info__frame-482092">
         <div className="supply-info__frame-482080">
-          <div className="supply-info__more-info">more Info </div>
+          <div className="supply-info__more-info">More Info</div>
           <div className="supply-info__component-229">
-            <div className="supply-info__can-be-collateral">Can be collateral </div>
+            <div className="supply-info__can-be-collateral">Can be collateral</div>
           </div>
         </div>
         <Component287Property1ExInfo className="supply-info__component-287-instance"></Component287Property1ExInfo>

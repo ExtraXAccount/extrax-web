@@ -1,18 +1,9 @@
-import './SelcetionProperty11.css'
+import './index.css'
 
 import { Switch } from 'antd/es'
 import { useState } from 'react'
 
-export interface ISelcetionProperty11Props {
-  property1?: 'default' | '1'
-  className?: string
-}
-
-export const SelcetionProperty11 = ({
-  property1 = 'default',
-  className,
-  ...props
-}: ISelcetionProperty11Props): JSX.Element => {
+export const SetAsCollateral = ({ property1 = 'default', className }): JSX.Element => {
   const variantsClassName = 'property-1-' + property1
   const [asCollateral, setAsCollateral] = useState(false)
 

@@ -111,7 +111,7 @@ export const BorrowInfo = ({ className, ...props }: IBorrowInfoProps): JSX.Eleme
       </div>
       <div className="borrow-info__frame-482093">
         <div className="borrow-info__frame-482080">
-          <div className="borrow-info__more-info">more Info </div>
+          <div className="borrow-info__more-info">More Info</div>
         </div>
         <div className="borrow-info__component-287">
           <div className="borrow-info__frame-482137">

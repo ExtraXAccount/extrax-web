@@ -2,7 +2,7 @@ import './InfoWithOperation.css'
 import '../InfoToListProperty1Info/InfoToListProperty1Info.css'
 
 import { useCallback, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import LPName from '@/components/LPName'
 import usePrices from '@/hooks/usePrices'
@@ -14,8 +14,8 @@ import { formatNumberByUnit, toPrecision } from '@/utils/math'
 
 import { BorrowInfo } from '../BorrowInfo/BorrowInfo'
 import { CoinMain } from '../CoinMain/CoinMain'
-import { Frame482074 } from '../Frame482074/Frame482074'
 import { InterestRateModel } from '../InterestRateModel/InterestRateModel'
+import { MoreDetail } from '../MoreDetail'
 import { SupplyInfo } from '../SupplyInfo/SupplyInfo'
 // import { InfoToListProperty1Info } from '../InfoToListProperty1Info/InfoToListProperty1Info'
 import { SupplyWindows } from '../SupplyWindows/SupplyWindows'
@@ -28,12 +28,10 @@ export interface IInfoWithOperationProps {
 
 export const InfoWithOperation = ({
   className,
-  ...props
 }: IInfoWithOperationProps): JSX.Element => {
   const poolInfo = useLendPoolInfo()
   const { getPrice } = usePrices()
   const { formattedLendPools } = useLendingList()
-  const location = useLocation()
   const navigate = useNavigate()
 
   const [isSelectingAsset, setIsSelectingAsset] = useState(false)
@@ -124,7 +122,7 @@ export const InfoWithOperation = ({
               <BorrowInfo className="info-to-list-property-1-info__borrow-info-instance"></BorrowInfo>
               <UsdcApyHistory className="info-to-list-property-1-info__usdc-apy-history-instance"></UsdcApyHistory>
               <InterestRateModel className="info-to-list-property-1-info__interest-rate-model-instance"></InterestRateModel>
-              <Frame482074 className="info-to-list-property-1-info__frame-482075-instance"></Frame482074>
+              <MoreDetail className="info-to-list-property-1-info__frame-482075-instance"></MoreDetail>
             </>
           )}
         </div>

@@ -2,7 +2,7 @@ import './InfoToListProperty1Info.css'
 
 import { BorrowInfo } from '../BorrowInfo/BorrowInfo'
 import { CoinMain } from '../CoinMain/CoinMain'
-import { Frame482074 } from '../Frame482074/Frame482074'
+import { Frame482074 } from '../MoreDetail'
 import { InterestRateModel } from '../InterestRateModel/InterestRateModel'
 import { SupplyInfo } from '../SupplyInfo/SupplyInfo'
 import { UsdcApyHistory } from '../UsdcApyHistory/UsdcApyHistory'

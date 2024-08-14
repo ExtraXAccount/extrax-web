@@ -17,7 +17,7 @@ import useLendingList from '@/pages/Lend/useLendingList'
 import { aprToApy, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
-import { SelcetionProperty11 } from '../SelcetionProperty11/SelcetionProperty11'
+import { SetAsCollateral } from '../SetAsCollateral'
 import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface ISupplyWindowsProps {
@@ -43,7 +43,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const { state } = useLocation()
 
   const [isBorrowMode, setIsBorrowMode] = useState(!!state?.isBorrowMode)
-  const [leverageMode, setLeverageMode] = useState(false)
+  // const [leverageMode, setLeverageMode] = useState(false)
   const [useNativeETH, setUseNativeETH] = useState(true)
   const [loading, setLoading] = useState({ writing: false, desc: '' })
   const [value, setValue] = useState('')
@@ -94,9 +94,9 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
       usedCredit: !isBorrowMode ? usedCredit : usedCredit + tokenValueChange,
       netWorth: !isBorrowMode
         ? netWorth + tokenValueChange
-        : leverageMode
-        ? netWorth - tokenValueChange
-        : netWorth,
+        : // : leverageMode
+          // ? netWorth - tokenValueChange
+          netWorth,
       debtVal: !isBorrowMode ? debtVal : debtVal + tokenValueChange,
       // TODO: APY UPDATED
       accountApy,
@@ -105,7 +105,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     accountApy,
     debtVal,
     isBorrowMode,
-    leverageMode,
+    // leverageMode,
     netWorth,
     tokenValueChange,
     usedCredit,
@@ -218,7 +218,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
       </div>
       <div className="supply-windows__frame-482088">
         <div className="supply-windows__frame-481806">
-          {isBorrowMode && (
+          {/* {isBorrowMode && (
             <div className="leverage-mode-setting-wrapper">
               <div className="leverage-mode-setting-form flex ai-ct jc-sb">
                 <span>Leverage Mode</span>
@@ -249,7 +249,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
                 )}
               </div>
             </div>
-          )}
+          )} */}
           <AmountInput
             noPadding
             maxText={`${isBorrowMode ? 'Borrowing ' : ''}Available`}
@@ -295,21 +295,21 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
               </div>
             </div>
           </div>
-          {isBorrowMode ? (
-            leverageMode && (
-              <div className="borrow-risk-hint">
-                <i className="warn-hint"></i>
-                <span>
-                  Borrowing this amount will reduce your health factor and increase risk
-                  of liquidation.
-                </span>
-              </div>
-            )
-          ) : (
-            <SelcetionProperty11
+          {!isBorrowMode && (
+            // (
+            //   leverageMode && (
+            //     <div className="borrow-risk-hint">
+            //       <i className="warn-hint"></i>
+            //       <span>
+            //         Borrowing this amount will reduce your health factor and increase risk
+            //         of liquidation.
+            //       </span>
+            //     </div>
+            //   )
+            <SetAsCollateral
               property1="1"
               className="supply-windows__selcetion-instance"
-            ></SelcetionProperty11>
+            ></SetAsCollateral>
           )}
         </div>
         <div className="supply-windows__deposit-info">

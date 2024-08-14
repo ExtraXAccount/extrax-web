@@ -320,7 +320,7 @@
   flex-shrink: 0 !important;
   width: unset !important;
 }
-
+/* 
 .leverage-mode-setting-wrapper {
   width: 100%;
   border-radius: 8px;
@@ -338,14 +338,15 @@
     padding-left: 12px;
     display: flex;
     align-items: center;
-    /* justify-content: center; */
     gap: 4px;
     color: var(--switch-text-unselect, #848383);
     font-size: 12px;
     white-space: nowrap;
   }
 }
+  */
 
+/*
 .borrow-risk-hint {
   border-radius: 8px;
   border: 0.5px solid var(--stroke, #c9c9cb);
@@ -358,10 +359,11 @@
   line-height: 24px;
   font-weight: 300;
 }
-
+  */
+/* 
 .warn-hint {
   display: block;
   width: 24px;
   height: 24px;
   background: url(./imgs//warn.png) center/contain no-repeat;
-}
+} */
