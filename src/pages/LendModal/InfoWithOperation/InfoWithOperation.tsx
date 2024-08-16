@@ -1,5 +1,4 @@
 import './InfoWithOperation.css'
-import '../InfoToListProperty1Info/InfoToListProperty1Info.css'
 
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -17,7 +16,6 @@ import { CoinMain } from '../CoinMain/CoinMain'
 import { InterestRateModel } from '../InterestRateModel/InterestRateModel'
 import { MoreDetail } from '../MoreDetail'
 import { SupplyInfo } from '../SupplyInfo/SupplyInfo'
-// import { InfoToListProperty1Info } from '../InfoToListProperty1Info/InfoToListProperty1Info'
 import { SupplyWindows } from '../SupplyWindows/SupplyWindows'
 import { UsdcApyHistory } from '../UsdcApyHistory/UsdcApyHistory'
 import useLendPoolInfo from '../useLendPoolInfo'
@@ -68,7 +66,6 @@ export const InfoWithOperation = ({
         />
       </div>
       <div className="info-with-operation__frame-482114">
-        {/* <InfoToListProperty1Info className="info-with-operation__info-to-list-instance"></InfoToListProperty1Info> */}
         <div
           className={
             'info-to-list-property-1-info info-with-operation__info-to-list-instance property-1-info'

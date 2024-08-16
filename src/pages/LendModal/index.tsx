@@ -1,6 +1,6 @@
 import './index.scss'
 
-import { InfoWithOperation } from '@/pages/FigmaModal/InfoWithOperation/InfoWithOperation'
+import { InfoWithOperation } from './InfoWithOperation/InfoWithOperation'
 
 export default function DepositModal() {
   return (

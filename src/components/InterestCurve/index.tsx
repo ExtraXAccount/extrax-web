@@ -13,7 +13,7 @@ import {
   YAxis,
 } from 'recharts'
 
-import useLendPoolInfo from '@/pages/FigmaModal/useLendPoolInfo'
+import useLendPoolInfo from '@/pages/LendModal/useLendPoolInfo'
 import { toPrecision } from '@/utils/math'
 import calculateBorrowingRate from '@/utils/math/borrowInterest'
 
