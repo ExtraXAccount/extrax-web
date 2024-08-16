@@ -4,7 +4,7 @@ import { Skeleton } from 'antd'
 
 import { formatNumberByUnit, toPrecision } from '@/utils/math'
 
-import { Component287Property1ExInfo } from '../Component287Property1ExInfo/Component287Property1ExInfo'
+import { SupplyMoreInfo } from '../SupplyMoreInfo'
 import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface ISupplyInfoProps {
@@ -70,7 +70,7 @@ export const SupplyInfo = ({ className }: ISupplyInfoProps): JSX.Element => {
                       lendPoolInfo.formatted.supplyCap) *
                       100,
                   )}
-                  %{' '}
+                  %
                 </>
               )}
             </div>
@@ -86,8 +86,9 @@ export const SupplyInfo = ({ className }: ISupplyInfoProps): JSX.Element => {
                   ) : (
                     <>
                       {formatNumberByUnit(
-                        lendPoolInfo?.formatted.availableLiquidity || 0,
-                      )}{' '}
+                        lendPoolInfo.formatted.supplyCap -
+                          (lendPoolInfo.formatted.totalSupply || 0),
+                      )}
                     </>
                   )}
                 </div>
@@ -99,11 +100,12 @@ export const SupplyInfo = ({ className }: ISupplyInfoProps): JSX.Element => {
               ) : (
                 <>
                   {toPrecision(
-                    ((lendPoolInfo.formatted.availableLiquidity || 0) /
-                      lendPoolInfo.formatted.totalSupply) *
+                    (1 -
+                      (lendPoolInfo.formatted.totalSupply || 0) /
+                        lendPoolInfo.formatted.supplyCap) *
                       100,
                   )}
-                  %{' '}
+                  %
                 </>
               )}
             </div>
@@ -117,7 +119,7 @@ export const SupplyInfo = ({ className }: ISupplyInfoProps): JSX.Element => {
             <div className="supply-info__can-be-collateral">Can be collateral</div>
           </div>
         </div>
-        <Component287Property1ExInfo className="supply-info__component-287-instance"></Component287Property1ExInfo>
+        <SupplyMoreInfo className="supply-info__component-287-instance"></SupplyMoreInfo>
       </div>
     </div>
   )

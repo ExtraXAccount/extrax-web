@@ -1,0 +1,92 @@
+.pool-history-stats {
+  width: 100%;
+  border-style: solid;
+  border-color: #c9c9cb;
+  border-width: 0px 0px 0.5px 0px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
+
+  .lending-history-title {
+    color:  #000;
+    font-size: 16px;
+    line-height: 24px;
+    font-weight: 600;
+  }
+
+  .lending-history-tabbox {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    .page-minitabs {
+      display: flex;
+      gap: 8px;
+      a {
+        display: flex;
+        padding: 2px 4px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 2px;
+        background: rgba(120, 120, 128, 0.16);
+        color: #666;
+        font-size: 10px;
+        font-weight: 500;
+        line-height: 12px; /* 120% */
+        &.active {
+          color: #FFF;
+          background: linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%);
+        }
+      }
+    }
+  }
+  .history-avg-stats-wrapper {
+    p {
+      color: #666;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 14px; /* 116.667% */
+      margin-bottom: 4px;
+    }
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      background: linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+
+  .custom-tooltip-content {
+    width: 140px;
+    border: 0.5px solid #C9C9CB;
+    border-radius: 4px;
+    p {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px;
+      &:not(:last-child) {
+        border-bottom: 0.5px solid #C9C9CB;
+      }
+      span {
+        color: #666;
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 12px; /* 120% */
+        &:last-child {
+          color: #000;
+        }
+      }
+    }
+  }
+}

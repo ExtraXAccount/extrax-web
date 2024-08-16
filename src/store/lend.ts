@@ -87,6 +87,7 @@ export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
 
 export interface LendState {
   lendPools: ILendPoolInfo[]
+  historyData: any[]
   positions: ILendPosition[]
   isFetching: boolean
   currentPosition: IFormattedPosition | undefined
@@ -96,6 +97,7 @@ export interface LendState {
 
 export interface LendAction {
   updateLendPools: (lendPools: LendState['lendPools']) => void
+  updateHistoryData: (historyData: LendState['historyData']) => void
   updatePositions: (balances: LendState['positions']) => void
   updateIsFetching: (isFetching: LendState['isFetching']) => void
   updateCurrentPosition: (currentPosition: LendState['currentPosition']) => void
@@ -105,18 +107,18 @@ export interface LendAction {
 
 export const useLendStore = create<LendState & LendAction>((set) => ({
   lendPools: [],
+  historyData: [],
   positions: [],
   isFetching: false,
   currentPosition: undefined,
   currentDialogShow: null,
   showEvent: true,
 
-  updateLendPools: (lendPools) => set(() => ({ lendPools: lendPools })),
-  updatePositions: (positions) => set(() => ({ positions: positions })),
-  updateIsFetching: (isFetching) => set(() => ({ isFetching: isFetching })),
-  updateCurrentPosition: (currentPosition) =>
-    set(() => ({ currentPosition: currentPosition })),
-  updateDialogShow: (currentDialogShow) =>
-    set(() => ({ currentDialogShow: currentDialogShow })),
-  updateEventShow: (showEvent) => set(() => ({ showEvent: showEvent })),
+  updateLendPools: (lendPools) => set(() => ({ lendPools })),
+  updateHistoryData: (historyData) => set(() => ({ historyData })),
+  updatePositions: (positions) => set(() => ({ positions })),
+  updateIsFetching: (isFetching) => set(() => ({ isFetching })),
+  updateCurrentPosition: (currentPosition) => set(() => ({ currentPosition })),
+  updateDialogShow: (currentDialogShow) => set(() => ({ currentDialogShow })),
+  updateEventShow: (showEvent) => set(() => ({ showEvent })),
 }))

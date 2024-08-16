@@ -3,6 +3,7 @@
     padding: 0 !important;
     border-radius: 0 0 8px 8px;
     overflow: hidden;
+    font-size: 12px;
   }
 
   .asset-type-tag {
@@ -28,9 +29,6 @@
 
     &-asset {
       color: #38AD3D;
-      .lpname {
-        color: #000;
-      }
       .asset-type-tag {
         color: #38AD3D;
         border-color: #38AD3D;
@@ -40,9 +38,6 @@
 
     &-debt{
       color: #F13F3F;
-      .lpname {
-        color: #000;
-      }
       .mini-positions-item-sign{
         background-color: #F13F3F;
       }
@@ -50,6 +45,23 @@
         color: #F13F3F;
         border-color: #F13F3F;
         background: rgba(#F13F3F, 0.10);
+      }
+    }
+
+    &-asset,
+    &-debt {
+      .lpname {
+        align-items: center;
+        color: #000;
+        .coin {
+          width: 20px;
+          height: 20px;
+        }
+        p {
+          font-weight: 400;
+          font-size: 12px;
+          margin-left: 4px;
+        }
       }
     }
   }

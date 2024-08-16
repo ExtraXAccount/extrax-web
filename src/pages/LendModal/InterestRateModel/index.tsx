@@ -1,4 +1,4 @@
-import './InterestRateModel.css'
+import './index.css'
 
 import { Skeleton } from 'antd'
 

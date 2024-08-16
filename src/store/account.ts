@@ -90,20 +90,17 @@ export const useAccountStore = create<AccountState & AccountAction>((set) => ({
 
   init: ({ accounts, supportedAssets, supportedDebts }) =>
     set(() => ({
-      accounts: accounts,
-      supportedAssets: supportedAssets,
-      supportedDebts: supportedDebts,
+      accounts,
+      supportedAssets,
+      supportedDebts,
     })),
-  updateAccounts: (accounts) => set(() => ({ accounts: accounts })),
-  updateCurrentAccount: (account) => set(() => ({ currentAccount: account })),
-  updateHealthStatus: (healthStatus) => set(() => ({ healthStatus: healthStatus })),
-  updateBalances: (balances) => set(() => ({ balances: balances })),
-  updatePositions: (positions) => set(() => ({ positions: positions })),
-  updateAccountInfo: (accountInfo) => set(() => ({ accountInfo: accountInfo })),
-  updateSupportedAssets: (supportedAssets) =>
-    set(() => ({ supportedAssets: supportedAssets })),
-  updateSupportedDebts: (supportedDebts) =>
-    set(() => ({ supportedDebts: supportedDebts })),
-  updateAccountLayer: (showAccountLayer) =>
-    set(() => ({ showAccountLayer: showAccountLayer })),
+  updateAccounts: (accounts) => set(() => ({ accounts })),
+  updateCurrentAccount: (currentAccount) => set(() => ({ currentAccount })),
+  updateHealthStatus: (healthStatus) => set(() => ({ healthStatus })),
+  updateBalances: (balances) => set(() => ({ balances })),
+  updatePositions: (positions) => set(() => ({ positions })),
+  updateAccountInfo: (accountInfo) => set(() => ({ accountInfo })),
+  updateSupportedAssets: (supportedAssets) => set(() => ({ supportedAssets })),
+  updateSupportedDebts: (supportedDebts) => set(() => ({ supportedDebts })),
+  updateAccountLayer: (showAccountLayer) => set(() => ({ showAccountLayer })),
 }))

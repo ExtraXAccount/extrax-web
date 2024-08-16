@@ -3,6 +3,7 @@ import './InfoWithOperation.css'
 import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import LendingPoolHistory from '@/components/LendingPoolHistory'
 import LPName from '@/components/LPName'
 import usePrices from '@/hooks/usePrices'
 import useLendingList from '@/pages/Lend/useLendingList'
@@ -13,11 +14,10 @@ import { formatNumberByUnit, toPrecision } from '@/utils/math'
 
 import { BorrowInfo } from '../BorrowInfo/BorrowInfo'
 import { CoinMain } from '../CoinMain/CoinMain'
-import { InterestRateModel } from '../InterestRateModel/InterestRateModel'
+import { InterestRateModel } from '../InterestRateModel'
 import { MoreDetail } from '../MoreDetail'
 import { SupplyInfo } from '../SupplyInfo/SupplyInfo'
 import { SupplyWindows } from '../SupplyWindows/SupplyWindows'
-import { UsdcApyHistory } from '../UsdcApyHistory/UsdcApyHistory'
 import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface IInfoWithOperationProps {
@@ -117,7 +117,7 @@ export const InfoWithOperation = ({
             <>
               <SupplyInfo className="info-to-list-property-1-info__supply-info-instance"></SupplyInfo>
               <BorrowInfo className="info-to-list-property-1-info__borrow-info-instance"></BorrowInfo>
-              <UsdcApyHistory className="info-to-list-property-1-info__usdc-apy-history-instance"></UsdcApyHistory>
+              <LendingPoolHistory />
               <InterestRateModel className="info-to-list-property-1-info__interest-rate-model-instance"></InterestRateModel>
               <MoreDetail className="info-to-list-property-1-info__frame-482075-instance"></MoreDetail>
             </>

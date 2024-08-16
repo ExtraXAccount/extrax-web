@@ -68,13 +68,13 @@ export default function InterestCurve() {
 
   return (
     <div className="interest-curve">
-      <ResponsiveContainer width={'100%'} height={120}>
+      <ResponsiveContainer width={'100%'} height={150}>
         <LineChart
           data={lineChartData}
           margin={{
             top: 20,
             right: 10,
-            left: -10,
+            left: -20,
             bottom: -10,
           }}
         >

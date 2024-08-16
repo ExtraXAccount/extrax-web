@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom'
 
 import AmountInput from '@/components/AmountInput'
 import TokenIcon from '@/components/TokenIcon'
-import { useWagmiCtx } from '@/components/WagmiContext'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
@@ -39,7 +38,6 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     accounts,
     updateAfterAction,
   } = useSmartAccount()
-  const { account } = useWagmiCtx()
   const { state } = useLocation()
 
   const [isBorrowMode, setIsBorrowMode] = useState(!!state?.isBorrowMode)
@@ -330,7 +328,6 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
           >
             {loading.writing ? loading.desc : isBorrowMode ? 'Borrow' : 'Supply'}
           </Button>
-          {/* <MainProperty1Default className="supply-windows__main-instance"></MainProperty1Default> */}
         </div>
       </div>
     </div>

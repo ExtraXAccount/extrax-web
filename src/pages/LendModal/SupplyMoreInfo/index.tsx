@@ -1,20 +1,10 @@
-import './Component287Property1ExInfo.css'
+import './index.css'
 
 import { aprToApy, aprToApy100, toPrecision } from '@/utils/math'
 
-import { MoeInfoProperty1Def } from '../MoeInfoProperty1Def/MoeInfoProperty1Def'
 import useLendPoolInfo from '../useLendPoolInfo'
 
-export interface IComponent287Property1ExInfoProps {
-  property1?: 'ex-info' | 'ex-info-more'
-  className?: string
-}
-
-export const Component287Property1ExInfo = ({
-  property1 = 'ex-info',
-  className,
-  ...props
-}: IComponent287Property1ExInfoProps): JSX.Element => {
+export const SupplyMoreInfo = ({ property1 = 'ex-info', className }): JSX.Element => {
   const variantsClassName = 'property-1-' + property1
   const lendPoolInfo = useLendPoolInfo()
 
@@ -40,7 +30,7 @@ export const Component287Property1ExInfo = ({
           </div>
           <div className="component-287-property-1-ex-info__frame-481698">
             <div className="component-287-property-1-ex-info___85">
-              {lendPoolInfo?.formatted.exchangeRate}
+              {(lendPoolInfo?.formatted.exchangeRate || 0) * 100}%
             </div>
           </div>
         </div>
@@ -55,9 +45,7 @@ export const Component287Property1ExInfo = ({
           </div>
         </div>
       </div>
-      <div className="component-287-property-1-ex-info__frame-482139">
-        {/* <MoeInfoProperty1Def className="component-287-property-1-ex-info__moe-info-instance"></MoeInfoProperty1Def> */}
-      </div>
+      <div className="component-287-property-1-ex-info__frame-482139"></div>
     </div>
   )
 }

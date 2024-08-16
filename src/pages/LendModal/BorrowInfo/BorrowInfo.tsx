@@ -6,11 +6,7 @@ import { aprToApy, formatNumberByUnit, toPrecision } from '@/utils/math'
 
 import useLendPoolInfo from '../useLendPoolInfo'
 
-export interface IBorrowInfoProps {
-  className?: string
-}
-
-export const BorrowInfo = ({ className, ...props }: IBorrowInfoProps): JSX.Element => {
+export const BorrowInfo = ({ className }): JSX.Element => {
   const lendPoolInfo = useLendPoolInfo()
 
   return (
@@ -116,7 +112,7 @@ export const BorrowInfo = ({ className, ...props }: IBorrowInfoProps): JSX.Eleme
         <div className="borrow-info__component-287">
           <div className="borrow-info__frame-482137">
             <div className="borrow-info__frame-482083">
-              <div className="borrow-info__supply-apy">Borrow APY </div>
+              <div className="borrow-info__supply-apy">Borrow APY</div>
               <div className="borrow-info__frame-481698">
                 <div className="borrow-info___5-24">
                   {toPrecision(aprToApy(lendPoolInfo?.formatted.borrowApr || 0) * 100)}%
@@ -124,15 +120,15 @@ export const BorrowInfo = ({ className, ...props }: IBorrowInfoProps): JSX.Eleme
               </div>
             </div>
             <div className="borrow-info__frame-481709">
-              <div className="borrow-info__collateral-factor">Borrow Factor </div>
+              <div className="borrow-info__collateral-factor">Borrow Factor</div>
               <div className="borrow-info__frame-481698">
                 <div className="borrow-info___85">
-                  {lendPoolInfo?.formatted.exchangeRate}
+                  {(lendPoolInfo?.formatted.exchangeRate || 0) * 100}%
                 </div>
               </div>
             </div>
             <div className="borrow-info__frame-482081">
-              <div className="borrow-info__liquidation-threshold">Reserve Fee </div>
+              <div className="borrow-info__liquidation-threshold">Reserve Fee</div>
               <div className="borrow-info__frame-481698">
                 <div className="borrow-info___90-0">
                   {(lendPoolInfo?.config.reserveProtocoalFee || 0) / 100}%
