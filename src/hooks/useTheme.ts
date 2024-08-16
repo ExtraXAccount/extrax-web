@@ -118,7 +118,7 @@ const themeConfig = {
     bgBoxHover: '#e8e8e8',
     // bgBoxHover: 'rgb(252, 250, 255)',
     // bgBox: '#fff',
-    labelColor: 'rgba(0,30,88,0.45)',
+    labelColor: '#666',
     labelColorHighlight: '#008CF2',
     rainbow: customRainbowTheme.light,
     antd: customAntdThemeConfig.light,
