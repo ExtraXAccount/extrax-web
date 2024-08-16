@@ -54,11 +54,14 @@ export default function InterestCurve() {
   const renderTooltip = useCallback((params) => {
     const { label, payload: tooltipPayload } = params
     return (
-      <div className="interest-curve-tooltip">
-        <p key={1}>Utilization Rate: {toPrecision(label, 4)}%</p>
+      <div className="custom-tooltip-content">
+        <p key={1}>
+          <span>Utilization Rate: </span>
+          <span>{toPrecision(label, 4)}%</span>
+        </p>
         {tooltipPayload.map((item) => (
           <p key={item.dataKey}>
-            {'Borrow APR: '}
+            <span>Borrow APR: </span>
             <span className="">{toPrecision(Number(item.value), 4) + '%'}</span>
           </p>
         ))}
