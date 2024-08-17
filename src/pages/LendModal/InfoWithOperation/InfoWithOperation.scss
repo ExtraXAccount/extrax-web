@@ -17,7 +17,7 @@
   transition: width .125s ease-in-out;
   width: 520px;
   margin: 0 auto;
-  transition: width .125s ease-in-out;
+  transition: width 2s ease-in-out;
   &-show-detail {
     width: 1200px;
   }
@@ -84,7 +84,7 @@
   flex-direction: row;
   gap: 0px;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: flex-end;
   align-self: stretch;
   flex-shrink: 0;
   position: relative;
