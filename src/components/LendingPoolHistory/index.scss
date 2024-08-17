@@ -20,6 +20,7 @@
   }
 
   .lending-history-tabbox {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -27,6 +28,14 @@
     .page-minitabs {
       display: flex;
       gap: 8px;
+      &-center {
+        position: absolute;
+        left: 50%;
+        top: 0;
+        transform: translateX(-50%);
+        height: 100%;
+        align-items: center;
+      }
       a {
         display: flex;
         padding: 2px 4px;

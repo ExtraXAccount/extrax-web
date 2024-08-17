@@ -35,6 +35,7 @@
   "dependencies": {
     "@ethersproject/bignumber": "^5.7.0",
     "@rainbow-me/rainbowkit": "^2.0.5",
+    "@react-spring/web": "^9.7.4",
     "@reduxjs/toolkit": "^1.9.7",
     "@tanstack/react-query": "^5.32.0",
     "@uniswap/sdk-core": "^4.2.1",

@@ -3,7 +3,7 @@ import './SupplyWindows.css'
 import { Button, Switch, Tooltip } from 'antd/es'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useMatch } from 'react-router-dom'
 
 import AmountInput from '@/components/AmountInput'
 import TokenIcon from '@/components/TokenIcon'
@@ -24,6 +24,7 @@ export interface ISupplyWindowsProps {
 }
 
 export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
+  const matchLend = useMatch('lend/:marketId/:reserveId')
   const { getPrice } = usePrices()
   const {
     liquidationThreshold,
@@ -182,38 +183,40 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
 
   return (
     <div className={'supply-windows ' + className}>
-      <div className="supply-windows__frame-482102">
-        <div className="supply-windows__frame-482101">
-          <div className="supply-windows__group-9">
-            <TokenIcon
-              symbol={lendPoolInfo?.tokenSymbol}
-              style={{ width: '100%', height: '100%' }}
-            />
+      {matchLend && (
+        <div className="supply-windows__frame-482102">
+          <div className="supply-windows__frame-482101">
+            <div className="supply-windows__group-9">
+              <TokenIcon
+                symbol={lendPoolInfo?.tokenSymbol}
+                style={{ width: '100%', height: '100%' }}
+              />
+            </div>
+            <div className="supply-windows__supply-usdc">
+              {isBorrowMode ? 'Borrow' : 'Supply'} {lendPoolInfo.tokenSymbol}
+            </div>
           </div>
-          <div className="supply-windows__supply-usdc">
-            Supply {lendPoolInfo.tokenSymbol}{' '}
+          <div className="supply-windows__mode-selector">
+            <div
+              className={classNames('supply-windows__mode', {
+                'supply-windows__mode-active': !isBorrowMode,
+              })}
+              onClick={() => setIsBorrowMode(false)}
+            >
+              Supply
+            </div>{' '}
+            /{' '}
+            <div
+              className={classNames('supply-windows__mode', {
+                'supply-windows__mode-active': isBorrowMode,
+              })}
+              onClick={() => setIsBorrowMode(true)}
+            >
+              Borrow
+            </div>
           </div>
         </div>
-        <div className="supply-windows__mode-selector">
-          <div
-            className={classNames('supply-windows__mode', {
-              'supply-windows__mode-active': !isBorrowMode,
-            })}
-            onClick={() => setIsBorrowMode(false)}
-          >
-            Supply
-          </div>{' '}
-          /{' '}
-          <div
-            className={classNames('supply-windows__mode', {
-              'supply-windows__mode-active': isBorrowMode,
-            })}
-            onClick={() => setIsBorrowMode(true)}
-          >
-            Borrow
-          </div>
-        </div>
-      </div>
+      )}
       <div className="supply-windows__frame-482088">
         <div className="supply-windows__frame-481806">
           {/* {isBorrowMode && (

@@ -210,12 +210,12 @@ export default function LendingTable() {
           }}
         />
         <Column
-          title="Total Borrowed"
+          title="Total Borrow"
           dataIndex=""
           key="totalBorrowed"
           sortIcon={CustomSortIcon}
           showSorterTooltip={false}
-          sorter={(a: any, b: any) => {
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
             return (
               a.formatted.totalBorrowed * getPrice(a.tokenSymbol) -
               b.formatted.totalBorrowed * getPrice(b.tokenSymbol)
@@ -263,7 +263,7 @@ export default function LendingTable() {
           key="availableLiquidity"
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
-          sorter={(a: any, b: any) => {
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
             return (
               a.formatted.availableLiquidity * getPrice(a.tokenSymbol) -
               b.formatted.availableLiquidity * getPrice(b.tokenSymbol)
@@ -290,9 +290,10 @@ export default function LendingTable() {
           dataIndex=""
           key="utilization"
           showSorterTooltip={false}
-          // sorter={(a: any, b: any) => {
-          //   return a.formatted.utilization - b.formatted.utilization
-          // }}
+          sortIcon={CustomSortIcon}
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
+            return a.formatted.utilization - b.formatted.utilization
+          }}
           render={(i: IFormattedLendPool) => {
             return (
               <>
@@ -308,9 +309,10 @@ export default function LendingTable() {
           dataIndex=""
           key="ltv"
           showSorterTooltip={false}
-          // sorter={(a: any, b: any) => {
-          //   return a.value - b.value
-          // }}
+          sortIcon={CustomSortIcon}
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
+            return a.config.LTV - b.config.LTV
+          }}
           render={(i: IFormattedLendPool) => {
             return (
               <>
@@ -328,7 +330,7 @@ export default function LendingTable() {
           width={150}
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
-          sorter={(a: any, b: any) => {
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
             return a.formatted.apr - b.formatted.apr
           }}
           // onCell={() => {
@@ -357,7 +359,7 @@ export default function LendingTable() {
                   <div className="flex ai-ct jc-sb gap-10">
                     <span className="text-apr color-safe">+{toPrecision(apy)}%</span>
                     <Link
-                      to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                      to={`/lend/supply/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                       onClick={(e) => {
                         if (!account) {
                           e.preventDefault()
@@ -375,22 +377,8 @@ export default function LendingTable() {
                         e.stopPropagation()
                       }}
                     >
-                      <button className="btn-base btn-base-small">Deposit</button>
+                      <button className="btn-base btn-base-small">Supply</button>
                     </Link>
-                    {/* <button
-                    className="btn-base btn-base-small"
-                    onClick={() => {
-                      if (!account) {
-                        openConnectModal?.()
-                        return
-                      }
-                      console.log('Deposit :>> ', pool)
-                      updateCurrentPosition(pool)
-                      updateDialogShow('deposit')
-                    }}
-                  >
-                    Deposit
-                  </button> */}
                   </div>
                 </>
               </RewardsHover>
@@ -405,7 +393,7 @@ export default function LendingTable() {
           key="borrowingRate"
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
-          sorter={(a: any, b: any) => {
+          sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
             return a.formatted.borrowApr - b.formatted.borrowApr
           }}
           render={(pool: IFormattedLendPool) => {
@@ -416,7 +404,7 @@ export default function LendingTable() {
                     -{toPrecision(pool.formatted.borrowApr * 100)}%
                   </span>
                   <Link
-                    to={`/lend/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                    to={`/lend/borrow/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                     state={{ isBorrowMode: true }}
                     onClick={(e) => {
                       if (!account) {

@@ -31,7 +31,7 @@ import {
 const chartTypeSet = [
   {
     key: 'apy',
-    label: 'Lending APY',
+    label: 'Supply APY',
   },
   {
     key: 'tvl',
@@ -143,7 +143,7 @@ export default function LendingPoolHistory() {
             )}
           </span>
         </div>
-        <div className="page-minitabs">
+        <div className="page-minitabs page-minitabs-center">
           {chartTypeSet.map((item) => (
             <a
               key={item.key}
