@@ -65,14 +65,14 @@ export default function DialogAccountInfo({
           <b>{formattedData.nextApy}</b>
         </div>
       </li>
-      <li>
+      {/* <li>
         <p>Account Leverage:</p>
         <div className="flex ai-ct gap-8">
           <span className="item-pre">{formattedData.preLv}</span>
           <span>→</span>
           <b>{formattedData.nextLv}</b>
         </div>
-      </li>
+      </li> */}
       <li>
         <p>Net Worth:</p>
         <div className="flex ai-ct gap-8">

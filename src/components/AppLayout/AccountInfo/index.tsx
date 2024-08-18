@@ -111,15 +111,10 @@ export default function AccountInfo() {
                   {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
                 </em>
 
-                <span style={{ marginLeft: 20 }}>Account Leverage: </span>
-                <em
-                  className={cx('', {
-                    // 'color-safe': !!accountApy && accountApy > 0,
-                    // 'color-danger': !!accountApy && accountApy < 0,
-                  })}
-                >
+                {/* <span style={{ marginLeft: 20 }}>Account Leverage: </span>
+                <em className={cx('', {})}>
                   {!leverage ? '--' : toPrecision(leverage) + 'x'}
-                </em>
+                </em> */}
               </div>
               <button
                 className="btn-base extrax-account-info-apr-supply-btn"
@@ -182,7 +177,9 @@ export default function AccountInfo() {
                         width: `${(LTV.liquidation - LTV.max) * 100}%`,
                       }}
                     >
-                      <span>Liq: {`${toPrecision(LTV.liquidation * 100)}%`}</span>
+                      <span>
+                        Liquidation Threshold: {`${toPrecision(LTV.liquidation * 100)}%`}
+                      </span>
                     </p>
                   </div>
                 )}
@@ -202,7 +199,7 @@ export default function AccountInfo() {
                       : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
                   </em>
                 </div>
-                <span>Debt Limit: ${toPrecision(Number(maxCredit))}</span>
+                <span>Total: ${toPrecision(Number(maxCredit))}</span>
               </div>
               <PercentCircle
                 radix={32}

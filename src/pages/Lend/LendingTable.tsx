@@ -400,7 +400,7 @@ export default function LendingTable() {
             return (
               <>
                 <div className="flex ai-ct jc-sb gap-10">
-                  <span className="text-apr color-danger">
+                  <span className="color-danger">
                     -{toPrecision(pool.formatted.borrowApr * 100)}%
                   </span>
                   <Link

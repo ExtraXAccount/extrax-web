@@ -185,7 +185,7 @@
           color: var(--text-gry-60-b, #666);
           font-size: 12px;
           font-weight: 400;
-          line-height: 1;
+          // line-height: 1;
         }
         em {
           color: var(--text-black, var(--bgBlack, #000));
@@ -214,9 +214,11 @@
           flex-direction: column;
           gap: 8px;
           flex: 1 1 auto;
+          line-height: 1.2;
         }
 
         &-graph{
+          flex: 1 2 auto;
           &-wrap{
             width: 323px;
             height: 64px;
@@ -226,8 +228,8 @@
       }
 
       .extrax-account-info-credit {
-        // width: 300px;
-        flex: 1 1.5 auto;
+        width: 300px;
+        flex: 1 .5 auto;
         gap: 20px;
         svg {
           // margin-left: 30px;
@@ -300,7 +302,7 @@
     .ltv-wrapper-item {
       height: 12px;
       position: relative;
-      &:after{
+      &::after{
         content: '';
         position: absolute;
         right: -3px;
@@ -310,6 +312,7 @@
         border-left: 3px solid transparent;
         border-right: 3px solid transparent;
         border-bottom: 6px solid var(--gree);
+        transition: opacity .125s ease-in-out;
       }
       span {
         position: absolute;
@@ -319,6 +322,7 @@
         color: #000;
         font-size: 12px;
         white-space: nowrap;
+        transition: opacity .125s ease-in-out;
       }
       &-current {
         z-index: 10;
@@ -355,6 +359,7 @@
           bottom: auto;
           top: -24px;
           color: #F4A700;
+          opacity: 0;
         }
         &::before{
           content: '';
@@ -373,6 +378,15 @@
           border-bottom: 0;
           bottom: auto;
           top: -8px;
+          opacity: 0;
+        }
+        &:hover {
+          span {
+            opacity: 1;
+          }
+          &::after{
+            opacity: 1;
+          }
         }
       }
       &-liquidation {
@@ -394,9 +408,20 @@
         }
         span {
           color: var(--button-red, #E02525);
+          opacity: 0;
+          transform: translateX(10%);
         }
         &::after{
           border-bottom: 6px solid #E02525;
+          opacity: 0;
+        }
+        &:hover {
+          span {
+            opacity: 1;
+          }
+          &::after{
+            opacity: 1;
+          }
         }
       }
     }
