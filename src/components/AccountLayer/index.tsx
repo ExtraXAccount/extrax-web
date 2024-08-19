@@ -2,6 +2,7 @@ import './index.scss'
 
 import { Drawer } from 'antd'
 import cx from 'classnames'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import useSmartAccount from '@/hooks/useSmartAccount'
@@ -27,7 +28,10 @@ export default function AccountLayer() {
     accounts,
   } = useSmartAccount()
 
-  console.log(accounts)
+  const [name, setName] = useState('')
+  const [isEdit, setIsEdit] = useState(-1)
+
+  const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
 
   return (
     <Drawer
@@ -47,10 +51,11 @@ export default function AccountLayer() {
     >
       <div className="account-layer-list">
         {accounts.map((account, index) => {
+          const accountName = nameList[account.toLocaleLowerCase()] || `Account${index}`
           return (
             <div className="account-layer-item" key={account}>
               <div className="account-layer-item-title flex ai-ct gap-8">
-                Account{index}
+                {accountName}
                 <div className="btn-base btn-base-primary">
                   {account?.slice(0, 6)}....{account?.slice(-4)}
                 </div>

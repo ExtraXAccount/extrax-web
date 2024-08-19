@@ -494,3 +494,23 @@
   }
 }
 
+.extrax-account-info-edit{
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  &-input{
+    border: 0;
+    outline: 0;
+    font-size: 12px;
+    background-color: transparent;
+    border: 0.5px solid var(--stroke, #C9C9CB);
+    border-radius: 4px;
+    padding: 3px 8px;
+    margin-right: 4px;
+  }
+
+  .iconfont{
+    cursor: pointer;
+  }
+}
+

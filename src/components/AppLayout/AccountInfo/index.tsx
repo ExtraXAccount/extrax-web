@@ -29,6 +29,8 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   } = useSmartAccount()
 
   const [copied, setCopied] = useState(false)
+  const [name, setName] = useState('')
+  const [isEdit, setIsEdit] = useState(false)
 
   useEffect(() => {
     console.log('healthStatus :>> ', healthStatus, healthFactor)
@@ -49,6 +51,8 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     }
   }, [copied])
 
+  const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
+  const accountName = name || nameList[currentAccount?.toLowerCase()] || ''
   return (
     <div className="extrax-account-info">
       <AccountDepositDialog
@@ -91,6 +95,43 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                     </span>
                   </CopyToClipboard>
                 </em>
+                <section className="extrax-account-info-edit">
+                  {!!accountName && !isEdit && <p>({accountName})</p>}
+                  {!isEdit && (
+                    <i
+                      className="iconfont icon-edit"
+                      onClick={() => {
+                        setIsEdit(true)
+                        setName(accountName)
+                      }}
+                    ></i>
+                  )}
+                  {isEdit && (
+                    <>
+                      <input
+                        className="extrax-account-info-edit-input"
+                        type="text"
+                        value={name}
+                        onChange={(e) => {
+                          setName(e.target.value)
+                        }}
+                        placeholder="Add a name"
+                      />
+                      <i
+                        className="iconfont icon-check"
+                        onClick={() => {
+                          console.log(name)
+                          nameList[currentAccount?.toLowerCase()] = name
+                          localStorage.setItem(
+                            'extrax-account-name',
+                            JSON.stringify(nameList),
+                          )
+                          setIsEdit(false)
+                        }}
+                      ></i>
+                    </>
+                  )}
+                </section>
               </div>
             </div>
             {portfolioMode && (
