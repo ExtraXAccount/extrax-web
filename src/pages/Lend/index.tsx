@@ -30,7 +30,6 @@ export default function Lend() {
           totalBorrow={totalInfos.totalBorrowed}
           totalSize={totalInfos.totalSize}
           globalUtilization={totalInfos.globalUtilization}
-          maxOutflow={totalInfos.maxOutflow}
         />
         <LendingTable />
       </div>

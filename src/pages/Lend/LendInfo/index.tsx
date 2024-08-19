@@ -7,9 +7,8 @@ export default function LendInfo(props: {
   totalAvailable: number
   totalBorrow: number
   globalUtilization: number
-  maxOutflow: number
 }) {
-  const { totalSize, totalAvailable, totalBorrow, globalUtilization, maxOutflow } = props
+  const { totalSize, totalAvailable, totalBorrow, globalUtilization } = props
   return (
     <div className="lend-info">
       <ul className="lend-info-list">
@@ -28,10 +27,6 @@ export default function LendInfo(props: {
         <li>
           <p>Global Utilization</p>
           <b>{remain2Decimal(globalUtilization * 100)}%</b>
-        </li>
-        <li>
-          <p>Max Outflow</p>
-          <b>${formatNumberByUnit(maxOutflow)} Per 4 Hours</b>
         </li>
       </ul>
     </div>
