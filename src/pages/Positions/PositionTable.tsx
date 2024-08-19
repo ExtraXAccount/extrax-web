@@ -1,5 +1,6 @@
 import { Table } from 'antd'
 
+import CustomSortIcon from '@/components/CustomSortIcon'
 import LPName from '@/components/LPName'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { toDecimals } from '@/sdk/utils/token'
@@ -41,7 +42,7 @@ export default function PositionTable(props: { positions: any[] }) {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">
+                <div>
                   <LPName token0={i.pool.tokenSymbol} title={`${i.pool.tokenSymbol}`} />
                 </div>
               </>
@@ -52,6 +53,10 @@ export default function PositionTable(props: { positions: any[] }) {
           title="Value"
           dataIndex=""
           key="value"
+          sortIcon={CustomSortIcon}
+          sorter={(a: any, b: any) => {
+            return a.value - b.value
+          }}
           render={(i) => {
             return (
               <>
@@ -106,6 +111,14 @@ export default function PositionTable(props: { positions: any[] }) {
           title="APY"
           dataIndex=""
           key="apy"
+          sortIcon={CustomSortIcon}
+          sorter={(a: any, b: any) => {
+            if (a.type === 'debt') {
+              return a.formatted.borrowApr - b.formatted.borrowApr
+            } else {
+              return a.formatted.apr - b.formatted.apr
+            }
+          }}
           render={(i) => {
             return (
               <>

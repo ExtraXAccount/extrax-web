@@ -11,7 +11,8 @@ import PercentCircle from '@/pages/Lend/PercentCircle'
 import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
-export default function AccountInfo() {
+export default function AccountInfo(props: { portfolioMode?: boolean }) {
+  const { portfolioMode } = props
   const {
     healthStatus,
     LTV,
@@ -78,6 +79,7 @@ export default function AccountInfo() {
                 <span>Current Account: </span>
                 <em>
                   {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)}
+                  <i className="iconfont icon-copy"></i>
                   <CopyToClipboard text={currentAccount} onCopy={onCopy}>
                     <span
                       className={cx('copy-hint', {
@@ -91,6 +93,24 @@ export default function AccountInfo() {
                 </em>
               </div>
             </div>
+            {portfolioMode && (
+              <div className="flex ai-ct jc-sb">
+                <div className="extrax-account-info-portfoliomode-infos">
+                  <section>
+                    <span className="text-sm-2">Total Supply:</span>
+                    <b>${formatNumberByUnit(depositedVal)}</b>
+                  </section>
+                  <section>
+                    <span className="text-sm-2">Total Borrow:</span>
+                    <b>${formatNumberByUnit(debtVal)}</b>
+                  </section>
+                  <section>
+                    <span className="text-sm-2">Networth:</span>
+                    <b>${formatNumberByUnit(netWorth)}</b>
+                  </section>
+                </div>
+              </div>
+            )}
 
             {/* <p className="extrax-account-info-main-splitter"> | </p>
             <p className="extrax-account-info-main-apy">
@@ -99,30 +119,32 @@ export default function AccountInfo() {
                 {!depositedVal ? '--' : toPrecision(accountApy * 100) + '%'}
               </em>
             </p> */}
-            <div className="flex ai-ct jc-sb">
-              <div className="extrax-account-info-apr-lv">
-                <span>Portfolio APR: </span>
-                <em
-                  className={cx('', {
-                    'color-safe': !!accountApy && accountApy > 0,
-                    'color-danger': !!accountApy && accountApy < 0,
-                  })}
-                >
-                  {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
-                </em>
+            {!portfolioMode && (
+              <div className="flex ai-ct jc-sb">
+                <div className="extrax-account-info-apr-lv">
+                  <span>Portfolio APR: </span>
+                  <em
+                    className={cx('', {
+                      'color-safe': !!accountApy && accountApy > 0,
+                      'color-danger': !!accountApy && accountApy < 0,
+                    })}
+                  >
+                    {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
+                  </em>
 
-                {/* <span style={{ marginLeft: 20 }}>Account Leverage: </span>
+                  {/* <span style={{ marginLeft: 20 }}>Account Leverage: </span>
                 <em className={cx('', {})}>
                   {!leverage ? '--' : toPrecision(leverage) + 'x'}
                 </em> */}
+                </div>
+                <button
+                  className="btn-base extrax-account-info-apr-supply-btn"
+                  onClick={handleAddDeposit}
+                >
+                  Supply
+                </button>
               </div>
-              <button
-                className="btn-base extrax-account-info-apr-supply-btn"
-                onClick={handleAddDeposit}
-              >
-                Supply
-              </button>
-            </div>
+            )}
           </div>
           <div className="extrax-account-info-detail">
             <div className="extrax-account-info-detail-item extrax-account-info-deposited">
