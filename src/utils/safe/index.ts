@@ -2,9 +2,9 @@ import Safe from '@safe-global/protocol-kit'
 import { PublicClient, WalletClient } from 'viem'
 
 export async function getSafeProtocolKit(
-  client: PublicClient | WalletClient,
+  client: WalletClient,
   // provider,
-  signer: string,
+  // signer: string,
   safeAddress: string,
 ) {
   const { account, chain, transport } = client
@@ -21,7 +21,7 @@ export async function getSafeProtocolKit(
 
   const protocolKit = await Safe.init({
     provider: transport,
-    signer,
+    // signer,
     safeAddress,
   })
 
