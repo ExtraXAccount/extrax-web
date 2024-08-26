@@ -33,18 +33,6 @@ import { MultiSendCallOnlyABI } from './MultiSendCallOnlyABI'
 
 const defaultMarketId = 1n
 
-export function clientToSigner(client: Client<Transport, Chain, Account>) {
-  const { account, chain, transport } = client
-  const network = {
-    chainId: chain.id,
-    name: chain.name,
-    ensAddress: chain.contracts?.ensRegistry?.address,
-  }
-  const provider = new BrowserProvider(transport, network)
-  const signer = new JsonRpcSigner(provider, account.address)
-  return signer
-}
-
 export interface IMetaTx {
   to: Address
   value: bigint
@@ -64,7 +52,7 @@ export function encodeMetaTransaction(tx: MetaTransaction) {
   const data = toBytes(tx.data)
   const encoded = encodePacked(
     ['uint8', 'address', 'uint256', 'uint256', 'bytes'],
-    [tx.operation, tx.to, BigInt(tx.value), BigInt(data.length), tx.data],
+    [tx.operation, tx.to, BigInt(tx.value), BigInt(data.length), tx.data]
   )
   return encoded.slice(2)
 }
@@ -79,12 +67,7 @@ export class LendingManager {
   public publicClient: PublicClient
   public walletClient: WalletClient
 
-  constructor(
-    chainId: SupportedChainId,
-    publicClient: PublicClient,
-    walletClient: WalletClient,
-    account?: Address,
-  ) {
+  constructor(chainId: SupportedChainId, publicClient: PublicClient, walletClient: WalletClient, account?: Address) {
     if (chainId && chainId in SupportedChainId) {
       this.chainId = chainId
     }
@@ -133,24 +116,19 @@ export class LendingManager {
   }
 
   public async getPoolStatus(reserveId: bigint) {
-    const res = await this.getExtraXLendingContract().read.getReserveStatus([
-      defaultMarketId,
-      reserveId,
-    ])
+    const res = await this.getExtraXLendingContract().read.getReserveStatus([defaultMarketId, reserveId])
     console.log('getPoolStatus :>> ', res)
     return res
   }
   public async multicallPoolsStatus(reserveIds: bigint[]) {
-    const reserveStatus =
-      await this.getExtraXLendingContract().read.getMultiReserveStatus([
-        defaultMarketId,
-        reserveIds,
-      ])
-    const reserveStorage =
-      await this.getExtraXLendingContract().read.getMultiReserveStorage([
-        defaultMarketId,
-        reserveIds,
-      ])
+    const reserveStatus = await this.getExtraXLendingContract().read.getMultiReserveStatus([
+      defaultMarketId,
+      reserveIds,
+    ])
+    const reserveStorage = await this.getExtraXLendingContract().read.getMultiReserveStorage([
+      defaultMarketId,
+      reserveIds,
+    ])
     console.log('getMultiReserveStatus :>> ', { reserveStatus, reserveStorage })
     return reserveStorage.map((item, index) => {
       return {
@@ -177,41 +155,25 @@ export class LendingManager {
 
   public async getUserHealthStatus(account: Address) {
     // Health status, including DEBT, LTV, LIQUIDATE_VALUE
-    const healthStatus =
-      await this.getExtraXLendingContract().read.calculateUserHealthData([
-        defaultMarketId,
-        account,
-      ])
+    const healthStatus = await this.getExtraXLendingContract().read.calculateUserHealthData([defaultMarketId, account])
 
     console.log('healthStatus :>> ', healthStatus)
     return healthStatus
   }
 
   public async getUserPositions(account: Address) {
-    const reserves = await this.getExtraXLendingContract().read.getActiveReservesOf([
-      defaultMarketId,
-      account,
-    ])
+    const reserves = await this.getExtraXLendingContract().read.getActiveReservesOf([defaultMarketId, account])
     // console.log('getUserLendStatus:', reserves)
     const positions = await Promise.all(
       reserves.map((reserveId) => {
-        return this.getExtraXLendingContract().read.getPosition([
-          defaultMarketId,
-          reserveId,
-          account,
-        ])
-      }),
+        return this.getExtraXLendingContract().read.getPosition([defaultMarketId, reserveId, account])
+      })
     )
     console.log('getUserPositions :>> ', positions)
     return positions
   }
 
-  public async requireAllowance(
-    tokenAddress: Address,
-    targetAddress: Address,
-    amount: bigint,
-    useNativeETH = true,
-  ) {
+  public async requireAllowance(tokenAddress: Address, targetAddress: Address, amount: bigint, useNativeETH = true) {
     if (useNativeETH && isWETH(this.chainId, tokenAddress)) {
       return false
     }
@@ -297,12 +259,7 @@ export class LendingManager {
     return metaTx
   }
 
-  public async buildDepositToAccountTx(
-    tokenAddress: Address,
-    safeAccount: Address,
-    amount: bigint,
-    ethValue?: bigint,
-  ) {
+  public async buildDepositToAccountTx(tokenAddress: Address, safeAccount: Address, amount: bigint, ethValue?: bigint) {
     const funcData = encodeFunctionData({
       abi: ERC20ABI,
       functionName: 'transferFrom',
@@ -322,7 +279,7 @@ export class LendingManager {
     tokenAddress: Address,
     amount: bigint,
     ethValue?: bigint,
-    chainId?: SupportedChainId,
+    chainId?: SupportedChainId
   ) {
     const funcData = encodeFunctionData({
       abi: ERC20ABI,
@@ -344,17 +301,13 @@ export class LendingManager {
     reserveId: bigint,
     amount: bigint,
     ethValue?: bigint,
-    chainId?: SupportedChainId,
+    chainId?: SupportedChainId
   ) {
     // const params = ethers.AbiCoder.defaultAbiCoder().encode(
     //   ['uint256', 'uint256', 'uint256'],
     //   [marketId, reserveId, amount],
     // )
-    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, uint256'), [
-      marketId,
-      reserveId,
-      amount,
-    ])
+    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, uint256'), [marketId, reserveId, amount])
 
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
@@ -422,7 +375,7 @@ export class LendingManager {
       data: Address
       operation: number // 0x1 delegateCall, 0x0 call
       extra: Hex
-    }[],
+    }[]
   ) {
     console.log('multicall...', {
       safeAccount,
@@ -436,27 +389,19 @@ export class LendingManager {
           abi: ExtraXAccountABI,
           functionName: 'execTransaction',
           args: [tx],
-        }),
+        })
       )
     }
 
-    const res = this.getExtraXAccountContract(safeAccount).write.multicall(
-      [encodedData],
-      {
-        chain: this.walletClient.chain,
-        account: this.account,
-      },
-    )
+    const res = this.getExtraXAccountContract(safeAccount).write.multicall([encodedData], {
+      chain: this.walletClient.chain,
+      account: this.account,
+    })
 
     return res
   }
 
-  public async depositToLending(
-    safeAccount: Address,
-    reserveId: bigint,
-    amount: bigint,
-    useNativeETH = true,
-  ) {
+  public async depositToLending(safeAccount: Address, reserveId: bigint, amount: bigint, useNativeETH = true) {
     console.log('depositToLending :>> ', {
       safeAccount,
       reserveId,
@@ -466,9 +411,7 @@ export class LendingManager {
     // Apprve the Account transfer assets from user's wallet
     // Note: This tx cannot be batched to a multiSend Transaction
     console.log('approve ...')
-    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find(
-      (item: any) => item.reserveId === reserveId,
-    )
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
     const token = lendConfig.name
     let ethValue = 0n
     if (useNativeETH && isWETH(this.chainId, lendConfig.underlyingTokenAddress)) {
@@ -478,7 +421,7 @@ export class LendingManager {
       lendConfig.underlyingTokenAddress,
       safeAccount,
       amount,
-      useNativeETH,
+      useNativeETH
     )
     console.log('requireAllowance :>> ', requireAllowance)
     if (requireAllowance) {
@@ -487,10 +430,7 @@ export class LendingManager {
 
     const transactions: IMetaTx[] = []
 
-    console.log(
-      'assetId :>> ',
-      HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId,
-    )
+    console.log('assetId :>> ', HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId)
     // transactions.push(
     //   await this.buildSetAsCollateralTx(
     //     HealthManagerConfig[this.chainId].assets[`${token}_BASIC_ASSET`].assetId,
@@ -507,24 +447,21 @@ export class LendingManager {
         LendingConfig[this.chainId][token].underlyingTokenAddress,
         safeAccount,
         amount,
-        ethValue,
-      ),
+        ethValue
+      )
     )
 
     transactions.push(
-      await this.buildApproveLendingTx(
-        LendingConfig[this.chainId][token].underlyingTokenAddress,
-        amount,
-      ),
+      await this.buildApproveLendingTx(LendingConfig[this.chainId][token].underlyingTokenAddress, amount)
     )
 
     transactions.push(
       await this.buildDepositToLendingTx(
         LendingConfig[this.chainId][token].marketId,
         LendingConfig[this.chainId][token].reserveId,
-        amount,
+        amount
         // ethValue
-      ),
+      )
     )
     // const hash = await this.multiSend(safeAccount, transactions)
     const hash = await this.multicall(safeAccount, transactions)
@@ -560,12 +497,14 @@ export class LendingManager {
     marketId: bigint,
     reserveId: bigint,
     eTokenAmount: bigint,
-    chainId?: SupportedChainId,
+    chainId?: SupportedChainId
   ) {
-    const params = encodeAbiParameters(
-      parseAbiParameters('uint256, uint256, uint256, bool'),
-      [marketId, reserveId, eTokenAmount, false],
-    )
+    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, uint256, bool'), [
+      marketId,
+      reserveId,
+      eTokenAmount,
+      false,
+    ])
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'withdraw',
@@ -580,12 +519,7 @@ export class LendingManager {
     }
     return metaTx
   }
-  public async withdraw(
-    safeAccount: Address,
-    marketId: bigint,
-    reserveId: bigint,
-    amount: bigint,
-  ) {
+  public async withdraw(safeAccount: Address, marketId: bigint, reserveId: bigint, amount: bigint) {
     console.log('withdraw :>> ', { safeAccount, reserveId, amount })
 
     const transactions: IMetaTx[] = []
@@ -599,11 +533,7 @@ export class LendingManager {
     return tx
   }
 
-  public async buildActivateUserDebtTx(
-    userAccount: Address,
-    reserveId: bigint,
-    chainId?: SupportedChainId,
-  ) {
+  public async buildActivateUserDebtTx(userAccount: Address, reserveId: bigint, chainId?: SupportedChainId) {
     const funcData = encodeFunctionData({
       abi: HealthManagerABI,
       functionName: 'activateUserDebt',
@@ -616,17 +546,8 @@ export class LendingManager {
     }
     return metaTx
   }
-  public async buildBorrowTransaction(
-    marketId: bigint,
-    reserveId: bigint,
-    amount: bigint,
-    chainId?: SupportedChainId,
-  ) {
-    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, uint256'), [
-      marketId,
-      reserveId,
-      amount,
-    ])
+  public async buildBorrowTransaction(marketId: bigint, reserveId: bigint, amount: bigint, chainId?: SupportedChainId) {
+    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, uint256'), [marketId, reserveId, amount])
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'borrow',
@@ -646,7 +567,7 @@ export class LendingManager {
     safeAccount: Address,
     marketId: bigint,
     reserveId: bigint,
-    amount: bigint,
+    amount: bigint
     // debtId: bigint,
   ) {
     console.log('borrow :>> ', { safeAccount, marketId, reserveId, amount })
@@ -668,12 +589,14 @@ export class LendingManager {
     reserveId: bigint,
     account: Hex,
     amount: bigint,
-    chainId?: SupportedChainId,
+    chainId?: SupportedChainId
   ) {
-    const params = encodeAbiParameters(
-      parseAbiParameters('uint256, uint256, address, uint256'),
-      [marketId, reserveId, account, amount],
-    )
+    const params = encodeAbiParameters(parseAbiParameters('uint256, uint256, address, uint256'), [
+      marketId,
+      reserveId,
+      account,
+      amount,
+    ])
     const funcData = encodeFunctionData({
       abi: ExtraXLendingABI,
       functionName: 'repay',
@@ -688,28 +611,16 @@ export class LendingManager {
     }
     return metaTx
   }
-  public async repay(
-    safeAccount: Address,
-    marketId: bigint,
-    reserveId: bigint,
-    amount: bigint,
-  ) {
+  public async repay(safeAccount: Address, marketId: bigint, reserveId: bigint, amount: bigint) {
     console.log('repay :>> ', { safeAccount, reserveId, amount })
-    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find(
-      (item: any) => item.reserveId === reserveId,
-    )
+    const lendConfig: any = Object.values(LendingConfig[this.chainId]).find((item: any) => item.reserveId === reserveId)
     const token = lendConfig.name
 
     const transactions: IMetaTx[] = []
     transactions.push(
-      await this.buildApproveLendingTx(
-        LendingConfig[this.chainId][token].underlyingTokenAddress,
-        amount,
-      ),
+      await this.buildApproveLendingTx(LendingConfig[this.chainId][token].underlyingTokenAddress, amount)
     )
-    transactions.push(
-      await this.buildRepayTransaction(marketId, reserveId, safeAccount, amount),
-    )
+    transactions.push(await this.buildRepayTransaction(marketId, reserveId, safeAccount, amount))
     const res = await this.multicall(safeAccount, transactions)
     console.log('multicall res :>> ', res)
   }

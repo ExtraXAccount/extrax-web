@@ -1,6 +1,5 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd/es'
-import { icons } from 'antd/es/image/PreviewGroup'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSwitchChain } from 'wagmi'
@@ -16,14 +15,7 @@ import { formatSymbol, toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
 import { nameChecker } from '@/utils'
-import {
-  addComma,
-  aprToApy100,
-  formatFloatNumber,
-  formatNumberByUnit,
-  toPrecision,
-  toPrecisionNum,
-} from '@/utils/math'
+import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
 import BorrowDialog from './BorrowDialog'
@@ -46,8 +38,7 @@ export default function LendingTable() {
   const { switchChain } = useSwitchChain()
   const { isMobile } = useDeviceDetect()
   const accountManager = useAccountManager()
-  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } =
-    useLendStore()
+  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } = useLendStore()
 
   const {
     formattedLendPools,
@@ -65,7 +56,7 @@ export default function LendingTable() {
       accountManager
         .getBalances(
           [account],
-          formattedLendPools.map((i) => i.underlyingTokenAddress),
+          formattedLendPools.map((i) => i.underlyingTokenAddress)
         )
         .then((r) => {
           const balanceMap = {}
@@ -109,7 +100,7 @@ export default function LendingTable() {
       ></BorrowDialog>
 
       <Table
-        className="lend-list-table"
+        className='lend-list-table'
         sortDirections={['descend', 'ascend']}
         dataSource={formattedLendPools}
         pagination={false}
@@ -117,17 +108,15 @@ export default function LendingTable() {
         onRow={(record: IFormattedLendPool) => {
           return {
             onClick: () => {
-              navigate(
-                `/lend/${record.marketId.toString()}/${record.reserveId.toString()}`,
-              )
+              navigate(`/lend/${record.marketId.toString()}/${record.reserveId.toString()}`)
             },
           }
         }}
         locale={{
           emptyText: (
-            <div className="ant-empty ant-empty-normal">
+            <div className='ant-empty ant-empty-normal'>
               <div
-                className="ant-empty-description"
+                className='ant-empty-description'
                 style={{
                   margin: '20px 0',
                 }}
@@ -139,20 +128,16 @@ export default function LendingTable() {
         }}
       >
         <Column
-          title="Pool"
-          dataIndex=""
-          key="poolKey"
+          title='Pool'
+          dataIndex=''
+          key='poolKey'
           render={(pool: IFormattedLendPool) => {
             return (
               <>
-                <div className="lending-list-title-wrap">
-                  <LPName
-                    token0={nameChecker(formatSymbol(pool.tokenSymbol))}
-                    title={nameChecker(pool.tokenSymbol)}
-                  >
-                    <div className="lending-list-title-wrap-balance text-sm-2">
-                      Wallet:{' '}
-                      {formatFloatNumber(balanceMap[pool.underlyingTokenAddress] || 0)}
+                <div className='lending-list-title-wrap'>
+                  <LPName token0={nameChecker(formatSymbol(pool.tokenSymbol))} title={nameChecker(pool.tokenSymbol)}>
+                    <div className='lending-list-title-wrap-balance text-sm-2'>
+                      Wallet: {formatFloatNumber(balanceMap[pool.underlyingTokenAddress] || 0)}
                     </div>
                   </LPName>
                 </div>
@@ -161,44 +146,38 @@ export default function LendingTable() {
           }}
         />
         <Column
-          title="Total Supply"
-          dataIndex=""
-          key="totalSupply"
+          title='Total Supply'
+          dataIndex=''
+          key='totalSupply'
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return (
-              a.formatted.totalSupply * getPrice(a.tokenSymbol) -
-              b.formatted.totalSupply * getPrice(b.tokenSymbol)
-            )
+            return a.formatted.totalSupply * getPrice(a.tokenSymbol) - b.formatted.totalSupply * getPrice(b.tokenSymbol)
           }}
           render={(i: IFormattedLendPool) => {
             const amount = i.formatted.totalSupply
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <CapHover
-                type="supply"
+                type='supply'
                 max={i.formatted.supplyCap}
                 current={i.formatted.totalSupply}
                 price={getPrice(i.tokenSymbol)}
               >
                 <div>
-                  {isMobile && <div className="text-bold-small">Total Supply</div>}
-                  <div className="flex ai-ct gap-10">
+                  {isMobile && <div className='text-bold-small'>Total Supply</div>}
+                  <div className='flex ai-ct gap-10'>
                     <div>
                       <div>
                         {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
                         {/* {nameChecker(i.tokenSymbol)} */}
                       </div>
-                      <div className="text-sm-2">${formatNumberByUnit(value)}</div>
+                      <div className='text-sm-2'>${formatNumberByUnit(value)}</div>
                     </div>
                     <div>
                       <PercentCircle
                         radix={8}
-                        percent={div(
-                          i.formatted.totalSupply.toString(),
-                          i.formatted.supplyCap.toString(),
-                        ).toNumber()}
+                        percent={div(i.formatted.totalSupply.toString(), i.formatted.supplyCap.toString()).toNumber()}
                         strokeWidth={2.5}
                         strokeColor={'#38AD3D'}
                       />
@@ -210,15 +189,14 @@ export default function LendingTable() {
           }}
         />
         <Column
-          title="Total Borrow"
-          dataIndex=""
-          key="totalBorrowed"
+          title='Total Borrow'
+          dataIndex=''
+          key='totalBorrowed'
           sortIcon={CustomSortIcon}
           showSorterTooltip={false}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
             return (
-              a.formatted.totalBorrowed * getPrice(a.tokenSymbol) -
-              b.formatted.totalBorrowed * getPrice(b.tokenSymbol)
+              a.formatted.totalBorrowed * getPrice(a.tokenSymbol) - b.formatted.totalBorrowed * getPrice(b.tokenSymbol)
             )
           }}
           render={(i: IFormattedLendPool) => {
@@ -226,27 +204,24 @@ export default function LendingTable() {
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <CapHover
-                type="borrow"
+                type='borrow'
                 max={i.formatted.borrowCap}
                 current={i.formatted.totalBorrowed}
                 price={getPrice(i.tokenSymbol)}
               >
                 <div>
-                  {isMobile && <div className="text-bold-small">Total Supply</div>}
-                  <div className="flex ai-ct gap-10">
+                  {isMobile && <div className='text-bold-small'>Total Supply</div>}
+                  <div className='flex ai-ct gap-10'>
                     <div>
                       <div>
                         {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
                         {/* {nameChecker(i.tokenSymbol)} */}
                       </div>
-                      <div className="text-sm-2">${formatNumberByUnit(value)}</div>
+                      <div className='text-sm-2'>${formatNumberByUnit(value)}</div>
                     </div>
                     <PercentCircle
                       radix={8}
-                      percent={div(
-                        i.formatted.totalBorrowed.toString(),
-                        i.formatted.borrowCap.toString(),
-                      ).toNumber()}
+                      percent={div(i.formatted.totalBorrowed.toString(), i.formatted.borrowCap.toString()).toNumber()}
                       strokeWidth={2.5}
                       strokeColor={'#EC6F14'}
                     />
@@ -258,9 +233,9 @@ export default function LendingTable() {
         />
 
         <Column
-          title="Liquidity"
-          dataIndex=""
-          key="availableLiquidity"
+          title='Liquidity'
+          dataIndex=''
+          key='availableLiquidity'
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
@@ -274,21 +249,20 @@ export default function LendingTable() {
             const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
             return (
               <>
-                {isMobile && <div className="text-bold-small">Total Supply</div>}
+                {isMobile && <div className='text-bold-small'>Total Supply</div>}
                 <div>
-                  {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
-                  {/* {nameChecker(i.tokenSymbol)} */}
+                  {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)} {/* {nameChecker(i.tokenSymbol)} */}
                 </div>
-                <div className="text-sm-2">${formatNumberByUnit(value)}</div>
+                <div className='text-sm-2'>${formatNumberByUnit(value)}</div>
               </>
             )
           }}
         />
 
         <Column
-          title="Utilization"
-          dataIndex=""
-          key="utilization"
+          title='Utilization'
+          dataIndex=''
+          key='utilization'
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
@@ -297,7 +271,7 @@ export default function LendingTable() {
           render={(i: IFormattedLendPool) => {
             return (
               <>
-                {isMobile && <div className="text-bold-small">Utilization</div>}
+                {isMobile && <div className='text-bold-small'>Utilization</div>}
                 <div>{toPrecision(i.formatted.utilization * 100)}%</div>
               </>
             )
@@ -305,9 +279,9 @@ export default function LendingTable() {
         />
 
         <Column
-          title="LTV"
-          dataIndex=""
-          key="ltv"
+          title='LTV'
+          dataIndex=''
+          key='ltv'
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
@@ -316,7 +290,7 @@ export default function LendingTable() {
           render={(i: IFormattedLendPool) => {
             return (
               <>
-                {isMobile && <div className="text-bold-small">LTV</div>}
+                {isMobile && <div className='text-bold-small'>LTV</div>}
                 <div>{toPrecision(i.config.LTV / 10000, 2)}</div>
               </>
             )
@@ -324,9 +298,9 @@ export default function LendingTable() {
         />
 
         <Column
-          title="Supply APY"
-          dataIndex=""
-          key="apr"
+          title='Supply APY'
+          dataIndex=''
+          key='apr'
           width={150}
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
@@ -355,9 +329,9 @@ export default function LendingTable() {
                 ]}
               >
                 <>
-                  {isMobile && <div className="text-bold-small">APY</div>}
-                  <div className="flex ai-ct jc-sb gap-10">
-                    <span className="text-apr color-safe">+{toPrecision(apy)}%</span>
+                  {isMobile && <div className='text-bold-small'>APY</div>}
+                  <div className='flex ai-ct jc-sb gap-10'>
+                    <span className='text-apr color-safe'>+{toPrecision(apy)}%</span>
                     <Link
                       to={`/lend/supply/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                       onClick={(e) => {
@@ -377,7 +351,7 @@ export default function LendingTable() {
                         e.stopPropagation()
                       }}
                     >
-                      <button className="btn-base btn-base-small">Supply</button>
+                      <button className='btn-base btn-base-small'>Supply</button>
                     </Link>
                   </div>
                 </>
@@ -387,10 +361,10 @@ export default function LendingTable() {
         />
 
         <Column
-          title="Borrow APR"
-          dataIndex=""
+          title='Borrow APR'
+          dataIndex=''
           width={150}
-          key="borrowingRate"
+          key='borrowingRate'
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
@@ -399,10 +373,8 @@ export default function LendingTable() {
           render={(pool: IFormattedLendPool) => {
             return (
               <>
-                <div className="flex ai-ct jc-sb gap-10">
-                  <span className="color-danger">
-                    -{toPrecision(pool.formatted.borrowApr * 100)}%
-                  </span>
+                <div className='flex ai-ct jc-sb gap-10'>
+                  <span className='color-danger'>-{toPrecision(pool.formatted.borrowApr * 100)}%</span>
                   <Link
                     to={`/lend/borrow/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
                     state={{ isBorrowMode: true }}
@@ -423,7 +395,7 @@ export default function LendingTable() {
                       e.stopPropagation()
                     }}
                   >
-                    <button className="btn-base btn-base-small">Borrow</button>
+                    <button className='btn-base btn-base-small'>Borrow</button>
                   </Link>
                 </div>
               </>

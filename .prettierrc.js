@@ -1,28 +1,13 @@
 module.exports = {
   semi: false,
-  trailingComma: 'all',
+  trailingComma: 'es5',
   singleQuote: true,
   printWidth: 90,
   tabWidth: 2,
   endOfLine: 'auto',
+  printWidth: 120,
+  useTabs: false,
+  bracketSpacing: true,
+  endOfLine: 'lf',
+  jsxSingleQuote: true,
 }
-
-// {
-//   "arrowParens": "always",
-//   "bracketSpacing": true,
-//   "embeddedLanguageFormatting": "auto",
-//   "htmlWhitespaceSensitivity": "css",
-//   "insertPragma": false,
-//   "jsxBracketSameLine": false,
-//   "jsxSingleQuote": false,
-//   "proseWrap": "preserve",
-//   "quoteProps": "as-needed",
-//   "requirePragma": false,
-//   "semi": true,
-//   "singleQuote": false,
-//   "tabWidth": 2,
-//   "trailingComma": "es5",
-//   "useTabs": false,
-//   "vueIndentScriptAndStyle": false,
-//   "printWidth": 100
-// }

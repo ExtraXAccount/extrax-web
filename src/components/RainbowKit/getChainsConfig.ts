@@ -17,7 +17,7 @@ const connectors = connectorsForWallets(
   {
     appName,
     projectId,
-  },
+  }
 )
 
 // export const defaultConfig = getDefaultConfig({
@@ -36,9 +36,7 @@ export const wagmiConfig = createConfig({
   // projectId,
   chains: [optimism] as any,
   transports: {
-    [optimism.id]: http(
-      'https://rpc.tenderly.co/fork/fcdf1b53-1c59-4502-9bff-2887be8073b0',
-    ),
+    [optimism.id]: http('https://virtual.optimism.rpc.tenderly.co/77b8e846-c004-4697-8dab-7ee0e30df151'),
     // [base.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
   },
 })

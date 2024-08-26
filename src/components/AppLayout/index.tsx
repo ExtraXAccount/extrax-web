@@ -1,18 +1,20 @@
 import './index.scss'
 
-import { ConnectButton } from '@rainbow-me/rainbowkit'
+// import { ConnectButton } from '@rainbow-me/rainbowkit'
 import classNames from 'classnames'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
+import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
-import useSmartAccount from '@/hooks/useSmartAccount'
+// import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
 import lendingData from '@/sdk/lend-deprecated/mock.json'
 import { getCoingeckoPriceByIds } from '@/sdk/utils/coingecko'
+import { getLendingGlobalState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAppDispatch } from '@/state'
-import { setLendingStatus } from '@/state/lending/reducer'
+// import { setLendingStatus } from '@/state/lending/reducer'
 import { setPrices } from '@/state/price/reducer'
 import { useAccountStore } from '@/store'
 
@@ -46,19 +48,23 @@ export default function AppLayout() {
 
   const dispatch = useAppDispatch()
 
-  const { fetchLendPools } = useLendingList()
-  const { getInitData: getInitSmartAccountData } = useSmartAccount()
+  // const { fetchLendPools } = useLendingList()
+  // const { getInitData: getInitSmartAccountData } = useSmartAccount()
+
+  // useEffect(() => {
+  //   getInitSmartAccountData()
+  // }, [getInitSmartAccountData])
+
+  // useEffect(() => {
+  //   fetchLendPools()
+  // }, [fetchLendPools])
 
   useEffect(() => {
-    getInitSmartAccountData()
-  }, [getInitSmartAccountData])
+    getLendingGlobalState(chainIdToName[SupportedChainId.OPTIMISM])
+  }, [])
 
   useEffect(() => {
-    fetchLendPools()
-  }, [fetchLendPools])
-
-  useEffect(() => {
-    dispatch(setLendingStatus(lendingData))
+    // dispatch(setLendingStatus(lendingData))
 
     const getPrices = async () => {
       const priceMap = {
@@ -84,7 +90,7 @@ export default function AppLayout() {
             USDT: 1,
             OP: 2,
             WETH: 3000,
-          }),
+          })
         )
         console.warn(err)
       }
@@ -102,42 +108,38 @@ export default function AppLayout() {
       <ScrollToTop />
       <AccountLayer />
 
-      <div className="top-bar">
-        <div className="nav-logo-top">
-          <i className="nav-logo-image"></i>
+      <div className='top-bar'>
+        <div className='nav-logo-top'>
+          <i className='nav-logo-image'></i>
         </div>
-        <div className="nav-menu">
+        <div className='nav-menu'>
           {navList.map((i) => {
             return !i.isExternal ? (
-              <NavLink
-                to={i.link + '?' + searchParams.toString()}
-                className="nav-menu-item"
-                key={i.name}
-              >
+              <NavLink to={i.link + '?' + searchParams.toString()} className='nav-menu-item' key={i.name}>
                 <p>{i.name}</p>
               </NavLink>
             ) : (
               <a
                 key={i.name}
                 href={i.link}
-                target="_blank"
-                rel="noopener noreferrer"
+                target='_blank'
+                rel='noopener noreferrer'
                 className={classNames('nav-menu-item', {})}
               >
                 {i.name}
-                <i className="iconfont icon-external-link" style={{ marginLeft: 2 }}></i>
+                <i className='iconfont icon-external-link' style={{ marginLeft: 2 }}></i>
               </a>
             )
           })}
         </div>
-        <div className="nav-right flex ai-ct gap-8">
+        <div className='nav-right flex ai-ct gap-8'>
           <button
-            className="nav-shine-button"
+            className='nav-shine-button'
             onClick={() => {
               updateAccountLayer(true)
             }}
           >
-            <div className="nav-shine-button-inner">✨ Try Smart Account ✨</div>
+            <div className='nav-shine-button-inner'>✨ Try Smart Account ✨</div>
           </button>
           <CustomConnectButton />
           {/* <DarkMode /> */}
@@ -145,7 +147,7 @@ export default function AppLayout() {
       </div>
 
       <div className={classNames('page-content')}>
-        <div className="page-content-inner">
+        <div className='page-content-inner'>
           <Outlet />
         </div>
       </div>

@@ -6,6 +6,7 @@ import { Account, Chain, PublicClient, Transport, WalletClient } from 'viem'
 import { useAccount, useBlockNumber, usePublicClient, useWalletClient } from 'wagmi'
 
 import { defaultChainId } from '@/constants'
+import { clientToSigner } from '@/sdk/utils/clientToSigner'
 
 // import useDebouncedMemo from '@/hooks/useDebouncedMemo'
 
@@ -34,5 +35,6 @@ export default function useWagmi() {
     chainId,
     publicClient,
     walletClient,
+    signer: clientToSigner(walletClient),
   }
 }

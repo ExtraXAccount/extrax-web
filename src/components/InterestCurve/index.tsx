@@ -39,9 +39,7 @@ export default function InterestCurve() {
     ]
 
     for (let utilization = 0; utilization < 101; utilization++) {
-      const borrowRate = !interestRateConfig
-        ? 0
-        : calculateBorrowingRate(utilization * 100, interestRateConfig) / 100
+      const borrowRate = !interestRateConfig ? 0 : calculateBorrowingRate(utilization * 100, interestRateConfig) / 100
       fullData.push({
         utilization,
         borrowApr: borrowRate,
@@ -54,7 +52,7 @@ export default function InterestCurve() {
   const renderTooltip = useCallback((params) => {
     const { label, payload: tooltipPayload } = params
     return (
-      <div className="custom-tooltip-content">
+      <div className='custom-tooltip-content'>
         <p key={1}>
           <span>Utilization Rate: </span>
           <span>{toPrecision(label, 4)}%</span>
@@ -62,7 +60,7 @@ export default function InterestCurve() {
         {tooltipPayload.map((item) => (
           <p key={item.dataKey}>
             <span>Borrow APR: </span>
-            <span className="">{toPrecision(Number(item.value), 4) + '%'}</span>
+            <span className=''>{toPrecision(Number(item.value), 4) + '%'}</span>
           </p>
         ))}
       </div>
@@ -70,7 +68,7 @@ export default function InterestCurve() {
   }, [])
 
   return (
-    <div className="interest-curve">
+    <div className='interest-curve'>
       <ResponsiveContainer width={'100%'} height={150}>
         <LineChart
           data={lineChartData}
@@ -81,10 +79,10 @@ export default function InterestCurve() {
             bottom: -10,
           }}
         >
-          <CartesianGrid strokeDasharray="7 3" strokeWidth={0.5} vertical={false} />
+          <CartesianGrid strokeDasharray='7 3' strokeWidth={0.5} vertical={false} />
           <XAxis
-            type="number"
-            dataKey="utilization"
+            type='number'
+            dataKey='utilization'
             tick={{ fontSize: 12 }}
             tickFormatter={(value) => `${toPrecision(value)}%`}
             axisLine={false}
@@ -92,7 +90,7 @@ export default function InterestCurve() {
             domain={[0, 100]}
           ></XAxis>
           <YAxis
-            type="number"
+            type='number'
             // orientation="right"
             tick={{ fontSize: 12 }}
             ticks={[0, 50, 100]}
@@ -101,7 +99,7 @@ export default function InterestCurve() {
             domain={['dataMin', 'dataMax']}
           ></YAxis>
           <Tooltip content={renderTooltip} cursor />
-          <ReferenceLine x={currentUtilization} strokeDasharray="7 3">
+          <ReferenceLine x={currentUtilization} strokeDasharray='7 3'>
             <Label
               strokeWidth={0.5}
               stroke={'#666'}
@@ -109,38 +107,18 @@ export default function InterestCurve() {
               fontSize={10}
               offset={6}
               position={
-                Math.abs(
-                  currentUtilization - (interestRateConfig?.utilizationB || 0) / 100,
-                ) > 20
-                  ? 'top'
-                  : 'center'
+                Math.abs(currentUtilization - (interestRateConfig?.utilizationB || 0) / 100) > 20 ? 'top' : 'center'
               }
             >
               {`Current ${toPrecision(currentUtilization)}%`}
             </Label>
           </ReferenceLine>
-          <ReferenceLine
-            x={(interestRateConfig?.utilizationB || 0) / 100}
-            strokeDasharray="7 3"
-          >
-            <Label
-              strokeWidth={0.5}
-              stroke={'#666'}
-              letterSpacing={0.2}
-              fontSize={10}
-              offset={6}
-              position="top"
-            >
+          <ReferenceLine x={(interestRateConfig?.utilizationB || 0) / 100} strokeDasharray='7 3'>
+            <Label strokeWidth={0.5} stroke={'#666'} letterSpacing={0.2} fontSize={10} offset={6} position='top'>
               {`Optimal ${(interestRateConfig?.utilizationB || 0) / 100}%`}
             </Label>
           </ReferenceLine>
-          <Line
-            type="basis"
-            strokeWidth={1}
-            dataKey="borrowApr"
-            stroke="#7A8FFF"
-            dot={false}
-          />
+          <Line type='basis' strokeWidth={1} dataKey='borrowApr' stroke='#7A8FFF' dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>

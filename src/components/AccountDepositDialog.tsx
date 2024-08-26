@@ -36,7 +36,7 @@ export default function AccountDepositDialog({
 
   const currentLendingPoolDetail = useMemo(
     () => currentLendingPool || formattedLendPools[1],
-    [currentLendingPool, formattedLendPools[0]],
+    [currentLendingPool, formattedLendPools],
   )
 
   const { balance } = useFetchBalance(currentLendingPoolDetail?.tokenAddress)
@@ -71,29 +71,19 @@ export default function AccountDepositDialog({
         newAccounts = await accountMng.createAccount()
       }
       setLoading({ writing: true, desc: 'Depositing assets' })
-      await lendMng.depositToLending(
-        newAccounts[0],
-        currentLendingPoolDetail?.reserveId,
-        BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
-      )
+      // await lendMng.depositToLending(
+      //   newAccounts[0],
+      //   currentLendingPoolDetail?.reserveId,
+      //   BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
+      // )
 
-      getAccountInfo(accounts[0])
-      fetchLendPools()
+      // getAccountInfo(accounts[0])
+      // fetchLendPools()
       onClose()
     } finally {
       setLoading({ writing: false, desc: '' })
     }
-  }, [
-    getAccountInfo,
-    fetchLendPools,
-    accounts,
-    accountMng,
-    lendMng,
-    value,
-    currentLendingPoolDetail?.decimals,
-    currentLendingPoolDetail?.reserveId,
-    onClose,
-  ])
+  }, [accounts, accountMng, onClose])
 
   useEffect(() => {
     reset()
