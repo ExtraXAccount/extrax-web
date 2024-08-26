@@ -48,20 +48,16 @@ export default function AppLayout() {
 
   const dispatch = useAppDispatch()
 
-  // const { fetchLendPools } = useLendingList()
+  const { fetchPoolState } = useLendingList()
   // const { getInitData: getInitSmartAccountData } = useSmartAccount()
 
   // useEffect(() => {
   //   getInitSmartAccountData()
   // }, [getInitSmartAccountData])
 
-  // useEffect(() => {
-  //   fetchLendPools()
-  // }, [fetchLendPools])
-
   useEffect(() => {
-    getLendingGlobalState(chainIdToName[SupportedChainId.OPTIMISM])
-  }, [])
+    fetchPoolState()
+  }, [fetchPoolState])
 
   useEffect(() => {
     // dispatch(setLendingStatus(lendingData))

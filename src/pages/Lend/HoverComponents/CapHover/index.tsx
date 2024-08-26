@@ -20,27 +20,23 @@ export default function CapHover(props: {
       className={cx('cap-hover', 'hover-content', `cap-hover-${type}`)}
       onClick={(event) => event.stopPropagation()}
     >
-      <div className="cap-hover-title flex ai-ct">
+      <div className='cap-hover-title flex ai-ct'>
         <p>
           {type} cap: {addComma(max)}
         </p>
-        <p className="text-sm-2">${formatNumberByUnit(max * price)}</p>
+        <p className='text-sm-2'>${formatNumberByUnit(max * price)}</p>
       </div>
-      <div className="cap-hover-content">
-        <section className="cap-hover-content-slide">
-          <div
-            className="cap-hover-content-slide-inner"
-            style={{ width: `${Math.trunc(percent)}%` }}
-          ></div>
+      <div className='cap-hover-content'>
+        <section className='cap-hover-content-slide'>
+          <div className='cap-hover-content-slide-inner' style={{ width: `${Math.trunc(percent)}%` }}></div>
         </section>
-        <section className="cap-hover-content-text flex ai-ct">
-          <p className="flex ai-ct gap-4">
-            <i className="cap-hover-circle cap-hover-circle-main"></i>
+        <section className='cap-hover-content-text flex ai-ct'>
+          <p className='flex ai-ct gap-4'>
+            <i className='cap-hover-circle cap-hover-circle-main'></i>
             {type} used: {addComma(current)}
           </p>
-          <p className="flex ai-ct gap-4">
-            <i className="cap-hover-circle"></i>remaining: {addComma(max - current)} (
-            {Math.trunc(100 - percent)}%)
+          <p className='flex ai-ct gap-4'>
+            <i className='cap-hover-circle'></i>remaining: {addComma(max - current)} ({Math.trunc(100 - percent)}%)
           </p>
         </section>
       </div>
@@ -48,7 +44,7 @@ export default function CapHover(props: {
   )
 
   return (
-    <Popover content={content} overlayClassName="no-outside">
+    <Popover content={content} overlayClassName='no-outside'>
       {props.children}
     </Popover>
   )

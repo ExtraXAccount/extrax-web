@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@aave/math-utils@^1.30.1":
+  version "1.30.1"
+  resolved "https://registry.yarnpkg.com/@aave/math-utils/-/math-utils-1.30.1.tgz#cb245d6bdb893dd1d1a94703feb0f34b82f19da7"
+  integrity sha512-7gA5cCqi1ySsVWzTYdS6NmfuC3GZVH7kGyZXtoQQrsDnx3/c3Q0uUzhL4m2UHB73QrSF6Qxi5ueQLKLWVKkvKg==
+
 "@adraffy/ens-normalize@1.10.0":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@adraffy/ens-normalize/-/ens-normalize-1.10.0.tgz#d2a39395c587e092d77cbbc80acf956a54f38bf7"

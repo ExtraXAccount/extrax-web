@@ -1,11 +1,14 @@
-import { sumBy } from 'lodash'
+import { formatReserveUSD } from '@aave/math-utils'
+import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
+import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import usePrices from '@/hooks/usePrices'
 import { useLendingManager2 } from '@/hooks/useSDK'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
+import { getLendingGlobalState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore, useLendStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
 import { aprToApy } from '@/utils/math'
@@ -38,6 +41,21 @@ export default function useLendingList() {
       updateIsFetching(false)
     }
   }, [lendingMng, updateIsFetching, updateLendPools])
+
+  const fetchPoolState = useCallback(async () => {
+    const { reservesData, baseCurrencyData } = await getLendingGlobalState(chainIdToName[SupportedChainId.OPTIMISM])
+    const formattedReserves = reservesData.map((reserve) => {
+      const formattedReserve = formatReserveUSD({
+        reserve,
+        currentTimestamp: dayjs().unix(),
+        marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+        marketReferenceCurrencyDecimals: baseCurrencyData.marketReferenceCurrencyDecimals,
+      })
+      return { ...reserve, ...formattedReserve }
+    })
+    console.log('formattedReserves :>> ', formattedReserves)
+    return formattedReserves
+  }, [])
 
   const formattedLendPools: IFormattedLendPool[] = useMemo(() => {
     return lendPools.map((pool, index) => {
@@ -99,6 +117,7 @@ export default function useLendingList() {
 
   return {
     formattedLendPools,
+    fetchPoolState,
     totalInfos,
     fetchLendPools,
     isFetching,
