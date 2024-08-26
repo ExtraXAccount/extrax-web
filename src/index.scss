@@ -199,7 +199,7 @@ input {
   // flex-shrink: 0;
   // gap: 8px;
   border-radius: 6px;
-  border: 0.5px solid var(--stroke, #C9C9CB);
+  border: 0.5px solid var(--box-border-color);
   background: var(--white, #FFF);
   box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.08);
   &.btn-base-small{
@@ -275,8 +275,8 @@ input {
     // opacity: .5;
     // background: var(--button-bg);
 
-    color: var(--stroke, #C9C9CB);
-    border: 0.5px solid var(--stroke, #C9C9CB);
+    color: var(--box-border-color);
+    border: 0.5px solid var(--box-border-color);
     pointer-events: none;
     // cursor: not-allowed;
   }

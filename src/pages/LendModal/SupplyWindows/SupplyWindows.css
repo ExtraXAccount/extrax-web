@@ -87,7 +87,7 @@
   background: var(--background, #f9f9fa);
   border-radius: 16px;
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0.5px;
   display: flex;
   flex-direction: column;
@@ -101,7 +101,7 @@
 }
 .supply-windows__frame-481806 {
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0px 0px 0.5px 0px;
   padding: 16px;
   display: flex;
@@ -126,7 +126,7 @@
   background: #ffffff;
   border-radius: 8px;
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0.5px;
   display: flex;
   flex-direction: row;
@@ -137,7 +137,7 @@
 }
 .supply-windows__frame-4820842 {
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0px 0.5px 0px 0px;
   padding: 12px 16px 12px 16px;
   display: flex;
@@ -185,7 +185,7 @@
   background: var(--background, #f9f9fa);
   border-radius: 12px;
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0.5px;
   padding: 4px 8px 4px 8px;
   display: flex;
@@ -212,7 +212,7 @@
   background: var(--background, #f9f9fa);
   border-radius: 12px;
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0.5px;
   padding: 4px 8px 4px 8px;
   display: flex;
@@ -262,7 +262,7 @@
   background: var(--white, #ffffff) !important;
   border-radius: 8px !important;
   border-style: solid !important;
-  border-color: var(--stroke, #c9c9cb) !important;
+  border-color: var(--box-border-color) !important;
   border-width: 0.5px !important;
   padding: 8px 12px 8px 12px !important;
   justify-content: space-between !important;
@@ -285,7 +285,7 @@
   background: #ffffff;
   border-radius: 8px;
   /* border-style: solid; */
-  /* border-color: var(--stroke, #c9c9cb); */
+  /* border-color: var(--box-border-color); */
   /* border-width: 0.5px; */
   display: flex;
   flex-direction: row;
@@ -324,11 +324,11 @@
 .leverage-mode-setting-wrapper {
   width: 100%;
   border-radius: 8px;
-  border: 0.5px solid var(--stroke, #c9c9cb);
+  border: 0.5px solid var(--box-border-color);
   background: #fff;
   .leverage-mode-setting-form {
     padding: 8px 12px;
-    border-bottom: 0.5px solid var(--stroke, #c9c9cb);
+    border-bottom: 0.5px solid var(--box-border-color);
     color: var(--text-gry-60-b, #666);
     font-size: 12px;
     font-weight: bold;
@@ -349,7 +349,7 @@
 /*
 .borrow-risk-hint {
   border-radius: 8px;
-  border: 0.5px solid var(--stroke, #c9c9cb);
+  border: 0.5px solid var(--box-border-color);
   padding: 8px;
   display: flex;
   gap: 8px;

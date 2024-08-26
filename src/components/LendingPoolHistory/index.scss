@@ -1,7 +1,7 @@
 .pool-history-stats {
   width: 100%;
   border-style: solid;
-  border-color: #c9c9cb;
+  border-color: var(--box-border-color);
   border-width: 0px 0px 0.5px 0px;
   padding: 24px;
   display: flex;
@@ -76,7 +76,7 @@
 
 .custom-tooltip-content {
   width: 140px;
-  border: 0.5px solid #C9C9CB;
+  border: 0.5px solid var(--box-border-color);
   border-radius: 4px;
   p {
     width: 100%;
@@ -85,7 +85,7 @@
     align-items: center;
     padding: 4px;
     &:not(:last-child) {
-      border-bottom: 0.5px solid #C9C9CB;
+      border-bottom: 0.5px solid var(--box-border-color);
     }
     span {
       color: #666;

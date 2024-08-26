@@ -4,7 +4,7 @@
 }
 .borrow-info {
   border-style: solid;
-  border-color: var(--stroke, #c9c9cb);
+  border-color: var(--box-border-color);
   border-width: 0px 0px 0.5px 0px;
   padding: 24px;
   display: flex;

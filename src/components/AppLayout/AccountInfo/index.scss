@@ -82,7 +82,7 @@
       background: var(--title-back, #F2F2F7);
       // border-radius: 16px 16px 0 0;
       font-size: 14px;
-      border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+      border-bottom: 0.5px solid var(--box-border-color);
       
       > div {
         height: 100%;
@@ -91,7 +91,7 @@
         .extrax-account-info-market {
           padding: 16px;
           height: 100%;
-          border-right: 0.5px solid var(--stroke, #C9C9CB);
+          border-right: 0.5px solid var(--box-border-color);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -107,7 +107,7 @@
           }
         }
         &:first-child {
-          border-right: 0.5px solid var(--stroke, #C9C9CB);
+          border-right: 0.5px solid var(--box-border-color);
           width: 35%;
           padding: 0;
         }
@@ -134,7 +134,7 @@
           position: relative;
           padding: 2px 8px;
           border-radius: 4px;
-          border: 0.5px solid var(--stroke, #C9C9CB);
+          border: 0.5px solid var(--box-border-color);
           background: var(--white, #FFF);
 
           color: var(--bgBlack, #000);
@@ -160,7 +160,7 @@
             align-items: center;
             gap: 4px;
             border-radius: 4px;
-            // border: 0.5px solid var(--stroke, #C9C9CB);
+            // border: 0.5px solid var(--box-border-color);
             background: var(--white, #FFF);
 
             color: var(--card-title, rgba(0, 0, 0, 0.90));
@@ -218,7 +218,7 @@
         //   }
         // }
         &:not(:last-child) {
-          border-right: 0.5px solid var(--stroke, #C9C9CB);
+          border-right: 0.5px solid var(--box-border-color);
         }
       }
 
@@ -485,7 +485,7 @@
       &.available{
         >p{
           &::before{
-            border: 0.5px solid var(--stroke, #C9C9CB);
+            border: 0.5px solid var(--box-border-color);
             background: var(--slider-switch-back, rgba(120, 120, 128, 0.16));
           }
         }
@@ -503,7 +503,7 @@
     outline: 0;
     font-size: 12px;
     background-color: transparent;
-    border: 0.5px solid var(--stroke, #C9C9CB);
+    border: 0.5px solid var(--box-border-color);
     border-radius: 4px;
     padding: 3px 8px;
     margin-right: 4px;

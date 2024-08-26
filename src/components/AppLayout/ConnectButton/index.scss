@@ -4,7 +4,7 @@
     font-size: 12px;
     padding: 4px;
     border-radius: 6px;
-    border: 0.5px solid var(--stroke, #C9C9CB);
+    border: 0.5px solid var(--box-border-color);
     background: var(--white, #FFF);
     transition: .3s ease-in-out;
     &:hover{
@@ -30,7 +30,7 @@
       width: 24px;
       height: 24px;
       border-radius: 4px;
-      border: 0.5px solid var(--stroke, #C9C9CB);
+      border: 0.5px solid var(--box-border-color);
     }
     &-avatar{
       background-color: rgb(255, 128, 36);

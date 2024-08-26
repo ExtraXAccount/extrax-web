@@ -11,7 +11,7 @@
   height: var(--nav-height);
   line-height: var(--nav-height);
   padding: 0 1em;
-  border-bottom: 1px solid var(--nav-border-color);
+  border-bottom: 1px solid var(--box-border-color);
 
   &::after{
     content: '';
@@ -55,8 +55,8 @@
   // gap: .5em;
   gap: 1.5em;
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  left: 190px;
+  // transform: translateX(-50%);
   // box-shadow: var(--nav-box-shadow);
   // border: 2px solid var(--nav-bg);
 
@@ -157,6 +157,7 @@ $light-logo: '/logo.svg';
   &-top{
     display: flex;
     align-items: center;
+    padding-left: 32px;
   }
   &-image{
     display: block;

@@ -9,7 +9,7 @@
 
   .account-info-switch-box{
     margin-bottom: 24px;
-    border: 0.5px solid var(--stroke, #C9C9CB);
+    border: 0.5px solid var(--box-border-color);
     border-radius: 8px;
     border-bottom: 0;
     .extrax-account-info-main{
@@ -22,7 +22,7 @@
   }
 
   .extrax-account-info-detail{
-    border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+    border-bottom: 0.5px solid var(--box-border-color);
   }
 
   &-title{

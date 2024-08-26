@@ -10,7 +10,7 @@
     top: 16px;
     right: 16px;
     border-radius: 4px;
-    border: 1px solid var(--stroke, #C9C9CB);
+    border: 1px solid var(--box-border-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,7 +22,7 @@
 
   &-item{
     height: 144px;
-    background: url('https://s3-alpha-sig.figma.com/img/83ce/9b96/977c4148b630bf2d17dffe42c9f5c4ad?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=HvY2Kp3cl3CBSy4xpGEgNCvmw-URO~jFro3S~QKC7qjT5SoW1mGXkpiJ1SZXjsEBoHzGu9t45I0QzkvGGBYVaozxWqRBY9LlyidMH6SH-HWzxkZGE61IUMk1axOAb~wSBzYWvXW-mlxv7k-rMqqRe4qjg0KfOCquy~Q-UjZCxPl0l6CmpSnOZcee4jT6kpXWTPzxt3BsA5yV6WBxDaXVvvH-4uHqjgWm7u4skvLbypP~1mOm-J1y43MmY98~tGH3USnv69diKfNO768qWLLdeMxd6cPyd0gKKArPWmfwbr1MfxuMVzo9Yc1gC8a8ElyX0rACY1SKwP0RRmIv09HGNg__')
+    background: url('https://extra-static.s3.amazonaws.com/images/x/test/event-bg.png')
       center / cover no-repeat;
 
     &-mask{

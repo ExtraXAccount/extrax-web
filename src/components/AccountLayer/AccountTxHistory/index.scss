@@ -1,13 +1,13 @@
 .account-txhistory{
   border-radius: 8px;
-  border: 0.5px solid var(--stroke, #C9C9CB);
+  border: 0.5px solid var(--box-border-color);
   background: #FFF;
 
   &-title{
     font-size: 12px;
     line-height: 1.5;
     padding: 8px 12px;
-    // border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+    // border-bottom: 0.5px solid var(--box-border-color);
   }
 
   &-table{
@@ -24,7 +24,7 @@
       padding: 19px 12px;
       vertical-align: middle;
       display: table-cell;
-      border-top: 0.5px solid var(--stroke, #C9C9CB);
+      border-top: 0.5px solid var(--box-border-color);
 
       .lpname{
         .bold{
