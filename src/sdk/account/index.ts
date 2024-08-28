@@ -19,12 +19,7 @@ export class AccountManager {
   publicClient: PublicClient
   walletClient: WalletClient
 
-  constructor(
-    chainId: SupportedChainId,
-    publicClient: PublicClient,
-    walletClient: WalletClient,
-    account?: Address,
-  ) {
+  constructor(chainId: SupportedChainId, publicClient: PublicClient, walletClient: WalletClient, account?: Address) {
     if (chainId && chainId in SupportedChainId) {
       this.chainId = chainId
     }
@@ -81,13 +76,10 @@ export class AccountManager {
   public async createAccount() {
     const userAccountTag = Math.floor(new Date().getTime() / 1000)
     console.log('createAccount start :>> ', protocolTag, userAccountTag)
-    const res = await this.factoryContract().write.createAccount(
-      [protocolTag, BigInt(userAccountTag), '0x'],
-      {
-        chain: this.walletClient.chain,
-        account: this.account,
-      },
-    )
+    const res = await this.factoryContract().write.createAccount([protocolTag, BigInt(userAccountTag), '0x'], {
+      chain: this.walletClient.chain,
+      account: this.account,
+    })
     // const [ collateral, collateralDeciamls, debt, debtDecimals ] = res as any
     console.log('createAccount res :>> ', res)
     const tx = await (this.publicClient as PublicClient).waitForTransactionReceipt({
@@ -159,9 +151,7 @@ export class AccountManager {
   }
 
   public async getCollateralAndDebtValue(account: Address) {
-    const res = await this.healthManagerContract().read.getCollateralAndDebtValue([
-      account,
-    ])
+    const res = await this.healthManagerContract().read.getCollateralAndDebtValue([account])
     const [collateral, collateralDeciamls, debt, debtDecimals] = res
     console.log('getCollateralAndDebtValue :>> ', {
       account,

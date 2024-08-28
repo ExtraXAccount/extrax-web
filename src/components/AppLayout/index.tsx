@@ -6,16 +6,10 @@ import { useEffect } from 'react'
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
-import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
-import lendingData from '@/sdk/lend-deprecated/mock.json'
-import { getCoingeckoPriceByIds } from '@/sdk/utils/coingecko'
 import { getLendingGlobalState } from '@/sdk-ethers/extra-x-lending/state'
-import { useAppDispatch } from '@/state'
-// import { setLendingStatus } from '@/state/lending/reducer'
-import { setPrices } from '@/state/price/reducer'
 import { useAccountStore } from '@/store'
 
 import AccountLayer from '../AccountLayer'
@@ -46,8 +40,6 @@ export default function AppLayout() {
   const { isMobile } = useDeviceDetect()
   const { updateAccountLayer } = useAccountStore()
 
-  const dispatch = useAppDispatch()
-
   const { fetchPoolState } = useLendingList()
   // const { getInitData: getInitSmartAccountData } = useSmartAccount()
 
@@ -58,42 +50,6 @@ export default function AppLayout() {
   useEffect(() => {
     fetchPoolState()
   }, [fetchPoolState])
-
-  useEffect(() => {
-    // dispatch(setLendingStatus(lendingData))
-
-    const getPrices = async () => {
-      const priceMap = {
-        'USDC.e': 1,
-        USDC: 1,
-        USDT: 1,
-      }
-      try {
-        const result = await getCoingeckoPriceByIds(lendingData.map((i) => i.cgId))
-
-        // console.log('getCoingeckoPriceByIds :>> ', result)
-        lendingData.forEach((i) => {
-          if (result[i.cgId]?.usd) {
-            priceMap[i.tokenSymbol] = result[i.cgId].usd
-          }
-        })
-        dispatch(setPrices(priceMap))
-      } catch (err) {
-        dispatch(
-          setPrices({
-            'USDC.e': 1,
-            USDC: 1,
-            USDT: 1,
-            OP: 2,
-            WETH: 3000,
-          })
-        )
-        console.warn(err)
-      }
-    }
-
-    getPrices()
-  }, [dispatch])
 
   return (
     <div

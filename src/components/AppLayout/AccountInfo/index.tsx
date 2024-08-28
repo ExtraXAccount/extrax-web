@@ -89,11 +89,11 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const accountName = name || nameList[currentAccount?.toLowerCase()] || ''
   return (
     <div className='extrax-account-info'>
-      <AccountDepositDialog
+      {/* <AccountDepositDialog
         accounts={accounts}
         open={depositDialogOpen}
         onClose={() => setDepositDialogOpen(false)}
-      ></AccountDepositDialog>
+      ></AccountDepositDialog> */}
 
       {!currentAccount ? (
         <div className='extrax-account-info-inner extrax-account-creator'>

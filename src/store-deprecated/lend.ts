@@ -1,4 +1,3 @@
-import { FormatReserveUSDResponse } from '@aave/math-utils'
 import { Address } from 'viem'
 import { create } from 'zustand'
 
@@ -43,7 +42,33 @@ export interface ILendPoolInfo {
   config: ILendPoolConfig
 }
 
-export type IFormattedLendPool = FormatReserveUSDResponse
+export interface IFormattedLendPool extends ILendPoolInfo {
+  formatted: {
+    exchangeRate: number
+    apr: number
+    apy: number
+    borrowApr: number
+    borrowApy: number
+    totalSupply: number
+    supplyCap: number
+    totalBorrowed: number
+    borrowCap: number
+    availableLiquidity: number
+    utilization: number
+    balance: number
+    deposited: number
+    borrowed: number
+    depositedBal: number
+    borrowedBal: number
+  }
+  name: string
+  tokenSymbol: string
+  poolKey: string
+  underlyingTokenAddress: Address
+  eToken: Address
+  debtToken: Address
+  decimals: number
+}
 
 export interface ILendPosition {
   account: Address
@@ -61,7 +86,7 @@ export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
 }
 
 export interface LendState {
-  lendPools: FormatReserveUSDResponse[]
+  lendPools: ILendPoolInfo[]
   historyData: any[]
   positions: ILendPosition[]
   isFetching: boolean

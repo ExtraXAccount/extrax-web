@@ -2,6 +2,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd/es'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { Address } from 'viem'
 import { useSwitchChain } from 'wagmi'
 
 import CustomSortIcon from '@/components/CustomSortIcon'
@@ -16,7 +17,7 @@ import { useLendStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
-import { div } from '@/utils/math/bigNumber'
+import { div, minus } from '@/utils/math/bigNumber'
 
 import BorrowDialog from './BorrowDialog'
 import DepositDialog from './DepositDialog'
@@ -56,12 +57,12 @@ export default function LendingTable() {
       accountManager
         .getBalances(
           [account],
-          formattedLendPools.map((i) => i.underlyingTokenAddress)
+          formattedLendPools.map((i) => i.underlyingAsset as Address)
         )
         .then((r) => {
           const balanceMap = {}
           formattedLendPools.forEach((i, index) => {
-            balanceMap[i.underlyingTokenAddress] = toDecimals(r[index], i.decimals)
+            balanceMap[i.underlyingAsset] = toDecimals(r[index], i.decimals)
           })
           setBalanceMap(balanceMap)
         })
@@ -104,11 +105,11 @@ export default function LendingTable() {
         sortDirections={['descend', 'ascend']}
         dataSource={formattedLendPools}
         pagination={false}
-        rowKey={(i: IFormattedLendPool) => i.poolKey}
+        rowKey={(i: IFormattedLendPool) => i.symbol}
         onRow={(record: IFormattedLendPool) => {
           return {
             onClick: () => {
-              navigate(`/lend/${record.marketId.toString()}/${record.reserveId.toString()}`)
+              navigate(`/lend/${record.id}`)
             },
           }
         }}
@@ -135,9 +136,9 @@ export default function LendingTable() {
             return (
               <>
                 <div className='lending-list-title-wrap'>
-                  <LPName token0={nameChecker(formatSymbol(pool.tokenSymbol))} title={nameChecker(pool.tokenSymbol)}>
+                  <LPName token0={nameChecker(formatSymbol(pool.symbol))} title={nameChecker(pool.symbol)}>
                     <div className='lending-list-title-wrap-balance text-sm-2'>
-                      Wallet: {formatFloatNumber(balanceMap[pool.underlyingTokenAddress] || 0)}
+                      Wallet: {formatFloatNumber(balanceMap[pool.underlyingAsset] || 0)}
                     </div>
                   </LPName>
                 </div>
@@ -152,18 +153,13 @@ export default function LendingTable() {
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return a.formatted.totalSupply * getPrice(a.tokenSymbol) - b.formatted.totalSupply * getPrice(b.tokenSymbol)
+            return Number(a.totalLiquidityUSD) - Number(b.totalLiquidityUSD)
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = i.formatted.totalSupply
-            const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
+            const amount = Number(i.totalLiquidity)
+            const value = Number(i.totalLiquidityUSD)
             return (
-              <CapHover
-                type='supply'
-                max={i.formatted.supplyCap}
-                current={i.formatted.totalSupply}
-                price={getPrice(i.tokenSymbol)}
-              >
+              <CapHover type='supply' max={Number(i.supplyCap)} current={amount} price={Number(i.priceInUSD)}>
                 <div>
                   {isMobile && <div className='text-bold-small'>Total Supply</div>}
                   <div className='flex ai-ct gap-10'>
@@ -177,7 +173,7 @@ export default function LendingTable() {
                     <div>
                       <PercentCircle
                         radix={8}
-                        percent={div(i.formatted.totalSupply.toString(), i.formatted.supplyCap.toString()).toNumber()}
+                        percent={div(i.totalLiquidity, i.supplyCap).toNumber()}
                         strokeWidth={2.5}
                         strokeColor={'#38AD3D'}
                       />
@@ -195,19 +191,17 @@ export default function LendingTable() {
           sortIcon={CustomSortIcon}
           showSorterTooltip={false}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return (
-              a.formatted.totalBorrowed * getPrice(a.tokenSymbol) - b.formatted.totalBorrowed * getPrice(b.tokenSymbol)
-            )
+            return Number(a.totalDebtUSD) - Number(b.totalDebtUSD)
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = i.formatted.totalBorrowed
-            const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
+            const amount = Number(i.totalDebt)
+            const value = Number(i.totalDebtUSD)
             return (
               <CapHover
                 type='borrow'
-                max={i.formatted.borrowCap}
-                current={i.formatted.totalBorrowed}
-                price={getPrice(i.tokenSymbol)}
+                max={Number(i.borrowCap)}
+                current={Number(i.totalDebt)}
+                price={Number(i.priceInUSD)}
               >
                 <div>
                   {isMobile && <div className='text-bold-small'>Total Supply</div>}
@@ -221,7 +215,7 @@ export default function LendingTable() {
                     </div>
                     <PercentCircle
                       radix={8}
-                      percent={div(i.formatted.totalBorrowed.toString(), i.formatted.borrowCap.toString()).toNumber()}
+                      percent={div(i.totalDebt, i.borrowCapUSD).toNumber()}
                       strokeWidth={2.5}
                       strokeColor={'#EC6F14'}
                     />
@@ -239,14 +233,11 @@ export default function LendingTable() {
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return (
-              a.formatted.availableLiquidity * getPrice(a.tokenSymbol) -
-              b.formatted.availableLiquidity * getPrice(b.tokenSymbol)
-            )
+            return Number(a.availableLiquidityUSD) - Number(b.availableLiquidityUSD)
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = i.formatted.availableLiquidity
-            const value = formatFloatNumber(amount * getPrice(i.tokenSymbol))
+            const amount = Number(i.formattedAvailableLiquidity)
+            const value = Number(i.availableLiquidityUSD)
             return (
               <>
                 {isMobile && <div className='text-bold-small'>Total Supply</div>}
@@ -266,13 +257,13 @@ export default function LendingTable() {
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return a.formatted.utilization - b.formatted.utilization
+            return Number(a.supplyUsageRatio) - Number(b.supplyUsageRatio)
           }}
           render={(i: IFormattedLendPool) => {
             return (
               <>
                 {isMobile && <div className='text-bold-small'>Utilization</div>}
-                <div>{toPrecision(i.formatted.utilization * 100)}%</div>
+                <div>{toPrecision(Number(i.supplyUsageRatio) * 100)}%</div>
               </>
             )
           }}
@@ -285,13 +276,13 @@ export default function LendingTable() {
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return a.config.LTV - b.config.LTV
+            return minus(a.formattedBaseLTVasCollateral, b.formattedBaseLTVasCollateral).toNumber()
           }}
           render={(i: IFormattedLendPool) => {
             return (
               <>
                 {isMobile && <div className='text-bold-small'>LTV</div>}
-                <div>{toPrecision(i.config.LTV / 10000, 2)}</div>
+                <div>{toPrecision(Number(i.formattedBaseLTVasCollateral), 2)}</div>
               </>
             )
           }}
@@ -305,17 +296,10 @@ export default function LendingTable() {
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return a.formatted.apr - b.formatted.apr
+            return minus(a.supplyAPY, b.supplyAPY).toNumber()
           }}
-          // onCell={() => {
-          //   return {
-          //     onClick: (event) => {
-          //       event.stopPropagation()
-          //     },
-          //   }
-          // }}
           render={(pool: IFormattedLendPool) => {
-            const apy = aprToApy100(pool.formatted.apr * 100)
+            const apy = Number(pool.supplyAPY) * 100
             return (
               // for test
               <RewardsHover
@@ -333,7 +317,7 @@ export default function LendingTable() {
                   <div className='flex ai-ct jc-sb gap-10'>
                     <span className='text-apr color-safe'>+{toPrecision(apy)}%</span>
                     <Link
-                      to={`/lend/supply/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                      to={`/lend/supply/${pool.id}`}
                       onClick={(e) => {
                         if (!account) {
                           e.preventDefault()
@@ -368,15 +352,15 @@ export default function LendingTable() {
           showSorterTooltip={false}
           sortIcon={CustomSortIcon}
           sorter={(a: IFormattedLendPool, b: IFormattedLendPool) => {
-            return a.formatted.borrowApr - b.formatted.borrowApr
+            return minus(a.variableBorrowAPY, b.variableBorrowAPY).toNumber()
           }}
           render={(pool: IFormattedLendPool) => {
             return (
               <>
                 <div className='flex ai-ct jc-sb gap-10'>
-                  <span className='color-danger'>-{toPrecision(pool.formatted.borrowApr * 100)}%</span>
+                  <span className='color-danger'>-{toPrecision(Number(pool.variableBorrowAPY) * 100)}%</span>
                   <Link
-                    to={`/lend/borrow/${pool.marketId.toString()}/${pool.reserveId.toString()}`}
+                    to={`/lend/borrow/${pool.id}`}
                     state={{ isBorrowMode: true }}
                     onClick={(e) => {
                       if (!account) {
