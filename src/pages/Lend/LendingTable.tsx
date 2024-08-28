@@ -6,6 +6,7 @@ import { Address } from 'viem'
 import { useSwitchChain } from 'wagmi'
 
 import CustomSortIcon from '@/components/CustomSortIcon'
+import FormattedNumber from '@/components/FormattedNumber'
 import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { SupportedChainId } from '@/constants/chains'
@@ -138,7 +139,7 @@ export default function LendingTable() {
                 <div className='lending-list-title-wrap'>
                   <LPName token0={nameChecker(formatSymbol(pool.symbol))} title={nameChecker(pool.symbol)}>
                     <div className='lending-list-title-wrap-balance text-sm-2'>
-                      Wallet: {formatFloatNumber(balanceMap[pool.underlyingAsset] || 0)}
+                      Wallet: <FormattedNumber value={balanceMap[pool.underlyingAsset]} unit />
                     </div>
                   </LPName>
                 </div>
@@ -156,19 +157,24 @@ export default function LendingTable() {
             return Number(a.totalLiquidityUSD) - Number(b.totalLiquidityUSD)
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = Number(i.totalLiquidity)
-            const value = Number(i.totalLiquidityUSD)
             return (
-              <CapHover type='supply' max={Number(i.supplyCap)} current={amount} price={Number(i.priceInUSD)}>
+              <CapHover
+                type='supply'
+                max={Number(i.supplyCap)}
+                current={Number(i.totalLiquidity)}
+                price={Number(i.priceInUSD)}
+              >
                 <div>
                   {isMobile && <div className='text-bold-small'>Total Supply</div>}
                   <div className='flex ai-ct gap-10'>
                     <div>
                       <div>
-                        {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
+                        <FormattedNumber value={i.totalLiquidity} unit />
                         {/* {nameChecker(i.tokenSymbol)} */}
                       </div>
-                      <div className='text-sm-2'>${formatNumberByUnit(value)}</div>
+                      <div className='text-sm-2'>
+                        <FormattedNumber value={i.totalLiquidityUSD} unit symbol='$' />
+                      </div>
                     </div>
                     <div>
                       <PercentCircle
@@ -194,8 +200,6 @@ export default function LendingTable() {
             return Number(a.totalDebtUSD) - Number(b.totalDebtUSD)
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = Number(i.totalDebt)
-            const value = Number(i.totalDebtUSD)
             return (
               <CapHover
                 type='borrow'
@@ -208,10 +212,11 @@ export default function LendingTable() {
                   <div className='flex ai-ct gap-10'>
                     <div>
                       <div>
-                        {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)}{' '}
-                        {/* {nameChecker(i.tokenSymbol)} */}
+                        <FormattedNumber value={i.totalDebt} unit />
                       </div>
-                      <div className='text-sm-2'>${formatNumberByUnit(value)}</div>
+                      <div className='text-sm-2'>
+                        <FormattedNumber value={i.totalDebtUSD} unit symbol='$' />
+                      </div>
                     </div>
                     <PercentCircle
                       radix={8}
@@ -236,15 +241,15 @@ export default function LendingTable() {
             return Number(a.availableLiquidityUSD) - Number(b.availableLiquidityUSD)
           }}
           render={(i: IFormattedLendPool) => {
-            const amount = Number(i.formattedAvailableLiquidity)
-            const value = Number(i.availableLiquidityUSD)
             return (
               <>
                 {isMobile && <div className='text-bold-small'>Total Supply</div>}
                 <div>
-                  {amount < 1 ? formatNumberByUnit(amount) : addComma(amount)} {/* {nameChecker(i.tokenSymbol)} */}
+                  <FormattedNumber value={i.formattedAvailableLiquidity} />
                 </div>
-                <div className='text-sm-2'>${formatNumberByUnit(value)}</div>
+                <div className='text-sm-2'>
+                  <FormattedNumber value={i.availableLiquidityUSD} symbol='$' />
+                </div>
               </>
             )
           }}
@@ -263,7 +268,7 @@ export default function LendingTable() {
             return (
               <>
                 {isMobile && <div className='text-bold-small'>Utilization</div>}
-                <div>{toPrecision(Number(i.supplyUsageRatio) * 100)}%</div>
+                <FormattedNumber value={i.supplyUsageRatio} percent />
               </>
             )
           }}
@@ -282,7 +287,9 @@ export default function LendingTable() {
             return (
               <>
                 {isMobile && <div className='text-bold-small'>LTV</div>}
-                <div>{toPrecision(Number(i.formattedBaseLTVasCollateral), 2)}</div>
+                <div>
+                  <FormattedNumber value={i.formattedBaseLTVasCollateral} unit symbol='$' />
+                </div>
               </>
             )
           }}
@@ -315,7 +322,10 @@ export default function LendingTable() {
                 <>
                   {isMobile && <div className='text-bold-small'>APY</div>}
                   <div className='flex ai-ct jc-sb gap-10'>
-                    <span className='text-apr color-safe'>+{toPrecision(apy)}%</span>
+                    <span className='text-apr color-safe'>
+                      +
+                      <FormattedNumber value={pool.supplyAPY} percent />
+                    </span>
                     <Link
                       to={`/lend/supply/${pool.id}`}
                       onClick={(e) => {
@@ -358,7 +368,10 @@ export default function LendingTable() {
             return (
               <>
                 <div className='flex ai-ct jc-sb gap-10'>
-                  <span className='color-danger'>-{toPrecision(Number(pool.variableBorrowAPY) * 100)}%</span>
+                  <span className='color-danger'>
+                    -
+                    <FormattedNumber value={pool.variableBorrowAPY} percent />
+                  </span>
                   <Link
                     to={`/lend/borrow/${pool.id}`}
                     state={{ isBorrowMode: true }}

@@ -51,8 +51,8 @@ export default function useLendingList() {
         marketReferencePriceInUsd: baseCurrencyData.marketReferenceCurrencyPriceInUsd,
         marketReferenceCurrencyDecimals: baseCurrencyData.marketReferenceCurrencyDecimals,
       })
-      return formattedReserve
-      // return { ...reserve, ...formattedReserve }
+      // return formattedReserve
+      return { ...reserve, ...formattedReserve }
     })
     updateLendPools(formattedReserves)
     console.log('formattedReserves :>> ', formattedReserves)

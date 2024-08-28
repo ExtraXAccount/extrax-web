@@ -97,7 +97,7 @@ export default function AccountDepositDialog({
     >
       <div>
         <AmountInput
-          maxText='Balance'
+          maxText="Balance"
           max={balance}
           ethBalance={ethBalance}
           useNativeETH={useNativeETH}
@@ -108,23 +108,23 @@ export default function AccountDepositDialog({
           onChange={(val) => setValue(val)}
         />
       </div>
-      <ul className='summary-list'>
+      <ul className="summary-list">
         <li>
           <p>Value:</p>
-          <b className='text-highlight'>
+          <b className="text-highlight">
             ${toPrecision(Number(value) * getPrice(currentLendingPoolDetail?.tokenSymbol))}
           </b>
         </li>
         <li>
           <p>Current APY:</p>
-          <b className='text-highlight'>{formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%</b>
+          <b className="text-highlight">{formatFloatNumber(aprToApy(currentLendingPoolDetail?.apr) * 100)}%</b>
         </li>
         <li>
           <p>Updated APY:</p>
-          <b className='text-highlight'>{formatFloatNumber(nextApy)}%</b>
+          <b className="text-highlight">{formatFloatNumber(nextApy)}%</b>
         </li>
       </ul>
-      <div className='dialog-btns flex jc-sb'>
+      <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading.writing}
           disabled={!Number(value)}

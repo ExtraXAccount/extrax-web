@@ -26,7 +26,9 @@ export async function getLendingGlobalState(chain: string) {
   const lendingPoolAddressProvider = LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID]
   const { 0: reservesRaw, 1: poolBaseCurrencyRaw } = await dataProvider.getReservesData(lendingPoolAddressProvider)
 
+  console.log('reservesRaw :>> ', reservesRaw)
   const reservesData = reservesRaw.map((reserveRaw) => ({
+    reserveRaw: (reserveRaw as any).toObject(),
     id: `${ChainId[chain]}-${reserveRaw.underlyingAsset}-${lendingPoolAddressProvider}`.toLowerCase(),
     underlyingAsset: reserveRaw.underlyingAsset.toLowerCase(),
     name: reserveRaw.name,
@@ -50,10 +52,10 @@ export async function getLendingGlobalState(chain: string) {
     variableBorrowRate: reserveRaw.variableBorrowRate.toString(),
     stableBorrowRate: reserveRaw.stableBorrowRate.toString(),
     lastUpdateTimestamp: bi2num(reserveRaw.lastUpdateTimestamp),
-    aTokenAddress: reserveRaw.aTokenAddress.toString(),
-    stableDebtTokenAddress: reserveRaw.stableDebtTokenAddress.toString(),
-    variableDebtTokenAddress: reserveRaw.variableDebtTokenAddress.toString(),
-    interestRateStrategyAddress: reserveRaw.interestRateStrategyAddress.toString(),
+    aTokenAddress: reserveRaw.aTokenAddress,
+    stableDebtTokenAddress: reserveRaw.stableDebtTokenAddress,
+    variableDebtTokenAddress: reserveRaw.variableDebtTokenAddress,
+    interestRateStrategyAddress: reserveRaw.interestRateStrategyAddress,
     availableLiquidity: reserveRaw.availableLiquidity.toString(),
     totalPrincipalStableDebt: reserveRaw.totalPrincipalStableDebt.toString(),
     averageStableRate: reserveRaw.averageStableRate.toString(),
@@ -72,13 +74,13 @@ export async function getLendingGlobalState(chain: string) {
     isPaused: reserveRaw.isPaused,
     debtCeiling: reserveRaw.debtCeiling.toString(),
     eModeCategoryId: bi2num(reserveRaw.eModeCategoryId),
-    borrowCap: reserveRaw.borrowCap.toString(),
-    supplyCap: reserveRaw.supplyCap.toString(),
+    borrowCap: reserveRaw.borrowCap.toString() === '0' ? '1000000' : reserveRaw.borrowCap.toString(),
+    supplyCap: reserveRaw.supplyCap.toString() === '0' ? '1000000' : reserveRaw.supplyCap.toString(),
     eModeLtv: bi2num(reserveRaw.eModeLtv),
     eModeLiquidationThreshold: bi2num(reserveRaw.eModeLiquidationThreshold),
     eModeLiquidationBonus: bi2num(reserveRaw.eModeLiquidationBonus),
-    eModePriceSource: reserveRaw.eModePriceSource.toString(),
-    eModeLabel: reserveRaw.eModeLabel.toString(),
+    eModePriceSource: reserveRaw.eModePriceSource,
+    eModeLabel: reserveRaw.eModeLabel,
     borrowableInIsolation: reserveRaw.borrowableInIsolation,
     accruedToTreasury: reserveRaw.accruedToTreasury.toString(),
     unbacked: reserveRaw.unbacked.toString(),

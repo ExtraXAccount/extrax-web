@@ -1,4 +1,4 @@
-import { floor, round } from 'lodash'
+import { ceil, floor, round } from 'lodash'
 
 export function getBaseLog(x: number, y: number) {
   return Math.log(y) / Math.log(x)
@@ -80,10 +80,7 @@ export function addComma(numStr: string | number) {
   const intStr = String(Math.floor(Number(numStr)))
   const floatStr = String(numStr).split('.')[1] || ''
   if (withFloat) {
-    return (
-      intStr.replace(/(?=(\B)(\d{3})+$)/g, ',') +
-      (floatStr ? `.${floatStr.slice(0, 2)}` : '')
-    )
+    return intStr.replace(/(?=(\B)(\d{3})+$)/g, ',') + (floatStr ? `.${floatStr.slice(0, 2)}` : '')
   }
   return intStr.replace(/(?=(\B)(\d{3})+$)/g, ',')
 }
@@ -98,16 +95,8 @@ export function range(num: number, min: number, max: number) {
 }
 
 export function getDynamicFee(bullEquity: number, bearEquity: number) {
-  const bullDynamicFee = range(
-    -(bullEquity - bearEquity) / (bullEquity * 100),
-    -0.01,
-    0.01,
-  )
-  const bearDynamicFee = range(
-    (bullEquity - bearEquity) / (bearEquity * 100),
-    -0.01,
-    0.01,
-  )
+  const bullDynamicFee = range(-(bullEquity - bearEquity) / (bullEquity * 100), -0.01, 0.01)
+  const bearDynamicFee = range((bullEquity - bearEquity) / (bearEquity * 100), -0.01, 0.01)
 
   // console.log('eee', bullEquity - bearEquity, bullEquity, bearEquity);
   // console.log('bullDynamicFee', bullDynamicFee, bearDynamicFee);
@@ -190,6 +179,38 @@ function removeTrailingZero(str: string) {
     return str.replace(/0*$/g, '')
   }
   return str
+}
+
+export function num2precision(
+  value: number | string,
+  {
+    precision = 3,
+    roundType = 'round',
+  }: // remainTrailingZero = false
+  {
+    precision?: number
+    roundType?: 'floor' | 'ceil' | 'round'
+    // remainTrailingZero?: boolean
+  }
+) {
+  const num = Number(value)
+  if (!num) {
+    return 0
+  }
+  const roundTypeFn = {
+    round,
+    floor,
+    ceil,
+  }[roundType]
+
+  for (let ii = precision; ii > -1; ii--) {
+    if (num >= 10 ** (ii - 1)) {
+      return roundTypeFn(num, precision - ii)
+    }
+  }
+  const formattedNumStr = num.toPrecision?.(precision)
+  return Number(formattedNumStr)
+  // return !remainTrailingZero ? removeTrailingZero(formattedNumStr) : formattedNumStr
 }
 
 export function toPrecision(num: number, precision = 3) {
