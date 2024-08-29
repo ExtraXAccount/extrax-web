@@ -1,15 +1,20 @@
+import { formatUserSummary } from '@aave/math-utils'
 import { sumBy } from 'lodash'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
+import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import usePrices from '@/hooks/usePrices'
 import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
-import useLendingList from '@/pages/Lend/useLendingList'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
+import { getAccounts } from '@/sdk-ethers'
+import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore, useLendStore } from '@/store'
 import { bi2decimalStr } from '@/utils/bigInt'
-import { div, minus, plus } from '@/utils/math/bigNumber'
+import { div, minus, mul, plus } from '@/utils/math/bigNumber'
+
+import { useCurrentTimestamp } from './useCurrentTimestamp'
 
 type ChainId = keyof typeof LendingConfig
 type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
@@ -17,32 +22,60 @@ type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
 export default function useSmartAccount() {
   const { prices, getPrice } = usePrices()
 
-  const { chainId } = useWagmiCtx()
+  const { chainId, signer, account } = useWagmiCtx()
   const {
     accounts,
-    currentAccount,
+    currentAccount: _currentAccount,
+    updateCurrentAccount,
+    positions: userReserves,
     // accountInfo,
     updateAccounts,
     updateAccountInfo,
     updateBalances,
-    // updatePositions,
+    updatePositions,
     updateSupportedAssets,
     updateSupportedDebts,
     healthStatus,
     updateHealthStatus,
   } = useAccountStore()
+  const { reservesData } = useLendStore()
+  const currentAccount = _currentAccount || account || ''
 
-  const { updatePositions } = useLendStore()
-  const { formattedLendPools } = useLendingList()
+  // const { updatePositions } = useLendStore()
+  // const { formattedLendPools } = useLendingList()
   // console.log('accountInfo :>> ', accountInfo);
 
+  const currentTimestamp = useCurrentTimestamp(600)
+
+  const formattedUserPosition = useMemo(() => {
+    if (!reservesData.formattedReserves.length) {
+      return
+    }
+    const formatted = formatUserSummary({
+      currentTimestamp,
+      formattedReserves: reservesData.formattedReserves,
+      marketReferenceCurrencyDecimals: reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
+      marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+      userReserves,
+      userEmodeCategoryId: 0,
+    })
+    return formatted
+  }, [
+    currentTimestamp,
+    reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
+    reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+    reservesData.formattedReserves,
+    userReserves,
+  ])
+
+  useEffect(() => {
+    console.log('formattedUserPosition :>> ', formattedUserPosition)
+  }, [formattedUserPosition])
+
   const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
-    const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
-    const debtVal = Number(healthStatus?.formatted?.debtValueUsd) || 0
-    const netWorth = minus(
-      healthStatus.formatted?.collateralValueUsd,
-      healthStatus.formatted?.debtValueUsd,
-    ).toNumber()
+    const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD)
+    const debtVal = Number(formattedUserPosition?.totalBorrowsUSD)
+    const netWorth = Number(formattedUserPosition?.netWorthUSD)
     const leverage = !netWorth ? 0 : div(depositedVal, netWorth).toString()
     return {
       depositedVal,
@@ -50,7 +83,7 @@ export default function useSmartAccount() {
       leverage: Number(leverage) || 0,
       netWorth,
     }
-  }, [healthStatus?.formatted?.collateralValueUsd, healthStatus?.formatted?.debtValueUsd])
+  }, [formattedUserPosition])
 
   const { accountApr, accountApy } = useMemo(() => {
     // console.log('accountApr formattedLendPools :>> ', depositedVal, formattedLendPools)
@@ -62,38 +95,29 @@ export default function useSmartAccount() {
     }
 
     const totalApr =
-      sumBy(
-        formattedLendPools,
-        (item) =>
-          item.formatted.apr * item.formatted.deposited * getPrice(item.tokenSymbol) -
-            item.formatted.borrowApr *
-              item.formatted.borrowed *
-              getPrice(item.tokenSymbol) || 0,
+      sumBy(formattedUserPosition?.userReservesData, (item) =>
+        mul(item.reserve.supplyAPR, item.underlyingBalanceUSD)
+          .minus(mul(item.reserve.variableBorrowAPR, item.totalBorrowsUSD))
+          .toNumber()
       ) / depositedVal
 
     const totalApy =
-      sumBy(
-        formattedLendPools,
-        (item) =>
-          item.formatted.apy * item.formatted.deposited * getPrice(item.tokenSymbol) -
-            item.formatted.borrowApy *
-              item.formatted.borrowed *
-              getPrice(item.tokenSymbol) || 0,
+      sumBy(formattedUserPosition?.userReservesData, (item) =>
+        mul(item.reserve.supplyAPY, item.underlyingBalanceUSD)
+          .minus(mul(item.reserve.variableBorrowAPY, item.totalBorrowsUSD))
+          .toNumber()
       ) / depositedVal
 
     return {
       accountApr: totalApr,
       accountApy: totalApy,
     }
-  }, [depositedVal, formattedLendPools, getPrice])
+  }, [depositedVal, formattedUserPosition?.userReservesData])
 
   const accountMng = useAccountManager()
-  const lendingMng = useLendingManager()
 
   const chainLendingConfig = useMemo(() => {
-    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
-      LendingConfig[chainId] || {},
-    )
+    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(LendingConfig[chainId] || {})
   }, [chainId])
 
   const getAccountInfo = useCallback(
@@ -111,16 +135,11 @@ export default function useSmartAccount() {
         collateralDeciamls,
         debt,
         debtDecimals,
-        depositedVal: Number(
-          (collateral > 0n
-            ? collateral / BigInt(10 ** collateralDeciamls)
-            : 0n
-          ).toString(),
-        ),
+        depositedVal: Number((collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()),
         debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
       })
     },
-    [accountMng, updateAccountInfo],
+    [accountMng, updateAccountInfo]
   )
 
   const fetchBalances = useCallback(
@@ -129,15 +148,14 @@ export default function useSmartAccount() {
         return []
       }
       const tokens = chainLendingConfig.reduce(
-        (arr: any, item) =>
-          arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
-        [],
+        (arr: any, item) => arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
+        []
       )
       // console.log('fetchBalances :>> ', { acc, tokens })
       const [...res] = await accountMng.getBalances([acc], tokens)
       updateBalances(res)
     },
-    [chainLendingConfig, accountMng, updateBalances],
+    [chainLendingConfig, accountMng, updateBalances]
   )
   // const fetchUserHealthStatus = useCallback(
   //   async (acc) => {
@@ -147,68 +165,41 @@ export default function useSmartAccount() {
   //   [lendingMng, updateHealthStatus],
   // )
 
-  const fetchUserLending = useCallback(
-    async (acc) => {
-      const [healthStatus, positions] = await Promise.all([
-        lendingMng.getUserHealthStatus(acc),
-        lendingMng.getUserPositions(acc),
-      ])
-      updateHealthStatus({
-        ...healthStatus,
-        formatted: {
-          collateralValueUsd: bi2decimalStr(
-            healthStatus.collateralValue.value,
-            healthStatus.collateralValue.decimals,
-          ),
-          debtValueUsd: bi2decimalStr(
-            healthStatus.debtValue.value,
-            healthStatus.debtValue.decimals,
-          ),
-          healthFactor: bi2decimalStr(healthStatus.healthFactor),
-          liquidationThreshold: bi2decimalStr(
-            healthStatus.liquidationThreshold.value,
-            healthStatus.liquidationThreshold.decimals,
-          ),
-          ltv: bi2decimalStr(healthStatus.ltv.value, healthStatus.ltv.decimals),
-        },
-      })
-      updatePositions(positions)
+  const fetchUserReserves = useCallback(
+    async (acc: string | undefined, chainId: SupportedChainId) => {
+      if (!acc) {
+        return
+      }
+      const userReserves = await getLendingUserState(chainId, acc)
+      console.log('fetchUserReserves :>> ', acc, userReserves)
+      updatePositions(userReserves)
     },
-    [lendingMng, updateHealthStatus, updatePositions],
+    [updatePositions]
   )
 
+  const fetchAccounts = useCallback(async () => {
+    if (!signer || !account) {
+      return
+    }
+    const accounts = await getAccounts(chainIdToName[chainId], signer, account)
+    updateAccounts(accounts as Address[])
+  }, [account, chainId, signer, updateAccounts])
+
   const getInitData = useCallback(async () => {
-    accountMng.getAccounts().then((accounts) => {
-      updateAccounts(accounts)
-      // getAccountInfo(accounts?.[0])
-      fetchBalances(accounts?.[0])
-      fetchUserLending(accounts?.[0])
-    })
+    fetchAccounts()
+  }, [fetchAccounts])
 
-    accountMng.getSupportedAssets().then((res) => {
-      updateSupportedAssets(res)
-    })
-
-    accountMng.getSupportedDebts().then((res) => {
-      updateSupportedDebts(res)
-    })
-  }, [
-    accountMng,
-    fetchBalances,
-    fetchUserLending,
-    // getAccountInfo,
-    updateAccounts,
-    updateSupportedAssets,
-    updateSupportedDebts,
-  ])
+  useEffect(() => {
+    fetchUserReserves(currentAccount || account, chainId)
+  }, [account, chainId, currentAccount, fetchUserReserves])
 
   const updateAfterAction = useCallback(
-    async (account: Address) => {
+    async (account = currentAccount) => {
       // getAccountInfo(account)
       fetchBalances(account)
-      fetchUserLending(account)
+      fetchUserReserves(account, chainId)
     },
-    [fetchBalances, fetchUserLending],
+    [chainId, currentAccount, fetchBalances, fetchUserReserves]
   )
 
   const LTV = useMemo(() => {
@@ -224,29 +215,23 @@ export default function useSmartAccount() {
       max: Number(healthStatus.formatted?.ltv) / depositedVal,
       liquidation: Number(healthStatus.formatted?.liquidationThreshold) / depositedVal,
     }
-  }, [
-    debtVal,
-    depositedVal,
-    healthStatus.formatted?.liquidationThreshold,
-    healthStatus.formatted?.ltv,
-  ])
+  }, [debtVal, depositedVal, healthStatus.formatted?.liquidationThreshold, healthStatus.formatted?.ltv])
 
   return {
     accounts,
-    currentAccount: currentAccount || accounts?.[0],
+    currentAccount,
+    isSmartAccount: _currentAccount !== undefined,
+    formattedUserPosition,
     healthStatus,
     leverage,
     depositedVal,
     debtVal,
     netWorth,
-    healthFactor: Number(healthStatus.formatted?.healthFactor) || 0,
+    healthFactor: Number(formattedUserPosition?.healthFactor) || 0,
     liquidationThreshold: Number(healthStatus.formatted?.liquidationThreshold) || 0,
     LTV,
     maxCredit: healthStatus.formatted?.ltv,
-    availableCredit: minus(
-      healthStatus.formatted?.ltv,
-      healthStatus.formatted?.debtValueUsd,
-    ).toString(),
+    availableCredit: minus(healthStatus.formatted?.ltv, healthStatus.formatted?.debtValueUsd).toString(),
     usedCredit: debtVal,
     accountApr,
     accountApy,

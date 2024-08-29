@@ -7,9 +7,8 @@ import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
 import ScrollToTop from '@/components/ScrollToTop'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
-// import useSmartAccount from '@/hooks/useSmartAccount'
+import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
-import { getLendingGlobalState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore } from '@/store'
 
 import AccountLayer from '../AccountLayer'
@@ -41,11 +40,11 @@ export default function AppLayout() {
   const { updateAccountLayer } = useAccountStore()
 
   const { fetchPoolState } = useLendingList()
-  // const { getInitData: getInitSmartAccountData } = useSmartAccount()
+  const { getInitData: getInitSmartAccountData } = useSmartAccount()
 
-  // useEffect(() => {
-  //   getInitSmartAccountData()
-  // }, [getInitSmartAccountData])
+  useEffect(() => {
+    getInitSmartAccountData()
+  }, [getInitSmartAccountData])
 
   useEffect(() => {
     fetchPoolState()

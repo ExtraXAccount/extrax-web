@@ -1,5 +1,4 @@
-import { ReserveDataWithPrice } from '@aave/math-utils'
-
+import { chainIdToName } from '@/constants/chains'
 import { IUiPoolDataProviderV3 } from '@/typechain-types'
 import { PoolBaseCurrencyHumanized, ReserveDataHumanized } from '@/types/aave'
 import { bi2num } from '@/utils/bigInt'
@@ -8,14 +7,6 @@ import { ChainId } from '..'
 import { LendingPoolConfig } from '../config/constants'
 import { POOL_ADDRESSES_PROVIDER_ID } from '../config/contract-id'
 import { getUiDataProvider } from './contract-helpers/ui-data-provider'
-
-export async function getLendingState(chain: string, user?: string) {
-  await getLendingGlobalState(chain)
-
-  if (user) {
-    await getLendingUserState(chain, user)
-  }
-}
 
 export async function getLendingGlobalState(chain: string) {
   const dataProvider = getUiDataProvider(chain)
@@ -107,7 +98,8 @@ export async function getLendingGlobalState(chain: string) {
   }
 }
 
-export async function getLendingUserState(chain, user: string) {
+export async function getLendingUserState(chainId: number, user: string) {
+  const chain = chainIdToName[chainId]
   const dataProvider = getUiDataProvider(chain)
 
   const userDataResult: [IUiPoolDataProviderV3.UserReserveDataStructOutput[], bigint] =
@@ -125,12 +117,12 @@ export async function getLendingUserState(chain, user: string) {
     ] = data
     return {
       underlyingAsset,
-      scaledATokenBalance,
+      scaledATokenBalance: scaledATokenBalance.toString(),
       usageAsCollateralEnabledOnUser,
-      stableBorrowRate,
-      scaledVariableDebt,
-      principalStableDebt,
-      stableBorrowLastUpdateTimestamp,
+      stableBorrowRate: stableBorrowRate.toString(),
+      scaledVariableDebt: scaledVariableDebt.toString(),
+      principalStableDebt: principalStableDebt.toString(),
+      stableBorrowLastUpdateTimestamp: bi2num(stableBorrowLastUpdateTimestamp),
     }
   })
   console.log('getLendingUserState :>> ', positions, userDataResult[1])

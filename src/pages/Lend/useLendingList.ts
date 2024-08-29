@@ -4,10 +4,10 @@ import { useCallback, useMemo } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { chainIdToName, SupportedChainId } from '@/constants/chains'
-import usePrices from '@/hooks/usePrices'
-import { useLendingManager2 } from '@/hooks/useSDK'
+// import usePrices from '@/hooks/usePrices'
+// import { useLendingManager2 } from '@/hooks/useSDK'
 // import useSmartAccount from '@/hooks/useSmartAccount'
-import { LendingConfig } from '@/sdk/lending/lending-pool'
+// import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { getLendingGlobalState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore, useLendStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
@@ -15,13 +15,8 @@ import { aprToApy } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
 
-// export interface
-type chainId = keyof typeof LendingConfig
-type LendPoolConfig = keyof (typeof LendingConfig)[chainId]
-
 export default function useLendingList() {
-  const lendingMng = useLendingManager2()
-  const { lendPools, positions, isFetching, updateLendPools, updateIsFetching } = useLendStore()
+  const { reservesData, updateReservesData, isFetching, updateLendPools, updateIsFetching } = useLendStore()
   // const { balances } = useAccountStore()
   // const { getPrice } = usePrices()
 
@@ -31,16 +26,16 @@ export default function useLendingList() {
   //   return Object.values<(typeof LendingConfig)[chainId][LendPoolConfig]>(LendingConfig[chainId] || {})
   // }, [chainId])
 
-  const fetchLendPools = useCallback(async () => {
-    updateIsFetching(true)
-    try {
-      const res = await lendingMng.getPoolStatus()
-      console.log('multicallPoolsStatus :>> ', res)
-      updateLendPools([])
-    } finally {
-      updateIsFetching(false)
-    }
-  }, [lendingMng, updateIsFetching, updateLendPools])
+  // const fetchLendPools = useCallback(async () => {
+  //   updateIsFetching(true)
+  //   try {
+  //     const res = await lendingMng.getPoolStatus()
+  //     console.log('multicallPoolsStatus :>> ', res)
+  //     updateLendPools([])
+  //   } finally {
+  //     updateIsFetching(false)
+  //   }
+  // }, [lendingMng, updateIsFetching, updateLendPools])
 
   const fetchPoolState = useCallback(async () => {
     const { reservesData, baseCurrencyData } = await getLendingGlobalState(chainIdToName[SupportedChainId.OPTIMISM])
@@ -54,12 +49,14 @@ export default function useLendingList() {
       // return formattedReserve
       return { ...reserve, ...formattedReserve }
     })
-    updateLendPools(formattedReserves)
+    updateReservesData({
+      formattedReserves,
+      baseCurrencyData,
+    })
     console.log('formattedReserves :>> ', formattedReserves)
     return formattedReserves
-  }, [updateLendPools])
+  }, [updateReservesData])
 
-  const formattedLendPools = lendPools
   // const formattedLendPools: IFormattedLendPool[] = useMemo(() => {
   //   return lendPools.map((pool, index) => {
   //     const config = chainLendingConfig[index]
@@ -101,7 +98,7 @@ export default function useLendingList() {
   const totalInfos = useMemo(() => {
     let totalSize = 0
     let totalBorrowed = 0
-    lendPools.forEach((pool) => {
+    reservesData.formattedReserves.forEach((pool) => {
       totalSize += Number(pool.totalLiquidityUSD)
       totalBorrowed += Number(pool.totalDebtUSD) || 0
     })
@@ -115,13 +112,13 @@ export default function useLendingList() {
       globalUtilization,
       maxOutflow: 5_000_000,
     }
-  }, [lendPools])
+  }, [reservesData.formattedReserves])
 
   return {
-    formattedLendPools,
+    formattedLendPools: reservesData.formattedReserves,
     fetchPoolState,
     totalInfos,
-    fetchLendPools,
+    // fetchLendPools,
     isFetching,
   }
 }

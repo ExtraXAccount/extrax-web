@@ -1,3 +1,4 @@
+import { UserReserveData } from '@aave/math-utils'
 import { Address, Hex } from 'viem'
 import { create } from 'zustand'
 
@@ -58,7 +59,7 @@ export interface AccountState {
   currentAccount?: Address
   healthStatus: IHealthStatus
   balances: bigint[]
-  positions: ILendPosition[]
+  positions: UserReserveData[]
   accountInfo?: AccountInfo
   supportedAssets: ISupportedAssets[]
   supportedDebts: ISupportedAssets[]

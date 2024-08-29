@@ -1,7 +1,9 @@
 import { JsonRpcSigner, toBigInt, TransactionRequest } from 'ethers'
 import { WalletClient } from 'viem'
 
+import { chainIdToName } from '@/constants/chains'
 import { clientToSigner } from '@/sdk/utils/clientToSigner'
+import { isWETH } from '@/sdk/utils/token'
 
 import { ReserveAssets } from '../config/constants'
 import { executeAccountTransaction, fundAccountWithERC20 } from '../safe-account'
@@ -36,13 +38,14 @@ export async function depositTransactions(
 
 export async function depositWithAccount(
   walletClient: WalletClient,
-  chain: string,
+  chainid: number,
   account: string,
   reserve: string,
   amount: string,
-  usageAsCollateral: boolean,
+  usageAsCollateral = true,
   referralCode = '1234'
 ) {
+  const chain = chainIdToName[chainid]
   const signer = clientToSigner(walletClient) as JsonRpcSigner
   const user = signer.address
 
@@ -68,15 +71,29 @@ export async function depositWithAccount(
   await executeAccountTransaction(walletClient, account, transactions)
 }
 
-export async function deposit(
+export async function depositWithWallet(
   signer: JsonRpcSigner,
-  chain: string,
+  chainId: number,
   reserve: string,
   amount: string,
-  usageAsCollateral: boolean,
+  usageAsCollateral = true,
+  referralCode = '1234'
+) {
+  const isReserveWETH = isWETH(chainId, reserve)
+  const fn = isReserveWETH ? depositETH : deposit
+  return fn(signer, chainId, reserve, amount, usageAsCollateral, referralCode)
+}
+
+export async function deposit(
+  signer: JsonRpcSigner,
+  chainId: number,
+  reserve: string,
+  amount: string,
+  usageAsCollateral = true,
   referralCode = '1234'
 ) {
   const user = signer.address
+  const chain = chainIdToName[chainId]
 
   const transactions = await depositTransactions(signer, user, chain, reserve, amount, usageAsCollateral, referralCode)
 
@@ -87,11 +104,13 @@ export async function deposit(
 
 export async function depositETH(
   signer: JsonRpcSigner,
-  chain: string,
+  chainId: number,
   amount: string,
+  reservea: string,
   usageAsCollateral: boolean,
   referralCode = '1234'
 ) {
+  const chain = chainIdToName[chainId]
   const reserve = ReserveAssets[chain]['WETH'].Reserve
   const onBehalfOf = signer.address
 

@@ -1,6 +1,8 @@
-import { FormatReserveUSDResponse } from '@aave/math-utils'
+import { FormatReserveUSDResponse, UserReserveData } from '@aave/math-utils'
 import { Address } from 'viem'
 import { create } from 'zustand'
+
+import { PoolBaseCurrencyHumanized } from '@/types/aave'
 
 export interface IInterestRateConfig {
   borrowingRateA: number
@@ -62,8 +64,11 @@ export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
 
 export interface LendState {
   lendPools: FormatReserveUSDResponse[]
+  reservesData: {
+    formattedReserves: FormatReserveUSDResponse[]
+    baseCurrencyData: PoolBaseCurrencyHumanized
+  }
   historyData: any[]
-  positions: ILendPosition[]
   isFetching: boolean
   currentPosition: IFormattedPosition | undefined
   currentDialogShow: 'repay' | 'borrow' | 'withdraw' | 'deposit' | null
@@ -71,9 +76,9 @@ export interface LendState {
 }
 
 export interface LendAction {
+  updateReservesData: (lendPools: LendState['reservesData']) => void
   updateLendPools: (lendPools: LendState['lendPools']) => void
   updateHistoryData: (historyData: LendState['historyData']) => void
-  updatePositions: (balances: LendState['positions']) => void
   updateIsFetching: (isFetching: LendState['isFetching']) => void
   updateCurrentPosition: (currentPosition: LendState['currentPosition']) => void
   updateDialogShow: (currentDialogShow: LendState['currentDialogShow']) => void
@@ -82,6 +87,10 @@ export interface LendAction {
 
 export const useLendStore = create<LendState & LendAction>((set) => ({
   lendPools: [],
+  reservesData: {
+    formattedReserves: [] as FormatReserveUSDResponse[],
+    baseCurrencyData: {} as PoolBaseCurrencyHumanized,
+  },
   historyData: [],
   positions: [],
   isFetching: false,
@@ -89,9 +98,9 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
   currentDialogShow: null,
   showEvent: true,
 
+  updateReservesData: (reservesData) => set(() => ({ reservesData })),
   updateLendPools: (lendPools) => set(() => ({ lendPools })),
   updateHistoryData: (historyData) => set(() => ({ historyData })),
-  updatePositions: (positions) => set(() => ({ positions })),
   updateIsFetching: (isFetching) => set(() => ({ isFetching })),
   updateCurrentPosition: (currentPosition) => set(() => ({ currentPosition })),
   updateDialogShow: (currentDialogShow) => set(() => ({ currentDialogShow })),

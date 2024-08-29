@@ -41,21 +41,11 @@ export function calculateNextBorrowingRate(props: {
   totalLiquidity: number
   utilizationRate: number
 }) {
-  const {
-    totalLiquidity,
-    utilizationRate,
-    poolKey,
-    borrowChangedValue = 0,
-    liquidityChangedValue = 0,
-  } = props
+  const { totalLiquidity, utilizationRate, poolKey, borrowChangedValue = 0, liquidityChangedValue = 0 } = props
   const totalBorrow = totalLiquidity * utilizationRate
-  const nextUtilizationRate =
-    (totalBorrow + borrowChangedValue) / (totalLiquidity + liquidityChangedValue)
+  const nextUtilizationRate = (totalBorrow + borrowChangedValue) / (totalLiquidity + liquidityChangedValue)
 
-  const nextBorrowingRate = calculateBorrowingRate(
-    nextUtilizationRate * 10000,
-    getBorrowConfigByPoolKey(poolKey),
-  )
+  const nextBorrowingRate = calculateBorrowingRate(nextUtilizationRate * 10000, getBorrowConfigByPoolKey(poolKey))
   return {
     nextBorrowingRate: nextBorrowingRate / 10000,
     nextUtilizationRate,
@@ -71,10 +61,7 @@ export function getBorrowConfigByPoolKey(poolKey: string) {
   return InterestRates['model-2']
 }
 
-export default function calculateBorrowingRate(
-  utilizationRate: number,
-  config: IBorrowingRateConfig,
-) {
+export default function calculateBorrowingRate(utilizationRate: number, config: IBorrowingRateConfig) {
   let borrowingRate = 0
   const maxUtilization = 10000
   const utilizationRateBn = new BigNumber(utilizationRate)
@@ -82,10 +69,7 @@ export default function calculateBorrowingRate(
     if (config.utilizationA == 0) {
       return config.borrowingRateA
     }
-    borrowingRate = utilizationRateBn
-      .multipliedBy(config.borrowingRateA)
-      .div(config.utilizationA)
-      .toNumber()
+    borrowingRate = utilizationRateBn.multipliedBy(config.borrowingRateA).div(config.utilizationA).toNumber()
   } else if (utilizationRate <= config.utilizationB) {
     if (config.utilizationB == config.utilizationA) {
       return config.borrowingRateB

@@ -7,7 +7,6 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import { useWagmiCtx } from '@/components/WagmiContext'
-import { useAccountManager2 } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import PercentCircle from '@/pages/Lend/PercentCircle'
 import { deposit, depositETH, depositWithAccount } from '@/sdk-ethers/extra-x-lending'
@@ -31,8 +30,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     accountApy,
     accounts,
   } = useSmartAccount()
-  const accountMng = useAccountManager2()
-  const { signer, walletClient } = useWagmiCtx()
+  // const { chainId, signer, walletClient } = useWagmiCtx()
 
   const [copied, setCopied] = useState(false)
   const [name, setName] = useState('')
@@ -44,37 +42,41 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
-  const handleAddDeposit = useCallback(async () => {
-    if (!signer) {
-      return
-    }
-    console.log('handleAddDeposit :>> ')
-    let accounts = await accountMng.getAccounts()
-    if (!accounts.length) {
-      accounts = await accountMng.createAccount()
-    }
-    await getLendingUserState('optimism', accounts[0])
-    await depositWithAccount(
-      walletClient,
-      'optimism',
-      accounts[0],
-      '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-      '1000000000000000000',
-      true
-    )
-    await getLendingUserState('optimism', accounts[0])
-    console.log('accounts :>> ', accounts)
-    // setDepositDialogOpen(true)
-  }, [accountMng, signer, walletClient])
+  // const handleAddDeposit = useCallback(async () => {
+  //   if (!signer) {
+  //     return
+  //   }
+  //   console.log('handleAddDeposit :>> ')
+  //   let accounts = await accountMng.getAccounts()
+  //   if (!accounts.length) {
+  //     accounts = await accountMng.createAccount()
+  //   }
+  //   await getLendingUserState(chainId, accounts[0])
+  //   await depositWithAccount(
+  //     walletClient,
+  //     chainId,
+  //     accounts[0],
+  //     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+  //     '1000000000000000000',
+  //     true
+  //   )
+  //   await getLendingUserState(chainId, accounts[0])
+  //   console.log('accounts :>> ', accounts)
+  //   // setDepositDialogOpen(true)
+  // }, [accountMng, chainId, signer, walletClient])
 
-  const handleAddDeposit2 = useCallback(async () => {
-    if (!signer) {
-      return
-    }
-    await getLendingUserState('optimism', signer.address)
-    await deposit(signer, 'optimism', '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', '100000000', true)
-    await getLendingUserState('optimism', signer.address)
-  }, [signer])
+  // const handleAddDeposit2 = useCallback(async () => {
+  //   if (!signer) {
+  //     return
+  //   }
+  //   await getLendingUserState(chainId, signer.address)
+  //   await deposit(signer, chainId, '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', '100000000', true)
+  //   await getLendingUserState(chainId, signer.address)
+  // }, [signer])
+
+  const handleAddDeposit = useCallback(() => {
+    setDepositDialogOpen(true)
+  }, [])
 
   const onCopy = useCallback(() => {
     if (!copied) {
@@ -87,15 +89,16 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
 
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   const accountName = name || nameList[currentAccount?.toLowerCase()] || ''
+
   return (
     <div className='extrax-account-info'>
-      {/* <AccountDepositDialog
+      <AccountDepositDialog
         accounts={accounts}
         open={depositDialogOpen}
         onClose={() => setDepositDialogOpen(false)}
-      ></AccountDepositDialog> */}
+      ></AccountDepositDialog>
 
-      {!currentAccount ? (
+      {!depositedVal ? (
         <div className='extrax-account-info-inner extrax-account-creator'>
           <div className='extrax-account-create-button'>
             <p className='btn-base' onClick={handleAddDeposit}>
