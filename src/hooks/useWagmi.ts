@@ -28,6 +28,7 @@ export default function useWagmi() {
     user: account,
     // account: (searchParams.get('addr') as `0x${string}`) || account,
     account,
+    // account: '0x3835400BE823D3a1bc0eA0b32522809D327ED178',
     blockNumber: Number(blockNumber?.toString()),
     // currentAccount: '0x2a2C3B2a78b6c09a15520C97747bD1c5cbf39431',
     activeConnector,

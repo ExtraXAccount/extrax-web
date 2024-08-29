@@ -6,15 +6,14 @@ import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import useSmartAccount from '@/hooks/useSmartAccount'
-import { createAccount, getAccounts } from '@/sdk-ethers'
 import { useAccountStore } from '@/store'
 
+import CreateAccountButton from '../CreateAccountButton'
 import { useWagmiCtx } from '../WagmiContext'
 import AccountCard from './AccountCard'
 import AccountTxHistory from './AccountTxHistory'
 
 export default function AccountLayer() {
-  const [loading, setLoading] = useState({ writing: false, desc: '' })
   const { showAccountLayer, updateAccountLayer } = useAccountStore()
   const {
     healthStatus,
@@ -28,7 +27,6 @@ export default function AccountLayer() {
     maxCredit,
     usedCredit,
     accountApy,
-    fetchAccounts,
     accounts,
   } = useSmartAccount()
 
@@ -37,19 +35,6 @@ export default function AccountLayer() {
   const { signer, chainId } = useWagmiCtx()
 
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
-
-  const handleCreate = useCallback(async () => {
-    if (!signer) {
-      return
-    }
-    try {
-      setLoading({ writing: true, desc: 'Creating smart account' })
-      await createAccount(signer, chainId)
-      await fetchAccounts()
-    } finally {
-      setLoading({ writing: false, desc: '' })
-    }
-  }, [chainId, fetchAccounts, signer])
 
   return (
     <Drawer
@@ -68,18 +53,7 @@ export default function AccountLayer() {
       }}
     >
       <div className='account-layer-list'>
-        {accounts.length === 0 && (
-          <Button
-            loading={loading.writing}
-            disabled={loading.writing}
-            className={classNames('', {
-              // 'btn-disable': loading.writing,
-            })}
-            onClick={handleCreate}
-          >
-            {loading.writing ? loading.desc : 'Create Smart Account'}
-          </Button>
-        )}
+        {accounts.length === 0 && <CreateAccountButton />}
         {accounts.map((account, index) => {
           const accountName = nameList[account.toLocaleLowerCase()] || `Account${index}`
           return (

@@ -475,12 +475,35 @@
 
 .account-list-overlay {
   width: 400px;
-  border-bottom: 0.5px solid var(--stroke, #C9C9CB);
-  padding: 12px;
+  background: #fff;
+  border-radius: 4px;
+  // border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+  .ant-dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    box-shadow: none;
+    .ant-dropdown-menu-item {
+      padding: 0;
+      // padding: 0 12px;
+      border-radius: 0;
+      &:last-child {
+        // border-top: 0.5px solid var(--stroke, #C9C9CB);
+        // padding-top: 12px;
+      }
+    }
+  }
   .account-list-item {
     width: 100%;
     padding: 12px;
     border-radius: 4px;
     border: 0.5px solid var(--stroke, #C9C9CB);
+    &-create {
+      
+      padding: 4px 0;
+      display: flex;
+      justify-content: center;
+    }
   }
 }

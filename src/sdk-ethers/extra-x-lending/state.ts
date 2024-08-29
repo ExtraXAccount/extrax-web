@@ -17,7 +17,7 @@ export async function getLendingGlobalState(chain: string) {
   const lendingPoolAddressProvider = LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID]
   const { 0: reservesRaw, 1: poolBaseCurrencyRaw } = await dataProvider.getReservesData(lendingPoolAddressProvider)
 
-  console.log('reservesRaw :>> ', reservesRaw)
+  // console.log('reservesRaw :>> ', reservesRaw)
   const reservesData = reservesRaw.map((reserveRaw) => ({
     reserveRaw: (reserveRaw as any).toObject(),
     id: `${ChainId[chain]}-${reserveRaw.underlyingAsset}-${lendingPoolAddressProvider}`.toLowerCase(),

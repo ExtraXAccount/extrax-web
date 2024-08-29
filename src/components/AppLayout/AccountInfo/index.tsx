@@ -8,9 +8,11 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import AddressWithCopy from '@/components/AddressWithCopy'
+import CreateAccountButton from '@/components/CreateAccountButton'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import PercentCircle from '@/pages/Lend/PercentCircle'
+import { createAccount } from '@/sdk-ethers'
 import { deposit, depositETH, depositWithAccount } from '@/sdk-ethers/extra-x-lending'
 import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore } from '@/store'
@@ -131,20 +133,37 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                   trigger={['click']}
                   placement='bottomRight'
                   menu={{
-                    items: [...accounts, account!].map((item, index) => ({
-                      key: item,
-                      label: (
-                        <div
-                          className='account-list-item flex jc-sb'
-                          onClick={() => {
-                            updateCurrentAccount(item)
-                          }}
-                        >
-                          <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
-                          <AddressWithCopy address={item} />
-                        </div>
-                      ),
-                    })),
+                    items: [...accounts, account!]
+                      .map((item, index) => ({
+                        key: item,
+                        label: (
+                          <div
+                            className='account-list-item flex jc-sb'
+                            onClick={(e) => {
+                              updateCurrentAccount(item)
+                              // e.stopPropagation()
+                            }}
+                          >
+                            <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
+                            <AddressWithCopy address={item} />
+                          </div>
+                        ),
+                      }))
+                      .concat([
+                        {
+                          key: '0x',
+                          label: (
+                            <div
+                              className='account-list-item account-list-item-create'
+                              onClick={(e) => {
+                                e.stopPropagation()
+                              }}
+                            >
+                              <CreateAccountButton label={'+ Create New Account'} />
+                            </div>
+                          ),
+                        },
+                      ]),
                   }}
                 >
                   <div className='extrax-account-info-menu'>

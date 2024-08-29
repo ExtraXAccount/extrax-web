@@ -171,7 +171,7 @@ export default function useSmartAccount() {
         return
       }
       const userReserves = await getLendingUserState(chainId, acc)
-      console.log('fetchUserReserves :>> ', acc, userReserves)
+      // console.log('fetchUserReserves :>> ', acc, userReserves)
       updatePositions(userReserves)
     },
     [updatePositions]
@@ -181,8 +181,9 @@ export default function useSmartAccount() {
     if (!signer || !account) {
       return
     }
+    console.log('getAccounts start:>> ', account)
     const accounts = await getAccounts(chainIdToName[chainId], signer, account)
-    console.log('getAccounts :>> ', accounts)
+    console.log('getAccounts :>> ', account, accounts)
     updateAccounts(accounts as Address[])
   }, [account, chainId, signer, updateAccounts])
 
