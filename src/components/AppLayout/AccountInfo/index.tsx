@@ -167,7 +167,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                   }}
                 >
                   <div className='extrax-account-info-menu'>
-                    <i className='iconfont icon-down'></i>
+                    <i className='iconfont icon-menu'></i>
                   </div>
                 </Dropdown>
               </div>
