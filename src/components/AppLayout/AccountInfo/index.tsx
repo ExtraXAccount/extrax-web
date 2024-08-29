@@ -50,7 +50,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     }
     console.log('handleAddDeposit :>> ')
     let accounts = await accountMng.getAccounts()
-    if (!accounts) {
+    if (!accounts.length) {
       accounts = await accountMng.createAccount()
     }
     await getLendingUserState('optimism', accounts[0])
