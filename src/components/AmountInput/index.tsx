@@ -52,9 +52,7 @@ export default function AmountInput(props: IAmountInputProps) {
     price,
   } = props
   // console.log('token :>> ', { useNativeETH, token })
-  const [selectedToken, setSelectedToken] = useState(
-    useNativeETH ? nameChecker(token) : token,
-  )
+  const [selectedToken, setSelectedToken] = useState(useNativeETH ? nameChecker(token) : token)
 
   const max = useMemo(() => {
     return selectedToken === NativeETH ? ethBalance || _max : _max
@@ -67,7 +65,7 @@ export default function AmountInput(props: IAmountInputProps) {
   const suffix = useMemo(() => {
     if (token !== 'WETH') {
       return (
-        <div className="amount-input-number-token">
+        <div className='amount-input-number-token'>
           <i className={`coin coin-${specialNameChecker(token)}`} />
           <p>{nameChecker(token)}</p>
         </div>
@@ -75,22 +73,22 @@ export default function AmountInput(props: IAmountInputProps) {
     }
     return (
       <Dropdown
-        overlayClassName="weth-select-overlay"
+        overlayClassName='weth-select-overlay'
         trigger={['hover']}
-        placement="bottomLeft"
+        placement='bottomLeft'
         menu={{
           items: [
             {
               key: 'eth',
               label: (
                 <div
-                  className="amount-input-number-token"
+                  className='amount-input-number-token'
                   onClick={() => {
                     onUseNativeETH?.(true)
                     setSelectedToken(NativeETH)
                   }}
                 >
-                  <i className="coin coin-eth" />
+                  <i className='coin coin-eth' />
                   <p>ETH</p>
                 </div>
               ),
@@ -99,13 +97,13 @@ export default function AmountInput(props: IAmountInputProps) {
               key: 'weth',
               label: (
                 <div
-                  className="amount-input-number-token"
+                  className='amount-input-number-token'
                   onClick={() => {
                     onUseNativeETH?.(false)
                     setSelectedToken('WETH')
                   }}
                 >
-                  <i className="coin coin-weth" />
+                  <i className='coin coin-weth' />
                   <p>WETH</p>
                 </div>
               ),
@@ -113,10 +111,10 @@ export default function AmountInput(props: IAmountInputProps) {
           ],
         }}
       >
-        <div className="amount-input-number-token amount-input-number-token-select">
+        <div className='amount-input-number-token amount-input-number-token-select'>
           <i className={`coin coin-${specialNameChecker(selectedToken)}`} />
           <p>{selectedToken}</p>
-          <i className="iconfont icon-down"></i>
+          <i className='iconfont icon-down'></i>
         </div>
       </Dropdown>
     )
@@ -128,11 +126,11 @@ export default function AmountInput(props: IAmountInputProps) {
         'amount-input-nopadding': noPadding,
       })}
     >
-      <section className="amount-input-number">
-        <div className="amount-input-number-wrap">
+      <section className='amount-input-number'>
+        <div className='amount-input-number-wrap'>
           <Input
             suffix={suffix}
-            className="amount-input-input"
+            className='amount-input-input'
             min={min}
             max={max}
             value={value}
@@ -144,32 +142,25 @@ export default function AmountInput(props: IAmountInputProps) {
                 onChange(r)
               }
             }}
-            placeholder="0.00"
+            placeholder='0.00'
           />
         </div>
-        <div className="amount-input-number-sub flex jc-sb ai-ct">
-          <div className="amount-input-number-totalvalue text-sm-2">
+        <div className='amount-input-number-sub flex jc-sb ai-ct'>
+          <div className='amount-input-number-totalvalue text-sm-2'>
             {!!price && <>${remain2Decimal(price * Number(value))}</>}
           </div>
-          <div className="flex ai-ct">
+          <div className='flex ai-ct'>
             {sliderMax !== undefined && (
-              <div className="amount-input-number-max text-sm-2">
-                {sliderMaxText}:
-                <span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
+              <div className='amount-input-number-max text-sm-2'>
+                {sliderMaxText}:<span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
               </div>
             )}
             {!sliderMax && (
-              <div className="amount-input-number-max text-sm-2">
-                {maxText}:{' '}
-                <span onClick={() => onChange(String(max))}>
-                  {toPrecision(Number(max), 5)}
-                </span>
+              <div className='amount-input-number-max text-sm-2'>
+                {maxText}: <span onClick={() => onChange(String(max))}>{toPrecision(Number(max), 5)}</span>
               </div>
             )}
-            <div
-              className="amount-input-number-max-button"
-              onClick={() => onChange(String(parsedSliderMax))}
-            >
+            <div className='amount-input-number-max-button' onClick={() => onChange(String(parsedSliderMax))}>
               Max
             </div>
           </div>
@@ -196,7 +187,7 @@ export default function AmountInput(props: IAmountInputProps) {
           </ul> */}
         </div>
       </section>
-      <section className="amount-input-slider">
+      <section className='amount-input-slider'>
         <Slider
           marks={{
             0: '0%',
@@ -216,7 +207,7 @@ export default function AmountInput(props: IAmountInputProps) {
               onChange(
                 mul(div(val, 100).toString(), parsedSliderMax)
                   .toFixed(decimals)
-                  .replace(/\.?0+$/, ''),
+                  .replace(/\.?0+$/, '')
               )
             }
           }}

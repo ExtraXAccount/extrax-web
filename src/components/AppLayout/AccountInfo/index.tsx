@@ -1,22 +1,27 @@
 import './index.scss'
 
+import { Dropdown } from 'antd'
 // import { Tooltip } from 'antd'
 import cx from 'classnames'
 import { useCallback, useEffect, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
+import AddressWithCopy from '@/components/AddressWithCopy'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import PercentCircle from '@/pages/Lend/PercentCircle'
 import { deposit, depositETH, depositWithAccount } from '@/sdk-ethers/extra-x-lending'
 import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
+import { useAccountStore } from '@/store'
 import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
 export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const { portfolioMode } = props
+  const { updateCurrentAccount } = useAccountStore()
   const {
+    formattedUserPosition,
     healthStatus,
     LTV,
     netWorth,
@@ -30,7 +35,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     accountApy,
     accounts,
   } = useSmartAccount()
-  // const { chainId, signer, walletClient } = useWagmiCtx()
+  const { chainId, signer, account, walletClient } = useWagmiCtx()
 
   const [copied, setCopied] = useState(false)
   const [name, setName] = useState('')
@@ -41,38 +46,6 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   }, [healthStatus, healthFactor])
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
-
-  // const handleAddDeposit = useCallback(async () => {
-  //   if (!signer) {
-  //     return
-  //   }
-  //   console.log('handleAddDeposit :>> ')
-  //   let accounts = await accountMng.getAccounts()
-  //   if (!accounts.length) {
-  //     accounts = await accountMng.createAccount()
-  //   }
-  //   await getLendingUserState(chainId, accounts[0])
-  //   await depositWithAccount(
-  //     walletClient,
-  //     chainId,
-  //     accounts[0],
-  //     '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-  //     '1000000000000000000',
-  //     true
-  //   )
-  //   await getLendingUserState(chainId, accounts[0])
-  //   console.log('accounts :>> ', accounts)
-  //   // setDepositDialogOpen(true)
-  // }, [accountMng, chainId, signer, walletClient])
-
-  // const handleAddDeposit2 = useCallback(async () => {
-  //   if (!signer) {
-  //     return
-  //   }
-  //   await getLendingUserState(chainId, signer.address)
-  //   await deposit(signer, chainId, '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85', '100000000', true)
-  //   await getLendingUserState(chainId, signer.address)
-  // }, [signer])
 
   const handleAddDeposit = useCallback(() => {
     setDepositDialogOpen(true)
@@ -112,26 +85,13 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
       ) : (
         <div className='extrax-account-info-inner'>
           <div className='extrax-account-info-main'>
-            <div className='flex ai-ct'>
+            <div className='flex ai-ct jc-sb'>
               <div className='extrax-account-info-market'>
                 <span>Main Market</span>
               </div>
               <div className='extrax-account-info-main-account'>
                 <span>Current Account: </span>
-                <em>
-                  {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)}
-                  <i className='iconfont icon-copy'></i>
-                  <CopyToClipboard text={currentAccount} onCopy={onCopy}>
-                    <span
-                      className={cx('copy-hint', {
-                        'color-safe': copied,
-                      })}
-                    >
-                      <i className='iconfont icon-copy'></i>
-                      {copied ? 'Copied!' : 'Copy'}
-                    </span>
-                  </CopyToClipboard>
-                </em>
+                <AddressWithCopy address={currentAccount} />
                 <section className='extrax-account-info-edit'>
                   {!!accountName && !isEdit && <p>({accountName})</p>}
                   {!isEdit && (
@@ -166,6 +126,31 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                     </>
                   )}
                 </section>
+                <Dropdown
+                  overlayClassName='account-list-overlay'
+                  trigger={['click']}
+                  placement='bottomRight'
+                  menu={{
+                    items: [...accounts, account!].map((item, index) => ({
+                      key: item,
+                      label: (
+                        <div
+                          className='account-list-item flex jc-sb'
+                          onClick={() => {
+                            updateCurrentAccount(item)
+                          }}
+                        >
+                          <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
+                          <AddressWithCopy address={item} />
+                        </div>
+                      ),
+                    })),
+                  }}
+                >
+                  <div className='extrax-account-info-menu'>
+                    <i className='iconfont icon-down'></i>
+                  </div>
+                </Dropdown>
               </div>
             </div>
             {portfolioMode && (

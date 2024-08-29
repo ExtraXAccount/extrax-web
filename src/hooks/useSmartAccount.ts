@@ -68,9 +68,9 @@ export default function useSmartAccount() {
     userReserves,
   ])
 
-  useEffect(() => {
-    console.log('formattedUserPosition :>> ', formattedUserPosition)
-  }, [formattedUserPosition])
+  // useEffect(() => {
+  //   console.log('formattedUserPosition :>> ', formattedUserPosition)
+  // }, [formattedUserPosition])
 
   const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
     const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD)
@@ -182,6 +182,7 @@ export default function useSmartAccount() {
       return
     }
     const accounts = await getAccounts(chainIdToName[chainId], signer, account)
+    console.log('getAccounts :>> ', accounts)
     updateAccounts(accounts as Address[])
   }, [account, chainId, signer, updateAccounts])
 
@@ -239,5 +240,6 @@ export default function useSmartAccount() {
     getInitData,
     updateAfterAction,
     getAccountInfo,
+    fetchAccounts,
   }
 }

@@ -126,59 +126,17 @@
       }
 
       &-account{
+        position: relative;
         padding: 16px;
         display: flex;
         align-items: center;
         gap: 4px;
-        em{
-          position: relative;
-          padding: 2px 8px;
-          border-radius: 4px;
-          border: 0.5px solid var(--box-border-color);
-          background: var(--white, #FFF);
-
-          color: var(--bgBlack, #000);
-          text-align: center;
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 16px;
-          transition: all .15s;
-          .iconfont{
-            font-size: 12px;
-            margin-left: 8px;
-          }
-          .copy-hint {
-            display: none;
-            position: absolute;
-            right: 0px;
-            top: 0;
-            width: 100%;
-            // width: 80%;
-            height: 100%;
-            padding: 0px 8px;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
-            border-radius: 4px;
-            // border: 0.5px solid var(--box-border-color);
-            background: var(--white, #FFF);
-
-            color: var(--card-title, rgba(0, 0, 0, 0.90));
-            font-size: 12px;
-            font-style: normal;
-            font-weight: 500;
-            line-height: 16px;
-            cursor: pointer;
-            .iconfont {
-              font-size: inherit;
-            }
-          }
-          &:hover {
-            color: var(--text-gry-60-b, #666);
-            .copy-hint {
-              display: flex;
-            }
-          }
+        flex: 4 1 auto;
+        .extrax-account-info-menu {
+          position: absolute;
+          top: 20px;
+          right: 16px;
+          cursor: pointer;
         }
       }
     }
@@ -514,3 +472,15 @@
   }
 }
 
+
+.account-list-overlay {
+  width: 400px;
+  border-bottom: 0.5px solid var(--stroke, #C9C9CB);
+  padding: 12px;
+  .account-list-item {
+    width: 100%;
+    padding: 12px;
+    border-radius: 4px;
+    border: 0.5px solid var(--stroke, #C9C9CB);
+  }
+}
