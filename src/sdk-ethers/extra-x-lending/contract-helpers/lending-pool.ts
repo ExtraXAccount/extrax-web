@@ -18,5 +18,8 @@ export function getLendingPool(chain: string, signer: JsonRpcSigner) {
 }
 
 export function getWrappedTokenGateway(chain: string, signer: JsonRpcSigner) {
-  return IWrappedTokenGatewayV3__factory.connect(LendingPoolConfig[chain][WRAPPED_TOKEN_GATEWAY_V3], signer)
+  return IWrappedTokenGatewayV3__factory.connect(
+    LendingPoolConfig[chain][WRAPPED_TOKEN_GATEWAY_V3],
+    signer
+  )
 }

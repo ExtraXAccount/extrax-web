@@ -5,7 +5,12 @@ import { clientToSigner } from '@/sdk/utils/clientToSigner'
 import { approve, generateTransferFromTx, generateWrapEtherTx } from '../utils'
 import { executeAccountTransaction, executeAccountTransactionWithEther } from './execute-account-tx'
 
-export async function fundAccountWithERC20(walletClient: WalletClient, account: string, asset: string, amount: string) {
+export async function fundAccountWithERC20(
+  walletClient: WalletClient,
+  account: string,
+  asset: string,
+  amount: string
+) {
   const user = walletClient.account!.address
 
   // approve account to spend user's token
@@ -16,7 +21,12 @@ export async function fundAccountWithERC20(walletClient: WalletClient, account: 
   await executeAccountTransaction(walletClient, account, [tx])
 }
 
-export async function fundAccountWithETH(walletClient: WalletClient, chain: string, account: string, amount: string) {
+export async function fundAccountWithETH(
+  walletClient: WalletClient,
+  chain: string,
+  account: string,
+  amount: string
+) {
   const tx = generateWrapEtherTx(chain, amount)
 
   await executeAccountTransactionWithEther(walletClient, account, [tx], amount)

@@ -26,7 +26,12 @@ export async function withdrawWithAccount(
   await executeAccountTransaction(walletClient, account, transactions)
 }
 
-export async function withdraw(signer: JsonRpcSigner, chain: string, reserve: string, amount: string) {
+export async function withdraw(
+  signer: JsonRpcSigner,
+  chain: string,
+  reserve: string,
+  amount: string
+) {
   const onBehalfOf = signer.address
 
   const lendingPool = getLendingPool(chain, signer)

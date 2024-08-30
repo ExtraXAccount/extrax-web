@@ -24,7 +24,12 @@ export async function repayWithAccount(
   const approveTx = generateApproveTx(reserve, await lendingPool.getAddress(), amount)
   transactions.push(approveTx)
 
-  const repayTx = await lendingPool.repay.populateTransaction(reserve, amount, InterestRate.Variable, onBehalfOf)
+  const repayTx = await lendingPool.repay.populateTransaction(
+    reserve,
+    amount,
+    InterestRate.Variable,
+    onBehalfOf
+  )
   transactions.push(repayTx)
 
   return executeAccountTransaction(walletClient, account, transactions)
@@ -40,7 +45,12 @@ export async function repay(signer: JsonRpcSigner, chain: string, reserve: strin
   const approveTx = generateApproveTx(reserve, await lendingPool.getAddress(), amount)
   transactions.push(approveTx)
 
-  const repayTx = await lendingPool.repay.populateTransaction(reserve, amount, InterestRate.Variable, onBehalfOf)
+  const repayTx = await lendingPool.repay.populateTransaction(
+    reserve,
+    amount,
+    InterestRate.Variable,
+    onBehalfOf
+  )
   transactions.push(repayTx)
 
   return sendTransaction(signer, transactions)

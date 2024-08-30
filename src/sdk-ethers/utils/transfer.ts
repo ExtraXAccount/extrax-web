@@ -27,7 +27,10 @@ export function generateTransferFromTx(
   }
 }
 
-export function generateWrapEtherTx(chain: string, amount: string): { to: string; data: string; value: string } {
+export function generateWrapEtherTx(
+  chain: string,
+  amount: string
+): { to: string; data: string; value: string } {
   const WETH = ReserveAssets[chain]['WETH'].Reserve
 
   const wethAbi = ['function deposit() external payable', 'function withdraw(uint wad) external']

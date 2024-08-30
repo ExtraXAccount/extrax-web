@@ -64,7 +64,7 @@ export default function useSmartAccount() {
       userReserves,
       userEmodeCategoryId: 0,
     })
-    console.log('formattedUserPosition :>> ', formatted)
+    // console.log('formattedUserPosition :>> ', formatted)
     return formatted
   }, [
     currentTimestamp,
@@ -73,10 +73,6 @@ export default function useSmartAccount() {
     reservesData.formattedReserves,
     userReserves,
   ])
-
-  // useEffect(() => {
-  //   console.log('formattedUserPosition :>> ', formattedUserPosition)
-  // }, [formattedUserPosition])
 
   const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
     const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD)
