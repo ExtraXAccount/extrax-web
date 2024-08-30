@@ -58,7 +58,7 @@ export const InfoWithOperation = (): JSX.Element => {
       })}
     >
       <div className='info-with-operation__frame-1279'>
-        <Tooltip title={`${!showPoolDetail ? 'Show' : 'Hide'} ${poolInfo?.symbol} pool info}`}>
+        <Tooltip title={`${!showPoolDetail ? 'Show' : 'Hide'} ${poolInfo?.symbol} pool info`}>
           <span className='btn-toggle-detail' onClick={toggleDetail}>
             <i />
           </span>

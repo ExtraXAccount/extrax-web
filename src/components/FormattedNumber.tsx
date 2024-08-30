@@ -44,7 +44,7 @@ export default function FormattedNumber({
       // remainTrailingZero,
     })
     // let result = toPrecision(num)
-    if (comma && result > 1000) {
+    if (comma && result > 1000 && !unit) {
       result = result.toLocaleString('en-US')
       // result = addComma(result)
       // const decimals = String(result).split('.')[1]?.length || 0
@@ -52,8 +52,7 @@ export default function FormattedNumber({
       //   maximumFractionDigits: decimals,
       //   minimumFractionDigits: decimals,
       // }).format(Number(result))
-    }
-    if (unit) {
+    } else if (unit) {
       result = formatNumberByUnitWithoutK(Number(result))
     }
     // console.log('result :>> ', result)

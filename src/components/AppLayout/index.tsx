@@ -40,7 +40,7 @@ export default function AppLayout() {
   const { updateAccountLayer } = useAccountStore()
 
   const { fetchPoolState } = useLendingList()
-  const { getInitData: getInitSmartAccountData } = useSmartAccount()
+  const { formattedUserPosition, getInitData: getInitSmartAccountData } = useSmartAccount()
 
   useEffect(() => {
     getInitSmartAccountData()
@@ -49,6 +49,10 @@ export default function AppLayout() {
   useEffect(() => {
     fetchPoolState()
   }, [fetchPoolState])
+
+  useEffect(() => {
+    console.log('formattedUserPosition :>> ', formattedUserPosition)
+  }, [formattedUserPosition])
 
   return (
     <div
@@ -66,7 +70,11 @@ export default function AppLayout() {
         <div className='nav-menu'>
           {navList.map((i) => {
             return !i.isExternal ? (
-              <NavLink to={i.link + '?' + searchParams.toString()} className='nav-menu-item' key={i.name}>
+              <NavLink
+                to={i.link + '?' + searchParams.toString()}
+                className='nav-menu-item'
+                key={i.name}
+              >
                 <p>{i.name}</p>
               </NavLink>
             ) : (
