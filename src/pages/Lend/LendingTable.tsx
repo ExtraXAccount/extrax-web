@@ -17,7 +17,13 @@ import { formatSymbol, toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
 import { nameChecker } from '@/utils'
-import { addComma, aprToApy100, formatFloatNumber, formatNumberByUnit, toPrecision } from '@/utils/math'
+import {
+  addComma,
+  aprToApy100,
+  formatFloatNumber,
+  formatNumberByUnit,
+  toPrecision,
+} from '@/utils/math'
 import { div, minus } from '@/utils/math/bigNumber'
 
 import BorrowDialog from './BorrowDialog'
@@ -40,7 +46,8 @@ export default function LendingTable() {
   const { switchChain } = useSwitchChain()
   const { isMobile } = useDeviceDetect()
   const accountManager = useAccountManager()
-  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } = useLendStore()
+  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } =
+    useLendStore()
 
   const {
     formattedLendPools,
@@ -137,7 +144,10 @@ export default function LendingTable() {
             return (
               <>
                 <div className='lending-list-title-wrap'>
-                  <LPName token0={nameChecker(formatSymbol(pool.symbol))} title={nameChecker(pool.symbol)}>
+                  <LPName
+                    token0={nameChecker(formatSymbol(pool.symbol))}
+                    title={nameChecker(pool.symbol)}
+                  >
                     <div className='lending-list-title-wrap-balance text-sm-2'>
                       Wallet: <FormattedNumber value={balanceMap[pool.underlyingAsset]} unit />
                     </div>

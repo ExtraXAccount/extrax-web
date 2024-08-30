@@ -28,20 +28,14 @@ function App() {
               <Route path="spark" element={<Spark />}></Route>
               <Route path="velodromev2" element={<Velodrome />}></Route>
             </Route> */}
-            <Route path="lend" element={<Lend />}></Route>
-            <Route path="lend/:marketId/:reserveId" element={<LendModal />}></Route>
-            <Route
-              path="lend/supply/:marketId/:reserveId"
-              element={<LendModal />}
-            ></Route>
-            <Route
-              path="lend/borrow/:marketId/:reserveId"
-              element={<LendModal />}
-            ></Route>
+            <Route path='lend' element={<Lend />}></Route>
+            <Route path='lend/:reserveId' element={<LendModal />}></Route>
+            <Route path='lend/supply/:reserveId' element={<LendModal />}></Route>
+            <Route path='lend/borrow/:reserveId' element={<LendModal />}></Route>
             {/* <Route path="lend" element={<FigmaLend />}></Route> */}
-            <Route path="portfolio" element={<Positions />}></Route>
+            <Route path='portfolio' element={<Positions />}></Route>
             {/* <Route path="intent" element={<Intent />}></Route> */}
-            <Route path="*" element={<Navigate to="/lend" replace />} />
+            <Route path='*' element={<Navigate to='/lend' replace />} />
           </Route>
         </Routes>
       </RainbowContextApp>

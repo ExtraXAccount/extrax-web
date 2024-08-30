@@ -19,7 +19,7 @@ export default function DialogAccountInfo({
     debtVal: number
     accountApy: number
   }
-  reserveId?: bigint
+  reserveId?: string
 }) {
   const { usedCredit, leverage, netWorth, debtVal, accountApy } = useSmartAccount()
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } =
@@ -33,34 +33,33 @@ export default function DialogAccountInfo({
       nextApy: toPrecision(updatedSummary.accountApy * 100) + '%',
       preLv: toPrecision(leverage),
       nextLv: toPrecision(
-        (updatedSummary.netWorth + updatedSummary.debtVal) / updatedSummary.netWorth,
+        (updatedSummary.netWorth + updatedSummary.debtVal) / updatedSummary.netWorth
       ),
       preNetWorth: '$' + formatNumDisplay(netWorth),
       nextNetWorth: '$' + formatNumDisplay(updatedSummary.netWorth),
       preDebtRatio: toPrecision((debtVal / (netWorth + debtVal)) * 100) + '%',
       nextDebtRatio:
         toPrecision(
-          (updatedSummary.debtVal / (updatedSummary.netWorth + updatedSummary.debtVal)) *
-            100,
+          (updatedSummary.debtVal / (updatedSummary.netWorth + updatedSummary.debtVal)) * 100
         ) + '%',
     }
   }, [accountApy, debtVal, leverage, netWorth, updatedSummary, usedCredit])
 
   // console.log(reserveId, { assetPositions, debtPositions })
   const info = (
-    <ul className="summary-list">
+    <ul className='summary-list'>
       <li>
         <p>Borrowing Power:</p>
-        <div className="flex ai-ct gap-8">
-          <span className="item-pre">{formattedData.preBorrowingPower}</span>
+        <div className='flex ai-ct gap-8'>
+          <span className='item-pre'>{formattedData.preBorrowingPower}</span>
           <span>→</span>
           <b>{formattedData.nextBorrowingPower}</b>
         </div>
       </li>
       <li>
         <p>Portfolio APY:</p>
-        <div className="flex ai-ct gap-8">
-          <span className="item-pre">{formattedData.preApy}</span>
+        <div className='flex ai-ct gap-8'>
+          <span className='item-pre'>{formattedData.preApy}</span>
           <span>→</span>
           <b>{formattedData.nextApy}</b>
         </div>
@@ -75,16 +74,16 @@ export default function DialogAccountInfo({
       </li> */}
       <li>
         <p>Net Worth:</p>
-        <div className="flex ai-ct gap-8">
-          <span className="item-pre">{formattedData.preNetWorth}</span>
+        <div className='flex ai-ct gap-8'>
+          <span className='item-pre'>{formattedData.preNetWorth}</span>
           <span>→</span>
           <b>{formattedData.nextNetWorth}</b>
         </div>
       </li>
       <li>
         <p>Debt Ratio:</p>
-        <div className="flex ai-ct gap-8">
-          <span className="item-pre">{formattedData.preDebtRatio}</span>
+        <div className='flex ai-ct gap-8'>
+          <span className='item-pre'>{formattedData.preDebtRatio}</span>
           <span>→</span>
           <b>{formattedData.nextDebtRatio}</b>
         </div>
@@ -105,7 +104,7 @@ export default function DialogAccountInfo({
     },
   ]
   return (
-    <div className="dialog-accountinfo">
+    <div className='dialog-accountinfo'>
       <Collapse items={items} defaultActiveKey={['Account Info']} />
     </div>
   )

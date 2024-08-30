@@ -4,7 +4,6 @@ import { Dropdown } from 'antd'
 // import { Tooltip } from 'antd'
 import cx from 'classnames'
 import { useCallback, useEffect, useState } from 'react'
-import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import AddressWithCopy from '@/components/AddressWithCopy'
@@ -39,7 +38,6 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   } = useSmartAccount()
   const { chainId, signer, account, walletClient } = useWagmiCtx()
 
-  const [copied, setCopied] = useState(false)
   const [name, setName] = useState('')
   const [isEdit, setIsEdit] = useState(false)
 
@@ -52,15 +50,6 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const handleAddDeposit = useCallback(() => {
     setDepositDialogOpen(true)
   }, [])
-
-  const onCopy = useCallback(() => {
-    if (!copied) {
-      setCopied(true)
-      setTimeout(() => {
-        setCopied(false)
-      }, 2000)
-    }
-  }, [copied])
 
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   const accountName = name || nameList[currentAccount?.toLowerCase()] || ''
@@ -141,7 +130,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                             className='account-list-item flex jc-sb'
                             onClick={(e) => {
                               updateCurrentAccount(item)
-                              // e.stopPropagation()
+                              e.stopPropagation()
                             }}
                           >
                             <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
@@ -216,7 +205,10 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                   {!leverage ? '--' : toPrecision(leverage) + 'x'}
                 </em> */}
                 </div>
-                <button className='btn-base extrax-account-info-apr-supply-btn' onClick={handleAddDeposit}>
+                <button
+                  className='btn-base extrax-account-info-apr-supply-btn'
+                  onClick={handleAddDeposit}
+                >
                   Supply
                 </button>
               </div>
@@ -228,7 +220,8 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                 <span>Net Worth</span>
                 <em className=''>${toPrecision(netWorth).toLocaleString()}</em>
                 <span>
-                  Deposited: ${formatNumberByUnit(depositedVal)} | Borrowed: ${formatNumberByUnit(debtVal)}
+                  Deposited: ${formatNumberByUnit(depositedVal)} | Borrowed: $
+                  {formatNumberByUnit(debtVal)}
                 </span>
               </section>
               <section className='extrax-account-info-deposited-graph'>
@@ -254,7 +247,10 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                 <span className='ltv-wrapper-label'>LTV</span>
                 {!(LTV.max === 0) && (
                   <div className='ltv-wrapper-content'>
-                    <p className='ltv-wrapper-item ltv-wrapper-item-current' style={{ width: `${LTV.current * 100}%` }}>
+                    <p
+                      className='ltv-wrapper-item ltv-wrapper-item-current'
+                      style={{ width: `${LTV.current * 100}%` }}
+                    >
                       <span>
                         Current: <b>{`${toPrecision(LTV.current * 100)}%`}</b>
                       </span>
@@ -283,7 +279,9 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                 <span>Borrowing Power</span>
                 <div className='flex ai-ct gap-10' style={{ margin: '10px 0', fontSize: 20 }}>
                   <em className=''>
-                    {!depositedVal ? '--' : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
+                    {!depositedVal
+                      ? '--'
+                      : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
                   </em>
                 </div>
                 <span>Total: ${toPrecision(Number(maxCredit))}</span>
@@ -302,7 +300,9 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                 </div>
                 <div className='extrax-account-info-credit-percent-item available'>
                   <p>Available</p>
-                  <span>{toPrecision((1 - div(String(usedCredit), maxCredit).toNumber()) * 100)}%</span>
+                  <span>
+                    {toPrecision((1 - div(String(usedCredit), maxCredit).toNumber()) * 100)}%
+                  </span>
                 </div>
               </div>
             </div>

@@ -3,24 +3,29 @@ import { IUiPoolDataProviderV3 } from '@/typechain-types'
 import { PoolBaseCurrencyHumanized, ReserveDataHumanized } from '@/types/aave'
 import { bi2num } from '@/utils/bigInt'
 
-import { ChainId } from '..'
 import { LendingPoolConfig } from '../config/constants'
 import { POOL_ADDRESSES_PROVIDER_ID } from '../config/contract-id'
 import { getUiDataProvider } from './contract-helpers/ui-data-provider'
 
-export async function getLendingGlobalState(chain: string) {
+export async function getLendingGlobalState(chainId: number) {
+  const chain = chainIdToName[chainId]
   const dataProvider = getUiDataProvider(chain)
 
-  // const reserveList = await dataProvider.getReservesList(LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID])
+  // const reserveList = await dataProvider.getReservesList(
+  //   LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID]
+  // )
   // console.log(reserveList)
 
   const lendingPoolAddressProvider = LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID]
-  const { 0: reservesRaw, 1: poolBaseCurrencyRaw } = await dataProvider.getReservesData(lendingPoolAddressProvider)
+  const { 0: reservesRaw, 1: poolBaseCurrencyRaw } = await dataProvider.getReservesData(
+    lendingPoolAddressProvider
+  )
 
   // console.log('reservesRaw :>> ', reservesRaw)
   const reservesData = reservesRaw.map((reserveRaw) => ({
     reserveRaw: (reserveRaw as any).toObject(),
-    id: `${ChainId[chain]}-${reserveRaw.underlyingAsset}-${lendingPoolAddressProvider}`.toLowerCase(),
+    id: `${chainId}-${reserveRaw.underlyingAsset}`.toLowerCase(),
+    // id: reserveRaw.underlyingAsset.toLowerCase(),
     underlyingAsset: reserveRaw.underlyingAsset.toLowerCase(),
     name: reserveRaw.name,
     symbol: reserveRaw.symbol,
@@ -65,8 +70,10 @@ export async function getLendingGlobalState(chain: string) {
     isPaused: reserveRaw.isPaused,
     debtCeiling: reserveRaw.debtCeiling.toString(),
     eModeCategoryId: bi2num(reserveRaw.eModeCategoryId),
-    borrowCap: reserveRaw.borrowCap.toString() === '0' ? '1000000' : reserveRaw.borrowCap.toString(),
-    supplyCap: reserveRaw.supplyCap.toString() === '0' ? '1000000' : reserveRaw.supplyCap.toString(),
+    borrowCap:
+      reserveRaw.borrowCap.toString() === '0' ? '1000000' : reserveRaw.borrowCap.toString(),
+    supplyCap:
+      reserveRaw.supplyCap.toString() === '0' ? '1000000' : reserveRaw.supplyCap.toString(),
     eModeLtv: bi2num(reserveRaw.eModeLtv),
     eModeLiquidationThreshold: bi2num(reserveRaw.eModeLiquidationThreshold),
     eModeLiquidationBonus: bi2num(reserveRaw.eModeLiquidationBonus),
@@ -85,8 +92,10 @@ export async function getLendingGlobalState(chain: string) {
 
   const baseCurrencyData: PoolBaseCurrencyHumanized = {
     // this is to get the decimals from the unit so 1e18 = string length of 19 - 1 to get the number of 0
-    marketReferenceCurrencyDecimals: poolBaseCurrencyRaw.marketReferenceCurrencyUnit.toString().length - 1,
-    marketReferenceCurrencyPriceInUsd: poolBaseCurrencyRaw.marketReferenceCurrencyPriceInUsd.toString(),
+    marketReferenceCurrencyDecimals:
+      poolBaseCurrencyRaw.marketReferenceCurrencyUnit.toString().length - 1,
+    marketReferenceCurrencyPriceInUsd:
+      poolBaseCurrencyRaw.marketReferenceCurrencyPriceInUsd.toString(),
     networkBaseTokenPriceInUsd: poolBaseCurrencyRaw.networkBaseTokenPriceInUsd.toString(),
     networkBaseTokenPriceDecimals: bi2num(poolBaseCurrencyRaw.networkBaseTokenPriceDecimals),
   }
@@ -103,7 +112,10 @@ export async function getLendingUserState(chainId: number, user: string) {
   const dataProvider = getUiDataProvider(chain)
 
   const userDataResult: [IUiPoolDataProviderV3.UserReserveDataStructOutput[], bigint] =
-    await dataProvider.getUserReservesData(LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID], user)
+    await dataProvider.getUserReservesData(
+      LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID],
+      user
+    )
 
   const positions = userDataResult[0].map((data) => {
     const [

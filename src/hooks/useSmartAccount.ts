@@ -1,4 +1,8 @@
-import { formatUserSummary } from '@aave/math-utils'
+import {
+  FormatReserveUSDResponse,
+  formatUserSummary,
+  FormatUserSummaryResponse,
+} from '@aave/math-utils'
 import { sumBy } from 'lodash'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Address } from 'viem'
@@ -54,7 +58,8 @@ export default function useSmartAccount() {
     const formatted = formatUserSummary({
       currentTimestamp,
       formattedReserves: reservesData.formattedReserves,
-      marketReferenceCurrencyDecimals: reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
+      marketReferenceCurrencyDecimals:
+        reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
       marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
       userReserves,
       userEmodeCategoryId: 0,
@@ -117,7 +122,9 @@ export default function useSmartAccount() {
   const accountMng = useAccountManager()
 
   const chainLendingConfig = useMemo(() => {
-    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(LendingConfig[chainId] || {})
+    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
+      LendingConfig[chainId] || {}
+    )
   }, [chainId])
 
   const getAccountInfo = useCallback(
@@ -135,7 +142,9 @@ export default function useSmartAccount() {
         collateralDeciamls,
         debt,
         debtDecimals,
-        depositedVal: Number((collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()),
+        depositedVal: Number(
+          (collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()
+        ),
         debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
       })
     },
@@ -217,7 +226,12 @@ export default function useSmartAccount() {
       max: Number(healthStatus.formatted?.ltv) / depositedVal,
       liquidation: Number(healthStatus.formatted?.liquidationThreshold) / depositedVal,
     }
-  }, [debtVal, depositedVal, healthStatus.formatted?.liquidationThreshold, healthStatus.formatted?.ltv])
+  }, [
+    debtVal,
+    depositedVal,
+    healthStatus.formatted?.liquidationThreshold,
+    healthStatus.formatted?.ltv,
+  ])
 
   return {
     accounts,
@@ -233,7 +247,10 @@ export default function useSmartAccount() {
     liquidationThreshold: Number(healthStatus.formatted?.liquidationThreshold) || 0,
     LTV,
     maxCredit: healthStatus.formatted?.ltv,
-    availableCredit: minus(healthStatus.formatted?.ltv, healthStatus.formatted?.debtValueUsd).toString(),
+    availableCredit: minus(
+      healthStatus.formatted?.ltv,
+      healthStatus.formatted?.debtValueUsd
+    ).toString(),
     usedCredit: debtVal,
     accountApr,
     accountApy,

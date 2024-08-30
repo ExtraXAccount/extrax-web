@@ -28,7 +28,12 @@ export async function depositTransactions(
   const approveTx = generateApproveTx(reserve, await lendingPool.getAddress(), amount)
   transactions.push(approveTx)
 
-  const depositTx = await lendingPool.deposit.populateTransaction(reserve, amount, onBehalfOf, referralCode)
+  const depositTx = await lendingPool.deposit.populateTransaction(
+    reserve,
+    amount,
+    onBehalfOf,
+    referralCode
+  )
 
   transactions.push(depositTx)
 
@@ -38,14 +43,14 @@ export async function depositTransactions(
 
 export async function depositWithAccount(
   walletClient: WalletClient,
-  chainid: number,
+  chainId: number,
   account: string,
   reserve: string,
   amount: string,
   usageAsCollateral = true,
   referralCode = '1234'
 ) {
-  const chain = chainIdToName[chainid]
+  const chain = chainIdToName[chainId]
   const signer = clientToSigner(walletClient) as JsonRpcSigner
   const user = signer.address
 
@@ -95,7 +100,15 @@ export async function deposit(
   const user = signer.address
   const chain = chainIdToName[chainId]
 
-  const transactions = await depositTransactions(signer, user, chain, reserve, amount, usageAsCollateral, referralCode)
+  const transactions = await depositTransactions(
+    signer,
+    user,
+    chain,
+    reserve,
+    amount,
+    usageAsCollateral,
+    referralCode
+  )
 
   const res = await sendTransaction(signer, transactions)
   // console.log('deposit :>> ', res)

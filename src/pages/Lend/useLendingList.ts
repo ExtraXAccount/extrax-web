@@ -16,11 +16,12 @@ import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
 
 export default function useLendingList() {
-  const { reservesData, updateReservesData, isFetching, updateLendPools, updateIsFetching } = useLendStore()
+  const { reservesData, updateReservesData, isFetching, updateLendPools, updateIsFetching } =
+    useLendStore()
   // const { balances } = useAccountStore()
   // const { getPrice } = usePrices()
 
-  // const { chainId } = useWagmiCtx()
+  const { chainId } = useWagmiCtx()
 
   // const chainLendingConfig = useMemo(() => {
   //   return Object.values<(typeof LendingConfig)[chainId][LendPoolConfig]>(LendingConfig[chainId] || {})
@@ -38,7 +39,7 @@ export default function useLendingList() {
   // }, [lendingMng, updateIsFetching, updateLendPools])
 
   const fetchPoolState = useCallback(async () => {
-    const { reservesData, baseCurrencyData } = await getLendingGlobalState(chainIdToName[SupportedChainId.OPTIMISM])
+    const { reservesData, baseCurrencyData } = await getLendingGlobalState(chainId)
     const formattedReserves = reservesData.map((reserve) => {
       const formattedReserve = formatReserveUSD({
         reserve,
@@ -55,7 +56,7 @@ export default function useLendingList() {
     })
     console.log('formattedReserves :>> ', formattedReserves)
     return formattedReserves
-  }, [updateReservesData])
+  }, [chainId, updateReservesData])
 
   // const formattedLendPools: IFormattedLendPool[] = useMemo(() => {
   //   return lendPools.map((pool, index) => {

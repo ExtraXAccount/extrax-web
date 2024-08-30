@@ -9,10 +9,10 @@ export const SetAsCollateral = ({ property1 = 'default', className }): JSX.Eleme
 
   return (
     <div className={'selcetion-property-11 ' + className + ' ' + variantsClassName}>
-      <div className="selcetion-property-11__auto-rebalance">As Collateral </div>
+      <div className='selcetion-property-11__auto-rebalance'>As Collateral </div>
       <Switch
         checked={asCollateral}
-        size="small"
+        size='small'
         onChange={(checked) => {
           setAsCollateral(checked)
         }}

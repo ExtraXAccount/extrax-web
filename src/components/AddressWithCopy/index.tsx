@@ -17,7 +17,7 @@ export default function AddressWithCopy({ address }: { address: string }) {
   }, [copied])
 
   return (
-    <em className={styles.addressWrapper}>
+    <em className={styles.addressWrapper} onClick={(e) => e.stopPropagation()}>
       {address.slice(0, 6)}...{address.slice(-4)}
       <i className={classNames('iconfont icon-copy', styles.iconfont)}></i>
       <CopyToClipboard text={address} onCopy={onCopy}>

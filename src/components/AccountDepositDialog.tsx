@@ -131,7 +131,10 @@ export default function AccountDepositDialog({
         <li>
           <p>Value:</p>
           <b className='text-highlight'>
-            <FormattedNumber value={mul(value, currentLendingPoolDetail?.priceInUSD).toString()} symbol='$' />
+            <FormattedNumber
+              value={mul(value, currentLendingPoolDetail?.priceInUSD).toString()}
+              symbol='$'
+            />
           </b>
         </li>
         <li>

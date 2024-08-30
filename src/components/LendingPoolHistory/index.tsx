@@ -17,16 +17,17 @@ import {
 } from 'recharts'
 
 import { useHistoryData } from '@/hooks/useHistoryData'
-import usePrices from '@/hooks/usePrices'
 import useTheme from '@/hooks/useTheme'
 import useLendPoolInfo from '@/pages/LendModal/useLendPoolInfo'
 import {
-  aprToApy,
+  // aprToApy,
   aprToApy100,
   formatNumberByUnit,
   remain2Decimal,
   toPrecision,
 } from '@/utils/math'
+
+import FormattedNumber from '../FormattedNumber'
 
 const chartTypeSet = [
   {
@@ -45,7 +46,6 @@ export default function LendingPoolHistory() {
   const [timeTab, setTimeTab] = useState(14)
   const [chartType, setChartType] = useState(chartTypeSet[0])
   const theme = useTheme()
-  const { getPrice } = usePrices()
 
   const poolList = useMemo(() => {
     const fromTs = Date.now() - timeTab * 24 * 3600 * 1000
@@ -56,7 +56,7 @@ export default function LendingPoolHistory() {
             // return info.id === lendPoolInfo?.reserveId?.toString()
             return (
               info.underlyingTokenAddress?.toLowerCase() ===
-              lendPoolInfo?.underlyingTokenAddress?.toLowerCase()
+              lendPoolInfo?.underlyingAsset?.toLowerCase()
             )
           }) || {}
 
@@ -73,7 +73,7 @@ export default function LendingPoolHistory() {
       return `${remain2Decimal(
         sumBy(poolList, (item) => {
           return aprToApy100(item.apr * 100)
-        }) / poolList.length,
+        }) / poolList.length
       )}%`
     } else if (chartType.key === 'tvl') {
       return `${formatNumberByUnit(sumBy(poolList, 'totalLiquidity') / poolList.length)}`
@@ -88,9 +88,7 @@ export default function LendingPoolHistory() {
       return {
         time: dayjs(i.ts).format('MMM D HH:mm'),
         value:
-          chartType.key === 'apy'
-            ? remain2Decimal(aprToApy100(i.apr * 100))
-            : i.totalLiquidity,
+          chartType.key === 'apy' ? remain2Decimal(aprToApy100(i.apr * 100)) : i.totalLiquidity,
       }
     })
   }, [chartType.key, poolList])
@@ -99,7 +97,7 @@ export default function LendingPoolHistory() {
     (params) => {
       const { label, payload } = params
       return (
-        <div className="custom-tooltip-content">
+        <div className='custom-tooltip-content'>
           <p key={1}>
             <span>Date: </span>
             <span>{label}</span>
@@ -115,35 +113,31 @@ export default function LendingPoolHistory() {
             </p>
           ))}
           <p key={3}>
-            <span>{lendPoolInfo?.tokenSymbol} price: </span>
-            <span>${getPrice(lendPoolInfo?.tokenSymbol || '')}</span>
+            <span>{lendPoolInfo?.symbol} price: </span>
+            <span>
+              <FormattedNumber value={lendPoolInfo?.priceInUSD || 0} symbol='$' />
+            </span>
           </p>
         </div>
       )
     },
-    [chartType.key, chartType.label, getPrice, lendPoolInfo?.tokenSymbol],
+    [chartType.key, chartType.label, lendPoolInfo?.priceInUSD, lendPoolInfo?.symbol]
   )
 
   return (
-    <div className="pool-history-stats">
-      <div className="lending-history-title">
-        {lendPoolInfo?.tokenSymbol} Pool History Stats
-      </div>
+    <div className='pool-history-stats'>
+      <div className='lending-history-title'>{lendPoolInfo?.symbol} Pool History Stats</div>
 
-      <div className="flex lending-history-tabbox">
-        <div className="history-avg-stats-wrapper">
-          <p className="">
+      <div className='flex lending-history-tabbox'>
+        <div className='history-avg-stats-wrapper'>
+          <p className=''>
             {chartType.label} ({timeTab}D AVG){' '}
           </p>
-          <span className="">
-            {!lendPoolInfo ? (
-              <Skeleton.Button active size="small" block={false} />
-            ) : (
-              <>{avg}</>
-            )}
+          <span className=''>
+            {!lendPoolInfo ? <Skeleton.Button active size='small' block={false} /> : <>{avg}</>}
           </span>
         </div>
-        <div className="page-minitabs page-minitabs-center">
+        <div className='page-minitabs page-minitabs-center'>
           {chartTypeSet.map((item) => (
             <a
               key={item.key}
@@ -156,7 +150,7 @@ export default function LendingPoolHistory() {
             </a>
           ))}
         </div>
-        <div className="page-minitabs">
+        <div className='page-minitabs'>
           {[7, 14, 30].map((item) => (
             <a
               key={item}
@@ -171,11 +165,7 @@ export default function LendingPoolHistory() {
         </div>
       </div>
 
-      <ResponsiveContainer
-        width={'100%'}
-        height={150}
-        className="lending-history-echarts"
-      >
+      <ResponsiveContainer width={'100%'} height={150} className='lending-history-echarts'>
         <LineChart
           data={lineChartData}
           margin={{
@@ -186,19 +176,17 @@ export default function LendingPoolHistory() {
           }}
         >
           <XAxis
-            type="category"
-            dataKey="time"
+            type='category'
+            dataKey='time'
             tick={{ fontSize: 12 }}
             axisLine={true}
             stroke={theme.labelColor}
           ></XAxis>
           <YAxis
-            type="number"
+            type='number'
             tick={{ fontSize: 12 }}
             tickFormatter={(value) =>
-              chartType.key === 'apy'
-                ? toPrecision(value) + '%'
-                : formatNumberByUnit(value)
+              chartType.key === 'apy' ? toPrecision(value) + '%' : formatNumberByUnit(value)
             }
             axisLine={true}
             domain={([dataMin, dataMax]) => [dataMin * 0.8, dataMax * 1.2]}
@@ -206,13 +194,7 @@ export default function LendingPoolHistory() {
             allowDataOverflow={false}
             stroke={theme.labelColor}
           ></YAxis>
-          <Line
-            type="basis"
-            dataKey="value"
-            strokeWidth={1}
-            stroke="#7A87FF"
-            dot={false}
-          />
+          <Line type='basis' dataKey='value' strokeWidth={1} stroke='#7A87FF' dot={false} />
 
           <Tooltip content={renderTooltip} />
         </LineChart>

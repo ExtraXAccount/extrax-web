@@ -1,6 +1,7 @@
 import { JsonRpcSigner, TransactionRequest } from 'ethers'
 import { WalletClient } from 'viem'
 
+import { chainIdToName } from '@/constants/chains'
 import { clientToSigner } from '@/sdk/utils/clientToSigner'
 
 import { executeAccountTransaction } from '../safe-account'
@@ -9,12 +10,13 @@ import { getLendingPool, InterestRate } from './contract-helpers'
 
 export async function borrowWithAccount(
   walletClient: WalletClient,
-  chain: string,
+  chainId: number,
   account: string,
   reserve: string,
   amount: string,
   referralCode = '1234'
 ) {
+  const chain = chainIdToName[chainId]
   const onBehalfOf = account
 
   const signer = clientToSigner(walletClient) as JsonRpcSigner
@@ -34,13 +36,14 @@ export async function borrowWithAccount(
   await executeAccountTransaction(walletClient, account, transactions)
 }
 
-export async function borrow(
+export async function borrowWithWallet(
   signer: JsonRpcSigner,
-  chain: string,
+  chainId: number,
   reserve: string,
   amount: string,
   referralCode = '1234'
 ) {
+  const chain = chainIdToName[chainId]
   const onBehalfOf = signer.address
 
   const lendingPool = getLendingPool(chain, signer)

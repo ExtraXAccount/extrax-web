@@ -6,15 +6,23 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router-dom'
 
 import AmountInput from '@/components/AmountInput'
+import FormattedNumber from '@/components/FormattedNumber'
 import TokenIcon from '@/components/TokenIcon'
+import { useWagmiCtx } from '@/components/WagmiContext'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import usePrices from '@/hooks/usePrices'
-import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import DialogAccountInfo from '@/pages/Lend/DialogComponents/DialogAccountInfo'
 import useLendingList from '@/pages/Lend/useLendingList'
+import {
+  borrowWithAccount,
+  borrowWithWallet,
+  depositWithAccount,
+  depositWithWallet,
+} from '@/sdk-ethers'
 import { aprToApy, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
+import { toBNString } from '@/utils/math/bn'
 
 import { SetAsCollateral } from '../SetAsCollateral'
 import useLendPoolInfo from '../useLendPoolInfo'
@@ -24,7 +32,7 @@ export interface ISupplyWindowsProps {
 }
 
 export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
-  const matchLend = useMatch('lend/:marketId/:reserveId')
+  const matchLend = useMatch('lend/:reserveId')
   const { getPrice } = usePrices()
   const {
     liquidationThreshold,
@@ -38,8 +46,10 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     availableCredit,
     accounts,
     updateAfterAction,
+    isSmartAccount,
   } = useSmartAccount()
   const { state } = useLocation()
+  const { chainId, walletClient, signer, account } = useWagmiCtx()
 
   const [isBorrowMode, setIsBorrowMode] = useState(!!state?.isBorrowMode)
   // const [leverageMode, setLeverageMode] = useState(false)
@@ -48,25 +58,23 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const [value, setValue] = useState('')
   const lendPoolInfo = useLendPoolInfo()
 
-  const { fetchLendPools } = useLendingList()
-  const accountMng = useAccountManager()
-  const lendMng = useLendingManager()
+  const { fetchPoolState } = useLendingList()
   const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
   const { balance: ethBalance } = useFetchEthBalance()
 
   const tokenPrice = useMemo(() => {
-    if (!lendPoolInfo?.tokenSymbol) {
+    if (!lendPoolInfo?.symbol) {
       return 0
     }
-    return getPrice(lendPoolInfo?.tokenSymbol) || 0
-  }, [getPrice, lendPoolInfo?.tokenSymbol])
+    return getPrice(lendPoolInfo?.symbol) || 0
+  }, [getPrice, lendPoolInfo?.symbol])
 
   const maxBorrowAmount = useMemo(() => {
-    if (!lendPoolInfo?.tokenSymbol || !tokenPrice) {
+    if (!lendPoolInfo?.symbol || !tokenPrice) {
       return 0
     }
     return div(availableCredit, tokenPrice).toString()
-  }, [availableCredit, lendPoolInfo?.tokenSymbol, tokenPrice])
+  }, [availableCredit, lendPoolInfo?.symbol, tokenPrice])
 
   const tokenValueChange = useMemo(() => {
     return Number(value) * tokenPrice || 0
@@ -74,7 +82,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
 
   const updatedHealthFactor = useMemo(() => {
     const reserveLiquidationThresholdConfig =
-      (lendPoolInfo?.config.liquidationThreshold || 0) / 10000
+      Number(lendPoolInfo?.formattedReserveLiquidationThreshold || 0) / 10000
     const _liquidateThshold = isBorrowMode
       ? liquidationThreshold
       : liquidationThreshold + tokenValueChange * reserveLiquidationThresholdConfig
@@ -83,7 +91,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   }, [
     debtVal,
     isBorrowMode,
-    lendPoolInfo?.config.liquidationThreshold,
+    lendPoolInfo?.formattedReserveLiquidationThreshold,
     liquidationThreshold,
     tokenValueChange,
   ])
@@ -111,59 +119,62 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   ])
 
   const handleDeposit = useCallback(async () => {
-    if (!lendPoolInfo) {
+    console.log('handleDeposit :>> ', currentAccount)
+    if (!signer || !lendPoolInfo) {
       return
     }
-    console.log('depositToLending :>> ', accounts)
-    let newAccounts = [...accounts]
+    const reserve = lendPoolInfo.underlyingAsset
+    const amount = toBNString(value, lendPoolInfo?.decimals)
     try {
-      if (!accounts.length) {
-        setLoading({ writing: true, desc: 'Creating smart account' })
-        newAccounts = await accountMng.createAccount()
-      }
-      setLoading({ writing: true, desc: 'Supplying' })
-      await lendMng.depositToLending(
-        newAccounts[0],
-        lendPoolInfo.reserveId,
-        BigInt(Number(value) * 10 ** lendPoolInfo.decimals),
-      )
-
-      updateAfterAction(newAccounts[0])
-      fetchLendPools()
-      // onClose()
+      setLoading({ writing: true, desc: 'Depositing assets' })
+      const res = !isSmartAccount
+        ? await depositWithWallet(signer, chainId, reserve, amount, true)
+        : await depositWithAccount(walletClient, chainId, currentAccount, reserve, amount)
+      updateAfterAction()
+      fetchPoolState()
     } finally {
       setLoading({ writing: false, desc: '' })
     }
   }, [
-    accountMng,
-    accounts,
-    fetchLendPools,
-    lendMng,
+    currentAccount,
+    signer,
     lendPoolInfo,
-    updateAfterAction,
     value,
+    isSmartAccount,
+    chainId,
+    walletClient,
+    updateAfterAction,
+    fetchPoolState,
   ])
 
   const handleBorrow = useCallback(async () => {
-    if (!lendPoolInfo) {
+    console.log('handleBorrow :>> ', currentAccount)
+    if (!signer || !lendPoolInfo) {
       return
     }
+    const reserve = lendPoolInfo.underlyingAsset
+    const amount = toBNString(value, lendPoolInfo?.decimals)
     try {
-      setLoading({ writing: true, desc: 'Borrowing' })
-      const res = await lendMng.borrow(
-        currentAccount,
-        lendPoolInfo.marketId,
-        lendPoolInfo.reserveId,
-        BigInt(Number(value) * 10 ** lendPoolInfo.decimals),
-      )
-
-      updateAfterAction(currentAccount)
-      fetchLendPools()
-      // onClose()
+      setLoading({ writing: true, desc: 'Borrowing assets' })
+      const res = !isSmartAccount
+        ? await borrowWithWallet(signer, chainId, reserve, amount)
+        : await borrowWithAccount(walletClient, chainId, currentAccount, reserve, amount)
+      updateAfterAction()
+      fetchPoolState()
     } finally {
       setLoading({ writing: false, desc: '' })
     }
-  }, [currentAccount, fetchLendPools, lendMng, lendPoolInfo, updateAfterAction, value])
+  }, [
+    chainId,
+    currentAccount,
+    fetchPoolState,
+    isSmartAccount,
+    lendPoolInfo,
+    signer,
+    updateAfterAction,
+    value,
+    walletClient,
+  ])
 
   const handleSubmit = useCallback(() => {
     if (isBorrowMode) {
@@ -184,19 +195,16 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   return (
     <div className={'supply-windows ' + className}>
       {matchLend && (
-        <div className="supply-windows__frame-482102">
-          <div className="supply-windows__frame-482101">
-            <div className="supply-windows__group-9">
-              <TokenIcon
-                symbol={lendPoolInfo?.tokenSymbol}
-                style={{ width: '100%', height: '100%' }}
-              />
+        <div className='supply-windows__frame-482102'>
+          <div className='supply-windows__frame-482101'>
+            <div className='supply-windows__group-9'>
+              <TokenIcon symbol={lendPoolInfo?.symbol} style={{ width: '100%', height: '100%' }} />
             </div>
-            <div className="supply-windows__supply-usdc">
-              {isBorrowMode ? 'Borrow' : 'Supply'} {lendPoolInfo.tokenSymbol}
+            <div className='supply-windows__supply-usdc'>
+              {isBorrowMode ? 'Borrow' : 'Supply'} {lendPoolInfo.symbol}
             </div>
           </div>
-          <div className="supply-windows__mode-selector">
+          <div className='supply-windows__mode-selector'>
             <div
               className={classNames('supply-windows__mode', {
                 'supply-windows__mode-active': !isBorrowMode,
@@ -217,8 +225,8 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
           </div>
         </div>
       )}
-      <div className="supply-windows__frame-482088">
-        <div className="supply-windows__frame-481806">
+      <div className='supply-windows__frame-482088'>
+        <div className='supply-windows__frame-481806'>
           {/* {isBorrowMode && (
             <div className="leverage-mode-setting-wrapper">
               <div className="leverage-mode-setting-form flex ai-ct jc-sb">
@@ -258,28 +266,24 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
             ethBalance={isBorrowMode ? maxBorrowAmount : ethBalance}
             useNativeETH={useNativeETH}
             onUseNativeETH={setUseNativeETH}
-            token={lendPoolInfo.tokenSymbol}
+            token={lendPoolInfo.symbol}
             decimals={lendPoolInfo.decimals}
             value={value}
-            price={getPrice(lendPoolInfo.tokenSymbol)}
+            price={getPrice(lendPoolInfo.symbol)}
             onChange={(val) => setValue(val)}
           />
-          <div className="supply-windows__frame-482084">
-            <div className="supply-windows__frame-4820842">
-              <div className="supply-windows__supply-apy">
+          <div className='supply-windows__frame-482084'>
+            <div className='supply-windows__frame-4820842'>
+              <div className='supply-windows__supply-apy'>
                 {/* TODO: calculate afterwards APY */}
                 {isBorrowMode ? 'Borrow' : 'Supply'} APY{' '}
               </div>
-              <div className="supply-windows__frame-482223">
-                <div className="supply-windows___6-73">
-                  {toPrecision(
-                    aprToApy(
-                      (isBorrowMode
-                        ? lendPoolInfo.formatted.borrowApr
-                        : lendPoolInfo.formatted.apr) * 100,
-                    ),
-                  )}
-                  %{' '}
+              <div className='supply-windows__frame-482223'>
+                <div className='supply-windows___6-73'>
+                  <FormattedNumber
+                    value={isBorrowMode ? lendPoolInfo.variableBorrowAPY : lendPoolInfo.supplyAPY}
+                    percent
+                  />
                 </div>
                 {/* <div className="supply-windows__frame-482224">
                   <div className="supply-windows___3-2">🎉 +3.2% </div>
@@ -289,11 +293,9 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
                 </div> */}
               </div>
             </div>
-            <div className="supply-windows__frame-481709">
-              <div className="supply-windows__health-factor">Health Factor</div>
-              <div className="supply-windows___1-21">
-                {toPrecision(updatedHealthFactor)}
-              </div>
+            <div className='supply-windows__frame-481709'>
+              <div className='supply-windows__health-factor'>Health Factor</div>
+              <div className='supply-windows___1-21'>{toPrecision(updatedHealthFactor)}</div>
             </div>
           </div>
           {!isBorrowMode && (
@@ -308,16 +310,13 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
             //     </div>
             //   )
             <SetAsCollateral
-              property1="1"
-              className="supply-windows__selcetion-instance"
+              property1='1'
+              className='supply-windows__selcetion-instance'
             ></SetAsCollateral>
           )}
         </div>
-        <div className="supply-windows__deposit-info">
-          <DialogAccountInfo
-            reserveId={lendPoolInfo.reserveId}
-            updatedSummary={updatedSummary}
-          />
+        <div className='supply-windows__deposit-info'>
+          <DialogAccountInfo reserveId={lendPoolInfo.id} updatedSummary={updatedSummary} />
           <Button
             loading={loading.writing}
             disabled={!Number(value)}
