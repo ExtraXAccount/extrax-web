@@ -116,12 +116,12 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   ])
 
   const handleDeposit = useCallback(async () => {
-    console.log('handleDeposit :>> ', currentAccount)
     if (!signer || !lendPoolInfo) {
       return
     }
     const reserve = lendPoolInfo.underlyingAsset
     const amount = toBNString(value, lendPoolInfo?.decimals)
+    console.log('handleDeposit :>> ', { amount, currentAccount, reserve })
     try {
       setLoading({ writing: true, desc: 'Depositing assets' })
       const res = !isSmartAccount
@@ -145,12 +145,12 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   ])
 
   const handleBorrow = useCallback(async () => {
-    console.log('handleBorrow :>> ', currentAccount)
     if (!signer || !lendPoolInfo) {
       return
     }
     const reserve = lendPoolInfo.underlyingAsset
     const amount = toBNString(value, lendPoolInfo?.decimals)
+    console.log('handleBorrow :>> ', { amount, currentAccount, reserve })
     try {
       setLoading({ writing: true, desc: 'Borrowing assets' })
       const res = !isSmartAccount
