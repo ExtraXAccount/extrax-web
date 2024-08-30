@@ -17,7 +17,7 @@ import { formatNumberByUnit, toPrecision } from '@/utils/math'
 
 import { BorrowInfo } from '../BorrowInfo/BorrowInfo'
 import { CoinMain } from '../CoinMain/CoinMain'
-// import { InterestRateModel } from '../InterestRateModel'
+import { InterestRateModel } from '../InterestRateModel'
 import { MoreDetail } from '../MoreDetail'
 import { SupplyInfo } from '../SupplyInfo/SupplyInfo'
 import { SupplyWindows } from '../SupplyWindows/SupplyWindows'
@@ -142,7 +142,7 @@ export const InfoWithOperation = (): JSX.Element => {
                   <BorrowInfo className='info-to-list-property-1-info__borrow-info-instance'></BorrowInfo>
                 )}
                 <LendingPoolHistory />
-                {/* <InterestRateModel className='info-to-list-property-1-info__interest-rate-model-instance'></InterestRateModel> */}
+                <InterestRateModel className='info-to-list-property-1-info__interest-rate-model-instance'></InterestRateModel>
                 <MoreDetail className='info-to-list-property-1-info__frame-482075-instance'></MoreDetail>
               </>
             )}

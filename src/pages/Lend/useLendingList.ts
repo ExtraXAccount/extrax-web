@@ -16,7 +16,7 @@ import { div } from '@/utils/math/bigNumber'
 import { stringToDecimals } from '@/utils/math/bn'
 
 export default function useLendingList() {
-  const { reservesData, updateReservesData, isFetching, updateLendPools, updateIsFetching } =
+  const { reservesData, updateReservesData, isFetching, updateIsFetching } =
     useLendStore()
   // const { balances } = useAccountStore()
   // const { getPrice } = usePrices()

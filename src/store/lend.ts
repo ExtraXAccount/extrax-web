@@ -2,7 +2,9 @@ import { FormatReserveUSDResponse, UserReserveData } from '@aave/math-utils'
 import { Address } from 'viem'
 import { create } from 'zustand'
 
-import { PoolBaseCurrencyHumanized } from '@/types/aave'
+import { PoolBaseCurrencyHumanized, ReserveDataHumanized } from '@/types/aave'
+
+export type ReserveFormattedData = (ReserveDataHumanized & FormatReserveUSDResponse)
 
 export interface IInterestRateConfig {
   borrowingRateA: number
@@ -63,9 +65,9 @@ export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
 }
 
 export interface LendState {
-  lendPools: FormatReserveUSDResponse[]
+  // lendPools: FormatReserveUSDResponse[]
   reservesData: {
-    formattedReserves: FormatReserveUSDResponse[]
+    formattedReserves: ReserveFormattedData[]
     baseCurrencyData: PoolBaseCurrencyHumanized
   }
   historyData: any[]
@@ -77,7 +79,7 @@ export interface LendState {
 
 export interface LendAction {
   updateReservesData: (lendPools: LendState['reservesData']) => void
-  updateLendPools: (lendPools: LendState['lendPools']) => void
+  // updateLendPools: (lendPools: LendState['lendPools']) => void
   updateHistoryData: (historyData: LendState['historyData']) => void
   updateIsFetching: (isFetching: LendState['isFetching']) => void
   updateCurrentPosition: (currentPosition: LendState['currentPosition']) => void
@@ -86,9 +88,9 @@ export interface LendAction {
 }
 
 export const useLendStore = create<LendState & LendAction>((set) => ({
-  lendPools: [],
+  // lendPools: [],
   reservesData: {
-    formattedReserves: [] as FormatReserveUSDResponse[],
+    formattedReserves: [] as ReserveFormattedData[],
     baseCurrencyData: {} as PoolBaseCurrencyHumanized,
   },
   historyData: [],
@@ -99,7 +101,7 @@ export const useLendStore = create<LendState & LendAction>((set) => ({
   showEvent: true,
 
   updateReservesData: (reservesData) => set(() => ({ reservesData })),
-  updateLendPools: (lendPools) => set(() => ({ lendPools })),
+  // updateLendPools: (lendPools) => set(() => ({ lendPools })),
   updateHistoryData: (historyData) => set(() => ({ historyData })),
   updateIsFetching: (isFetching) => set(() => ({ isFetching })),
   updateCurrentPosition: (currentPosition) => set(() => ({ currentPosition })),

@@ -23,6 +23,13 @@ export function isStable(chainId: SupportedChainId, address: string) {
   return false
 }
 
+export function strToDecimals(bn?: string, decimals = 18) {
+  if (!bn) {
+    return 0
+  }
+  return new BigNumber(bn).div(new BigNumber(`1e+${decimals}`)).toNumber()
+}
+
 export function toDecimals(bn: BN | bigint, decimals = 18) {
   if (!bn) {
     return 0
