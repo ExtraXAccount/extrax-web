@@ -37,7 +37,7 @@ export default function RepayDialog({
     updateAfterAction,
   } = useSmartAccount()
   const lendMng = useLendingManager()
-  const { fetchLendPools } = useLendingList()
+  const { fetchPoolState } = useLendingList()
 
   const { prices, getPrice } = usePrices()
   const [useNativeETH, setUseNativeETH] = useState(true)

@@ -16,7 +16,7 @@ export default function Positions() {
   const { currentPosition, currentDialogShow, updateDialogShow } = useLendStore()
   return (
     <div className="page-app page-positions">
-      <WithdrawDialog
+      {/* <WithdrawDialog
         open={currentDialogShow === 'withdraw'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
@@ -25,7 +25,7 @@ export default function Positions() {
         open={currentDialogShow === 'repay'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
-      ></RepayDialog>
+      ></RepayDialog> */}
       {/* <div className="box account-info-box"><AccountInfo /></div> */}
       <div className="account-info-switch-box">
         <AccountInfo portfolioMode />
