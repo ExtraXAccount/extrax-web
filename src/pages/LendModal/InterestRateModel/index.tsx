@@ -3,8 +3,8 @@ import './index.css'
 import { Skeleton } from 'antd'
 
 import FormattedNumber from '@/components/FormattedNumber'
+import InterestCurve from '@/components/InterestCurve'
 
-// import InterestCurve from '@/components/InterestCurve'
 import useLendPoolInfo from '../useLendPoolInfo'
 
 export const InterestRateModel = ({ className }): JSX.Element => {
@@ -36,7 +36,7 @@ export const InterestRateModel = ({ className }): JSX.Element => {
             INTEREST RATE STRATEGY <i className='interest-rate-model__vector'></i>
           </a>
         </div>
-        {/* <InterestCurve /> */}
+        <InterestCurve />
       </div>
     </div>
   )

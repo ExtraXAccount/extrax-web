@@ -21,22 +21,27 @@ import calculateBorrowingRate from '@/utils/math/borrowInterest'
 const RATE_DECIMALS = 23
 export default function InterestCurve() {
   const lendPoolInfo = useLendPoolInfo()
-  const interestRateConfig = useMemo(() => {
-    return {
-      utilizationA: 1,
-      borrowingRateA: strToDecimals(lendPoolInfo?.baseVariableBorrowRate, RATE_DECIMALS),
-      utilizationB: strToDecimals(lendPoolInfo?.optimalUsageRatio, RATE_DECIMALS),
-      borrowingRateB: strToDecimals(lendPoolInfo?.variableRateSlope1, RATE_DECIMALS),
-      maxBorrowingRate: strToDecimals(lendPoolInfo?.variableRateSlope1, RATE_DECIMALS),
-    }
-  }, [lendPoolInfo?.baseVariableBorrowRate, lendPoolInfo?.optimalUsageRatio, lendPoolInfo?.variableRateSlope1])
 
-  const { currentUtilization } = useMemo(() => {
+  const { optimalUsageRatio, currentUtilization } = useMemo(() => {
     return {
       // interestRateConfig: lendPoolInfo?.interestRateConfig,
+      optimalUsageRatio: strToDecimals(lendPoolInfo?.optimalUsageRatio, RATE_DECIMALS),
       currentUtilization: Number(lendPoolInfo?.supplyUsageRatio || 0) * 100,
     }
-  }, [lendPoolInfo?.supplyUsageRatio])
+  }, [lendPoolInfo?.optimalUsageRatio, lendPoolInfo?.supplyUsageRatio])
+
+  const interestRateConfig = useMemo(() => {
+    const borrowingRateA = strToDecimals(lendPoolInfo?.baseVariableBorrowRate, RATE_DECIMALS)
+    const borrowingRateB = borrowingRateA + strToDecimals(lendPoolInfo?.variableRateSlope1, RATE_DECIMALS)
+    const maxBorrowingRate = borrowingRateB + strToDecimals(lendPoolInfo?.variableRateSlope2, RATE_DECIMALS)
+    return {
+      utilizationA: 0,
+      borrowingRateA,
+      utilizationB: optimalUsageRatio,
+      borrowingRateB,
+      maxBorrowingRate,
+    }
+  }, [lendPoolInfo?.baseVariableBorrowRate, optimalUsageRatio, lendPoolInfo?.variableRateSlope1, lendPoolInfo?.variableRateSlope2])
 
   const lineChartData = useMemo(() => {
     const currentBorrowRate = !interestRateConfig
@@ -121,7 +126,7 @@ export default function InterestCurve() {
               fontSize={10}
               offset={6}
               position={
-                Math.abs(currentUtilization - (lendPoolInfo.optimalUsageRatio || 0) / 100) > 20
+                Math.abs(currentUtilization - optimalUsageRatio / 100) > 20
                   ? 'top'
                   : 'center'
               }
@@ -129,7 +134,7 @@ export default function InterestCurve() {
               {`Current ${toPrecision(currentUtilization)}%`}
             </Label>
           </ReferenceLine>
-          <ReferenceLine x={(lendPoolInfo.optimalUsageRatio || 0) / 100} strokeDasharray='7 3'>
+          <ReferenceLine x={optimalUsageRatio / 100} strokeDasharray='7 3'>
             <Label
               strokeWidth={0.5}
               stroke={'#666'}
@@ -138,7 +143,7 @@ export default function InterestCurve() {
               offset={6}
               position='top'
             >
-              {`Optimal ${(lendPoolInfo.optimalUsageRatio || 0) / 100}%`}
+              {`Optimal ${optimalUsageRatio / 100}%`}
             </Label>
           </ReferenceLine>
           <Line type='basis' strokeWidth={1} dataKey='borrowApr' stroke='#7A8FFF' dot={false} />
