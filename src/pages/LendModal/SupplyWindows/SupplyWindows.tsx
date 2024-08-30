@@ -33,7 +33,7 @@ export interface ISupplyWindowsProps {
 
 export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const matchLend = useMatch('lend/:reserveId')
-  const { getPrice } = usePrices()
+  // const { getPrice } = usePrices()
   const {
     liquidationThreshold,
     usedCredit,
@@ -63,11 +63,8 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const { balance: ethBalance } = useFetchEthBalance()
 
   const tokenPrice = useMemo(() => {
-    if (!lendPoolInfo?.symbol) {
-      return 0
-    }
-    return getPrice(lendPoolInfo?.symbol) || 0
-  }, [getPrice, lendPoolInfo?.symbol])
+    return Number(lendPoolInfo?.priceInUSD) || 1
+  }, [lendPoolInfo?.priceInUSD])
 
   const maxBorrowAmount = useMemo(() => {
     if (!lendPoolInfo?.symbol || !tokenPrice) {
@@ -269,7 +266,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
             token={lendPoolInfo.symbol}
             decimals={lendPoolInfo.decimals}
             value={value}
-            price={getPrice(lendPoolInfo.symbol)}
+            price={Number(lendPoolInfo.priceInUSD)}
             onChange={(val) => setValue(val)}
           />
           <div className='supply-windows__frame-482084'>

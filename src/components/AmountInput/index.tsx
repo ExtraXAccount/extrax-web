@@ -152,15 +152,20 @@ export default function AmountInput(props: IAmountInputProps) {
           <div className='flex ai-ct'>
             {sliderMax !== undefined && (
               <div className='amount-input-number-max text-sm-2'>
-                {sliderMaxText}:<span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
+                {sliderMaxText}:
+                <span onClick={() => onChange(String(sliderMax))}> {sliderMax}</span>
               </div>
             )}
             {!sliderMax && (
               <div className='amount-input-number-max text-sm-2'>
-                {maxText}: <span onClick={() => onChange(String(max))}>{toPrecision(Number(max), 5)}</span>
+                {maxText}:{' '}
+                <span onClick={() => onChange(String(max))}>{toPrecision(Number(max), 5)}</span>
               </div>
             )}
-            <div className='amount-input-number-max-button' onClick={() => onChange(String(parsedSliderMax))}>
+            <div
+              className='amount-input-number-max-button'
+              onClick={() => onChange(String(parsedSliderMax))}
+            >
               Max
             </div>
           </div>

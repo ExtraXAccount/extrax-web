@@ -64,6 +64,7 @@ export default function useSmartAccount() {
       userReserves,
       userEmodeCategoryId: 0,
     })
+    console.log('formattedUserPosition :>> ', formatted)
     return formatted
   }, [
     currentTimestamp,
@@ -247,10 +248,7 @@ export default function useSmartAccount() {
     liquidationThreshold: Number(healthStatus.formatted?.liquidationThreshold) || 0,
     LTV,
     maxCredit: healthStatus.formatted?.ltv,
-    availableCredit: minus(
-      healthStatus.formatted?.ltv,
-      healthStatus.formatted?.debtValueUsd
-    ).toString(),
+    availableCredit: formattedUserPosition?.availableBorrowsUSD || 0,
     usedCredit: debtVal,
     accountApr,
     accountApy,
