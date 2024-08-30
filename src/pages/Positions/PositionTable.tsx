@@ -1,6 +1,7 @@
 import { Table } from 'antd'
 
 import CustomSortIcon from '@/components/CustomSortIcon'
+import FormattedNumber from '@/components/FormattedNumber'
 import LPName from '@/components/LPName'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { toDecimals } from '@/sdk/utils/token'
@@ -12,14 +13,14 @@ export default function PositionTable(props: { positions: any[] }) {
   const { updateCurrentPosition, updateDialogShow } = useLendStore()
   const { healthStatus } = useSmartAccount()
 
-  console.log(healthStatus)
+  console.log(props.positions)
   return (
     <div>
       <Table
         sortDirections={['descend', 'ascend']}
         dataSource={props.positions || []}
         pagination={false}
-        rowKey={(item, index) => `${item.marketId}-${item.reserveId}`}
+        rowKey={(item, index) => item.id}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
@@ -43,7 +44,7 @@ export default function PositionTable(props: { positions: any[] }) {
             return (
               <>
                 <div>
-                  <LPName token0={i.pool.tokenSymbol} title={`${i.pool.tokenSymbol}`} />
+                  <LPName token0={i.reserve.symbol} title={`${i.reserve.symbol}`} />
                 </div>
               </>
             )
@@ -60,7 +61,9 @@ export default function PositionTable(props: { positions: any[] }) {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">${toPrecision(i.value)}</div>
+                <div className="lending-list-title-wrap">
+                  $<FormattedNumber value={i.value} />
+                </div>
               </>
             )
           }}
@@ -70,12 +73,10 @@ export default function PositionTable(props: { positions: any[] }) {
           dataIndex=""
           key="size"
           render={(i) => {
-            const debtSize = toDecimals(i.debt, i.pool.decimals)
-            const liquiditySize = toDecimals(i.debt, i.pool.decimals)
             return (
               <>
                 <div className="lending-list-title-wrap">
-                  {remain2Decimal(i.type === 'debt' ? debtSize : liquiditySize)}
+                  <FormattedNumber value={i.size} />
                 </div>
               </>
             )
@@ -88,7 +89,7 @@ export default function PositionTable(props: { positions: any[] }) {
           render={(i) => {
             return (
               <>
-                <p>${remain2Decimal(i.price)}</p>
+                <p>${remain2Decimal(i.reserve.priceInUSD)}</p>
               </>
             )
           }}
@@ -114,19 +115,19 @@ export default function PositionTable(props: { positions: any[] }) {
           sortIcon={CustomSortIcon}
           sorter={(a: any, b: any) => {
             if (a.type === 'debt') {
-              return a.formatted.borrowApr - b.formatted.borrowApr
+              return a.reserve.variableBorrowAPY - b.reserve.variableBorrowAPY
             } else {
-              return a.formatted.apr - b.formatted.apr
+              return a.reserve.supplyAPY - b.reserve.supplyAPY
             }
           }}
           render={(i) => {
             return (
               <>
                 {i.type === 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.formatted.borrowApr * 100))}%</p>
+                  <p>{toPrecision(aprToApy100(i.reserve.variableBorrowAPY * 100))}%</p>
                 )}
                 {i.type !== 'debt' && (
-                  <p>{toPrecision(aprToApy100(i.pool.formatted.apr * 100))}%</p>
+                  <p>{toPrecision(aprToApy100(i.reserve.supplyAPY * 100))}%</p>
                 )}
               </>
             )

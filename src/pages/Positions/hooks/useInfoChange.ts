@@ -19,7 +19,7 @@ export default function useInfoChange(props: {
     const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
     const nextApy =
       sumBy(formattedLendPools, (item) => {
-        if (props.reserveId === item.reserveId) {
+        if (String(props.reserveId) === item.id) {
           const depositAmount =
             props.type === 'liquidity'
               ? item.formatted.deposited + props.amount

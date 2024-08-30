@@ -14,7 +14,7 @@ export async function borrowWithAccount(
   account: string,
   reserve: string,
   amount: string,
-  referralCode = '1234'
+  referralCode = '1234',
 ) {
   const chain = chainIdToName[chainId]
   const onBehalfOf = account
@@ -29,7 +29,7 @@ export async function borrowWithAccount(
     amount,
     InterestRate.Variable,
     referralCode,
-    onBehalfOf
+    onBehalfOf,
   )
   transactions.push(borrowTx)
 
@@ -41,10 +41,11 @@ export async function borrowWithWallet(
   chainId: number,
   reserve: string,
   amount: string,
-  referralCode = '1234'
+  referralCode = '1234',
 ) {
-  const chain = chainIdToName[chainId]
   const onBehalfOf = signer.address
+
+  const chain = chainIdToName[chainId]
 
   const lendingPool = getLendingPool(chain, signer)
 
@@ -55,7 +56,7 @@ export async function borrowWithWallet(
     amount,
     InterestRate.Variable,
     referralCode,
-    onBehalfOf
+    onBehalfOf,
   )
   transactions.push(borrowTx)
 
