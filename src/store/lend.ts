@@ -1,4 +1,4 @@
-import { FormatReserveUSDResponse, UserReserveData } from '@aave/math-utils'
+import { ComputedUserReserve, FormatReserveUSDResponse, FormatUserSummaryResponse, UserReserveData } from '@aave/math-utils'
 import { Address } from 'viem'
 import { create } from 'zustand'
 
@@ -57,16 +57,25 @@ export interface ILendPosition {
   reserveId: bigint
 }
 
-export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
+// export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
+//   type: string
+//   price: number
+//   value: number
+//   reserve?: IFormattedLendPool
+//   underlyingBalance: string
+//   variableBorrows: string
+//   scaledATokenBalance: string
+//   scaledVariableDebt: string
+// }
+
+export interface IFormattedPosition
+  extends ComputedUserReserve<FormatReserveUSDResponse> {
   type: string
-  price: number
-  value: number
-  reserve?: IFormattedLendPool
-  underlyingBalance: string
-  variableBorrows: string
-  scaledATokenBalance: string
-  scaledVariableDebt: string
+  value: string
+  size: string
 }
+
+// export type IFormattedPosition = FormatUserSummaryResponse<ReserveFormattedData>
 
 export interface LendState {
   // lendPools: FormatReserveUSDResponse[]

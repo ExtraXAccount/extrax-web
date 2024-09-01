@@ -7,13 +7,7 @@ import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
 import { toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
-
-export interface FormattedUserPosition
-  extends ComputedUserReserve<FormatReserveUSDResponse> {
-  type: string
-  value: string
-  size: string
-}
+import { IFormattedPosition } from '@/store/lend'
 
 export default function useFormatPositions(reserveId?: string) {
   // const { formattedLendPools } = useLendingList()
@@ -54,8 +48,8 @@ export default function useFormatPositions(reserveId?: string) {
         })
 
     // type FormattedPositions = typeof formatted
-    const assetPositions: FormattedUserPosition[] = []
-    const debtPositions: FormattedUserPosition[] = []
+    const assetPositions: IFormattedPosition[] = []
+    const debtPositions: IFormattedPosition[] = []
 
     filtered.forEach((item) => {
       if (Number(item.totalBorrowsUSD) > 0) {

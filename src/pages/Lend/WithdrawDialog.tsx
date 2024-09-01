@@ -5,8 +5,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
 import { useWagmiCtx } from '@/components/WagmiContext'
-import usePrices from '@/hooks/usePrices'
-import { useLendingManager } from '@/hooks/useSDK'
+// import usePrices from '@/hooks/usePrices'
+// // import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { chainIdToName } from '@/sdk/constants/chains'
 import { strToDecimals, toDecimals } from '@/sdk/utils/token'
@@ -41,7 +41,7 @@ export default function WithdrawDialog({
     isSmartAccount,
     updateAfterAction,
   } = useSmartAccount()
-  const lendMng = useLendingManager()
+  // const lendMng = useLendingManager()
   const { fetchPoolState } = useLendingList()
 
   const [useNativeETH, setUseNativeETH] = useState(true)
@@ -101,7 +101,7 @@ export default function WithdrawDialog({
     setLoading(true)
     try {
       const reserve = currentLendingPoolDetail?.underlyingAsset
-      const amount = toBNString(value, currentLendingPoolDetail?.decimals)
+      const amount = toBNString(value, currentLendingPoolDetail?.reserve.decimals)
       const chain = chainIdToName[chainId]
       const res = isSmartAccount ? 
       await withdrawWithAccount(walletClient, chain, currentAccount, reserve, amount)
@@ -114,19 +114,11 @@ export default function WithdrawDialog({
     } finally {
       setLoading(false)
     }
-  }, [
-    currentAccount,
-    currentLendingPoolDetail,
-    lendMng,
-    value,
-    updateAfterAction,
-    fetchPoolState,
-    onClose,
-  ])
+  }, [currentAccount, currentLendingPoolDetail, value, chainId, isSmartAccount, walletClient, signer, updateAfterAction, fetchPoolState, onClose])
 
   useEffect(() => {
     reset()
-  }, [currentLendingPoolDetail?.reserveId])
+  }, [currentLendingPoolDetail?.reserve.id])
 
   if (!currentLendingPoolDetail) {
     return null
@@ -149,7 +141,7 @@ export default function WithdrawDialog({
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
           token={currentLendingPoolDetail?.reserve?.symbol || ''}
-          decimals={currentLendingPoolDetail.decimals}
+          decimals={currentLendingPoolDetail?.reserve.decimals}
           value={value}
           price={tokenPrice}
           onChange={(val) => setValue(val)}

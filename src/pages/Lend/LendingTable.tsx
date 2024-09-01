@@ -26,8 +26,8 @@ import {
 } from '@/utils/math'
 import { div, minus } from '@/utils/math/bigNumber'
 
-import BorrowDialog from './BorrowDialog'
-import DepositDialog from './DepositDialog'
+// import BorrowDialog from './BorrowDialog'
+// import DepositDialog from './DepositDialog'
 import CapHover from './HoverComponents/CapHover'
 import RewardsHover from './HoverComponents/RewardsHover'
 import PercentCircle from './PercentCircle'
@@ -85,11 +85,11 @@ export default function LendingTable() {
 
   return (
     <>
-      <DepositDialog
+      {/* <DepositDialog
         open={currentDialogShow === 'deposit'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
-      ></DepositDialog>
+      ></DepositDialog> */}
 
       {/* <WithdrawDialog
         open={currentDialogShow === 'withdraw'}
@@ -102,11 +102,11 @@ export default function LendingTable() {
         onClose={() => updateDialogShow(null)}
       ></RepayDialog> */}
 
-      <BorrowDialog
+      {/* <BorrowDialog
         open={currentDialogShow === 'borrow'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
-      ></BorrowDialog>
+      ></BorrowDialog> */}
 
       <Table
         className='lend-list-table'

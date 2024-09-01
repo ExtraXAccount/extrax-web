@@ -7,8 +7,8 @@ import Dialog from '@/components/Dialog'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { chainIdToName } from '@/constants/chains'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
-import usePrices from '@/hooks/usePrices'
-import { useLendingManager } from '@/hooks/useSDK'
+// import usePrices from '@/hooks/usePrices'
+// import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { strToDecimals } from '@/sdk/utils/token'
 import { repay, repayWithAccount } from '@/sdk-ethers'
@@ -42,10 +42,10 @@ export default function RepayDialog({
     isSmartAccount,
     updateAfterAction,
   } = useSmartAccount()
-  const lendMng = useLendingManager()
+  // const lendMng = useLendingManager()
   const { fetchPoolState } = useLendingList()
 
-  const { prices, getPrice } = usePrices()
+  // const { prices, getPrice } = usePrices()
   const [useNativeETH, setUseNativeETH] = useState(true)
   const { walletClient, signer, chainId } = useWagmiCtx()
   // const [allowance, setAllowance] = useState(0)
@@ -56,6 +56,7 @@ export default function RepayDialog({
   const { balance: ethBalance } = useFetchEthBalance()
 
   const tokenPrice = Number(currentLendingPoolDetail?.reserve?.priceInUSD)
+  const borrowedAmount = Number(currentLendingPoolDetail?.variableBorrows) || 0
 
   const tokenValueChange = useMemo(() => {
     return Number(value) * tokenPrice || 0
@@ -88,15 +89,15 @@ export default function RepayDialog({
   }
 
   const handleRepay = useCallback(async () => {
-    console.log('repay :>> ', currentAccount)
     if (!currentLendingPoolDetail) {
       return
     }
     setLoading(true)
     try {
       const reserve = currentLendingPoolDetail?.underlyingAsset
-      const amount = toBNString(value, currentLendingPoolDetail?.decimals)
+      const amount = toBNString(value, currentLendingPoolDetail?.reserve?.decimals)
       const chain = chainIdToName[chainId]
+      console.log('handleRepay :>> ', {currentAccount, currentLendingPoolDetail, amount} )
       const res = isSmartAccount ? 
       await repayWithAccount(walletClient, chain, currentAccount, reserve, amount)
       : await repay(signer as any, chain, reserve, amount) 
@@ -123,7 +124,7 @@ export default function RepayDialog({
 
   useEffect(() => {
     reset()
-  }, [currentLendingPoolDetail?.reserveId])
+  }, [currentLendingPoolDetail?.reserve?.id])
 
   if (!currentLendingPoolDetail) {
     return null
@@ -138,18 +139,18 @@ export default function RepayDialog({
       <div>
         <AmountInput
           sliderMaxText="Borrowed"
-          sliderMax={strToDecimals(currentLendingPoolDetail.scaledVariableDebt, currentLendingPoolDetail?.reserve?.decimals)}
+          sliderMax={borrowedAmount}
           max={balance}
           ethBalance={ethBalance}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
           token={currentLendingPoolDetail?.reserve?.symbol || ''}
-          decimals={currentLendingPoolDetail.decimals}
+          decimals={currentLendingPoolDetail?.reserve?.decimals}
           value={value}
           price={tokenPrice}
           onChange={(val) => {
-            if (Number(val) > strToDecimals(currentLendingPoolDetail.scaledVariableDebt, currentLendingPoolDetail?.reserve?.decimals)) {
-              setValue('' + strToDecimals(currentLendingPoolDetail.scaledVariableDebt, currentLendingPoolDetail?.reserve?.decimals))
+            if (Number(val) > borrowedAmount) {
+              setValue('' + borrowedAmount)
             } else {
               setValue(val)
             }

@@ -49,7 +49,7 @@ export default function useSmartAccount() {
   // const { formattedLendPools } = useLendingList()
   // console.log('accountInfo :>> ', accountInfo);
 
-  const currentTimestamp = useCurrentTimestamp(600)
+  const currentTimestamp = useCurrentTimestamp(10)
 
   const formattedUserPosition = useMemo(() => {
     if (!reservesData.formattedReserves.length) {
