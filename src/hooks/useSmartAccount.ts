@@ -39,7 +39,7 @@ export default function useSmartAccount() {
   const { reservesData } = useLendStore()
   const currentAccount = _currentAccount || account || ''
 
-  const currentTimestamp = useCurrentTimestamp(10)
+  const currentTimestamp = useCurrentTimestamp(1)
 
   const formattedUserPosition = useMemo(() => {
     if (!reservesData.formattedReserves.length) {
