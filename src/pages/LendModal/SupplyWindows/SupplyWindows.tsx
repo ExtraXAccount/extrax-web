@@ -10,7 +10,6 @@ import FormattedNumber from '@/components/FormattedNumber'
 import TokenIcon from '@/components/TokenIcon'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
-import usePrices from '@/hooks/usePrices'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import DialogAccountInfo from '@/pages/Lend/DialogComponents/DialogAccountInfo'
 import useLendingList from '@/pages/Lend/useLendingList'
@@ -37,14 +36,12 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const {
     liquidationThreshold,
     usedCredit,
-    leverage,
     healthFactor,
     netWorth,
     debtVal,
     accountApy,
     currentAccount,
     availableCredit,
-    accounts,
     updateAfterAction,
     isSmartAccount,
   } = useSmartAccount()
@@ -129,6 +126,8 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
         : await depositWithAccount(walletClient, chainId, currentAccount, reserve, amount)
       updateAfterAction()
       fetchPoolState()
+    } catch(err) {
+      console.warn(err);
     } finally {
       setLoading({ writing: false, desc: '' })
     }

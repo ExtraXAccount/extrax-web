@@ -12,6 +12,7 @@ import { withdraw,withdrawWithAccount } from '@/sdk-ethers'
 import { IFormattedPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+import { div, minus } from '@/utils/math/bigNumber'
 import { toBNString } from '@/utils/math/bn'
 
 import useInfoChange from '../Positions/hooks/useInfoChange'
@@ -35,6 +36,7 @@ export default function WithdrawDialog({
     netWorth,
     debtVal,
     accountApy,
+    availableCredit,
     currentAccount,
     isSmartAccount,
     updateAfterAction,
@@ -49,6 +51,13 @@ export default function WithdrawDialog({
   const [loading, setLoading] = useState(false)
 
   const tokenPrice = Number(currentLendingPoolDetail?.reserve?.priceInUSD)
+
+  const maxWithdrawAmount = useMemo(() => {
+    if (!availableCredit || !tokenPrice) {
+      return 0
+    }
+    return div(availableCredit, tokenPrice).toString()
+  }, [availableCredit, tokenPrice])
 
   const tokenValueChange = useMemo(() => {
     return Number(value) * tokenPrice || 0
@@ -131,10 +140,7 @@ export default function WithdrawDialog({
       <div>
         <AmountInput
           maxText="Deposited"
-          max={
-            strToDecimals(currentLendingPoolDetail?.scaledATokenBalance, currentLendingPoolDetail?.reserve?.decimals) -
-            strToDecimals(currentLendingPoolDetail?.scaledVariableDebt, currentLendingPoolDetail?.reserve?.decimals)
-          }
+          max={maxWithdrawAmount}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
           token={currentLendingPoolDetail?.reserve?.symbol || ''}

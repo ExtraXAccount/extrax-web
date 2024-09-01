@@ -84,19 +84,16 @@ export async function depositWithWallet(
   usageAsCollateral = true,
   referralCode = '1234'
 ) {
-  const isReserveWETH = isWETH(chainId, reserve)
-  const fn = isReserveWETH ? depositETH : deposit
-  return fn(signer, chainId, reserve, amount, usageAsCollateral, referralCode)
-}
+  if (isWETH(chainId, reserve)) {
+    return depositETH(
+      signer,
+      chainId,
+      amount,
+      usageAsCollateral,
+      referralCode
+    )
+  }
 
-export async function deposit(
-  signer: JsonRpcSigner,
-  chainId: number,
-  reserve: string,
-  amount: string,
-  usageAsCollateral = true,
-  referralCode = '1234'
-) {
   const user = signer.address
   const chain = chainIdToName[chainId]
 
@@ -119,7 +116,6 @@ export async function depositETH(
   signer: JsonRpcSigner,
   chainId: number,
   amount: string,
-  reservea: string,
   usageAsCollateral: boolean,
   referralCode = '1234'
 ) {
