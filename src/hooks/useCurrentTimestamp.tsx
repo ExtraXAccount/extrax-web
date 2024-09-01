@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
  */
 export function useCurrentTimestamp(updateInterval = 15): number {
   // const [timeTravel, setTimeTravel] = useState(0)
-  const [timestamp, setTimestamp] = useState(0)
+  const [timestamp, setTimestamp] = useState(dayjs().unix())
 
   useEffect(() => {
     const intervalHandlerID = setInterval(() => setTimestamp(dayjs().unix()), 1000 * updateInterval)

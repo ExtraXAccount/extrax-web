@@ -38,10 +38,6 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const [name, setName] = useState('')
   const [isEdit, setIsEdit] = useState(false)
 
-  useEffect(() => {
-    console.log('healthStatus :>> ', healthStatus, healthFactor)
-  }, [healthStatus, healthFactor])
-
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
   const handleAddDeposit = useCallback(() => {
