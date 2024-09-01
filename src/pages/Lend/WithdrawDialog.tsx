@@ -65,34 +65,32 @@ export default function WithdrawDialog({
 
   // const updatedHealthFactor = useMemo(() => {
   //   const reserveLiquidationThresholdConfig =
-  //     (currentLendingPoolDetail?.config.liquidationThreshold || 0) / 10000
+  //     (Number(currentLendingPoolDetail?.currentLiquidationThreshold) || 0) / 10000
   //   const _liquidateThshold =
   //     liquidationThreshold - tokenValueChange * reserveLiquidationThresholdConfig
   //   const _borrowedValue = debtVal
   //   return _liquidateThshold / _borrowedValue
   // }, [
   //   debtVal,
-  //   currentLendingPoolDetail?.config.liquidationThreshold,
-  //   liquidationThreshold,
+  //   currentLendingPoolDetail?.currentLiquidationThreshold,
   //   tokenValueChange,
   // ])
 
-  // const next = useInfoChange({
-  //   reserveId: currentLendingPoolDetail?.reserveId,
-  //   amount: -Number(value),
-  //   type: 'liquidity',
-  //   price: getPrice(currentLendingPoolDetail?.tokenSymbol || ''),
-  // })
+  const next = useInfoChange({
+    reserve: currentLendingPoolDetail?.reserve,
+    amount: -Number(value),
+    type: 'liquidity',
+  })
 
-  // const updatedSummary = useMemo(() => {
-  //   const tokenValueChange = Number(value) * tokenPrice || 0
-  //   return {
-  //     usedCredit: usedCredit,
-  //     netWorth: netWorth - tokenValueChange,
-  //     debtVal: debtVal,
-  //     accountApy: next.accountApy,
-  //   }
-  // }, [debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
+  const updatedSummary = useMemo(() => {
+    const tokenValueChange = Number(value) * tokenPrice || 0
+    return {
+      usedCredit: usedCredit,
+      netWorth: netWorth - tokenValueChange,
+      debtVal: debtVal,
+      accountApy: next.accountApy,
+    }
+  }, [debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
 
   function reset() {
     setValue('')
@@ -165,10 +163,10 @@ export default function WithdrawDialog({
         ]}
       />
       <div className="dialog-divider"></div>
-      {/* <DialogAccountInfo
-        reserveId={currentLendingPoolDetail.reserveId}
+      <DialogAccountInfo
+        reserveId={currentLendingPoolDetail?.reserve.id}
         updatedSummary={updatedSummary}
-      /> */}
+      />
       <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading}

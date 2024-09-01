@@ -1,54 +1,56 @@
+import { FormatReserveUSDResponse } from '@aave/math-utils'
 import { sumBy } from 'lodash'
 import { useMemo } from 'react'
 
 import usePrices from '@/hooks/usePrices'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import useLendingList from '@/pages/Lend/useLendingList'
+import { mul, plus } from '@/utils/math/bigNumber'
 
 export default function useInfoChange(props: {
-  reserveId: bigint | undefined
+  reserve: FormatReserveUSDResponse | undefined
   amount: number
   type: 'liquidity' | 'debt'
-  price: number
 }) {
+  const { reserve, amount, type} = props
   const { healthStatus } = useSmartAccount()
-  const { formattedLendPools } = useLendingList()
-  const { getPrice } = usePrices()
+  const { formattedUserPosition } = useSmartAccount()
 
   const nextTotalApy = useMemo(() => {
-    const depositedVal = Number(healthStatus?.formatted?.collateralValueUsd) || 0
+    if (!reserve) {
+      return 0
+    }
+    const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD) || 0
+
+    console.log(depositedVal)
     const nextApy =
-      sumBy(formattedLendPools, (item) => {
-        if (String(props.reserveId) === item.id) {
-          const depositAmount =
-            props.type === 'liquidity'
-              ? item.formatted.deposited + props.amount
-              : item.formatted.deposited
-          const borrowedAmount =
-            props.type === 'debt'
-              ? item.formatted.borrowed + props.amount
-              : item.formatted.borrowed
-          return (
-            item.formatted.apy * depositAmount * getPrice(item.tokenSymbol) -
-              item.formatted.borrowApy * borrowedAmount * getPrice(item.tokenSymbol) || 0
-          )
+      sumBy(formattedUserPosition?.userReservesData, (item) => {
+        if (reserve.id === item.reserve.id) {
+          const valueChanged = mul(amount, reserve.priceInUSD).toNumber()
+          console.log(valueChanged)
+          const depositRate =
+            type === 'liquidity'
+              ? plus(valueChanged, item.underlyingBalanceUSD).multipliedBy(item.reserve.supplyAPY)
+              : mul(item.reserve.supplyAPY, item.underlyingBalanceUSD)
+          const borrowedRate =
+            type === 'debt'
+              ? plus(valueChanged, item.totalBorrowsUSD).multipliedBy(item.reserve.variableBorrowAPR)
+              : mul(item.reserve.variableBorrowAPR, item.totalBorrowsUSD)
+            return depositRate
+              .minus(borrowedRate)
+              .toNumber()
         } else {
-          return (
-            item.formatted.apy * item.formatted.deposited * getPrice(item.tokenSymbol) -
-              item.formatted.borrowApy *
-                item.formatted.borrowed *
-                getPrice(item.tokenSymbol) || 0
-          )
+          return mul(item.reserve.supplyAPY, item.underlyingBalanceUSD)
+            .minus(mul(item.reserve.variableBorrowAPR, item.totalBorrowsUSD))
+            .toNumber()
         }
       }) / depositedVal
     return nextApy
   }, [
-    formattedLendPools,
-    getPrice,
-    healthStatus?.formatted?.collateralValueUsd,
-    props.amount,
-    props.reserveId,
-    props.type,
+    formattedUserPosition,
+    amount,
+    reserve,
+    type,
   ])
 
   const next = {

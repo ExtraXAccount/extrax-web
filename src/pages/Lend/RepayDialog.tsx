@@ -64,22 +64,22 @@ export default function RepayDialog({
   //   const _borrowedValue = debtVal - tokenValueChange
   //   return _liquidateThshold / _borrowedValue
   // }, [debtVal, liquidationThreshold, tokenValueChange])
-  // const next = useInfoChange({
-  //   reserveId: currentLendingPoolDetail?.reserveId,
-  //   amount: -Number(value),
-  //   type: 'debt',
-  //   price: getPrice(currentLendingPoolDetail?.tokenSymbol || ''),
-  // })
 
-  // const updatedSummary = useMemo(() => {
-  //   const tokenValueChange = Number(value) * tokenPrice || 0
-  //   return {
-  //     usedCredit: usedCredit,
-  //     netWorth: netWorth + tokenValueChange,
-  //     debtVal: debtVal - tokenValueChange,
-  //     accountApy: next.accountApy,
-  //   }
-  // }, [debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
+  const next = useInfoChange({
+    reserve: currentLendingPoolDetail?.reserve,
+    amount: -Number(value),
+    type: 'debt',
+  })
+
+  const updatedSummary = useMemo(() => {
+    const tokenValueChange = Number(value) * tokenPrice || 0
+    return {
+      usedCredit: usedCredit - tokenValueChange,
+      netWorth: netWorth + tokenValueChange,
+      debtVal: debtVal - tokenValueChange,
+      accountApy: next.accountApy,
+    }
+  }, [debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
 
   function reset() {
     setValue('')
@@ -169,10 +169,10 @@ export default function RepayDialog({
         ]}
       />
       <div className="dialog-divider"></div>
-      {/* <DialogAccountInfo
-        reserveId={currentLendingPoolDetail.reserveId}
+      <DialogAccountInfo
+        reserveId={currentLendingPoolDetail.reserve.id}
         updatedSummary={updatedSummary}
-      /> */}
+      />
       <div className="dialog-btns flex jc-sb">
         <Button
           loading={loading}

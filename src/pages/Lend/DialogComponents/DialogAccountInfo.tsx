@@ -3,9 +3,10 @@ import './dialogAccountInfo.scss'
 import { Collapse, CollapseProps } from 'antd/es'
 import { useMemo } from 'react'
 
+import FormattedNumber from '@/components/FormattedNumber'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import useFormatPositions from '@/pages/Positions/hooks/useFormatPositions'
-import { formatNumDisplay, remain2Decimal, toPrecision } from '@/utils/math'
+import { formatFloatNumber, formatNumDisplay, remain2Decimal, toPrecision } from '@/utils/math'
 
 import MiniPosition from './MiniPosition'
 
@@ -27,16 +28,16 @@ export default function DialogAccountInfo({
 
   const formattedData = useMemo(() => {
     return {
-      preBorrowingPower: '$' + formatNumDisplay(usedCredit),
-      nextBorrowingPower: '$' + formatNumDisplay(updatedSummary.usedCredit),
+      preBorrowingPower: '$' + formatFloatNumber(usedCredit),
+      nextBorrowingPower: '$' + formatFloatNumber(updatedSummary.usedCredit),
       preApy: toPrecision(accountApy * 100) + '%',
       nextApy: toPrecision(updatedSummary.accountApy * 100) + '%',
       preLv: toPrecision(leverage),
       nextLv: toPrecision(
         (updatedSummary.netWorth + updatedSummary.debtVal) / updatedSummary.netWorth
       ),
-      preNetWorth: '$' + formatNumDisplay(netWorth),
-      nextNetWorth: '$' + formatNumDisplay(updatedSummary.netWorth),
+      preNetWorth: '$' + formatFloatNumber(netWorth),
+      nextNetWorth: '$' + formatFloatNumber(updatedSummary.netWorth),
       preDebtRatio: toPrecision((debtVal / (netWorth + debtVal)) * 100) + '%',
       nextDebtRatio:
         toPrecision(

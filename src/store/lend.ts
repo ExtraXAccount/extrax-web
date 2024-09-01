@@ -21,6 +21,7 @@ export interface IFormattedPosition
   type: string
   value: string
   size: string
+  currentLiquidationThreshold?: string
 }
 
 export interface LendState {
