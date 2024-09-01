@@ -11,23 +11,15 @@ import LPName from '@/components/LPName'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { SupportedChainId } from '@/constants/chains'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
-import usePrices from '@/hooks/usePrices'
+import { useFetchEthBalance } from '@/hooks/useFetchBalance'
 import { useAccountManager } from '@/hooks/useSDK'
-import { formatSymbol, toDecimals } from '@/sdk/utils/token'
-import { useLendStore } from '@/store'
+import useSmartAccount from '@/hooks/useSmartAccount'
+import { formatSymbol, isWETH, toDecimals } from '@/sdk/utils/token'
+import { useAccountStore } from '@/store'
 import { IFormattedLendPool } from '@/store/lend'
 import { nameChecker } from '@/utils'
-import {
-  addComma,
-  aprToApy100,
-  formatFloatNumber,
-  formatNumberByUnit,
-  toPrecision,
-} from '@/utils/math'
 import { div, minus } from '@/utils/math/bigNumber'
 
-// import BorrowDialog from './BorrowDialog'
-// import DepositDialog from './DepositDialog'
 import CapHover from './HoverComponents/CapHover'
 import RewardsHover from './HoverComponents/RewardsHover'
 import PercentCircle from './PercentCircle'
@@ -40,74 +32,29 @@ const { Column } = Table
 export default function LendingTable() {
   const navigate = useNavigate()
 
-  const { getPrice } = usePrices()
   const { account, chainId } = useWagmiCtx()
   const { openConnectModal } = useConnectModal()
   const { switchChain } = useSwitchChain()
   const { isMobile } = useDeviceDetect()
-  const accountManager = useAccountManager()
-  const { currentPosition, currentDialogShow, updateDialogShow, updateCurrentPosition } =
-    useLendStore()
 
+  const { fetchBalances } = useSmartAccount()
   const {
     formattedLendPools,
     // fetchLendPools,
     // isFetching: isFetchingLendingList,
   } = useLendingList()
+  const { balanceMap } = useAccountStore()
 
   const [activeChain, setActiveChain] = useState(chainId)
-  const [balanceMap, setBalanceMap] = useState({})
+  const { balance: ethBalance } = useFetchEthBalance()
+  // const [balanceMap, setBalanceMap] = useState({})
 
   useEffect(() => {
-    console.log('formattedLendPools :>> ', formattedLendPools)
-    // get Balances for list
-    if (account) {
-      accountManager
-        .getBalances(
-          [account],
-          formattedLendPools.map((i) => i.underlyingAsset as Address)
-        )
-        .then((r) => {
-          const balanceMap = {}
-          formattedLendPools.forEach((i, index) => {
-            balanceMap[i.underlyingAsset] = toDecimals(r[index], i.decimals)
-          })
-          setBalanceMap(balanceMap)
-        })
-    }
-  }, [formattedLendPools, accountManager, account])
-
-  // const [currentLendingPoolDetail, setCurrentLendingPoolDetail] = useState(undefined)
-
-  // useEffect(() => {
-  //   mng.multicallPoolsStatus([1n, 2n, 3n])
-  // }, [mng])
+    fetchBalances(account)
+  }, [account, fetchBalances])
 
   return (
     <>
-      {/* <DepositDialog
-        open={currentDialogShow === 'deposit'}
-        currentLendingPoolDetail={currentPosition}
-        onClose={() => updateDialogShow(null)}
-      ></DepositDialog> */}
-
-      {/* <WithdrawDialog
-        open={currentDialogShow === 'withdraw'}
-        currentLendingPoolDetail={currentPosition}
-        onClose={() => updateDialogShow(null)}
-      ></WithdrawDialog>
-      <RepayDialog
-        open={currentDialogShow === 'repay'}
-        currentLendingPoolDetail={currentPosition}
-        onClose={() => updateDialogShow(null)}
-      ></RepayDialog> */}
-
-      {/* <BorrowDialog
-        open={currentDialogShow === 'borrow'}
-        currentLendingPoolDetail={currentPosition}
-        onClose={() => updateDialogShow(null)}
-      ></BorrowDialog> */}
-
       <Table
         className='lend-list-table'
         sortDirections={['descend', 'ascend']}
@@ -149,7 +96,9 @@ export default function LendingTable() {
                     title={nameChecker(pool.symbol)}
                   >
                     <div className='lending-list-title-wrap-balance text-sm-2'>
-                      Wallet: <FormattedNumber value={balanceMap[pool.underlyingAsset]} unit />
+                      Wallet: <FormattedNumber value={
+                        balanceMap[pool.underlyingAsset] + (isWETH(chainId, pool.underlyingAsset) ? Number(ethBalance) : 0)
+                      } unit />
                     </div>
                   </LPName>
                 </div>

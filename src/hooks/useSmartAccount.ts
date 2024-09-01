@@ -11,9 +11,11 @@ import { useWagmiCtx } from '@/components/WagmiContext'
 import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import { useAccountManager } from '@/hooks/useSDK'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
+import { strToDecimals } from '@/sdk/utils/token'
 import { getAccounts } from '@/sdk-ethers'
 import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore, useLendStore } from '@/store'
+import { IBalanceMap } from '@/store/account'
 import { bi2decimalStr } from '@/utils/bigInt'
 import { div, minus, mul, plus } from '@/utils/math/bigNumber'
 
@@ -27,24 +29,15 @@ export default function useSmartAccount() {
   const {
     accounts,
     currentAccount: _currentAccount,
-    updateCurrentAccount,
     positions: userReserves,
-    // accountInfo,
     updateAccounts,
-    updateAccountInfo,
     updateBalances,
     updatePositions,
-    updateSupportedAssets,
-    updateSupportedDebts,
     healthStatus,
     updateHealthStatus,
   } = useAccountStore()
   const { reservesData } = useLendStore()
   const currentAccount = _currentAccount || account || ''
-
-  // const { updatePositions } = useLendStore()
-  // const { formattedLendPools } = useLendingList()
-  // console.log('accountInfo :>> ', accountInfo);
 
   const currentTimestamp = useCurrentTimestamp(10)
 
@@ -115,50 +108,27 @@ export default function useSmartAccount() {
 
   const accountMng = useAccountManager()
 
-  const chainLendingConfig = useMemo(() => {
-    return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
-      LendingConfig[chainId] || {}
-    )
-  }, [chainId])
-
-  const getAccountInfo = useCallback(
-    async (acc) => {
-      console.log('getAccountInfo :>> ', acc)
-      if (!acc) {
-        return
-      }
-      const { account, collateral, collateralDeciamls, debt, debtDecimals } =
-        await accountMng.getCollateralAndDebtValue(acc)
-
-      updateAccountInfo({
-        account,
-        collateral,
-        collateralDeciamls,
-        debt,
-        debtDecimals,
-        depositedVal: Number(
-          (collateral > 0n ? collateral / BigInt(10 ** collateralDeciamls) : 0n).toString()
-        ),
-        debtVal: Number((debt > 0n ? debt / BigInt(10 ** debtDecimals) : 0n).toString()),
-      })
-    },
-    [accountMng, updateAccountInfo]
-  )
+  // const chainLendingConfig = useMemo(() => {
+  //   return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
+  //     LendingConfig[chainId] || {}
+  //   )
+  // }, [chainId])
 
   const fetchBalances = useCallback(
     async (acc) => {
       if (!acc) {
         return []
       }
-      const tokens = chainLendingConfig.reduce(
-        (arr: any, item) => arr.concat([item.underlyingTokenAddress, item.eToken, item.debtToken]),
-        []
-      )
-      // console.log('fetchBalances :>> ', { acc, tokens })
-      const [...res] = await accountMng.getBalances([acc], tokens)
-      updateBalances(res)
+      const tokens = reservesData.formattedReserves.map(item => item.underlyingAsset) as Address[]
+      console.log('fetchBalances :>> ', { acc, tokens })
+      const res = await accountMng.getBalances([acc], tokens)
+      const balances: IBalanceMap = {}
+      tokens.forEach((token, index) => {
+        balances[token] = strToDecimals(res[index].toString(), reservesData.formattedReserves[index].decimals)
+      })
+      updateBalances(balances)
     },
-    [chainLendingConfig, accountMng, updateBalances]
+    [reservesData.formattedReserves, accountMng, updateBalances]
   )
   // const fetchUserHealthStatus = useCallback(
   //   async (acc) => {
@@ -200,7 +170,6 @@ export default function useSmartAccount() {
 
   const updateAfterAction = useCallback(
     async (account = currentAccount) => {
-      // getAccountInfo(account)
       fetchBalances(account)
       fetchUserReserves(account, chainId)
     },
@@ -247,8 +216,8 @@ export default function useSmartAccount() {
     accountApy,
 
     getInitData,
+    fetchBalances,
     updateAfterAction,
-    getAccountInfo,
     fetchAccounts,
   }
 }
