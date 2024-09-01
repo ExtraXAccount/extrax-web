@@ -185,16 +185,11 @@ export default function useSmartAccount() {
       }
     }
     return {
-      current: debtVal / depositedVal,
-      max: Number(healthStatus.formatted?.ltv) / depositedVal,
-      liquidation: Number(healthStatus.formatted?.liquidationThreshold) / depositedVal,
+      current: Number(formattedUserPosition?.currentLoanToValue) || 0,
+      max: plus(formattedUserPosition?.currentLoanToValue || 0, formattedUserPosition?.currentLiquidationThreshold || 0).toNumber() / 2,
+      liquidation: Number(formattedUserPosition?.currentLiquidationThreshold) || 0,
     }
-  }, [
-    debtVal,
-    depositedVal,
-    healthStatus.formatted?.liquidationThreshold,
-    healthStatus.formatted?.ltv,
-  ])
+  }, [depositedVal, formattedUserPosition?.currentLiquidationThreshold, formattedUserPosition?.currentLoanToValue])
 
   return {
     accounts,
@@ -209,7 +204,7 @@ export default function useSmartAccount() {
     healthFactor: Number(formattedUserPosition?.healthFactor) || 0,
     liquidationThreshold: Number(healthStatus.formatted?.liquidationThreshold) || 0,
     LTV,
-    maxCredit: healthStatus.formatted?.ltv,
+    maxCredit: plus(formattedUserPosition?.availableBorrowsUSD || 0, formattedUserPosition?.totalBorrowsUSD || 0).toNumber(),
     availableCredit: formattedUserPosition?.availableBorrowsUSD || 0,
     usedCredit: debtVal,
     accountApr,
