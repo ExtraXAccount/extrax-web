@@ -13,10 +13,11 @@ import PositionTable from './PositionTable'
 export default function Positions() {
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } =
     useFormatPositions()
+
   const { currentPosition, currentDialogShow, updateDialogShow } = useLendStore()
   return (
     <div className="page-app page-positions">
-      {/* <WithdrawDialog
+      <WithdrawDialog
         open={currentDialogShow === 'withdraw'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
@@ -25,7 +26,7 @@ export default function Positions() {
         open={currentDialogShow === 'repay'}
         currentLendingPoolDetail={currentPosition}
         onClose={() => updateDialogShow(null)}
-      ></RepayDialog> */}
+      ></RepayDialog>
       {/* <div className="box account-info-box"><AccountInfo /></div> */}
       <div className="account-info-switch-box">
         <AccountInfo portfolioMode />
@@ -41,7 +42,7 @@ export default function Positions() {
               <h4>
                 <i></i>Asset
               </h4>
-              <p>Total: ${remain2Decimal(totalAssetValue)}</p>
+              <p>Total: ${remain2Decimal(Number(totalAssetValue))}</p>
             </section>
             <PositionTable positions={assetPositions} />
           </div>
@@ -50,7 +51,7 @@ export default function Positions() {
               <h4>
                 <i></i>Debt
               </h4>
-              <p>Total: ${remain2Decimal(totalDebtValue)}</p>
+              <p>Total: ${remain2Decimal(Number(totalDebtValue))}</p>
             </section>
             <PositionTable positions={debtPositions} />
           </div>

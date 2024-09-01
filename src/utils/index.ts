@@ -1,4 +1,7 @@
-export function nameChecker(tokenName: string) {
+export function nameChecker(tokenName: string | undefined) {
+  if (!tokenName) {
+    return ''
+  }
   if (tokenName === 'WETH') {
     return 'ETH'
   }

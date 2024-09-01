@@ -61,7 +61,11 @@ export interface IFormattedPosition extends ILendPosition, IFormattedLendPool {
   type: string
   price: number
   value: number
-  pool?: IFormattedLendPool
+  reserve?: IFormattedLendPool
+  underlyingBalance: string
+  variableBorrows: string
+  scaledATokenBalance: string
+  scaledVariableDebt: string
 }
 
 export interface LendState {
