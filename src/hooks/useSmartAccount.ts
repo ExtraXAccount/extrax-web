@@ -9,8 +9,7 @@ import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { chainIdToName, SupportedChainId } from '@/constants/chains'
-import usePrices from '@/hooks/usePrices'
-import { useAccountManager, useLendingManager } from '@/hooks/useSDK'
+import { useAccountManager } from '@/hooks/useSDK'
 import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { getAccounts } from '@/sdk-ethers'
 import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
@@ -24,8 +23,6 @@ type ChainId = keyof typeof LendingConfig
 type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
 
 export default function useSmartAccount() {
-  const { prices, getPrice } = usePrices()
-
   const { chainId, signer, account } = useWagmiCtx()
   const {
     accounts,

@@ -57,7 +57,6 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   return (
     <div className='extrax-account-info'>
       <AccountDepositDialog
-        accounts={accounts}
         open={depositDialogOpen}
         onClose={() => setDepositDialogOpen(false)}
       ></AccountDepositDialog>

@@ -5,8 +5,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import AmountInput from '@/components/AmountInput'
 import Dialog from '@/components/Dialog'
 import { useWagmiCtx } from '@/components/WagmiContext'
-// import usePrices from '@/hooks/usePrices'
-// // import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { chainIdToName } from '@/sdk/constants/chains'
 import { strToDecimals, toDecimals } from '@/sdk/utils/token'
@@ -41,7 +39,6 @@ export default function WithdrawDialog({
     isSmartAccount,
     updateAfterAction,
   } = useSmartAccount()
-  // const lendMng = useLendingManager()
   const { fetchPoolState } = useLendingList()
 
   const [useNativeETH, setUseNativeETH] = useState(true)

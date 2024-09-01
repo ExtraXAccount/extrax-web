@@ -7,8 +7,6 @@ import Dialog from '@/components/Dialog'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { chainIdToName } from '@/constants/chains'
 import useFetchBalance, { useFetchEthBalance } from '@/hooks/useFetchBalance'
-// import usePrices from '@/hooks/usePrices'
-// import { useLendingManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { strToDecimals } from '@/sdk/utils/token'
 import { repay, repayWithAccount } from '@/sdk-ethers'
@@ -42,7 +40,6 @@ export default function RepayDialog({
     isSmartAccount,
     updateAfterAction,
   } = useSmartAccount()
-  // const lendMng = useLendingManager()
   const { fetchPoolState } = useLendingList()
 
   // const { prices, getPrice } = usePrices()

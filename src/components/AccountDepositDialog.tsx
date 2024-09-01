@@ -19,14 +19,11 @@ import FormattedNumber from './FormattedNumber'
 import { useWagmiCtx } from './WagmiContext'
 
 export default function AccountDepositDialog({
-  accounts,
   open,
   onClose,
 }: {
-  accounts: any
   open: boolean
   onClose: any
-  currentLendingPoolDetail?: any
 }) {
   const { walletClient, signer, chainId } = useWagmiCtx()
   const { updateAfterAction, currentAccount, isSmartAccount } = useSmartAccount()
@@ -61,29 +58,17 @@ export default function AccountDepositDialog({
   }
 
   const handleDeposit = useCallback(async () => {
-    console.log('depositToLending :>> ', currentAccount)
     if (!signer) {
       return
     }
     const reserve = currentLendingPoolDetail?.underlyingAsset
     const amount = toBNString(value, currentLendingPoolDetail?.decimals)
-    // if (!isSmartAccount) {
-    //   deposit(signer, chainId, reserve, amount)
-    // }
+    console.log('depositToLending :>> ', {currentAccount, reserve, amount})
     try {
-      // setLoading({ writing: true, desc: 'Creating smart account' })
       setLoading({ writing: true, desc: 'Depositing assets' })
       const res = !isSmartAccount
         ? await depositWithWallet(signer, chainId, reserve, amount, true)
         : await depositWithAccount(walletClient, chainId, currentAccount, reserve, amount)
-      // await lendMng.depositToLending(
-      //   newAccounts[0],
-      //   currentLendingPoolDetail?.reserveId,
-      //   BigInt(Number(value) * 10 ** currentLendingPoolDetail?.decimals),
-      // )
-
-      // getAccountInfo(accounts[0])
-      // fetchLendPools()
       updateAfterAction()
       fetchPoolState()
       onClose()
