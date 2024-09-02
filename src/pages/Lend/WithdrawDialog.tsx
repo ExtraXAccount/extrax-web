@@ -20,6 +20,7 @@ import useInfoChange from '../Positions/hooks/useInfoChange'
 import DialogAccountInfo from './DialogComponents/DialogAccountInfo'
 import DialogApyDisplay from './DialogComponents/DialogAPYDisplay'
 import useLendingList from './useLendingList'
+import { calculateMaxWithdrawAmount } from './utils'
 
 export default function WithdrawDialog({
   open,
@@ -31,19 +32,16 @@ export default function WithdrawDialog({
   currentLendingPoolDetail?: IFormattedPosition
 }) {
   const {
-    healthFactor,
-    liquidationThreshold,
     usedCredit,
     netWorth,
     debtVal,
-    accountApy,
     availableCredit,
     currentAccount,
     isSmartAccount,
     formattedUserPosition,
     updateAfterAction,
   } = useSmartAccount()
-  const { fetchPoolState } = useLendingList()
+  const { formattedLendPools, fetchPoolState } = useLendingList()
 
   const [useNativeETH, setUseNativeETH] = useState(true)
   const { walletClient, signer, chainId } = useWagmiCtx()
@@ -55,11 +53,17 @@ export default function WithdrawDialog({
   const tokenPrice = Number(currentLendingPoolDetail?.reserve?.priceInUSD)
 
   const maxWithdrawAmount = useMemo(() => {
-    if (!availableCredit || !tokenPrice) {
+    if (!formattedUserPosition || !currentLendingPoolDetail) {
       return 0
     }
-    return div(availableCredit, tokenPrice).toString()
-  }, [availableCredit, tokenPrice])
+    const userReserve =  formattedUserPosition.userReservesData.find(item => item.reserve.id === currentLendingPoolDetail.reserve.id)
+    const user = {
+      isInEmode: formattedUserPosition.userEmodeCategoryId !== 0,
+      ...formattedUserPosition,
+    }
+    const max = calculateMaxWithdrawAmount(user, userReserve, currentLendingPoolDetail.reserve)
+    return max.toString()
+  }, [currentLendingPoolDetail, formattedUserPosition])
 
   const tokenValueChange = useMemo(() => {
     return Number(value) * tokenPrice || 0
@@ -139,7 +143,7 @@ export default function WithdrawDialog({
     >
       <div>
         <AmountInput
-          maxText="Deposited"
+          maxText="Available"
           max={maxWithdrawAmount}
           useNativeETH={useNativeETH}
           onUseNativeETH={setUseNativeETH}
