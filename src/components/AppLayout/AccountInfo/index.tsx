@@ -53,6 +53,93 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
 
       {!depositedVal ? (
         <div className='extrax-account-info-inner extrax-account-creator'>
+          <div className='extrax-account-info-main'>
+            <div className='flex ai-ct jc-sb'>
+              <div className='extrax-account-info-market'>
+                <span>Main Market</span>
+              </div>
+              <div className='extrax-account-info-main-account'>
+                <span>Current Account: </span>
+                <AddressWithCopy address={currentAccount} />
+                <section className='extrax-account-info-edit'>
+                  {!!accountName && !isEdit && <p>({accountName})</p>}
+                  {!isEdit && (
+                    <i
+                      className='iconfont icon-edit'
+                      onClick={() => {
+                        setIsEdit(true)
+                        setName(accountName)
+                      }}
+                    ></i>
+                  )}
+                  {isEdit && (
+                    <>
+                      <input
+                        className='extrax-account-info-edit-input'
+                        type='text'
+                        value={name}
+                        onChange={(e) => {
+                          setName(e.target.value)
+                        }}
+                        placeholder='Add a name'
+                      />
+                      <i
+                        className='iconfont icon-check'
+                        onClick={() => {
+                          console.log(name)
+                          nameList[currentAccount?.toLowerCase()] = name
+                          localStorage.setItem('extrax-account-name', JSON.stringify(nameList))
+                          setIsEdit(false)
+                        }}
+                      ></i>
+                    </>
+                  )}
+                </section>
+                <Dropdown
+                  overlayClassName='account-list-overlay'
+                  trigger={['click']}
+                  placement='bottomRight'
+                  menu={{
+                    items: [...accounts, account!]
+                      .map((item, index) => ({
+                        key: item,
+                        label: (
+                          <div
+                            className='account-list-item flex jc-sb'
+                            onClick={(e) => {
+                              updateCurrentAccount(item)
+                              e.stopPropagation()
+                            }}
+                          >
+                            <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
+                            <AddressWithCopy address={item} />
+                          </div>
+                        ),
+                      }))
+                      .concat([
+                        {
+                          key: '0x',
+                          label: (
+                            <div
+                              className='account-list-item account-list-item-create'
+                              onClick={(e) => {
+                                e.stopPropagation()
+                              }}
+                            >
+                              <CreateAccountButton label={'+ Create New Account'} />
+                            </div>
+                          ),
+                        },
+                      ]),
+                  }}
+                >
+                  <div className='extrax-account-info-menu'>
+                    <i className='iconfont icon-menu'></i>
+                  </div>
+                </Dropdown>
+              </div>
+            </div>
+          </div>
           <div className='extrax-account-create-button'>
             <p className='btn-base' onClick={handleAddDeposit}>
               Supply to Start
