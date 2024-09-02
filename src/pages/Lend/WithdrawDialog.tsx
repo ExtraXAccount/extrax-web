@@ -1,3 +1,4 @@
+import { calculateHealthFactorFromBalances } from '@aave/math-utils'
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -12,7 +13,7 @@ import { withdraw,withdrawWithAccount } from '@/sdk-ethers'
 import { IFormattedPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
-import { div, minus } from '@/utils/math/bigNumber'
+import { div, minus, plus } from '@/utils/math/bigNumber'
 import { toBNString } from '@/utils/math/bn'
 
 import useInfoChange from '../Positions/hooks/useInfoChange'
@@ -39,6 +40,7 @@ export default function WithdrawDialog({
     availableCredit,
     currentAccount,
     isSmartAccount,
+    formattedUserPosition,
     updateAfterAction,
   } = useSmartAccount()
   const { fetchPoolState } = useLendingList()
@@ -63,18 +65,18 @@ export default function WithdrawDialog({
     return Number(value) * tokenPrice || 0
   }, [tokenPrice, value])
 
-  // const updatedHealthFactor = useMemo(() => {
-  //   const reserveLiquidationThresholdConfig =
-  //     (Number(currentLendingPoolDetail?.currentLiquidationThreshold) || 0) / 10000
-  //   const _liquidateThshold =
-  //     liquidationThreshold - tokenValueChange * reserveLiquidationThresholdConfig
-  //   const _borrowedValue = debtVal
-  //   return _liquidateThshold / _borrowedValue
-  // }, [
-  //   debtVal,
-  //   currentLendingPoolDetail?.currentLiquidationThreshold,
-  //   tokenValueChange,
-  // ])
+  const updatedHealthFactor = useMemo(() => {
+    return calculateHealthFactorFromBalances({
+      collateralBalanceMarketReferenceCurrency: (minus(formattedUserPosition?.totalCollateralMarketReferenceCurrency || '0', tokenValueChange).toNumber()),
+      borrowBalanceMarketReferenceCurrency: (formattedUserPosition?.totalBorrowsMarketReferenceCurrency || '0'),
+      currentLiquidationThreshold: toBNString(formattedUserPosition?.currentLiquidationThreshold || '0', 4),
+    }).toNumber()
+  }, [
+    formattedUserPosition?.totalCollateralMarketReferenceCurrency,
+    formattedUserPosition?.totalBorrowsMarketReferenceCurrency,
+    formattedUserPosition?.currentLiquidationThreshold,
+    tokenValueChange,
+  ])
 
   const next = useInfoChange({
     reserve: currentLendingPoolDetail?.reserve,
@@ -158,7 +160,7 @@ export default function WithdrawDialog({
           },
           {
             title: 'Health Factor',
-            content: !currentLendingPoolDetail ? '--' : remain2Decimal(healthFactor),
+            content: !currentLendingPoolDetail ? '--' : remain2Decimal(updatedHealthFactor),
           },
         ]}
       />

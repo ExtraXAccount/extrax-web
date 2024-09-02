@@ -1,3 +1,4 @@
+import { calculateHealthFactorFromBalances } from '@aave/math-utils'
 import { Button } from 'antd'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -13,6 +14,7 @@ import { repay, repayWithAccount } from '@/sdk-ethers'
 import { IFormattedPosition } from '@/store/lend'
 import { nameChecker } from '@/utils'
 import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+import { minus } from '@/utils/math/bigNumber'
 import { toBNString } from '@/utils/math/bn'
 
 import useInfoChange from '../Positions/hooks/useInfoChange'
@@ -38,6 +40,7 @@ export default function RepayDialog({
     accountApy,
     currentAccount,
     isSmartAccount,
+    formattedUserPosition,
     updateAfterAction,
   } = useSmartAccount()
   const { fetchPoolState } = useLendingList()
@@ -59,11 +62,18 @@ export default function RepayDialog({
     return Number(value) * tokenPrice || 0
   }, [tokenPrice, value])
 
-  // const updatedHealthFactor = useMemo(() => {
-  //   const _liquidateThshold = liquidationThreshold
-  //   const _borrowedValue = debtVal - tokenValueChange
-  //   return _liquidateThshold / _borrowedValue
-  // }, [debtVal, liquidationThreshold, tokenValueChange])
+  const updatedHealthFactor = useMemo(() => {
+    return calculateHealthFactorFromBalances({
+      collateralBalanceMarketReferenceCurrency: (formattedUserPosition?.totalCollateralMarketReferenceCurrency || '0'),
+      borrowBalanceMarketReferenceCurrency: minus(formattedUserPosition?.totalBorrowsMarketReferenceCurrency || '0', tokenValueChange).toNumber(),
+      currentLiquidationThreshold: toBNString(formattedUserPosition?.currentLiquidationThreshold || '0', 4),
+    }).toNumber()
+  }, [
+    formattedUserPosition?.totalCollateralMarketReferenceCurrency,
+    formattedUserPosition?.totalBorrowsMarketReferenceCurrency,
+    formattedUserPosition?.currentLiquidationThreshold,
+    tokenValueChange,
+  ])
 
   const next = useInfoChange({
     reserve: currentLendingPoolDetail?.reserve,
@@ -164,7 +174,7 @@ export default function RepayDialog({
           },
           {
             title: 'Health Factor',
-            content: !currentLendingPoolDetail ? '--' : toPrecision(healthFactor),
+            content: !currentLendingPoolDetail ? '--' : toPrecision(updatedHealthFactor),
           },
         ]}
       />

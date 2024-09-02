@@ -11,6 +11,8 @@ import { IFormattedPosition } from '@/store/lend'
 export default function useFormatPositions(reserveId?: string) {
   const { formattedUserPosition } = useSmartAccount()
 
+  console.log(formattedUserPosition)
+
   const {
     formattedPositions,
     assetPositions,
@@ -31,6 +33,7 @@ export default function useFormatPositions(reserveId?: string) {
 
     filtered.forEach((item) => {
       if (Number(item.totalBorrowsUSD) > 0) {
+        // calc liquidate price
         debtPositions.push({
           ...item,
           type: 'debt',
