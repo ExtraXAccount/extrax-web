@@ -3,7 +3,7 @@ import './index.scss'
 import { Dropdown } from 'antd'
 // import { Tooltip } from 'antd'
 import cx from 'classnames'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import AddressWithCopy from '@/components/AddressWithCopy'
@@ -19,12 +19,9 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const { portfolioMode } = props
   const { updateCurrentAccount } = useAccountStore()
   const {
-    formattedUserPosition,
-    healthStatus,
     LTV,
     netWorth,
     healthFactor,
-    leverage,
     currentAccount,
     depositedVal,
     debtVal,
@@ -33,7 +30,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     accountApy,
     accounts,
   } = useSmartAccount()
-  const { chainId, signer, account, walletClient } = useWagmiCtx()
+  const { account } = useWagmiCtx()
 
   const [name, setName] = useState('')
   const [isEdit, setIsEdit] = useState(false)

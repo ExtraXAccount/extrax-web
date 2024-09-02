@@ -139,7 +139,7 @@ export async function getLendingUserState(chainId: number, user: string) {
       stableBorrowLastUpdateTimestamp: bi2num(stableBorrowLastUpdateTimestamp),
     }
   })
-  // console.log('getLendingUserState :>> ', {positions, userEmodeCategoryId})
+  console.log('getLendingUserState :>> ', {positions, userEmodeCategoryId})
   return {
     userReserves: positions,
     userEmodeCategoryId: bi2num(userEmodeCategoryId),

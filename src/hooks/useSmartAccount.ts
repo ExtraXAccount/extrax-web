@@ -32,8 +32,6 @@ export default function useSmartAccount() {
     updateAccounts,
     updateBalances,
     updatePositions,
-    healthStatus,
-    updateHealthStatus,
   } = useAccountStore()
   const { reservesData } = useLendStore()
   const currentAccount = _currentAccount || account || ''
@@ -187,13 +185,11 @@ export default function useSmartAccount() {
     currentAccount,
     isSmartAccount: _currentAccount !== undefined,
     formattedUserPosition,
-    healthStatus,
     leverage,
     depositedVal,
     debtVal,
     netWorth,
     healthFactor: Number(formattedUserPosition?.healthFactor) || 0,
-    liquidationThreshold: Number(healthStatus.formatted?.liquidationThreshold) || 0,
     LTV,
     maxCredit: plus(formattedUserPosition?.availableBorrowsUSD || 0, formattedUserPosition?.totalBorrowsUSD || 0).toNumber(),
     availableCredit: formattedUserPosition?.availableBorrowsUSD || 0,
