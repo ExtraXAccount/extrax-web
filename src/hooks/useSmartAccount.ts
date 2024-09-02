@@ -4,13 +4,12 @@ import {
   FormatUserSummaryResponse,
 } from '@aave/math-utils'
 import { sumBy } from 'lodash'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Address } from 'viem'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
 import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import { useAccountManager } from '@/hooks/useSDK'
-import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { strToDecimals } from '@/sdk/utils/token'
 import { getAccounts } from '@/sdk-ethers'
 import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
@@ -21,15 +20,15 @@ import { div, minus, mul, plus } from '@/utils/math/bigNumber'
 
 import { useCurrentTimestamp } from './useCurrentTimestamp'
 
-type ChainId = keyof typeof LendingConfig
-type LendPoolConfig = keyof (typeof LendingConfig)[ChainId]
-
 export default function useSmartAccount() {
   const { chainId, signer, account } = useWagmiCtx()
   const {
     accounts,
     currentAccount: _currentAccount,
-    positions: userReserves,
+    positions: {
+      userReserves,
+      userEmodeCategoryId,
+    },
     updateAccounts,
     updateBalances,
     updatePositions,
@@ -52,17 +51,11 @@ export default function useSmartAccount() {
         reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
       marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
       userReserves,
-      userEmodeCategoryId: 0,
+      userEmodeCategoryId,
     })
     // console.log('formattedUserPosition :>> ', formatted)
     return formatted
-  }, [
-    currentTimestamp,
-    reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
-    reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-    reservesData.formattedReserves,
-    userReserves,
-  ])
+  }, [currentTimestamp, reservesData.baseCurrencyData.marketReferenceCurrencyDecimals, reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd, reservesData.formattedReserves, userEmodeCategoryId, userReserves])
 
   const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
     const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD)
@@ -143,9 +136,11 @@ export default function useSmartAccount() {
       if (!acc) {
         return
       }
-      const userReserves = await getLendingUserState(chainId, acc)
-      // console.log('fetchUserReserves :>> ', acc, userReserves)
-      updatePositions(userReserves)
+      const {userReserves, userEmodeCategoryId} = await getLendingUserState(chainId, acc)
+      console.log('fetchUserReserves :>> ', {acc, userReserves, userEmodeCategoryId})
+      updatePositions({
+        userReserves, userEmodeCategoryId
+      })
     },
     [updatePositions]
   )
@@ -163,10 +158,6 @@ export default function useSmartAccount() {
   const getInitData = useCallback(async () => {
     fetchAccounts()
   }, [fetchAccounts])
-
-  useEffect(() => {
-    fetchUserReserves(currentAccount || account, chainId)
-  }, [account, chainId, currentAccount, fetchUserReserves])
 
   const updateAfterAction = useCallback(
     async (account = currentAccount) => {
@@ -214,5 +205,6 @@ export default function useSmartAccount() {
     fetchBalances,
     updateAfterAction,
     fetchAccounts,
+    fetchUserReserves,
   }
 }

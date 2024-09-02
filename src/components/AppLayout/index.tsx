@@ -12,6 +12,7 @@ import useLendingList from '@/pages/Lend/useLendingList'
 import { useAccountStore } from '@/store'
 
 import AccountLayer from '../AccountLayer'
+import { useWagmiCtx } from '../WagmiContext'
 import CustomConnectButton from './ConnectButton'
 
 const navList = [
@@ -40,7 +41,8 @@ export default function AppLayout() {
   const { updateAccountLayer } = useAccountStore()
 
   const { fetchPoolState } = useLendingList()
-  const { formattedUserPosition, getInitData: getInitSmartAccountData } = useSmartAccount()
+  const { chainId } = useWagmiCtx()
+  const { currentAccount, formattedUserPosition, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
 
   useEffect(() => {
     getInitSmartAccountData()
@@ -49,6 +51,10 @@ export default function AppLayout() {
   useEffect(() => {
     fetchPoolState()
   }, [fetchPoolState])
+
+  useEffect(() => {
+    fetchUserReserves(currentAccount, chainId)
+  }, [chainId, currentAccount, fetchUserReserves])
 
   useEffect(() => {
     console.log('formattedUserPosition :>> ', formattedUserPosition)

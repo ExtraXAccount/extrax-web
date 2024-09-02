@@ -38,7 +38,10 @@ export interface AccountState {
   currentAccount?: Address
   healthStatus: IHealthStatus
   balanceMap: IBalanceMap
-  positions: UserReserveData[]
+  positions: {
+    userReserves: UserReserveData[]
+    userEmodeCategoryId: number
+  }
   showAccountLayer: boolean
 }
 
@@ -56,7 +59,10 @@ export const useAccountStore = create<AccountState & AccountAction>((set) => ({
   currentAccount: undefined,
   healthStatus: {} as IHealthStatus,
   balanceMap: {},
-  positions: [],
+  positions: {
+    userReserves: [],
+    userEmodeCategoryId: 0
+  },
   accountInfo: undefined,
   showAccountLayer: false,
 

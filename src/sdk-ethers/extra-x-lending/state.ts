@@ -1,3 +1,5 @@
+import { UserReserveData } from '@aave/math-utils'
+
 import { chainIdToName } from '@/constants/chains'
 import { IUiPoolDataProviderV3 } from '@/typechain-types'
 import { PoolBaseCurrencyHumanized, ReserveDataHumanized } from '@/types/aave'
@@ -111,13 +113,13 @@ export async function getLendingUserState(chainId: number, user: string) {
   const chain = chainIdToName[chainId]
   const dataProvider = getUiDataProvider(chain)
 
-  const userDataResult: [IUiPoolDataProviderV3.UserReserveDataStructOutput[], bigint] =
+  const { 0: userReservesRaw, 1: userEmodeCategoryId } =
     await dataProvider.getUserReservesData(
       LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID],
       user
     )
 
-  const positions = userDataResult[0].map((data) => {
+  const positions = userReservesRaw.map((data) => {
     const [
       underlyingAsset,
       scaledATokenBalance,
@@ -137,6 +139,9 @@ export async function getLendingUserState(chainId: number, user: string) {
       stableBorrowLastUpdateTimestamp: bi2num(stableBorrowLastUpdateTimestamp),
     }
   })
-  console.log('getLendingUserState :>> ', positions, userDataResult[1])
-  return positions
+  // console.log('getLendingUserState :>> ', {positions, userEmodeCategoryId})
+  return {
+    userReserves: positions,
+    userEmodeCategoryId: bi2num(userEmodeCategoryId),
+  }
 }
