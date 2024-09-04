@@ -1,48 +1,33 @@
 import './index.scss'
 
-import { Dropdown } from 'antd'
-// import { Tooltip } from 'antd'
 import cx from 'classnames'
 import { useCallback, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
-import AddressWithCopy from '@/components/AddressWithCopy'
-import CreateAccountButton from '@/components/CreateAccountButton'
-import { useWagmiCtx } from '@/components/WagmiContext'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import PercentCircle from '@/pages/Lend/PercentCircle'
-import { useAccountStore } from '@/store'
 import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
+import AccountHeader from './AccountHeader'
+
 export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const { portfolioMode } = props
-  const { updateCurrentAccount } = useAccountStore()
   const {
     LTV,
     netWorth,
     healthFactor,
-    currentAccount,
     depositedVal,
     debtVal,
     maxCredit,
     usedCredit,
-    accountApy,
-    accounts,
   } = useSmartAccount()
-  const { account } = useWagmiCtx()
-
-  const [name, setName] = useState('')
-  const [isEdit, setIsEdit] = useState(false)
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
   const handleAddDeposit = useCallback(() => {
     setDepositDialogOpen(true)
   }, [])
-
-  const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
-  const accountName = name || nameList[currentAccount?.toLowerCase()] || ''
 
   return (
     <div className='extrax-account-info'>
@@ -51,95 +36,10 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
         onClose={() => setDepositDialogOpen(false)}
       ></AccountDepositDialog>
 
-      {!depositedVal ? (
-        <div className='extrax-account-info-inner extrax-account-creator'>
-          <div className='extrax-account-info-main'>
-            <div className='flex ai-ct jc-sb'>
-              <div className='extrax-account-info-market'>
-                <span>Main Market</span>
-              </div>
-              <div className='extrax-account-info-main-account'>
-                <span>Current Account: </span>
-                <AddressWithCopy address={currentAccount} />
-                <section className='extrax-account-info-edit'>
-                  {!!accountName && !isEdit && <p>({accountName})</p>}
-                  {!isEdit && (
-                    <i
-                      className='iconfont icon-edit'
-                      onClick={() => {
-                        setIsEdit(true)
-                        setName(accountName)
-                      }}
-                    ></i>
-                  )}
-                  {isEdit && (
-                    <>
-                      <input
-                        className='extrax-account-info-edit-input'
-                        type='text'
-                        value={name}
-                        onChange={(e) => {
-                          setName(e.target.value)
-                        }}
-                        placeholder='Add a name'
-                      />
-                      <i
-                        className='iconfont icon-check'
-                        onClick={() => {
-                          console.log(name)
-                          nameList[currentAccount?.toLowerCase()] = name
-                          localStorage.setItem('extrax-account-name', JSON.stringify(nameList))
-                          setIsEdit(false)
-                        }}
-                      ></i>
-                    </>
-                  )}
-                </section>
-                <Dropdown
-                  overlayClassName='account-list-overlay'
-                  trigger={['click']}
-                  placement='bottomRight'
-                  menu={{
-                    items: [...accounts, account!]
-                      .map((item, index) => ({
-                        key: item,
-                        label: (
-                          <div
-                            className='account-list-item flex jc-sb'
-                            onClick={(e) => {
-                              updateCurrentAccount(item)
-                              e.stopPropagation()
-                            }}
-                          >
-                            <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
-                            <AddressWithCopy address={item} />
-                          </div>
-                        ),
-                      }))
-                      .concat([
-                        {
-                          key: '0x',
-                          label: (
-                            <div
-                              className='account-list-item account-list-item-create'
-                              onClick={(e) => {
-                                e.stopPropagation()
-                              }}
-                            >
-                              <CreateAccountButton label={'+ Create New Account'} />
-                            </div>
-                          ),
-                        },
-                      ]),
-                  }}
-                >
-                  <div className='extrax-account-info-menu'>
-                    <i className='iconfont icon-menu'></i>
-                  </div>
-                </Dropdown>
-              </div>
-            </div>
-          </div>
+      <div className='extrax-account-info-inner'>
+        <AccountHeader portfolioMode={portfolioMode} handleAddDeposit={handleAddDeposit} />
+        {
+          !depositedVal ?
           <div className='extrax-account-create-button'>
             <p className='btn-base' onClick={handleAddDeposit}>
               Supply to Start
@@ -148,148 +48,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
               to start earning / leveraging (An On-chain smart account will be created)
             </span>
           </div>
-        </div>
-      ) : (
-        <div className='extrax-account-info-inner'>
-          <div className='extrax-account-info-main'>
-            <div className='flex ai-ct jc-sb'>
-              <div className='extrax-account-info-market'>
-                <span>Main Market</span>
-              </div>
-              <div className='extrax-account-info-main-account'>
-                <span>Current Account: </span>
-                <AddressWithCopy address={currentAccount} />
-                <section className='extrax-account-info-edit'>
-                  {!!accountName && !isEdit && <p>({accountName})</p>}
-                  {!isEdit && (
-                    <i
-                      className='iconfont icon-edit'
-                      onClick={() => {
-                        setIsEdit(true)
-                        setName(accountName)
-                      }}
-                    ></i>
-                  )}
-                  {isEdit && (
-                    <>
-                      <input
-                        className='extrax-account-info-edit-input'
-                        type='text'
-                        value={name}
-                        onChange={(e) => {
-                          setName(e.target.value)
-                        }}
-                        placeholder='Add a name'
-                      />
-                      <i
-                        className='iconfont icon-check'
-                        onClick={() => {
-                          console.log(name)
-                          nameList[currentAccount?.toLowerCase()] = name
-                          localStorage.setItem('extrax-account-name', JSON.stringify(nameList))
-                          setIsEdit(false)
-                        }}
-                      ></i>
-                    </>
-                  )}
-                </section>
-                <Dropdown
-                  overlayClassName='account-list-overlay'
-                  trigger={['click']}
-                  placement='bottomRight'
-                  menu={{
-                    items: [...accounts, account!]
-                      .map((item, index) => ({
-                        key: item,
-                        label: (
-                          <div
-                            className='account-list-item flex jc-sb'
-                            onClick={(e) => {
-                              updateCurrentAccount(item)
-                              e.stopPropagation()
-                            }}
-                          >
-                            <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
-                            <AddressWithCopy address={item} />
-                          </div>
-                        ),
-                      }))
-                      .concat([
-                        {
-                          key: '0x',
-                          label: (
-                            <div
-                              className='account-list-item account-list-item-create'
-                              onClick={(e) => {
-                                e.stopPropagation()
-                              }}
-                            >
-                              <CreateAccountButton label={'+ Create New Account'} />
-                            </div>
-                          ),
-                        },
-                      ]),
-                  }}
-                >
-                  <div className='extrax-account-info-menu'>
-                    <i className='iconfont icon-menu'></i>
-                  </div>
-                </Dropdown>
-              </div>
-            </div>
-            {portfolioMode && (
-              <div className='flex ai-ct jc-sb'>
-                <div className='extrax-account-info-portfoliomode-infos'>
-                  <section>
-                    <span className='text-sm-2'>Total Supply:</span>
-                    <b>${formatNumberByUnit(depositedVal)}</b>
-                  </section>
-                  <section>
-                    <span className='text-sm-2'>Total Borrow:</span>
-                    <b>${formatNumberByUnit(debtVal)}</b>
-                  </section>
-                  <section>
-                    <span className='text-sm-2'>Networth:</span>
-                    <b>${formatNumberByUnit(netWorth)}</b>
-                  </section>
-                </div>
-              </div>
-            )}
-
-            {/* <p className="extrax-account-info-main-splitter"> | </p>
-            <p className="extrax-account-info-main-apy">
-              <b>Portfolio APY: </b>
-              <em className="text-highlight">
-                {!depositedVal ? '--' : toPrecision(accountApy * 100) + '%'}
-              </em>
-            </p> */}
-            {!portfolioMode && (
-              <div className='flex ai-ct jc-sb'>
-                <div className='extrax-account-info-apr-lv'>
-                  <span>Portfolio APR: </span>
-                  <em
-                    className={cx('', {
-                      'color-safe': !!accountApy && accountApy > 0,
-                      'color-danger': !!accountApy && accountApy < 0,
-                    })}
-                  >
-                    {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
-                  </em>
-
-                  {/* <span style={{ marginLeft: 20 }}>Account Leverage: </span>
-                <em className={cx('', {})}>
-                  {!leverage ? '--' : toPrecision(leverage) + 'x'}
-                </em> */}
-                </div>
-                <button
-                  className='btn-base extrax-account-info-apr-supply-btn'
-                  onClick={handleAddDeposit}
-                >
-                  Supply
-                </button>
-              </div>
-            )}
-          </div>
+          :
           <div className='extrax-account-info-detail'>
             <div className='extrax-account-info-detail-item extrax-account-info-deposited'>
               <section className='extrax-account-info-deposited-info'>
@@ -383,8 +142,8 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        }
+      </div>
     </div>
   )
 }

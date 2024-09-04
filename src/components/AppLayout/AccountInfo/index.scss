@@ -32,23 +32,19 @@
     border-radius: var(--box-radius);
     box-shadow: var(--box-shadow);
     
-    &.extrax-account-creator {
-      // padding: 4px 10px;
-      // height: 50px;
-      .extrax-account-create-button {
-        // width: 400px;
-        // height: 42px;
-        margin: 16px auto 0;
-        padding: 4px 20px;
-        // border-radius: 12px;
-        // background: #51C37F;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-        text-align: center;
-        // cursor: pointer;
-      }
+    .extrax-account-create-button {
+      // width: 400px;
+      // height: 42px;
+      margin: 16px auto 0;
+      padding: 4px 20px;
+      // border-radius: 12px;
+      // background: #51C37F;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      text-align: center;
+      // cursor: pointer;
     }
 
     em {

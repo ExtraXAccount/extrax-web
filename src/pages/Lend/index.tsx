@@ -3,6 +3,7 @@ import './lendingList.scss'
 
 // import { useEffect } from 'react'
 import AccountInfo from '@/components/AppLayout/AccountInfo'
+import { useWagmiCtx } from '@/components/WagmiContext'
 
 import LendBanner from './LendBanner'
 import LendInfo from './LendInfo'
@@ -13,15 +14,19 @@ import useLendingList from './useLendingList'
 
 export default function Lend() {
   const { totalInfos } = useLendingList()
+  const { account } = useWagmiCtx()
   // useEffect(() => {
   //   fetchLendPools()
   // }, [fetchLendPools])
 
   return (
     <div className="page-app page-lending">
-      <div className="box">
-        <AccountInfo />
-      </div>
+      {
+        !!account &&
+        <div className="box">
+          <AccountInfo />
+        </div>
+      }
       <div className="box lending-list-box">
         <MarketSwitch />
         <LendBanner />
