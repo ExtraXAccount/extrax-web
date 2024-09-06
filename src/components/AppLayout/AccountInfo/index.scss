@@ -84,6 +84,7 @@
         height: 100%;
         flex: 1 1 auto;
         padding: 16px;
+        width: 55%;
         .extrax-account-info-market {
           padding: 16px;
           height: 100%;
@@ -104,7 +105,7 @@
         }
         &:first-child {
           border-right: 0.5px solid var(--box-border-color);
-          width: 35%;
+          width: 45%;
           padding: 0;
         }
         .extrax-account-info-apr-lv {
@@ -418,7 +419,12 @@
     color: var(--text-gry-60-b, #666);
     &-item{
       text-align: left;
-      margin-bottom: 4px;
+      // margin-bottom: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
       >p{
         display: flex;
         align-items: center;

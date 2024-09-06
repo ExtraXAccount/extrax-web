@@ -1,11 +1,13 @@
-import './SupplyWindows.css'
+import './SupplyWindows.scss'
 
+import { calculateHealthFactorFromBalancesBigUnits } from '@aave/math-utils'
 import { Button, Switch, Tooltip } from 'antd/es'
 import classNames from 'classnames'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useMatch } from 'react-router-dom'
 
 import AmountInput from '@/components/AmountInput'
+import { getHealthFactorInfo } from '@/components/AppLayout/AccountInfo/healthFactorFn'
 import FormattedNumber from '@/components/FormattedNumber'
 import TokenIcon from '@/components/TokenIcon'
 import { useWagmiCtx } from '@/components/WagmiContext'
@@ -19,11 +21,9 @@ import {
   depositWithAccount,
   depositWithWallet,
 } from '@/sdk-ethers'
-import { aprToApy, toPrecision } from '@/utils/math'
-import { div } from '@/utils/math/bigNumber'
+import { div, mul, plus } from '@/utils/math/bigNumber'
 import { toBNString } from '@/utils/math/bn'
 
-import { SetAsCollateral } from '../SetAsCollateral'
 import useLendPoolInfo from '../useLendPoolInfo'
 
 export interface ISupplyWindowsProps {
@@ -34,7 +34,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
   const matchLend = useMatch('lend/:reserveId')
   // const { getPrice } = usePrices()
   const {
-    liquidationThreshold,
+    LTV,
     usedCredit,
     healthFactor,
     netWorth,
@@ -44,20 +44,27 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     availableCredit,
     updateAfterAction,
     isSmartAccount,
+    formattedUserPosition,
   } = useSmartAccount()
   const { state } = useLocation()
-  const { chainId, walletClient, signer, account } = useWagmiCtx()
+  const { chainId, walletClient, signer } = useWagmiCtx()
+  const lendPoolInfo = useLendPoolInfo()
+  const { fetchPoolState } = useLendingList()
+  const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
+  const { balance: ethBalance } = useFetchEthBalance()
 
+  const [value, setValue] = useState('')
   const [isBorrowMode, setIsBorrowMode] = useState(!!state?.isBorrowMode)
   // const [leverageMode, setLeverageMode] = useState(false)
   const [useNativeETH, setUseNativeETH] = useState(true)
   const [loading, setLoading] = useState({ writing: false, desc: '' })
-  const [value, setValue] = useState('')
-  const lendPoolInfo = useLendPoolInfo()
+  const [asCollateral, setAsCollateral] = useState(true)
 
-  const { fetchPoolState } = useLendingList()
-  const { balance } = useFetchBalance(lendPoolInfo?.underlyingAsset)
-  const { balance: ethBalance } = useFetchEthBalance()
+  useEffect(() => {
+    if (!lendPoolInfo?.usageAsCollateralEnabled) {
+      setAsCollateral(false)
+    }
+  }, [lendPoolInfo?.usageAsCollateralEnabled])
 
   const tokenPrice = useMemo(() => {
     return Number(lendPoolInfo?.priceInUSD) || 1
@@ -74,25 +81,40 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     return Number(value) * tokenPrice || 0
   }, [tokenPrice, value])
 
+  const tokenValueChangeMarketReferenceCurrency = useMemo(() => {
+    return mul(lendPoolInfo?.formattedPriceInMarketReferenceCurrency || 0, value || 0).toString()
+  }, [lendPoolInfo, value])
+
   const updatedHealthFactor = useMemo(() => {
-    const reserveLiquidationThresholdConfig =
-      Number(lendPoolInfo?.formattedReserveLiquidationThreshold || 0) / 10000
-    const _liquidateThshold = isBorrowMode
-      ? liquidationThreshold
-      : liquidationThreshold + tokenValueChange * reserveLiquidationThresholdConfig
-    const _borrowedValue = isBorrowMode ? debtVal + tokenValueChange : debtVal
-    return _liquidateThshold / _borrowedValue
-  }, [
-    debtVal,
-    isBorrowMode,
-    lendPoolInfo?.formattedReserveLiquidationThreshold,
-    liquidationThreshold,
-    tokenValueChange,
-  ])
+    if (!formattedUserPosition) {
+      return 0
+    }
+
+    const updatedHF = isBorrowMode ? calculateHealthFactorFromBalancesBigUnits({
+      collateralBalanceMarketReferenceCurrency: formattedUserPosition.totalCollateralMarketReferenceCurrency,
+      borrowBalanceMarketReferenceCurrency: plus(formattedUserPosition.totalBorrowsMarketReferenceCurrency, tokenValueChangeMarketReferenceCurrency).toString(),
+      currentLiquidationThreshold: formattedUserPosition.currentLiquidationThreshold,
+    }) : calculateHealthFactorFromBalancesBigUnits({
+      collateralBalanceMarketReferenceCurrency: plus(formattedUserPosition.totalCollateralMarketReferenceCurrency, tokenValueChangeMarketReferenceCurrency).toString(),
+      borrowBalanceMarketReferenceCurrency: formattedUserPosition.totalBorrowsMarketReferenceCurrency,
+      currentLiquidationThreshold: formattedUserPosition.currentLiquidationThreshold,
+    })
+
+    return updatedHF.toNumber()
+    // const reserveLiquidationThresholdConfig =
+    //   Number(lendPoolInfo?.formattedReserveLiquidationThreshold || 0) / 10000
+    // const _liquidateThshold = isBorrowMode
+    //   ? LTV.liquidation
+    //   : LTV.liquidation + tokenValueChange * reserveLiquidationThresholdConfig
+    // const _borrowedValue = isBorrowMode ? debtVal + tokenValueChange : debtVal
+    // return _liquidateThshold / _borrowedValue
+  }, [formattedUserPosition, isBorrowMode, tokenValueChangeMarketReferenceCurrency])
 
   const updatedSummary = useMemo(() => {
     return {
       usedCredit: !isBorrowMode ? usedCredit : usedCredit + tokenValueChange,
+      // TODO if emode LTV
+      availableCredit: !isBorrowMode ? Number(availableCredit) + tokenValueChange * Number(lendPoolInfo?.formattedBaseLTVasCollateral) : Number(availableCredit) - tokenValueChange,
       netWorth: !isBorrowMode
         ? netWorth + tokenValueChange
         : // : leverageMode
@@ -102,15 +124,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
       // TODO: APY UPDATED
       accountApy,
     }
-  }, [
-    accountApy,
-    debtVal,
-    isBorrowMode,
-    // leverageMode,
-    netWorth,
-    tokenValueChange,
-    usedCredit,
-  ])
+  }, [accountApy, availableCredit, debtVal, isBorrowMode, lendPoolInfo?.formattedBaseLTVasCollateral, netWorth, tokenValueChange, usedCredit])
 
   const handleDeposit = useCallback(async () => {
     if (!signer || !lendPoolInfo) {
@@ -122,8 +136,8 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     try {
       setLoading({ writing: true, desc: 'Depositing assets' })
       const res = !isSmartAccount
-        ? await depositWithWallet(signer, chainId, reserve, amount, true)
-        : await depositWithAccount(walletClient, chainId, currentAccount, reserve, amount)
+        ? await depositWithWallet(signer, chainId, reserve, amount, asCollateral)
+        : await depositWithAccount(walletClient, chainId, currentAccount, reserve, amount, asCollateral)
       updateAfterAction()
       fetchPoolState()
     } catch(err) {
@@ -131,17 +145,7 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
     } finally {
       setLoading({ writing: false, desc: '' })
     }
-  }, [
-    currentAccount,
-    signer,
-    lendPoolInfo,
-    value,
-    isSmartAccount,
-    chainId,
-    walletClient,
-    updateAfterAction,
-    fetchPoolState,
-  ])
+  }, [signer, lendPoolInfo, value, currentAccount, isSmartAccount, chainId, asCollateral, walletClient, updateAfterAction, fetchPoolState])
 
   const handleBorrow = useCallback(async () => {
     if (!signer || !lendPoolInfo) {
@@ -291,7 +295,9 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
             </div>
             <div className='supply-windows__frame-481709'>
               <div className='supply-windows__health-factor'>Health Factor</div>
-              <div className='supply-windows___1-21'>{toPrecision(updatedHealthFactor)}</div>
+              <div className={'supply-windows___1-21' + ` color-${getHealthFactorInfo(updatedHealthFactor).type}`}>
+                <FormattedNumber precision={2} value={updatedHealthFactor} />
+              </div>
             </div>
           </div>
           {!isBorrowMode && (
@@ -305,10 +311,16 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
             //       </span>
             //     </div>
             //   )
-            <SetAsCollateral
-              property1='1'
-              className='supply-windows__selcetion-instance'
-            ></SetAsCollateral>
+            <div className={'selcetion-property-11 supply-windows__selcetion-instance'}>
+              <div className='selcetion-property-11__auto-rebalance'>As Collateral</div>
+              <Switch
+                checked={asCollateral}
+                size='small'
+                onChange={(checked) => {
+                  setAsCollateral(checked)
+                }}
+              ></Switch>
+            </div>
           )}
         </div>
         <div className='supply-windows__deposit-info'>
@@ -317,7 +329,6 @@ export const SupplyWindows = ({ className }: ISupplyWindowsProps) => {
             loading={loading.writing}
             disabled={!Number(value)}
             className={classNames('btn-base btn-base-primary btn-base-large flex1', {
-              // 'btn-disable': !Number(value) || isApproveActive,
             })}
             style={{
               width: '100%',

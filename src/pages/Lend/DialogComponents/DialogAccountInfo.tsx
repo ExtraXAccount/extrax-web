@@ -15,6 +15,7 @@ export default function DialogAccountInfo({
   updatedSummary,
 }: {
   updatedSummary: {
+    availableCredit: number
     usedCredit: number
     netWorth: number
     debtVal: number
@@ -22,14 +23,14 @@ export default function DialogAccountInfo({
   }
   reserveId?: string
 }) {
-  const { usedCredit, leverage, netWorth, debtVal, accountApy } = useSmartAccount()
+  const { availableCredit, usedCredit, leverage, netWorth, debtVal, accountApy } = useSmartAccount()
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } =
     useFormatPositions(reserveId)
 
   const formattedData = useMemo(() => {
     return {
-      preBorrowingPower: '$' + formatFloatNumber(usedCredit),
-      nextBorrowingPower: '$' + formatFloatNumber(updatedSummary.usedCredit),
+      preBorrowingPower: '$' + formatFloatNumber(Number(availableCredit)),
+      nextBorrowingPower: '$' + formatFloatNumber(updatedSummary.availableCredit),
       preApy: toPrecision(accountApy * 100) + '%',
       nextApy: toPrecision(updatedSummary.accountApy * 100) + '%',
       preLv: toPrecision(leverage),
@@ -44,7 +45,7 @@ export default function DialogAccountInfo({
           (updatedSummary.debtVal / (updatedSummary.netWorth + updatedSummary.debtVal)) * 100
         ) + '%',
     }
-  }, [accountApy, debtVal, leverage, netWorth, updatedSummary, usedCredit])
+  }, [accountApy, availableCredit, debtVal, leverage, netWorth, updatedSummary])
 
   // console.log(reserveId, { assetPositions, debtPositions })
   const info = (
@@ -94,19 +95,19 @@ export default function DialogAccountInfo({
 
   const items: CollapseProps['items'] = [
     {
-      key: 'Account Info',
-      label: 'Account Info',
+      key: 'Overview',
+      label: 'Overview',
       children: info,
     },
     {
-      key: 'Account Balances',
-      label: 'Account Balances',
+      key: 'Balance Change',
+      label: 'Balance Change',
       children: <MiniPosition positions={assetPositions.concat(debtPositions)} />,
     },
   ]
   return (
     <div className='dialog-accountinfo'>
-      <Collapse items={items} defaultActiveKey={['Account Info']} />
+      <Collapse items={items} defaultActiveKey={['Overview', 'Balance Change']} />
     </div>
   )
 }

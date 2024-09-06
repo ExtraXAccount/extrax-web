@@ -1,7 +1,7 @@
 import {
-  FormatReserveUSDResponse,
+  // FormatReserveUSDResponse,
   formatUserSummary,
-  FormatUserSummaryResponse,
+  // FormatUserSummaryResponse,
 } from '@aave/math-utils'
 import { sumBy } from 'lodash'
 import { useCallback, useMemo } from 'react'
@@ -15,8 +15,7 @@ import { getAccounts } from '@/sdk-ethers'
 import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore, useLendStore } from '@/store'
 import { IBalanceMap } from '@/store/account'
-import { bi2decimalStr } from '@/utils/bigInt'
-import { div, minus, mul, plus } from '@/utils/math/bigNumber'
+import { div, mul, plus } from '@/utils/math/bigNumber'
 
 import { useCurrentTimestamp } from './useCurrentTimestamp'
 

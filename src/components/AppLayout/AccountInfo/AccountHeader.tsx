@@ -4,10 +4,11 @@ import { useState } from 'react'
 
 import AddressWithCopy from '@/components/AddressWithCopy'
 import CreateAccountButton from '@/components/CreateAccountButton'
+import FormattedNumber from '@/components/FormattedNumber'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { useAccountStore } from '@/store'
-import { formatNumberByUnit, toPrecision } from '@/utils/math'
+import { formatNumberByUnit } from '@/utils/math'
 
 export default function AccountHeader({ portfolioMode, handleAddDeposit }: { portfolioMode?: boolean, handleAddDeposit: () => void }) {
   const { updateCurrentAccount } = useAccountStore()
@@ -38,7 +39,7 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
           <span>Main Market</span>
         </div>
         <div className='extrax-account-info-main-account'>
-          <span>Current Account: </span>
+          <span>Current: </span>
           <AddressWithCopy address={currentAccount} />
           <section className='extrax-account-info-edit'>
             {!!accountName && !isEdit && <p>({accountName})</p>}
@@ -154,7 +155,7 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
                 'color-danger': !!accountApy && accountApy < 0,
               })}
             >
-              {!accountApy ? '--' : toPrecision(accountApy * 100) + '%'}
+              {!accountApy ? '--' : <FormattedNumber precision={2} value={accountApy} percent />}
             </em>
 
             {/* <span style={{ marginLeft: 20 }}>Account Leverage: </span>

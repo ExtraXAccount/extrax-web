@@ -3,16 +3,11 @@ import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 
 import { useWagmiCtx } from '@/components/WagmiContext'
-import { chainIdToName, SupportedChainId } from '@/constants/chains'
 // import usePrices from '@/hooks/usePrices'
 // import useSmartAccount from '@/hooks/useSmartAccount'
 // import { LendingConfig } from '@/sdk/lending/lending-pool'
 import { getLendingGlobalState } from '@/sdk-ethers/extra-x-lending/state'
-import { useAccountStore, useLendStore } from '@/store'
-import { IFormattedLendPool } from '@/store/lend'
-import { aprToApy } from '@/utils/math'
-import { div } from '@/utils/math/bigNumber'
-import { stringToDecimals } from '@/utils/math/bn'
+import { useLendStore } from '@/store'
 
 export default function useLendingList() {
   const { reservesData, updateReservesData, isFetching, updateIsFetching } =

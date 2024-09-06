@@ -5,17 +5,13 @@ import Column from 'antd/es/table/Column'
 
 import FormattedNumber from '@/components/FormattedNumber'
 import LPName from '@/components/LPName'
-import usePrices from '@/hooks/usePrices'
-import { FormattedUserPosition } from '@/pages/Positions/hooks/useFormatPositions'
-import { toDecimals } from '@/sdk/utils/token'
-import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+import { IFormattedPosition } from '@/store/lend'
 
 const positionTypeTagMap = {
   asset: 'LENT',
   debt: 'DEBT',
 }
-export default function MiniPosition(props: { positions: FormattedUserPosition[] }) {
-  const { getPrice } = usePrices()
+export default function MiniPosition(props: { positions: IFormattedPosition[] }) {
 
   return (
     <div className='mini-positions'>
@@ -35,7 +31,7 @@ export default function MiniPosition(props: { positions: FormattedUserPosition[]
           title='Asset'
           dataIndex=''
           key='poolKey'
-          render={(i: FormattedUserPosition) => {
+          render={(i: IFormattedPosition) => {
             return (
               <>
                 <div className='lending-list-title-wrap flex gap-4'>
@@ -51,7 +47,7 @@ export default function MiniPosition(props: { positions: FormattedUserPosition[]
           title='Value'
           dataIndex=''
           key='value'
-          render={(i: FormattedUserPosition) => {
+          render={(i: IFormattedPosition) => {
             return (
               <>
                 <div className='lending-list-title-wrap'>
@@ -68,7 +64,7 @@ export default function MiniPosition(props: { positions: FormattedUserPosition[]
           title='Size'
           dataIndex=''
           key='size'
-          render={(i: FormattedUserPosition) => {
+          render={(i: IFormattedPosition) => {
             return (
               <>
                 <div className='lending-list-title-wrap'>
@@ -85,7 +81,7 @@ export default function MiniPosition(props: { positions: FormattedUserPosition[]
           title='APY'
           dataIndex=''
           key='apy'
-          render={(i: FormattedUserPosition) => {
+          render={(i: IFormattedPosition) => {
             return (
               <p>
                 <FormattedNumber

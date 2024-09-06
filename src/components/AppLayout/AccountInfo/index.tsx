@@ -1,15 +1,17 @@
 import './index.scss'
 
 import cx from 'classnames'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
+import FormattedNumber from '@/components/FormattedNumber'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import PercentCircle from '@/pages/Lend/PercentCircle'
-import { formatNumberByUnit, toPrecision, toPrecisionNum } from '@/utils/math'
+import { formatNumberByUnit, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
 import AccountHeader from './AccountHeader'
+import { getHealthFactorInfo } from './healthFactorFn'
 
 export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const { portfolioMode } = props
@@ -21,6 +23,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     debtVal,
     maxCredit,
     usedCredit,
+    availableCredit,
   } = useSmartAccount()
 
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
@@ -28,6 +31,10 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
   const handleAddDeposit = useCallback(() => {
     setDepositDialogOpen(true)
   }, [])
+
+  const healthFactorInfo = useMemo(() => {
+    return getHealthFactorInfo(healthFactor)
+  }, [healthFactor])
 
   return (
     <div className='extrax-account-info'>
@@ -69,13 +76,9 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                 <span>Health Factor</span>
                 <em>{!depositedVal ? '--' : toPrecision(healthFactor)}</em>
                 <span
-                  className={cx('extrax-account-info-health-judge', {
-                    'color-safe': healthFactor >= 2,
-                    'color-warn': healthFactor < 2 && healthFactor >= 1.5,
-                    'color-danger': healthFactor < 1.5,
-                  })}
+                  className={cx('extrax-account-info-health-judge', `color-${healthFactorInfo.type}`)}
                 >
-                  {'Conservative'}
+                  {healthFactorInfo.label}
                 </span>
               </div>
               <div className='ltv-wrapper'>
@@ -116,7 +119,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                   <em className=''>
                     {!depositedVal
                       ? '--'
-                      : `$${toPrecisionNum(Number(usedCredit)).toLocaleString()}`}
+                      : <FormattedNumber symbol='$' value={availableCredit} />}
                   </em>
                 </div>
                 <span>Total: ${toPrecision(Number(maxCredit))}</span>
@@ -133,12 +136,12 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                   <p>Used</p>
                   <span>{toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%</span>
                 </div>
-                <div className='extrax-account-info-credit-percent-item available'>
+                {/* <div className='extrax-account-info-credit-percent-item available'>
                   <p>Available</p>
                   <span>
                     {toPrecision((1 - div(String(usedCredit), maxCredit).toNumber()) * 100)}%
                   </span>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

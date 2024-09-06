@@ -2,7 +2,6 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { Table, Tooltip } from 'antd/es'
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Address } from 'viem'
 import { useSwitchChain } from 'wagmi'
 
 import CustomSortIcon from '@/components/CustomSortIcon'
@@ -12,7 +11,6 @@ import { useWagmiCtx } from '@/components/WagmiContext'
 import { SupportedChainId } from '@/constants/chains'
 import useDeviceDetect from '@/hooks/useDeviceDetect'
 import { useFetchEthBalance } from '@/hooks/useFetchBalance'
-import { useAccountManager } from '@/hooks/useSDK'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { formatSymbol, isWETH, toDecimals } from '@/sdk/utils/token'
 import { useAccountStore } from '@/store'
@@ -247,7 +245,7 @@ export default function LendingTable() {
               <>
                 {isMobile && <div className='text-bold-small'>LTV</div>}
                 <div>
-                  <FormattedNumber value={i.formattedBaseLTVasCollateral} unit symbol='$' />
+                  <FormattedNumber value={i.formattedBaseLTVasCollateral} unit />
                 </div>
               </>
             )
@@ -282,8 +280,7 @@ export default function LendingTable() {
                   {isMobile && <div className='text-bold-small'>APY</div>}
                   <div className='flex ai-ct jc-sb gap-10'>
                     <span className='text-apr color-safe'>
-                      +
-                      <FormattedNumber value={pool.supplyAPY} percent />
+                      <FormattedNumber precision={2} value={pool.supplyAPY} percent />
                     </span>
                     <Link
                       to={`/lend/supply/${pool.id}`}
@@ -314,7 +311,7 @@ export default function LendingTable() {
         />
 
         <Column
-          title='Borrow APR'
+          title='Borrow APY'
           dataIndex=''
           width={150}
           key='borrowingRate'
@@ -327,9 +324,8 @@ export default function LendingTable() {
             return (
               <>
                 <div className='flex ai-ct jc-sb gap-10'>
-                  <span className='color-danger'>
-                    -
-                    <FormattedNumber value={pool.variableBorrowAPY} percent />
+                  <span className='color-warn'>
+                    <FormattedNumber precision={2} value={pool.variableBorrowAPY} percent />
                   </span>
                   <Link
                     to={`/lend/borrow/${pool.id}`}

@@ -148,7 +148,7 @@ export const InfoWithOperation = (): JSX.Element => {
             )}
           </div>
         )}
-        <SupplyWindows className='info-with-operation__supply-windows-instance'></SupplyWindows>
+        <SupplyWindows className={classNames('info-with-operation__supply-windows-instance', {'show-pool-detail': showPoolDetail})}></SupplyWindows>
       </div>
     </div>
   )

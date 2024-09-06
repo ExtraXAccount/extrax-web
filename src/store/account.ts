@@ -1,5 +1,5 @@
 import { UserReserveData } from '@aave/math-utils'
-import { Address, Hex } from 'viem'
+import { Address } from 'viem'
 import { create } from 'zustand'
 
 export interface IBalanceMap {

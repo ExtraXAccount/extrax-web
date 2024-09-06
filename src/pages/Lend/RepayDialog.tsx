@@ -33,7 +33,6 @@ export default function RepayDialog({
 }) {
   const {
     healthFactor,
-    liquidationThreshold,
     usedCredit,
     netWorth,
     debtVal,

@@ -3,14 +3,14 @@
   box-sizing: border-box;
 }
 .supply-windows {
-  padding: 24px;
-  padding: 20px;
+  // padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  // gap: 24px;
   align-items: flex-start;
   justify-content: flex-start;
   position: relative;
+  transition: all .125s ease-in-out;
 
   .amount-input {
     width: 100%;
@@ -18,8 +18,20 @@
       background: #fff;
     }
   }
+  &.show-pool-detail {
+    padding: 24px;
+    .supply-windows__frame-482088 {
+      border-radius: 16px;
+      border-color: var(--box-border-color);
+    }
+    .supply-windows__frame-482102 {
+      padding: 0 0 16px;
+      background: #fff;
+    }
+  }
 }
 .supply-windows__frame-482102 {
+  transition: all .125s ease-in-out;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -27,6 +39,9 @@
   align-self: stretch;
   flex-shrink: 0;
   position: relative;
+  padding: 16px 16px 0;
+  background: var(--background, #f9f9fa);
+  transition: all .125s ease-in-out;
 }
 .supply-windows__frame-482101 {
   display: flex;
@@ -85,10 +100,12 @@
 
 .supply-windows__frame-482088 {
   background: var(--background, #f9f9fa);
-  border-radius: 16px;
+  // border-radius: 16px;
   border-style: solid;
-  border-color: var(--box-border-color);
+  // border-color: var(--box-border-color);
   border-width: 0.5px;
+  border-color: transparent;
+  border-radius: 0;
   display: flex;
   flex-direction: column;
   gap: 0px;
@@ -367,3 +384,26 @@
   height: 24px;
   background: url(./imgs//warn.png) center/contain no-repeat;
 } */
+
+.selcetion-property-11 {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+.selcetion-property-11__auto-rebalance {
+  color: var(--text-gry-60percent-b, #666666);
+  text-align: left;
+  font-family: 'RedHatDisplay-Medium', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.selcetion-property-11__mini-switch-instance {
+  flex-shrink: 0 !important;
+}

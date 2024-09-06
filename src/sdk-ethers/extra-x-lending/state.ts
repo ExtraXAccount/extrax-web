@@ -1,8 +1,6 @@
-import { UserReserveData } from '@aave/math-utils'
 
 import { chainIdToName } from '@/constants/chains'
-import { IUiPoolDataProviderV3 } from '@/typechain-types'
-import { PoolBaseCurrencyHumanized, ReserveDataHumanized } from '@/types/aave'
+import { PoolBaseCurrencyHumanized } from '@/types/aave'
 import { bi2num } from '@/utils/bigInt'
 
 import { LendingPoolConfig } from '../config/constants'
