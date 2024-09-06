@@ -92,6 +92,7 @@ export default function LendingTable() {
                   <LPName
                     token0={nameChecker(formatSymbol(pool.symbol))}
                     title={nameChecker(pool.symbol)}
+                    isIsolated={!!pool?.isIsolated}
                   >
                     <div className='lending-list-title-wrap-balance text-sm-2'>
                       Wallet: <FormattedNumber value={

@@ -29,6 +29,7 @@ export default function LPName(props: {
   chainId?: SupportedChainId
   type?: 'farm' | 'lend'
   children?: React.ReactNode
+  isIsolated?: boolean
 }) {
   const {
     token0,
@@ -37,6 +38,7 @@ export default function LPName(props: {
     nobold = false,
     chainId,
     type = 'farm',
+    isIsolated,
   } = props
   // if (!token0 || !token1) {
   //   return null
@@ -45,7 +47,13 @@ export default function LPName(props: {
     <div className={classNames('lpname', `lpname-${type}`)}>
       {token0 && <TokenIcon symbol={token0} chainId={chainId} />}
       {token1 && <TokenIcon symbol={token1} chainId={chainId} />}
-      <p className={nobold ? '' : 'bold'}>{title}</p>
+      <p className={nobold ? '' : 'bold'}>
+        {title}
+        {
+          isIsolated &&
+          <span className='tag-isolated'>Isolated</span>
+        }
+      </p>
       {props.children}
     </div>
   )

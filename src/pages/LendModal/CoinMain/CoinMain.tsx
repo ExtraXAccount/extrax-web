@@ -29,11 +29,14 @@ export const CoinMain = ({ className, toggleMenuOpen }: ICoinMainProps) => {
               <>{lendPoolInfo.symbol.toUpperCase()}</>
             )}
           </div>
-          <div className='coin-main__frame-482097'>
-            <div className='coin-main__component-229'>
-              <div className='coin-main__isolated'>Isolated</div>
+          {
+            !!lendPoolInfo?.isIsolated && 
+            <div className='coin-main__frame-482097'>
+              <div className='coin-main__component-229'>
+                <div className='coin-main__isolated'>Isolated</div>
+              </div>
             </div>
-          </div>
+          }
         </div>
       </div>
       <div className='coin-main__frame-482082'>

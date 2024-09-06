@@ -21,9 +21,23 @@
     }
     font-size: 14px;
     margin-left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     &.bold{
       font-weight: bold;
       line-height: 1.5;
+    }
+    .tag-isolated {
+      display: flex;
+      padding: 2px 4px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 4px;
+      border: 0.5px solid var(--stroke, #C9C9CB);
+      font-size: 10px;
+      font-weight: 500;
+      line-height: 12px; /* 120% */
     }
   }
 

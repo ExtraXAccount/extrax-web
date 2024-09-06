@@ -47,18 +47,12 @@ export default function LendingPoolHistory() {
   const [chartType, setChartType] = useState(chartTypeSet[0])
   const theme = useTheme()
 
+  // lendPoolInfo?.isIsolated
   const poolList = useMemo(() => {
     const fromTs = Date.now() - timeTab * 24 * 3600 * 1000
     return historyData
       .map((i) => {
-        const target =
-          find(i.lend, (info) => {
-            // return info.id === lendPoolInfo?.reserveId?.toString()
-            return (
-              info.underlyingTokenAddress?.toLowerCase() ===
-              lendPoolInfo?.underlyingAsset?.toLowerCase()
-            )
-          }) || {}
+        const target = i.lend[1]
 
         return {
           ts: i.ts,
@@ -66,7 +60,7 @@ export default function LendingPoolHistory() {
         }
       })
       .filter((i) => i.ts >= fromTs)
-  }, [lendPoolInfo, historyData, timeTab])
+  }, [historyData, timeTab])
 
   const avg = useMemo(() => {
     if (chartType.key === 'apy') {

@@ -3,7 +3,6 @@ import { erc20Abi, getContract, PublicClient, WalletClient } from 'viem'
 import { defaultChainId } from '@/constants'
 import { CONTRACT_ADDRESSES } from '@/constants/addresses'
 import { SupportedChainId } from '@/constants/chains'
-import { ISupportedAssets } from '@/store/account'
 import { Address } from '@/types'
 
 import { BalanceCheckerABI } from './BalanceCheckerABI'
@@ -114,41 +113,6 @@ export class AccountManager {
   //   console.log('accounts :>> ', accounts)
   //   return accounts
   // }
-
-  public async getSupportedAssets() {
-    const nextAssetId = await this.healthManagerContract().read.nextAssetId()
-    const result = [] as ISupportedAssets[]
-    for (let i = 1n; i < nextAssetId; i++) {
-      const res = await this.healthManagerContract().read.assets([i])
-      const [assetType, underlyingTokensCalculator, data] = res
-      result.push({
-        assetId: i,
-        assetType,
-        underlyingTokensCalculator,
-        data,
-      })
-    }
-    // console.log('getSupportedAssets :>> ', result)
-    return result
-  }
-
-  public async getSupportedDebts() {
-    const nextDebtId = await this.healthManagerContract().read.nextDebtId()
-    // console.log('getSupportedDebts :>> ', nextDebtId)
-    const result = [] as ISupportedAssets[]
-    for (let i = 1n; i < nextDebtId; i++) {
-      const res = await this.healthManagerContract().read.debts([i])
-      const [assetType, underlyingTokensCalculator, data] = res
-      result.push({
-        assetId: i,
-        assetType,
-        underlyingTokensCalculator,
-        data,
-      })
-    }
-    // console.log('getSupportedDebts :>> ', result)
-    return result
-  }
 
   public async getCollateralAndDebtValue(account: Address) {
     const res = await this.healthManagerContract().read.getCollateralAndDebtValue([account])
