@@ -1,5 +1,15 @@
 .lend-info{
   padding: 16px;
+
+  &-item{
+    &-text{
+      width: 480px;
+      font: 14px;
+      color: var(--text-color);
+      line-height: 2;
+    }
+  }
+
   &-list{
     display: flex;
     align-items: center;

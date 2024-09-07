@@ -3,19 +3,17 @@ import { Table } from 'antd'
 import CustomSortIcon from '@/components/CustomSortIcon'
 import FormattedNumber from '@/components/FormattedNumber'
 import LPName from '@/components/LPName'
-import useSmartAccount from '@/hooks/useSmartAccount'
-import { toDecimals } from '@/sdk/utils/token'
 import { useLendStore } from '@/store'
-import { aprToApy100, remain2Decimal, toPrecision } from '@/utils/math'
+import { aprToApy100, formatNumberByUnit, remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
 
-export default function PositionTable(props: { positions: any[] }) {
+export default function PositionTable(props: {
+  positions: any[],
+  lite?: boolean
+}) {
   const { updateCurrentPosition, updateDialogShow } = useLendStore()
-  const { healthStatus } = useSmartAccount()
-
-  console.log(props.positions)
   return (
-    <div>
+    <div className='position-table'>
       <Table
         sortDirections={['descend', 'ascend']}
         dataSource={props.positions || []}
@@ -50,24 +48,27 @@ export default function PositionTable(props: { positions: any[] }) {
             )
           }}
         />
-        <Column
-          title="Value"
-          dataIndex=""
-          key="value"
-          sortIcon={CustomSortIcon}
-          sorter={(a: any, b: any) => {
-            return a.value - b.value
-          }}
-          render={(i) => {
-            return (
-              <>
-                <div className="lending-list-title-wrap">
-                  $<FormattedNumber value={i.value} />
-                </div>
-              </>
-            )
-          }}
-        />
+        {
+          !props.lite &&
+          <Column
+            title="Value"
+            dataIndex=""
+            key="value"
+            sortIcon={CustomSortIcon}
+            sorter={(a: any, b: any) => {
+              return a.value - b.value
+            }}
+            render={(i) => {
+              return (
+                <>
+                  <div className="lending-list-title-wrap">
+                    $<FormattedNumber value={i.value} />
+                  </div>
+                </>
+              )
+            }}
+          />
+        }
         <Column
           title="Size"
           dataIndex=""
@@ -75,39 +76,46 @@ export default function PositionTable(props: { positions: any[] }) {
           render={(i) => {
             return (
               <>
-                <div className="lending-list-title-wrap">
+                <div>
                   <FormattedNumber value={i.size} />
+                  {props.lite && <p className='text-sm-2'>${formatNumberByUnit(i.value)}</p>}
                 </div>
               </>
             )
           }}
         />
-        <Column
-          title="Price"
-          dataIndex=""
-          key="price"
-          render={(i) => {
-            return (
-              <>
-                <p>${remain2Decimal(i.reserve.priceInUSD)}</p>
-              </>
-            )
-          }}
-        />
-        <Column
-          title="Liquidation Price"
-          dataIndex=""
-          key="Liquidation"
-          render={(i) => {
-            // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 *
-            return (
-              <>
-                {i.type === 'debt' && <p>N/A</p>}
-                {i.type !== 'debt' && <p>N/A</p>}
-              </>
-            )
-          }}
-        />
+        {
+          !props.lite &&
+            <Column
+              title="Price"
+              dataIndex=""
+              key="price"
+              render={(i) => {
+                return (
+                  <>
+                    <p>${remain2Decimal(i.reserve.priceInUSD)}</p>
+                  </>
+                )
+              }}
+            />
+        }
+        {
+          !props.lite &&
+            <Column
+              title="Liquidation Price"
+              dataIndex=""
+              key="Liquidation"
+              render={(i) => {
+                // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 *
+                return (
+                  <>
+                    {i.type === 'debt' && <p>N/A</p>}
+                    {i.type !== 'debt' && <p>N/A</p>}
+                  </>
+                )
+              }}
+            />
+        }
         <Column
           title="APY"
           dataIndex=""

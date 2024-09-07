@@ -13,6 +13,13 @@ export default function LendInfo(props: {
     <div className="lend-info">
       <ul className="lend-info-list">
         <li>
+          <div className='lend-info-item-text'>
+            The TRUNK/USDC pool offers increased LTV to allow a leveraged position up to
+            4x. Higher leverage comes at the cost of increased liquidation risk so proceed
+            with caution.
+          </div>
+        </li>
+        <li>
           <p>Total Market Size</p>
           <b>${formatNumberByUnit(totalSize)}</b>
         </li>

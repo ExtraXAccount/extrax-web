@@ -10,20 +10,15 @@ export default function LendBanner() {
   return (
     <div className="lend-banner">
       <i
-        className="lend-banner-close iconfont icon-close"
+        className="lend-banner-close"
         onClick={() => {
           updateEventShow(false)
         }}
       ></i>
-      <div className="lend-banner-item">
-        <div className="lend-banner-item-mask">
-          <h4>Event</h4>
-          <p>
-            The TRUNK/USDC pool offers increased LTV to allow a leveraged position up to
-            4x. Higher leverage comes at the cost of increased liquidation risk so proceed
-            with caution.
-          </p>
-        </div>
+      <div className='lend-banner-list'>
+        <div className="lend-banner-item"></div>
+        <div className="lend-banner-item"></div>
+        <div className="lend-banner-item"></div>
       </div>
     </div>
   )

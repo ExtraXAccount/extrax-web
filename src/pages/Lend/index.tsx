@@ -3,6 +3,7 @@ import './lendingList.scss'
 
 // import { useEffect } from 'react'
 import AccountInfo from '@/components/AppLayout/AccountInfo'
+import QuickPosition from '@/components/QuickPosition'
 import { useWagmiCtx } from '@/components/WagmiContext'
 
 import LendBanner from './LendBanner'
@@ -23,9 +24,12 @@ export default function Lend() {
     <div className="page-app page-lending">
       {
         !!account &&
-        <div className="box">
-          <AccountInfo />
-        </div>
+        <>
+          <div className="box" style={{marginBottom: 0, borderBottomLeftRadius: 0, borderBottomRightRadius: 0}}>
+            <AccountInfo />
+          </div>
+          <QuickPosition />
+        </>
       }
       <div className="box lending-list-box">
         <MarketSwitch />
