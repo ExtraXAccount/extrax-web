@@ -86,9 +86,9 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
                   label: (
                     <div
                       className='account-list-item flex jc-sb'
-                      onClick={(e) => {
+                      onClick={() => {
                         updateCurrentAccount(item)
-                        e.stopPropagation()
+                        // e.stopPropagation()
                       }}
                     >
                       <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>

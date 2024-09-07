@@ -1,5 +1,5 @@
 export function getHealthFactorInfo(healthFactor: number) {
-  if (healthFactor >= 3) {
+  if (healthFactor >= 3 || healthFactor === -1) {
     return {
       type: 'safe',
       label: 'Conservative'
