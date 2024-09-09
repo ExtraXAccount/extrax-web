@@ -1,11 +1,18 @@
 import { Table } from 'antd'
+import classNames from 'classnames'
 
 import CustomSortIcon from '@/components/CustomSortIcon'
 import FormattedNumber from '@/components/FormattedNumber'
+import Hint from '@/components/Hint'
 import LPName from '@/components/LPName'
 import { useLendStore } from '@/store'
 import { aprToApy100, formatNumberByUnit, remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
+
+const positionTypeTagMap = {
+  asset: 'LENT',
+  debt: 'DEBT',
+}
 
 export default function PositionTable(props: {
   positions: any[],
@@ -41,8 +48,14 @@ export default function PositionTable(props: {
           render={(i) => {
             return (
               <>
-                <div>
+                <div className='flex ai-ct gap-4'>
                   <LPName token0={i.reserve.symbol} title={`${i.reserve.symbol}`} />
+                  <div className={classNames({
+                    'mini-positions-item-asset': i.type === 'asset',
+                    'mini-positions-item-debt': i.type === 'debt'
+                  })}>
+                    <span className='asset-type-tag'>{positionTypeTagMap[i.type] || ''}</span>
+                  </div>
                 </div>
               </>
             )
@@ -109,8 +122,8 @@ export default function PositionTable(props: {
                 // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 *
                 return (
                   <>
-                    {i.type === 'debt' && <p>N/A</p>}
-                    {i.type !== 'debt' && <p>N/A</p>}
+                    {i.type === 'debt' && <Hint content={`N/A`}>N/A</Hint>}
+                    {i.type !== 'debt' && <Hint content={`N/A`}>N/A</Hint>}
                   </>
                 )
               }}
