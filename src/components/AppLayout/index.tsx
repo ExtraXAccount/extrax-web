@@ -2,6 +2,7 @@ import './index.scss'
 
 // import { ConnectButton } from '@rainbow-me/rainbowkit'
 import classNames from 'classnames'
+import { toArray } from 'lodash'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useSearchParams } from 'react-router-dom'
 
@@ -64,7 +65,7 @@ export default function AppLayout() {
     console.log('formattedUserPosition :>> ', formattedUserPosition)
   }, [formattedUserPosition])
 
-  const isEOA = !(accounts as any)?.toArray().includes(currentAccount as `0x${string}`)
+  const isEOA = !toArray(accounts as any || []).includes(currentAccount as `0x${string}`)
 
   return (
     <div
