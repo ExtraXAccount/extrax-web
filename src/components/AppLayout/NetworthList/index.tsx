@@ -8,7 +8,7 @@ import { useAccountStore } from '@/store'
 import { formatNumberByUnit } from '@/utils/math'
 
 export default function NetworthList() {
-  const { currentAccount, accounts, netWorth } = useSmartAccount()
+  const { currentAccount, accounts, netWorth, isSmartAccount } = useSmartAccount()
   const { updateAccountLayer } = useAccountStore()
   console.log(accounts)
   const data = useMemo(() => {
@@ -20,17 +20,27 @@ export default function NetworthList() {
       <h2>Account Networth</h2>
       <section className='networth-list-main'>
         <div className='networth-list-main-item'>
-          <p>Total Networth</p>
-          <p>${formatNumberByUnit(netWorth)}</p>
-        </div>
-        <div className='networth-list-main-item-sub'>
-          <div className='networth-list-main-item'>
-            <p>EOA Mode</p>
+          <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
+            <p>Total Networth</p>
             <p>${formatNumberByUnit(netWorth)}</p>
           </div>
+        </div>
+        <div className='networth-list-main-item-sub'>
+          <div className={classNames('networth-list-main-item', {
+            active: !isSmartAccount
+          })}>
+            <i className='networth-list-main-item-line'></i>
+            <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
+              <p>EOA Mode</p>
+              <p>${formatNumberByUnit(netWorth)}</p>
+            </div>
+          </div>
           <div className='networth-list-main-item last'>
-            <p>Smart Account</p>
-            <p>$0</p>
+            <i className='networth-list-main-item-line'></i>
+            <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
+              <p>Smart Account</p>
+              <p>$0</p>
+            </div>
           </div>
           <div className='networth-list-main-item-sub'>
             {
@@ -38,10 +48,14 @@ export default function NetworthList() {
                 const accountName = nameList[currentAccount?.toLowerCase()] || `Account ${index}`
                 return (
                   <div className={classNames('networth-list-main-item', {
-                    last: index === accounts.length - 1
+                    last: index === accounts.length - 1,
+                    active: currentAccount?.toLowerCase() === i?.toLowerCase()
                   })} key={index}>
-                    <p>{accountName}</p>
-                    <p>$0</p>
+                    <i className='networth-list-main-item-line'></i>
+                    <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
+                      <p>{accountName}</p>
+                      <p>$0</p>
+                    </div>
                   </div>
                 )
               })

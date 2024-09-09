@@ -30,7 +30,7 @@
     padding: 12px;
     border-bottom: .5px solid var(--box-border-color);
     &-item{
-      padding: 4px 0 12px 0;
+      padding: 4px 0;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -44,7 +44,7 @@
             position: absolute;
             display: block;
             width: 1px;
-            height: 30px;
+            height: 40px;
             border-left: 1px solid #666;
           }
           &.last{
@@ -57,18 +57,27 @@
             display: flex;
             align-items: center;
           }
-          >p:first-child{
-            &::before{
-              content: '';
-              display: block;
-              width: 16px;
-              height: 1px;
-              border-bottom: 1px solid #666;
-              margin-right: 8px;
-            }
-          }
-
         }
+      }
+
+      &-line{
+        display: block;
+        width: 16px;
+        height: 1px;
+        border-bottom: 1px solid #666;
+      }
+
+      &.active{
+        .networth-list-main-item-inner{
+          color: #fff;
+          background: var(--exx, linear-gradient(251deg, #7A87FF -6.77%, #575BBE 100.09%));
+        }
+      }
+
+      &-inner{
+        padding: 4px 8px;
+        border-radius: 4px;
+        width: 100%;
       }
     }
   }

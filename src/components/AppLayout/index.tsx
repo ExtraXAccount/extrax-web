@@ -43,7 +43,7 @@ export default function AppLayout() {
 
   const { fetchPoolState } = useLendingList()
   const { chainId } = useWagmiCtx()
-  const { isSmartAccount, currentAccount, formattedUserPosition, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
+  const { accounts, currentAccount, formattedUserPosition, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
 
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   const accountName = nameList[currentAccount?.toLowerCase()] || 'Account 0'
@@ -63,6 +63,8 @@ export default function AppLayout() {
   useEffect(() => {
     console.log('formattedUserPosition :>> ', formattedUserPosition)
   }, [formattedUserPosition])
+
+  const isEOA = !(accounts as any)?.toArray().includes(currentAccount as `0x${string}`)
 
   return (
     <div
@@ -105,13 +107,13 @@ export default function AppLayout() {
           <button
             className='nav-shine-button'
             onClick={() => {
-              if (!isSmartAccount) {
+              if (isEOA) {
                 updateAccountLayer(true)
               }
             }}
           >
-            {!isSmartAccount && <div className='nav-shine-button-inner'>✨ Try Smart Account ✨</div>}
-            {isSmartAccount && 
+            {isEOA && <div className='nav-shine-button-inner'>✨ Try Smart Account ✨</div>}
+            {!isEOA && 
               <div className='nav-shine-button-inner'>{`Accounts > ${accountName}`}
                 <NetworthList />
               </div>
