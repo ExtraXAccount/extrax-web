@@ -26,6 +26,12 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     availableCredit,
   } = useSmartAccount()
 
+  console.log('maxCredit :>> ', div(availableCredit, maxCredit).toNumber(), {
+    availableCredit,
+    usedCredit,
+    maxCredit
+  });
+
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
   const handleAddDeposit = useCallback(() => {
@@ -126,15 +132,15 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
               </div>
               <PercentCircle
                 radix={32}
-                percent={div(String(usedCredit), maxCredit).toNumber()}
+                percent={div(availableCredit, maxCredit).toNumber()}
                 strokeWidth={6}
                 strokeColor={'#7A87FF'}
                 bgColor='#78788029'
               />
               <div className='extrax-account-info-credit-percent'>
                 <div className='extrax-account-info-credit-percent-item used'>
-                  <p>Used</p>
-                  <span>{toPrecision(div(String(usedCredit), maxCredit).toNumber() * 100)}%</span>
+                  <p>Available</p>
+                  <span>{toPrecision(div(availableCredit, maxCredit).toNumber() * 100)}%</span>
                 </div>
                 {/* <div className='extrax-account-info-credit-percent-item available'>
                   <p>Available</p>

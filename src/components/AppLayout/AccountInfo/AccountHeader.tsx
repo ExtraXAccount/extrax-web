@@ -1,12 +1,13 @@
-import { Dropdown } from 'antd'
+import { Dropdown, Switch } from 'antd'
 import cx from 'classnames'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import AddressWithCopy from '@/components/AddressWithCopy'
 import CreateAccountButton from '@/components/CreateAccountButton'
 import FormattedNumber from '@/components/FormattedNumber'
 import { useWagmiCtx } from '@/components/WagmiContext'
 import useSmartAccount from '@/hooks/useSmartAccount'
+import { setEModeWithAccount, setEModeWithWallet } from '@/sdk-ethers/extra-x-lending/setEMode'
 import { useAccountStore } from '@/store'
 import { formatNumberByUnit } from '@/utils/math'
 
@@ -19,14 +20,40 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
     debtVal,
     accountApy,
     accounts,
+    eModeEnabled,
+    updateAfterAction,
+    isSmartAccount,
   } = useSmartAccount()
-  const { account } = useWagmiCtx()
+  const { walletClient, signer, chainId, account } = useWagmiCtx()
 
   const [name, setName] = useState('')
   const [isEdit, setIsEdit] = useState(false)
+  const [loading, setLoading] = useState({ writing: false, desc: '' })
+  const [showAccountsOverlay, setShowAccountsOverlay] = useState(false);
 
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   const accountName = name || nameList[currentAccount?.toLowerCase()] || ''
+
+  const toggleAccountsOverlay = useCallback(() => {
+    setShowAccountsOverlay(!showAccountsOverlay)
+  }, [showAccountsOverlay])
+
+  const toggleEMode = useCallback(async () => {
+    if (!signer) {
+      return
+    }
+    try {
+      setLoading({ writing: true, desc: '' })
+      const res = !isSmartAccount
+        ? await setEModeWithWallet(signer, chainId, eModeEnabled ? 0 : 1)
+        : await setEModeWithAccount(walletClient, chainId, currentAccount, eModeEnabled ? 0 : 1)
+      updateAfterAction()
+    } catch(err) {
+      console.warn(err);
+    } finally {
+      setLoading({ writing: false, desc: '' })
+    }
+  }, [chainId, currentAccount, eModeEnabled, isSmartAccount, signer, updateAfterAction, walletClient])
 
   if (!account) {
     return null
@@ -75,7 +102,7 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
               </>
             )}
           </section>
-          <Dropdown
+          {/* <Dropdown
             overlayClassName='account-list-overlay'
             trigger={['click']}
             placement='bottomRight'
@@ -113,10 +140,50 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
                 ]),
             }}
           >
-            <div className='extrax-account-info-menu'>
-              <i className='iconfont icon-menu'></i>
-            </div>
-          </Dropdown>
+          </Dropdown> */}
+          <div className='extrax-account-info-menu' onClick={toggleAccountsOverlay}>
+            <i className='iconfont icon-menu'></i>
+          </div>
+          {
+            showAccountsOverlay && (
+              <div className='account-list-overlay'>
+                <div className="mode-switch">
+                  <div>
+                    <span>E-Mode</span>
+                    <Switch
+                      checked={eModeEnabled}
+                      size='small'
+                      onChange={toggleEMode}
+                    ></Switch>
+                  </div>
+                </div>
+                <ul className='account-list'>
+                  {
+                    [...accounts, account].map((item, index) => (
+                      <li
+                        key={item}
+                        className='account-list-item flex jc-sb'
+                        onClick={() => {
+                          updateCurrentAccount(item)
+                        }}
+                      >
+                        <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>
+                        <AddressWithCopy address={item} />
+                      </li>
+                    ))
+                  }
+                </ul>
+                <div
+                  className='account-list-item account-list-item-create'
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                >
+                  <CreateAccountButton label={'+ Create New Account'} />
+                </div>
+              </div>
+            )
+          }
         </div>
       </div>
       {!!depositedVal && portfolioMode && (

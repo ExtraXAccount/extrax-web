@@ -143,3 +143,7 @@ export async function getLendingUserState(chainId: number, user: string) {
     userEmodeCategoryId: bi2num(userEmodeCategoryId),
   }
 }
+
+export async function getLendingUsersState(chainId: number, users: string[]) {
+  return [1, 2]
+}

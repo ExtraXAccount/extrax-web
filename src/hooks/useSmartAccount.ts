@@ -12,7 +12,7 @@ import { chainIdToName, SupportedChainId } from '@/constants/chains'
 import { useAccountManager } from '@/hooks/useSDK'
 import { strToDecimals } from '@/sdk/utils/token'
 import { getAccounts } from '@/sdk-ethers'
-import { getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
+import { getLendingUsersState, getLendingUserState } from '@/sdk-ethers/extra-x-lending/state'
 import { useAccountStore, useLendStore } from '@/store'
 import { IBalanceMap } from '@/store/account'
 import { div, mul, plus } from '@/utils/math/bigNumber'
@@ -128,6 +128,21 @@ export default function useSmartAccount() {
   //   [lendingMng, updateHealthStatus],
   // )
 
+  const fetchUsersReserves = useCallback(
+    async (users: string[], chainId: SupportedChainId) => {
+      if (!users.length) {
+        return
+      }
+      const res = await getLendingUsersState(chainId, users)
+      // console.log('fetchUserReserves :>> ', {users, userReserves, userEmodeCategoryId})
+      // updatePositions({
+      //   userReserves, userEmodeCategoryId
+      // })
+    },
+    []
+  )
+
+  
   const fetchUserReserves = useCallback(
     async (acc: string | undefined, chainId: SupportedChainId) => {
       if (!acc) {
@@ -184,6 +199,7 @@ export default function useSmartAccount() {
     currentAccount,
     isSmartAccount: _currentAccount !== undefined,
     formattedUserPosition,
+    eModeEnabled: formattedUserPosition?.userEmodeCategoryId !== 0,
     leverage,
     depositedVal,
     debtVal,
