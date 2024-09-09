@@ -14,6 +14,7 @@ import { useAccountStore } from '@/store'
 import AccountLayer from '../AccountLayer'
 import { useWagmiCtx } from '../WagmiContext'
 import CustomConnectButton from './ConnectButton'
+import NetworthList from './NetworthList'
 
 const navList = [
   // {
@@ -42,7 +43,10 @@ export default function AppLayout() {
 
   const { fetchPoolState } = useLendingList()
   const { chainId } = useWagmiCtx()
-  const { currentAccount, formattedUserPosition, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
+  const { isSmartAccount, currentAccount, formattedUserPosition, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
+
+  const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
+  const accountName = nameList[currentAccount?.toLowerCase()] || 'Account 0'
 
   useEffect(() => {
     getInitSmartAccountData()
@@ -101,10 +105,17 @@ export default function AppLayout() {
           <button
             className='nav-shine-button'
             onClick={() => {
-              updateAccountLayer(true)
+              if (!isSmartAccount) {
+                updateAccountLayer(true)
+              }
             }}
           >
-            <div className='nav-shine-button-inner'>✨ Try Smart Account ✨</div>
+            {!isSmartAccount && <div className='nav-shine-button-inner'>✨ Try Smart Account ✨</div>}
+            {isSmartAccount && 
+              <div className='nav-shine-button-inner'>{`Accounts > ${accountName}`}
+                <NetworthList />
+              </div>
+            }
           </button>
           <CustomConnectButton />
           {/* <DarkMode /> */}
