@@ -1,6 +1,7 @@
 import { Dropdown, Switch } from 'antd'
 import cx from 'classnames'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import AddressWithCopy from '@/components/AddressWithCopy'
 import CreateAccountButton from '@/components/CreateAccountButton'
@@ -37,6 +38,10 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
   const toggleAccountsOverlay = useCallback(() => {
     setShowAccountsOverlay(!showAccountsOverlay)
   }, [showAccountsOverlay])
+
+  const ref = useRef(null)
+
+  useOnClickOutside(ref, toggleAccountsOverlay)
 
   const toggleEMode = useCallback(async () => {
     if (!signer) {
@@ -146,7 +151,7 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
           </div>
           {
             showAccountsOverlay && (
-              <div className='account-list-overlay'>
+              <div className='account-list-overlay' ref={ref}>
                 <div className="mode-switch">
                   <div>
                     <span>E-Mode</span>
@@ -165,6 +170,7 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
                         className='account-list-item flex jc-sb'
                         onClick={() => {
                           updateCurrentAccount(item)
+                          toggleAccountsOverlay()
                         }}
                       >
                         <span>{item === account ? 'EOA' : `Account${index + 1}`}</span>

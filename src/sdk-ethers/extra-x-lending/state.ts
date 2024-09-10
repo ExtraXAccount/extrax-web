@@ -1,11 +1,14 @@
+import { forEach } from "lodash";
 
 import { chainIdToName } from '@/constants/chains'
+import { UiPoolDataProviderV3ABI } from '@/typechain-types/factories/periphery-v3/misc/UiPoolDataProviderV3__factory'
 import { PoolBaseCurrencyHumanized } from '@/types/aave'
 import { bi2num } from '@/utils/bigInt'
 
 import { LendingPoolConfig } from '../config/constants'
-import { POOL_ADDRESSES_PROVIDER_ID } from '../config/contract-id'
+import { POOL_ADDRESSES_PROVIDER_ID, UI_POOL_DATA_PROVIDER_V3 } from '../config/contract-id'
 import { getUiDataProvider } from './contract-helpers/ui-data-provider'
+import multicallClient from './multicall'
 
 export async function getLendingGlobalState(chainId: number) {
   const chain = chainIdToName[chainId]
@@ -107,17 +110,29 @@ export async function getLendingGlobalState(chainId: number) {
   }
 }
 
-export async function getLendingUserState(chainId: number, user: string) {
-  const chain = chainIdToName[chainId]
-  const dataProvider = getUiDataProvider(chain)
-
-  const { 0: userReservesRaw, 1: userEmodeCategoryId } =
-    await dataProvider.getUserReservesData(
-      LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID],
-      user
-    )
-
+function formatUserState(userReservesData, isObjectRaw = false) {
+  const { 0: userReservesRaw, 1: userEmodeCategoryId } = userReservesData
   const positions = userReservesRaw.map((data) => {
+    if (isObjectRaw) {
+      const {
+        underlyingAsset,
+        scaledATokenBalance,
+        usageAsCollateralEnabledOnUser,
+        stableBorrowRate,
+        scaledVariableDebt,
+        principalStableDebt,
+        stableBorrowLastUpdateTimestamp,
+      } = data
+      return {
+        underlyingAsset,
+        scaledATokenBalance: scaledATokenBalance.toString(),
+        usageAsCollateralEnabledOnUser,
+        stableBorrowRate: stableBorrowRate.toString(),
+        scaledVariableDebt: scaledVariableDebt.toString(),
+        principalStableDebt: principalStableDebt.toString(),
+        stableBorrowLastUpdateTimestamp: bi2num(stableBorrowLastUpdateTimestamp),
+      }
+    }
     const [
       underlyingAsset,
       scaledATokenBalance,
@@ -137,13 +152,70 @@ export async function getLendingUserState(chainId: number, user: string) {
       stableBorrowLastUpdateTimestamp: bi2num(stableBorrowLastUpdateTimestamp),
     }
   })
-  console.log('getLendingUserState :>> ', {positions, userEmodeCategoryId})
+  // console.log('getLendingUserState :>> ', {positions, userEmodeCategoryId})
   return {
     userReserves: positions,
     userEmodeCategoryId: bi2num(userEmodeCategoryId),
   }
 }
 
+export async function getLendingUserState(chainId: number, user: string) {
+  const chain = chainIdToName[chainId]
+  const dataProvider = getUiDataProvider(chain)
+
+  const res =
+    await dataProvider.getUserReservesData(
+      LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID],
+      user
+    )
+  console.log('getLendingUserState :>> ', res);
+  return formatUserState(res)
+  // const positions = userReservesRaw.map((data) => {
+  //   const [
+  //     underlyingAsset,
+  //     scaledATokenBalance,
+  //     usageAsCollateralEnabledOnUser,
+  //     stableBorrowRate,
+  //     scaledVariableDebt,
+  //     principalStableDebt,
+  //     stableBorrowLastUpdateTimestamp,
+  //   ] = data
+  //   return {
+  //     underlyingAsset,
+  //     scaledATokenBalance: scaledATokenBalance.toString(),
+  //     usageAsCollateralEnabledOnUser,
+  //     stableBorrowRate: stableBorrowRate.toString(),
+  //     scaledVariableDebt: scaledVariableDebt.toString(),
+  //     principalStableDebt: principalStableDebt.toString(),
+  //     stableBorrowLastUpdateTimestamp: bi2num(stableBorrowLastUpdateTimestamp),
+  //   }
+  // })
+  // console.log('getLendingUserState :>> ', {positions, userEmodeCategoryId})
+  // return {
+  //   userReserves: positions,
+  //   userEmodeCategoryId: bi2num(userEmodeCategoryId),
+  // }
+}
+
 export async function getLendingUsersState(chainId: number, users: string[]) {
-  return [1, 2]
+  const chain = chainIdToName[chainId]
+  // const dataProvider = getUiDataProvider(chain)
+
+  const res = await multicallClient(
+    chainId,
+    LendingPoolConfig[chain][UI_POOL_DATA_PROVIDER_V3],
+    UiPoolDataProviderV3ABI,
+    'getUserReservesData',
+    users.map(user => ([
+      LendingPoolConfig[chain][POOL_ADDRESSES_PROVIDER_ID],
+      user
+    ]))
+  )
+
+  console.log('getLendingUsersState :>> ', res);
+  const result = {}
+  res.forEach((item, index) => {
+    result[users[index]] = formatUserState(item.result, true)
+  })
+  return result
 }

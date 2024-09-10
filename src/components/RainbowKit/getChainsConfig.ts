@@ -4,6 +4,8 @@ import { injectedWallet, walletConnectWallet } from '@rainbow-me/rainbowkit/wall
 import { createConfig, http } from 'wagmi'
 import { optimism } from 'wagmi/chains'
 
+import { TENDERLY_RPC } from '@/constants/rpc'
+
 const appName = 'ExtraX'
 const projectId = 'ae9bc6c16bf3d9121367f023f740150a' // Project ID of WalletConnect Cloud
 
@@ -36,7 +38,7 @@ export const wagmiConfig = createConfig({
   // projectId,
   chains: [optimism] as any,
   transports: {
-    [optimism.id]: http('https://virtual.optimism.rpc.tenderly.co/77b8e846-c004-4697-8dab-7ee0e30df151'),
+    [optimism.id]: http(TENDERLY_RPC),
     // [base.id]: http('https://eth-sepolia.g.alchemy.com/v2/...'),
   },
 })

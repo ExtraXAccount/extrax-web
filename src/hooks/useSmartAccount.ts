@@ -31,6 +31,7 @@ export default function useSmartAccount() {
     updateAccounts,
     updateBalances,
     updatePositions,
+    updatePositionsMap,
   } = useAccountStore()
   const { reservesData } = useLendStore()
   const currentAccount = _currentAccount || account || ''
@@ -134,12 +135,10 @@ export default function useSmartAccount() {
         return
       }
       const res = await getLendingUsersState(chainId, users)
-      // console.log('fetchUserReserves :>> ', {users, userReserves, userEmodeCategoryId})
-      // updatePositions({
-      //   userReserves, userEmodeCategoryId
-      // })
+      console.log('updatePositionsMap :>> ', res)
+      updatePositionsMap(res)
     },
-    []
+    [updatePositionsMap]
   )
 
   
@@ -197,7 +196,7 @@ export default function useSmartAccount() {
   return {
     accounts,
     currentAccount,
-    isSmartAccount: _currentAccount !== undefined,
+    isSmartAccount: currentAccount && currentAccount!== account,
     formattedUserPosition,
     eModeEnabled: formattedUserPosition?.userEmodeCategoryId !== 0,
     leverage,
@@ -217,5 +216,6 @@ export default function useSmartAccount() {
     updateAfterAction,
     fetchAccounts,
     fetchUserReserves,
+    fetchUsersReserves,
   }
 }

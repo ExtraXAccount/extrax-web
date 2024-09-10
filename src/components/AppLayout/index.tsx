@@ -43,8 +43,8 @@ export default function AppLayout() {
   const { updateAccountLayer } = useAccountStore()
 
   const { fetchPoolState } = useLendingList()
-  const { chainId } = useWagmiCtx()
-  const { accounts, currentAccount, formattedUserPosition, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
+  const { account, chainId } = useWagmiCtx()
+  const { accounts, currentAccount, formattedUserPosition, fetchUsersReserves, fetchUserReserves, getInitData: getInitSmartAccountData } = useSmartAccount()
 
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   const accountName = nameList[currentAccount?.toLowerCase()] || 'Account 0'
@@ -60,6 +60,13 @@ export default function AppLayout() {
   useEffect(() => {
     fetchUserReserves(currentAccount, chainId)
   }, [chainId, currentAccount, fetchUserReserves])
+
+  useEffect(() => {
+    if (!account) {
+      return
+    }
+    fetchUsersReserves([account, ...accounts], chainId)
+  }, [chainId, accounts, fetchUsersReserves, account])
 
   useEffect(() => {
     console.log('formattedUserPosition :>> ', formattedUserPosition)

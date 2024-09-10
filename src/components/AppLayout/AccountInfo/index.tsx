@@ -26,12 +26,6 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
     availableCredit,
   } = useSmartAccount()
 
-  console.log('maxCredit :>> ', div(availableCredit, maxCredit).toNumber(), {
-    availableCredit,
-    usedCredit,
-    maxCredit
-  });
-
   const [depositDialogOpen, setDepositDialogOpen] = useState(false)
 
   const handleAddDeposit = useCallback(() => {
