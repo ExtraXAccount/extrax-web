@@ -3,16 +3,16 @@ import './index.scss'
 import classNames from 'classnames'
 import { useMemo } from 'react'
 
+import FormattedNumber from '@/components/FormattedNumber'
+import useNetworthInfo from '@/hooks/useNetworthInfo'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { useAccountStore } from '@/store'
 import { formatNumberByUnit } from '@/utils/math'
 
 export default function NetworthList() {
-  const { currentAccount, accounts, netWorth, isSmartAccount } = useSmartAccount()
+  const { currentAccount, accounts, netWorth, isSmartAccount, formattedUserPositionMap } = useSmartAccount()
   const { updateAccountLayer } = useAccountStore()
-  console.log(accounts)
-  const data = useMemo(() => {
-  }, [])
+  const { totalNetworth, eoaNetworth, smartNetworth } = useNetworthInfo()
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   return (
     <div className='networth-list-wrap'>
@@ -22,7 +22,7 @@ export default function NetworthList() {
         <div className='networth-list-main-item'>
           <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
             <p>Total Networth</p>
-            <p>${formatNumberByUnit(netWorth)}</p>
+            <p><FormattedNumber value={totalNetworth} symbol={`$`} /></p>
           </div>
         </div>
         <div className='networth-list-main-item-sub'>
@@ -32,14 +32,14 @@ export default function NetworthList() {
             <i className='networth-list-main-item-line'></i>
             <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
               <p>EOA Mode</p>
-              <p>${formatNumberByUnit(netWorth)}</p>
+              <p><FormattedNumber value={eoaNetworth} symbol={`$`} /></p>
             </div>
           </div>
           <div className='networth-list-main-item last'>
             <i className='networth-list-main-item-line'></i>
             <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
               <p>Smart Account</p>
-              <p>$0</p>
+              <p><FormattedNumber value={smartNetworth} symbol={`$`} /></p>
             </div>
           </div>
           <div className='networth-list-main-item-sub'>
@@ -54,7 +54,7 @@ export default function NetworthList() {
                     <i className='networth-list-main-item-line'></i>
                     <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
                       <p>{accountName}</p>
-                      <p>$0</p>
+                      <p><FormattedNumber value={formattedUserPositionMap? formattedUserPositionMap[i]?.netWorthUSD : '0'} symbol={`$`} /></p>
                     </div>
                   </div>
                 )
