@@ -77,22 +77,20 @@ export default function useSmartAccount() {
     if (!account || !reservesData.formattedReserves.length) {
       return
     }
-    const formattedMap = {}
-    const allAccounts = [account, ...accounts]
-    allAccounts.forEach(item => {
+    return [account, ...accounts].map(item => {
       const targetPositions = positionsMap[item] || {}
-      formattedMap[item] = formatUserSummary({
-        currentTimestamp,
-        formattedReserves: reservesData.formattedReserves,
-        marketReferenceCurrencyDecimals:
-          reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
-        marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-        userReserves: targetPositions.userReserves,
-        userEmodeCategoryId: targetPositions.userEmodeCategoryId,
-      })
+      return {
+        [item]: formatUserSummary({
+          currentTimestamp,
+          formattedReserves: reservesData.formattedReserves,
+          marketReferenceCurrencyDecimals:
+            reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
+          marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+          userReserves: targetPositions.userReserves,
+          userEmodeCategoryId: targetPositions.userEmodeCategoryId,
+        })
+      }
     })
-    // console.log('formattedUserPositionMap :>> ', formattedMap);
-    return formattedMap
   }, [account, accounts, currentTimestamp, positionsMap, reservesData.baseCurrencyData.marketReferenceCurrencyDecimals, reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd, reservesData.formattedReserves])
 
   const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
@@ -190,7 +188,8 @@ export default function useSmartAccount() {
     const accounts = await getAccounts(chainIdToName[chainId], signer, account)
     // console.log('getAccounts :>> ', account, accounts)
     updateAccounts(accounts as Address[])
-  }, [account, chainId, signer, updateAccounts])
+    fetchUsersReserves([account, ...accounts], chainId)
+  }, [account, chainId, fetchUsersReserves, signer, updateAccounts])
 
   const getInitData = useCallback(async () => {
     fetchAccounts()

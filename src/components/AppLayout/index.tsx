@@ -61,12 +61,12 @@ export default function AppLayout() {
   //   fetchUserReserves(currentAccount, chainId)
   // }, [chainId, currentAccount, fetchUserReserves])
 
-  useEffect(() => {
-    if (!account) {
-      return
-    }
-    fetchUsersReserves([account, ...accounts], chainId)
-  }, [chainId, accounts, fetchUsersReserves, account])
+  // useEffect(() => {
+  //   if (!account) {
+  //     return
+  //   }
+  //   fetchUsersReserves([account, ...accounts], chainId)
+  // }, [chainId, accounts, fetchUsersReserves, account])
 
   useEffect(() => {
     console.log('formattedUserPosition :>> ', formattedUserPosition)

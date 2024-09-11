@@ -6,6 +6,7 @@ import FormattedNumber from '@/components/FormattedNumber'
 import Hint from '@/components/Hint'
 import LPName from '@/components/LPName'
 import { useLendStore } from '@/store'
+import { IFormattedPosition } from '@/store/lend'
 import { aprToApy100, formatNumberByUnit, remain2Decimal, toPrecision } from '@/utils/math'
 const { Column } = Table
 
@@ -15,7 +16,7 @@ const positionTypeTagMap = {
 }
 
 export default function PositionTable(props: {
-  positions: any[],
+  positions: IFormattedPosition[],
   lite?: boolean
 }) {
   const { updateCurrentPosition, updateDialogShow } = useLendStore()
@@ -25,7 +26,7 @@ export default function PositionTable(props: {
         sortDirections={['descend', 'ascend']}
         dataSource={props.positions || []}
         pagination={false}
-        rowKey={(item, index) => item.id}
+        rowKey={(item) => item.reserve.id}
         locale={{
           emptyText: (
             <div className="ant-empty ant-empty-normal">
@@ -119,7 +120,6 @@ export default function PositionTable(props: {
               dataIndex=""
               key="Liquidation"
               render={(i) => {
-                // const liquidatePrice = Number(healthStatus.formatted.liquidationThreshold) / 100 *
                 return (
                   <>
                     {i.type === 'debt' && <Hint content={`N/A`}>N/A</Hint>}

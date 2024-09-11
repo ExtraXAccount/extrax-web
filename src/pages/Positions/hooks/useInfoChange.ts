@@ -13,7 +13,6 @@ export default function useInfoChange(props: {
   type: 'liquidity' | 'debt'
 }) {
   const { reserve, amount, type} = props
-  const { healthStatus } = useSmartAccount()
   const { formattedUserPosition } = useSmartAccount()
 
   const nextTotalApy = useMemo(() => {
@@ -22,7 +21,7 @@ export default function useInfoChange(props: {
     }
     const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD) || 0
 
-    console.log(depositedVal)
+    // console.log(depositedVal)
     const nextApy =
       sumBy(formattedUserPosition?.userReservesData, (item) => {
         if (reserve.id === item.reserve.id) {
