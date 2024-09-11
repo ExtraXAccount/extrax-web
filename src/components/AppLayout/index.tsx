@@ -72,7 +72,7 @@ export default function AppLayout() {
     console.log('formattedUserPosition :>> ', formattedUserPosition)
   }, [formattedUserPosition])
 
-  const isEOA = !toArray(accounts as any || []).includes(currentAccount as `0x${string}`)
+  const isEOA = currentAccount && accounts.length === 0
 
   return (
     <div

@@ -1,18 +1,16 @@
 import './index.scss'
 
 import classNames from 'classnames'
-import { useMemo } from 'react'
 
 import FormattedNumber from '@/components/FormattedNumber'
 import useNetworthInfo from '@/hooks/useNetworthInfo'
 import useSmartAccount from '@/hooks/useSmartAccount'
 import { useAccountStore } from '@/store'
-import { formatNumberByUnit } from '@/utils/math'
 
 export default function NetworthList() {
   const { currentAccount, accounts, netWorth, isSmartAccount, formattedUserPositionMap } = useSmartAccount()
-  const { updateAccountLayer } = useAccountStore()
-  const { totalNetworth, eoaNetworth, smartNetworth } = useNetworthInfo()
+  const { updateAccountLayer, updateCurrentAccount } = useAccountStore()
+  const { totalNetworth, eoaNetworth, smartNetworth, eoaAccount} = useNetworthInfo()
   const nameList = JSON.parse(localStorage.getItem('extrax-account-name') || `{}`)
   return (
     <div className='networth-list-wrap'>
@@ -30,7 +28,9 @@ export default function NetworthList() {
             active: !isSmartAccount
           })}>
             <i className='networth-list-main-item-line'></i>
-            <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
+            <div className='networth-list-main-item-inner flex jc-sb ai-ct' onClick={() => {
+              updateCurrentAccount(eoaAccount)
+            }}>
               <p>EOA Mode</p>
               <p><FormattedNumber value={eoaNetworth} symbol={`$`} /></p>
             </div>
@@ -52,7 +52,9 @@ export default function NetworthList() {
                     active: currentAccount?.toLowerCase() === i?.toLowerCase()
                   })} key={index}>
                     <i className='networth-list-main-item-line'></i>
-                    <div className='networth-list-main-item-inner flex jc-sb ai-ct'>
+                    <div className='networth-list-main-item-inner flex jc-sb ai-ct' onClick={() => {
+                      updateCurrentAccount(i)
+                    }}>
                       <p>{accountName}</p>
                       <p><FormattedNumber value={formattedUserPositionMap? formattedUserPositionMap[i]?.netWorthUSD : '0'} symbol={`$`} /></p>
                     </div>

@@ -8,7 +8,6 @@ import useSmartAccount from "./useSmartAccount";
 
 export default function useNetworthInfo() {
   const { currentAccount, accounts, netWorth, isSmartAccount, formattedUserPositionMap } = useSmartAccount()
-
   const data = useMemo(() => {
     let totalNetworth = '0'
     let eoaAccount
@@ -23,6 +22,7 @@ export default function useNetworthInfo() {
     return {
       totalNetworth,
       eoaNetworth,
+      eoaAccount,
       smartNetworth: minus(totalNetworth, eoaNetworth).toString()
     }
   }, [formattedUserPositionMap, accounts])
