@@ -57,9 +57,9 @@ export default function AppLayout() {
     fetchPoolState()
   }, [fetchPoolState])
 
-  useEffect(() => {
-    fetchUserReserves(currentAccount, chainId)
-  }, [chainId, currentAccount, fetchUserReserves])
+  // useEffect(() => {
+  //   fetchUserReserves(currentAccount, chainId)
+  // }, [chainId, currentAccount, fetchUserReserves])
 
   useEffect(() => {
     if (!account) {

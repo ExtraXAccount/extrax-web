@@ -92,17 +92,18 @@ export default function WithdrawDialog({
     const tokenValueChange = Number(value) * tokenPrice || 0
     return {
       usedCredit: usedCredit,
+      availableCredit: Number(availableCredit),
       netWorth: netWorth - tokenValueChange,
       debtVal: debtVal,
       accountApy: next.accountApy,
     }
-  }, [debtVal, netWorth, tokenPrice, usedCredit, value, next.accountApy])
+  }, [value, tokenPrice, usedCredit, availableCredit, netWorth, debtVal, next.accountApy])
 
   function reset() {
     setValue('')
   }
 
-  console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
+  // console.log('currentLendingPoolDetail :>> ', currentLendingPoolDetail)
   const handleWithdraw = useCallback(async () => {
     console.log('withdraw :>> ', currentAccount, currentLendingPoolDetail)
     if (!currentLendingPoolDetail) {

@@ -16,7 +16,6 @@ import AccountTxHistory from './AccountTxHistory'
 export default function AccountLayer() {
   const { showAccountLayer, updateAccountLayer } = useAccountStore()
   const {
-    healthStatus,
     LTV,
     netWorth,
     healthFactor,

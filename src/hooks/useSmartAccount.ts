@@ -19,22 +19,40 @@ import { div, mul, plus } from '@/utils/math/bigNumber'
 
 import { useCurrentTimestamp } from './useCurrentTimestamp'
 
+export function useCurrentAccount() {
+  const { account } = useWagmiCtx()
+  const {
+    currentAccount: _currentAccount,
+    positionsMap,
+  } = useAccountStore()
+
+  const currentAccount = _currentAccount || account || ''
+  return {
+    currentAccount,
+    currentPositions: positionsMap[currentAccount] || {}
+  }
+}
+
 export default function useSmartAccount() {
   const { chainId, signer, account } = useWagmiCtx()
   const {
     accounts,
-    currentAccount: _currentAccount,
-    positions: {
-      userReserves,
-      userEmodeCategoryId,
-    },
+    positionsMap,
     updateAccounts,
     updateBalances,
-    updatePositions,
+    // updatePositions,
+    updateTargetPositions,
     updatePositionsMap,
   } = useAccountStore()
   const { reservesData } = useLendStore()
-  const currentAccount = _currentAccount || account || ''
+
+  const {
+    currentAccount,
+    currentPositions: {
+      userReserves,
+      userEmodeCategoryId,
+    }
+  } = useCurrentAccount()
 
   const currentTimestamp = useCurrentTimestamp(60)
 
@@ -54,6 +72,28 @@ export default function useSmartAccount() {
     // console.log('formattedUserPosition :>> ', formatted)
     return formatted
   }, [currentTimestamp, reservesData.baseCurrencyData.marketReferenceCurrencyDecimals, reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd, reservesData.formattedReserves, userEmodeCategoryId, userReserves])
+
+  const formattedUserPositionMap = useMemo(() => {
+    if (!account || !reservesData.formattedReserves.length) {
+      return
+    }
+    const formattedMap = {}
+    const allAccounts = [account, ...accounts]
+    allAccounts.forEach(item => {
+      const targetPositions = positionsMap[item] || {}
+      formattedMap[item] = formatUserSummary({
+        currentTimestamp,
+        formattedReserves: reservesData.formattedReserves,
+        marketReferenceCurrencyDecimals:
+          reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
+        marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
+        userReserves: targetPositions.userReserves,
+        userEmodeCategoryId: targetPositions.userEmodeCategoryId,
+      })
+    })
+    // console.log('formattedUserPositionMap :>> ', formattedMap);
+    return formattedMap
+  }, [account, accounts, currentTimestamp, positionsMap, reservesData.baseCurrencyData.marketReferenceCurrencyDecimals, reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd, reservesData.formattedReserves])
 
   const { depositedVal, debtVal, leverage, netWorth } = useMemo(() => {
     const depositedVal = Number(formattedUserPosition?.totalLiquidityUSD)
@@ -99,12 +139,6 @@ export default function useSmartAccount() {
 
   const accountMng = useAccountManager()
 
-  // const chainLendingConfig = useMemo(() => {
-  //   return Object.values<(typeof LendingConfig)[ChainId][LendPoolConfig]>(
-  //     LendingConfig[chainId] || {}
-  //   )
-  // }, [chainId])
-
   const fetchBalances = useCallback(
     async (acc) => {
       if (!acc) {
@@ -121,13 +155,6 @@ export default function useSmartAccount() {
     },
     [reservesData.formattedReserves, accountMng, updateBalances]
   )
-  // const fetchUserHealthStatus = useCallback(
-  //   async (acc) => {
-  //     const healthStatus = await lendingMng.getUserHealthStatus(acc)
-  //     updateHealthStatus(healthStatus)
-  //   },
-  //   [lendingMng, updateHealthStatus],
-  // )
 
   const fetchUsersReserves = useCallback(
     async (users: string[], chainId: SupportedChainId) => {
@@ -140,7 +167,6 @@ export default function useSmartAccount() {
     },
     [updatePositionsMap]
   )
-
   
   const fetchUserReserves = useCallback(
     async (acc: string | undefined, chainId: SupportedChainId) => {
@@ -148,21 +174,21 @@ export default function useSmartAccount() {
         return
       }
       const {userReserves, userEmodeCategoryId} = await getLendingUserState(chainId, acc)
-      console.log('fetchUserReserves :>> ', {acc, userReserves, userEmodeCategoryId})
-      updatePositions({
+      // console.log('fetchUserReserves :>> ', {acc, userReserves, userEmodeCategoryId})
+      updateTargetPositions(acc, {
         userReserves, userEmodeCategoryId
       })
     },
-    [updatePositions]
+    [updateTargetPositions]
   )
 
   const fetchAccounts = useCallback(async () => {
     if (!signer || !account) {
       return
     }
-    console.log('getAccounts start:>> ', account)
+    // console.log('getAccounts start:>> ', account)
     const accounts = await getAccounts(chainIdToName[chainId], signer, account)
-    console.log('getAccounts :>> ', account, accounts)
+    // console.log('getAccounts :>> ', account, accounts)
     updateAccounts(accounts as Address[])
   }, [account, chainId, signer, updateAccounts])
 
@@ -198,6 +224,7 @@ export default function useSmartAccount() {
     currentAccount,
     isSmartAccount: currentAccount && currentAccount!== account,
     formattedUserPosition,
+    formattedUserPositionMap,
     eModeEnabled: formattedUserPosition?.userEmodeCategoryId !== 0,
     leverage,
     depositedVal,
