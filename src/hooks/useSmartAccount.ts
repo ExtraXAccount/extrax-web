@@ -49,7 +49,7 @@ export default function useSmartAccount() {
   const {
     currentAccount,
     currentPositions: {
-      userReserves,
+      userReserves = [],
       userEmodeCategoryId,
     }
   } = useCurrentAccount()
