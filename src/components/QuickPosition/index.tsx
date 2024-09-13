@@ -13,7 +13,7 @@ export default function QuickPosition() {
   const [expand, setExpand] = useState(false)
   const { assetPositions, debtPositions, totalAssetValue, totalDebtValue } = useFormatPositions()
   const { currentPosition, currentDialogShow, updateDialogShow } = useLendStore()
-  return (
+  return (!!assetPositions.length || !!debtPositions.length) && (
     <div className={classNames('quick-position', {
       'quick-position-expand': expand
     })}>

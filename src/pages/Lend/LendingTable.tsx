@@ -21,6 +21,7 @@ import { div, minus } from '@/utils/math/bigNumber'
 import CapHover from './HoverComponents/CapHover'
 import RewardsHover from './HoverComponents/RewardsHover'
 import PercentCircle from './PercentCircle'
+import ProgressCircle from './ProgressCircle'
 // import RepayDialog from './RepayDialog'
 import useLendingList from './useLendingList'
 // import WithdrawDialog from './WithdrawDialog'
@@ -135,11 +136,18 @@ export default function LendingTable() {
                       </div>
                     </div>
                     <div>
-                      <PercentCircle
+                      {/* <PercentCircle
                         radix={8}
                         percent={div(i.totalLiquidity, i.supplyCap).toNumber()}
                         strokeWidth={2.5}
                         strokeColor={'#38AD3D'}
+                      /> */}
+                      <ProgressCircle
+                        size={16}
+                        progress={div(i.totalLiquidity, i.supplyCap).toNumber() * 100}
+                        lineWidth={2.5}
+                        progressColor={'#38AD3D'}
+                        bgColor='#C9C9CB'
                       />
                     </div>
                   </div>
@@ -176,11 +184,18 @@ export default function LendingTable() {
                         <FormattedNumber value={i.totalDebtUSD} unit symbol='$' />
                       </div>
                     </div>
-                    <PercentCircle
+                    {/* <PercentCircle
                       radix={8}
                       percent={div(i.totalDebt, i.borrowCapUSD).toNumber()}
                       strokeWidth={2.5}
                       strokeColor={'#EC6F14'}
+                    /> */}
+                    <ProgressCircle
+                      size={16}
+                      progress={div(i.totalDebt, i.borrowCapUSD).toNumber()}
+                      lineWidth={2.5}
+                      progressColor={'#EC6F14'}
+                      bgColor='#C9C9CB'
                     />
                   </div>
                 </div>
@@ -233,7 +248,7 @@ export default function LendingTable() {
         />
 
         <Column
-          title='LTV'
+          title='MAX LTV'
           dataIndex=''
           key='ltv'
           showSorterTooltip={false}

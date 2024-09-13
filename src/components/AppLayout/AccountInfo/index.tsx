@@ -5,8 +5,10 @@ import { useCallback, useMemo, useState } from 'react'
 
 import AccountDepositDialog from '@/components/AccountDepositDialog'
 import FormattedNumber from '@/components/FormattedNumber'
+import { INFINITY } from '@/constants/symbols'
 import useSmartAccount from '@/hooks/useSmartAccount'
-import PercentCircle from '@/pages/Lend/PercentCircle'
+// import PercentCircle from '@/pages/Lend/PercentCircle'
+import ProgressCircle from '@/pages/Lend/ProgressCircle'
 import { formatNumberByUnit, toPrecision } from '@/utils/math'
 import { div } from '@/utils/math/bigNumber'
 
@@ -74,7 +76,7 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
             <div className='extrax-account-info-detail-item extrax-account-info-health'>
               <div className='extrax-account-info-health-factor'>
                 <span>Health Factor</span>
-                <em>{!depositedVal ? '--' : toPrecision(healthFactor)}</em>
+                <em>{!depositedVal ? '--' : healthFactor === -1 ? INFINITY : toPrecision(healthFactor)}</em>
                 <span
                   className={cx('extrax-account-info-health-judge', `color-${healthFactorInfo.type}`)}
                 >
@@ -124,11 +126,18 @@ export default function AccountInfo(props: { portfolioMode?: boolean }) {
                 </div>
                 <span>Total: ${toPrecision(Number(maxCredit))}</span>
               </div>
-              <PercentCircle
+              {/* <PercentCircle
                 radix={32}
                 percent={div(availableCredit, maxCredit).toNumber()}
                 strokeWidth={6}
                 strokeColor={'#7A87FF'}
+                bgColor='#78788029'
+              /> */}
+              <ProgressCircle
+                size={64}
+                progress={div(availableCredit, maxCredit).toNumber() * 100}
+                lineWidth={6}
+                progressColor={'#7A87FF'}
                 bgColor='#78788029'
               />
               <div className='extrax-account-info-credit-percent'>

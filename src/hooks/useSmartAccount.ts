@@ -135,6 +135,33 @@ export default function useSmartAccount() {
     }
   }, [depositedVal, formattedUserPosition?.userReservesData])
 
+  const formattedInfo = useMemo(() => {
+    return {
+      isSmartAccount: currentAccount && currentAccount!== account,
+      eModeEnabled: formattedUserPosition?.userEmodeCategoryId !== 0,
+      healthFactor: Number(formattedUserPosition?.healthFactor) || 0,
+      maxCredit: plus(formattedUserPosition?.availableBorrowsUSD || 0, formattedUserPosition?.totalBorrowsUSD || 0).toNumber(),
+      availableCredit: formattedUserPosition?.availableBorrowsUSD || 0,
+    }
+  }, [account, currentAccount, formattedUserPosition?.availableBorrowsUSD, formattedUserPosition?.healthFactor, formattedUserPosition?.totalBorrowsUSD, formattedUserPosition?.userEmodeCategoryId])
+
+  const LTV = useMemo(() => {
+    if (!depositedVal) {
+      return {
+        current: 0,
+        max: 0,
+        liquidation: 0,
+      }
+    }
+    return {
+      current: debtVal / depositedVal,
+      max: formattedInfo.maxCredit / depositedVal,
+      liquidation: Number(formattedUserPosition?.currentLiquidationThreshold) || 0,
+    }
+  }, [debtVal, depositedVal, formattedInfo.maxCredit, formattedUserPosition])
+
+  // console.log('LTV :>> ', LTV);
+
   const accountMng = useAccountManager()
 
   const fetchBalances = useCallback(
@@ -203,36 +230,17 @@ export default function useSmartAccount() {
     [chainId, currentAccount, fetchBalances, fetchUserReserves]
   )
 
-  const LTV = useMemo(() => {
-    if (!depositedVal) {
-      return {
-        current: 0,
-        max: 0,
-        liquidation: 0,
-      }
-    }
-    return {
-      current: Number(formattedUserPosition?.currentLoanToValue) || 0,
-      max: plus(formattedUserPosition?.currentLoanToValue || 0, formattedUserPosition?.currentLiquidationThreshold || 0).toNumber() / 2,
-      liquidation: Number(formattedUserPosition?.currentLiquidationThreshold) || 0,
-    }
-  }, [depositedVal, formattedUserPosition?.currentLiquidationThreshold, formattedUserPosition?.currentLoanToValue])
-
   return {
     accounts,
     currentAccount,
-    isSmartAccount: currentAccount && currentAccount!== account,
     formattedUserPosition,
     formattedUserPositionMap,
-    eModeEnabled: formattedUserPosition?.userEmodeCategoryId !== 0,
     leverage,
+    ...formattedInfo,
     depositedVal,
     debtVal,
     netWorth,
-    healthFactor: Number(formattedUserPosition?.healthFactor) || 0,
     LTV,
-    maxCredit: plus(formattedUserPosition?.availableBorrowsUSD || 0, formattedUserPosition?.totalBorrowsUSD || 0).toNumber(),
-    availableCredit: formattedUserPosition?.availableBorrowsUSD || 0,
     usedCredit: debtVal,
     accountApr,
     accountApy,

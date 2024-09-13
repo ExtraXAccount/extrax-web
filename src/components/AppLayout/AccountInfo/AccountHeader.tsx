@@ -192,20 +192,20 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
           }
         </div>
       </div>
-      {!!depositedVal && portfolioMode && (
+      {portfolioMode && (
         <div className='flex ai-ct jc-sb'>
           <div className='extrax-account-info-portfoliomode-infos'>
             <section>
               <span className='text-sm-2'>Total Supply:</span>
-              <b>${formatNumberByUnit(depositedVal)}</b>
+              <b>{depositedVal ? <FormattedNumber value={depositedVal} unit symbol='$'/> : '--'}</b>
             </section>
             <section>
               <span className='text-sm-2'>Total Borrow:</span>
-              <b>${formatNumberByUnit(debtVal)}</b>
+              <b>{depositedVal ? <FormattedNumber value={debtVal} unit symbol='$'/> : '--'}</b>
             </section>
             <section>
               <span className='text-sm-2'>Networth:</span>
-              <b>${formatNumberByUnit(netWorth)}</b>
+              <b>{depositedVal ? <FormattedNumber value={netWorth} unit symbol='$'/> : '--'}</b>
             </section>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
           {!depositedVal ? '--' : toPrecision(accountApy * 100) + '%'}
         </em>
       </p> */}
-      {!!depositedVal && !portfolioMode && (
+      {!portfolioMode && (
         <div className='flex ai-ct jc-sb'>
           <div className='extrax-account-info-apr-lv'>
             <span>Portfolio APR: </span>
@@ -236,12 +236,15 @@ export default function AccountHeader({ portfolioMode, handleAddDeposit }: { por
             {!leverage ? '--' : toPrecision(leverage) + 'x'}
           </em> */}
           </div>
-          <button
-            className='btn-base extrax-account-info-apr-supply-btn'
-            onClick={handleAddDeposit}
-          >
-            Supply
-          </button>
+          {
+            !!depositedVal &&
+            <button
+              className='btn-base extrax-account-info-apr-supply-btn'
+              onClick={handleAddDeposit}
+            >
+              Supply
+            </button>
+          }
         </div>
       )}
     </div>
