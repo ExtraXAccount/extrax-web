@@ -86,7 +86,7 @@ export default function useSmartAccount() {
           marketReferenceCurrencyDecimals:
             reservesData.baseCurrencyData.marketReferenceCurrencyDecimals,
           marketReferencePriceInUsd: reservesData.baseCurrencyData.marketReferenceCurrencyPriceInUsd,
-          userReserves: targetPositions.userReserves,
+          userReserves: targetPositions.userReserves || [],
           userEmodeCategoryId: targetPositions.userEmodeCategoryId,
         })
       }
